@@ -1,0 +1,5 @@
+RewriteEngine on
+#does not apply to existing directories (if the folder exists on the server then don't change anything)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [NC,L]
