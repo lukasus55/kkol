@@ -1,0 +1,27 @@
+/* max-width:768px*/
+
+#title
+{
+    font-size: 20px;
+}
+
+#year
+{
+    margin-top: 4px;
+    font-size: 35px;
+}
+
+.platform_inside
+{
+    font-size: 40px;
+}
+
+.player_name
+{
+    display: none;
+}
+
+#buttons
+{
+    margin-top: 20px;
+}

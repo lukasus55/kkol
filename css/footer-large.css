@@ -1,0 +1,48 @@
+/* min-width:2560px */
+
+#footer
+{
+    height: 80px;
+}
+
+.footer_logo_description
+{
+    font-size: 20px;
+}
+
+#author
+{
+    font-size: 27px;
+    font-weight: 500;
+}
+
+#footer_menu_center
+{
+    width: 100px;
+    font-size: 35px;
+}
+
+#footer_menu_right, #footer_menu_left
+{
+    width: 250px;
+}
+
+.footer_menu_right_year, .footer_menu_left_year
+{
+    width: 75px;
+    font-size: 25px;
+}
+
+#year_selector_container ul, #year_selector_container li {
+    font-size: 25px;
+}
+
+#year_selector
+{
+    width: 500px;
+}
+
+#year_selector_title
+{
+    font-size: 28px;
+}
