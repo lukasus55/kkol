@@ -4,3 +4,128 @@
 {
     display: none;
 }
+
+.timeline_game
+{
+    width: 2%;
+    padding: 10px 0px 10px 30px;
+}
+
+.timeline_date
+{
+    width: 20%;
+    padding-right: 30px;
+}
+
+.timeline_wide
+{
+    width: 20%;
+    cursor: default;
+}
+
+.timeline_name
+{
+    font-size: 18px;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.timeline_icon
+{
+    display: none;
+}
+
+#catan
+{
+    height: 200vh;
+}
+
+#catan_rules_container
+{
+    width: 100%;
+    height: 70%;
+}
+
+#catan_rules_box
+{
+    width: 80%;
+    height: 100%;
+}
+
+#catan_rules_title
+{
+    font-size: 30px;
+}
+
+#catan_rules_board img
+{
+    width: 300px;
+    height: 300px;
+}
+
+#catan_results_container
+{
+    width: 100%;
+    height: 30%;
+}
+
+#catan_results_box
+{
+    width: 80%;
+}
+
+#catan_results_title
+{
+    font-size: 30px;
+}
+
+#catan_results_text
+{
+    font-size: 20px;
+}
+
+#catan_map_title
+{
+    font-size: 25px;
+}
+
+#catan_map_subtitle
+{
+    height: 35%;
+}
+
+#catan_map_reason, #catan_map_disclaimer
+{
+    width: 90%;
+    font-size: 13px;
+}
+
+#catan_interactive_map
+{
+    width: 200px;
+    height: 200px;
+}
+
+.catan_hexagon 
+{
+    height: 55px;
+}
+
+#catan_interactive_map_container
+{
+    width: 300px;
+    height: 250px;
+}
+
+.catan_hexagon_number
+{
+    height: 20px;
+    width: 20px;
+    font-size: 14px;
+}
+
+#catan_map_footer
+{
+    font-size: 10px;
+}

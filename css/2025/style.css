@@ -13,6 +13,7 @@ html
     /* font-style: normal; */
     scroll-behavior: smooth;
     color: #000000;
+    font-size: 16px;
 }
 
 body
@@ -20,15 +21,24 @@ body
     background-color: #ffffea;
 }
 
-a
-{
+a {
     text-decoration: none;
-    color:inherit;
+    color: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
+}
+
+.clickable
+{
+    cursor: pointer;
+}
+
+.invisible
+{
+    opacity: 0%;
 }
 
 #logo
@@ -96,5 +106,460 @@ a
     width: 100%; 
     height: 87%;
     font-size: 40px;
+    text-align: center;
+}
+
+#timeline
+{
+    display: flex;
+    min-height: 50vh;
+    height: 87%;
+    width: 100%;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding-top: 20px;
+}
+
+.timeline_event
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 20%;
+}
+
+.timeline_date
+{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 10%;
+    min-width: 150px;
+    height: 100%;
+    padding-right: 50px;
+}
+
+.timeline_game
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 10%;
+    min-width: 150px;
+    height: 100%;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 10px 0px 10px 50px;
+    cursor: pointer;
+}
+
+.timeline_wide
+{
+    width: 30%;
+    cursor: default;
+}
+
+.timeline_name
+{
+    display: flex;
+    width: 100%;
+    height: 20%;
+    text-align: center;
+    justify-content: center;
+}
+
+.timeline_icon
+{
+    padding: 10px 0px 10px 0px;
+    width: 100%;
+    height: 80%;
+}
+
+.timeline_icon img
+{
+    width: 100%;
+    height: 100%;
+}
+
+.timeline_line
+{
+    min-width: 8px;
+    height: 100%;
+    background-color: #cf7c00;
+}
+
+.timeline_dot
+{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: #cf7c00;
+}
+
+.timeline_dot_active
+{
+    width: 40px;
+    height: 40px;
+}
+
+#catan
+{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../../img/2025/games/catan.png);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#catan_rules_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+#catan_rules_box
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 75%;
+    height: 75%;
+    color: #ffffff;
+}
+
+#catan_rules_title
+{
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: 700;
+}
+
+#catan_rules_text
+{
+    width: 100%;
+    height: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: justify;
+}
+
+#catan_rules_board
+{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: justify;
+    cursor: pointer;
+}
+
+#catan_rules_board img
+{
+    width: 500px;
+    height: 500px;
+}
+
+
+#catan_results_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+#catan_results_box
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 75%;
+    height: 75%;
+    color: #ffffff;
+}
+
+#catan_results_title
+{
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: 700;
+}
+
+#catan_results_text
+{
+    width: 100%;
+    height: 35%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+#catan_map
+{
+    width: 100%;
+    height: 800px;
+    padding: 20px 10px 0px 10px;
+    /* background-color: #cf7c00; */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+#catan_map_title
+{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: 700;
+}
+
+#catan_map_subtitle
+{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#catan_map_reason, #catan_map_disclaimer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 51%;
+    text-align: center;
+}
+
+#catan_map_disclaimer
+{
+    font-size: 16px;
+}
+
+#catan_interactive_map_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 450px;
+    height: 400px;
+    font-weight: 500;
+    background-image: url(../../img/2025/games/catan_icons/normalBackground.png);
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../img/2025/games/catan_icons/normalBackground.png'); */
+    background-size: cover;
+    background-position: center;
+}
+
+#catan_interactive_map
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 300px;
+    height: 300px;
+    font-weight: 500;
+}
+
+.catan_interactive_map_row
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 20%;
+}
+
+.catan_hexagon 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px; /* adjust to control the size  */
+    aspect-ratio: cos(30deg);
+    clip-path: polygon(-50% 50%,50% 100%,150% 50%,50% 0);
+    background: #3B8686;
+    color: #ffefb1;
+    font-size: 20px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.catan_hexagon_forest
+{
+    background-image: url(../../img/2025/games/catan_icons/forest.png);
+}
+
+.catan_hexagon_stone
+{
+    background-image: url(../../img/2025/games/catan_icons/stone.png);
+}
+
+.catan_hexagon_plains
+{
+    background-image: url(../../img/2025/games/catan_icons/plains.png);
+}
+
+.catan_hexagon_wheat
+{
+    background-image: url(../../img/2025/games/catan_icons/wheat.png);
+}
+
+.catan_hexagon_bricks
+{
+    background-image: url(../../img/2025/games/catan_icons/bricks.png);
+}
+
+.catan_hexagon_desert
+{
+    background-image: url(../../img/2025/games/catan_icons/desert.png);
+}
+
+.catan_hexagon_number
+{
+    width: 30px;
+    height: 30px;
+    background-color: #ffefb1;
+    color: #000000;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.catan_hexagon_number_red
+{
+    color: #ff0000;
+}
+
+#catan_popup
+{
+    display: flex;
+    position: absolute;
+    width: 200px;
+    height: 110px;
+    background-color: #ffffff;
+    z-index: 100;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10px 10px 10px 10px;
+    flex-wrap: wrap;
+}
+
+#catan_popup_close
+{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    z-index: 100;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+#catan_popup_title
+{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    justify-content: center;
+    font-weight: 500;
+}
+
+#catan_popup_stats, #catan_popup_ship_stats
+{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+#catan_popup_ship_stats
+{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+#catan_popup ul 
+{
+    list-style-type: none;
+}
+
+#catan_popup_close img
+{
+    width: 100%;
+    height: 100%;
+}
+
+#catan_interactive_sea
+{
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    z-index: 5;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.catan_ship
+{
+    position: relative;
+    width: 50%;
+    height: 14.28%;
+    z-index: 6;
+}
+
+#catan_map_footer
+{
+    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
     text-align: center;
 }

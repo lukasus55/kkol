@@ -1,4 +1,4 @@
-/* max-width:768px*/
+/* max-height:580px */
 
 #title
 {
@@ -9,4 +9,9 @@
 {
     margin-top: 4px;
     font-size: 35px;
+}
+
+#catan
+{
+    height: 400vh;
 }

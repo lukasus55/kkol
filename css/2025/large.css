@@ -15,3 +15,117 @@
 {
     font-size: 85px;
 }
+
+.timeline_date
+{
+    font-size: 25px;
+}
+
+.timeline_game
+{
+    height: 80%;
+    font-size: 29px;
+}
+
+#catan_rules_title
+{
+    font-size: 70px;
+}
+
+#catan_rules_text
+{
+    font-size: 23px;
+    height: 40%;
+}
+
+#catan_rules_board
+{
+    height: 45%;
+}
+
+#catan_rules_board img
+{
+    width: 700px;
+    height: 700px;
+}
+
+#catan_results_title
+{
+    font-size: 70px;
+}
+
+#catan_results_text
+{
+    font-size: 45px;
+}
+
+#catan_map
+{
+    height: 1100px;
+}
+
+#catan_map_title
+{
+    font-size: 60px;
+}
+
+#catan_interactive_map
+{
+    width: 400px;
+    height: 400px;
+}
+
+.catan_hexagon 
+{
+    height: 105px;
+}
+
+#catan_interactive_map_container
+{
+    width: 580px;
+    height: 520px;
+}
+
+.catan_hexagon_number
+{
+    height: 43px;
+    width: 43px;
+    font-size: 30px;
+}
+
+#catan_map_reason
+{
+    font-size: 30px;
+}
+
+#catan_map_disclaimer
+{
+    font-size: 25px;
+}
+
+#catan_popup
+{
+    width: 300px;
+    height: 135px;
+}
+
+#catan_popup_close
+{
+    width: 30px;
+    height: 30px;
+}
+
+#catan_popup_resource
+{
+    font-size: 30px;
+}
+
+#catan_popup_stats
+{
+    font-size: 21px;
+}
+
+#catan_map_footer
+{
+    font-size: 24px;
+}

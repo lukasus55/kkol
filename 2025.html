@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
     <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
-    <title>Olimpiada Karwińska - 2025</title>
+    <title>Olimpiada Karwińska</title>
 
     <link rel="stylesheet" href="./css/footer.css">
     <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/footer-small.css">
@@ -41,14 +41,228 @@
                 </div>
             </div>
 
-            <div id="tba">
-                Informacje o sezonie 2025 zostaną podane niedługo.
+
+            <div id="timeline">
+
+                <div class="timeline_event">
+                    <div class="timeline_date"> ??.??.2025 </div>
+                    <div class="timeline_line"></div>
+                    <div class="timeline_dot timeline_dot_active"></div>
+                    <div class="timeline_game" onclick='window.location.href = "#catan";'> 
+                        <div class="timeline_name"> Catan </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/catan.png"> </div>
+                    </div>
+                </div>
+
+                <div class="timeline_event">
+                    <div class="timeline_date"> ??.??.2025 </div>
+                    <div class="timeline_line"></div>
+                    <div class="timeline_dot"></div>
+                    <div class="timeline_game"> 
+                        <div class="timeline_name"> Game 2 </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
+                    </div>
+                </div>
+
+                <div class="timeline_event">
+                    <div class="timeline_date"> ??.??.2025 </div>
+                    <div class="timeline_line"></div>
+                    <div class="timeline_dot"></div>
+                    <div class="timeline_game"> 
+                        <div class="timeline_name"> Game 3 </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
+                    </div>
+                </div>
+
+                <div class="timeline_event">
+                    <div class="timeline_date"> ??.??.2025 </div>
+                    <div class="timeline_line"></div>
+                    <div class="timeline_dot"></div>
+                    <div class="timeline_game"> 
+                        <div class="timeline_name"> Game 4 </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
+                    </div>
+                </div>
+
+                <div class="timeline_event">
+                    <div class="timeline_date timeline_wide"> 30.09.2025 </div>
+                    <div class="timeline_line"></div>
+                    <div class="timeline_dot"></div>
+                    <div class="timeline_game timeline_wide"> 
+                        Koniec sezonu
+                    </div>
+                </div>
+
             </div>
+
         </div>
 
     </header>
 
     <main id="main">
+
+        <section id="catan">
+
+            <div id="catan_rules_container">
+                <div id="catan_rules_box">
+                    <div id="catan_rules_title">OPIS I ZASADY</div>
+                    <div id="catan_rules_text">
+                        Catan to strategiczna gra planszowa, w której gracze rywalizują o dominację na wyspie, budując osady, drogi i miasta. Plansza składa się z heksagonalnych pól reprezentujących różne surowce: drewno, glinę, zboże, owce i rudy. Gracze zdobywają surowce, handlują nimi i rozwijają swoje osady, dążąc do uzyskania 10 punktów zwycięstwa. Rzut kostką określa, które pola produkują surowce w danej turze, a złodziej może blokować dochody. Gra wymaga planowania, negocjacji i elastyczności w strategii, co sprawia, że każda rozgrywka jest unikalna.
+                    </div>
+                    <div id="catan_rules_board" onclick='window.location.href = "#catan_map";'>
+                        <img src="img/2025/games/catan-board.png">
+                    </div>
+                </div>
+            </div>
+
+            <div id="catan_results_container">
+                <div id="catan_results_box">
+                    <div id="catan_results_title">WYNIKI</div>
+                    <div id="catan_results_text">
+                        Gra się jeszcze nie odbyła.
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="catan_map">
+
+            <div id="catan_map_title"> MAPA CATANA </div>
+            <div id="catan_map_subtitle"> 
+                <div id="catan_map_reason">
+                    W ramach fair play poniżej została umieszczona wersja mapy Catana na której rozgrywana będzie gra tak by każdy miał szansę na przygotowanie strategii. 
+                </div>
+                <div id="catan_map_disclaimer">
+                        UWAGA: Mapa może ulec jeszcze zmianie. Ostateczna wersja zostanie zatwierdzona do 31.03.2025r.
+                </div>
+            </div>
+
+            <div id="catan_popup">
+                <div id="catan_popup_close">
+                    <img src="img/close_tab.png">
+                </div>
+
+                <div id="catan_popup_title">
+                    <span id="catan_popup_resource">NaN</span>
+                </div>
+
+                <div id="catan_popup_stats">
+                    <ul>
+                        <li>Potrzebne oczka: <span id="catan_popup_dice">NaN</span></li>
+                        <li>Szansa: <span id="catan_popup_propability">NaN</span></li>
+                    </ul>    
+                </div>
+
+                <div id="catan_popup_ship_stats">
+                    1 Dowolne za&nbsp;<span id="catan_popup_proportions">NaN</span>&nbsp;<span id="catan_popup_trade_good">NaN</span>
+                </div>
+            </div>
+
+            <div id="catan_interactive_map_container">
+
+                <div id="catan_interactive_sea"> 
+
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '3', 'Dowolne', this)"></div>
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '3', 'Dowolne', this)"></div>
+
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '2', 'Owce', this)"></div>
+                    <div class="catan_ship"></div>
+
+                    <div class="catan_ship"></div>
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '2', 'Gliny', this)"></div>
+
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '3', 'Dowolne', this)"></div>
+                    <div class="catan_ship"></div>
+
+                    <div class="catan_ship"></div>
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '2', 'Drewna', this)"></div>
+
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '2', 'Rudy', this)"></div>
+                    <div class="catan_ship"></div>
+
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '2', 'Zboża', this)"></div>
+                    <div class="catan_ship clickable" onclick="showCatanPopup('ship', '3', 'Dowolne', this)"></div>
+
+                </div>
+
+                <div id="catan_interactive_map"> 
+                    
+                        <div class="catan_interactive_map_row">
+                            <div class="catan_hexagon catan_hexagon_bricks" onclick="showCatanPopup('bricks', '6', '13.889%', this)">
+                            <div class="catan_hexagon_number catan_hexagon_number_red"> 6 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_desert" onclick="showCatanPopup('desert', '-', '0%', this)"></div>
+                            <div class="catan_hexagon catan_hexagon_stone" onclick="showCatanPopup('stone', '8', '13.889%', this)">
+                                <div class="catan_hexagon_number catan_hexagon_number_red"> 8 </div>
+                            </div>
+                        </div>
+
+                        <div class="catan_interactive_map_row">
+                            <div class="catan_hexagon catan_hexagon_plains" onclick="showCatanPopup('plains', '10', '8.333%', this)">
+                                <div class="catan_hexagon_number"> 10 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_plains" onclick="showCatanPopup('plains', '12', '2.778%', this)">
+                                <div class="catan_hexagon_number"> 12 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_wheat" onclick="showCatanPopup('wheat', '5', '11.111%', this)">
+                                <div class="catan_hexagon_number"> 5 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_wheat" onclick="showCatanPopup('wheat', '11', '5.556%', this)">
+                                <div class="catan_hexagon_number"> 11 </div>
+                            </div>
+                        </div>
+
+                        <div class="catan_interactive_map_row">
+                            <div class="catan_hexagon catan_hexagon_wheat" onclick="showCatanPopup('wheat', '4', '8.333%', this)">
+                                <div class="catan_hexagon_number"> 4 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_forest" onclick="showCatanPopup('forest', '8', '13.889%', this)">
+                                <div class="catan_hexagon_number catan_hexagon_number_red"> 8 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_bricks" onclick="showCatanPopup('bricks', '4', '8.333%', this)">
+                                <div class="catan_hexagon_number"> 4 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_forest" onclick="showCatanPopup('forest', '10', '8.333%', this)">
+                                <div class="catan_hexagon_number"> 10 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_plains" onclick="showCatanPopup('plains', '6', '13.889%', this)">
+                                <div class="catan_hexagon_number catan_hexagon_number_red"> 6 </div>
+                            </div>
+                        </div>
+
+                        <div class="catan_interactive_map_row">
+                            <div class="catan_hexagon catan_hexagon_bricks" onclick="showCatanPopup('bricks', '9', '11.111%', this)">
+                                <div class="catan_hexagon_number"> 9 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_stone" onclick="showCatanPopup('stone', '3', '5.556%', this)">
+                                <div class="catan_hexagon_number"> 3 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_forest" onclick="showCatanPopup('forest', '11', '5.556%', this)">
+                                <div class="catan_hexagon_number"> 11 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_plains" onclick="showCatanPopup('plains', '8', '13.889%', this)">
+                                <div class="catan_hexagon_number"> 3 </div>
+                            </div>
+                        </div>
+
+                        <div class="catan_interactive_map_row">
+                            <div class="catan_hexagon catan_hexagon_forest" onclick="showCatanPopup('forest', '5', '11.111%', this)">
+                                <div class="catan_hexagon_number"> 5 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_wheat" onclick="showCatanPopup('wheat', '2', '2.778%', this)">
+                                <div class="catan_hexagon_number"> 2 </div>
+                            </div>
+                            <div class="catan_hexagon catan_hexagon_stone" onclick="showCatanPopup('stone', '9', '11.111%', this)">
+                                <div class="catan_hexagon_number"> 9 </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <div id="catan_map_footer"> Naciśnij na pole zasobu lub statek by zobaczyć szczegóły. </div>
+
+        </section>
         
         <div id="year_selector_container">
             <div id="year_selector">
@@ -108,5 +322,6 @@
 
     </footer>
 
+    <script src="./2025.js"></script>
     <script src="./footer.js"></script>
 </body>
