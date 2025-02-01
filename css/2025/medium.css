@@ -30,6 +30,7 @@
     justify-content: flex-start;
 }
 
+
 .timeline_icon
 {
     display: none;
@@ -75,4 +76,9 @@
 #catan_results_text
 {
     font-size: 20px;
+}
+
+#catan_map_reason, #catan_map_disclaimer
+{
+    width: 90%;
 }
