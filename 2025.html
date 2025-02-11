@@ -16,6 +16,7 @@
     <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/2025/medium.css">
     <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/2025/large.css">
     <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/2025/vertical.css">
+    <link rel="stylesheet" href="./flipdown/flipdown.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,7 +60,7 @@
                     <div class="timeline_line"></div>
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
-                        <div class="timeline_name"> Game 2 </div>
+                        <div class="timeline_name"> Gra 2 </div>
                         <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
                     </div>
                 </div>
@@ -69,7 +70,7 @@
                     <div class="timeline_line"></div>
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
-                        <div class="timeline_name"> Game 3 </div>
+                        <div class="timeline_name"> Gra 3 </div>
                         <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
                     </div>
                 </div>
@@ -79,7 +80,7 @@
                     <div class="timeline_line"></div>
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
-                        <div class="timeline_name"> Game 4 </div>
+                        <div class="timeline_name"> Gra 4 </div>
                         <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
                     </div>
                 </div>
@@ -101,6 +102,109 @@
 
     <main id="main">
 
+        <section id="ranking">
+
+            <div id="ranking_title">
+                Wyniki
+            </div>
+
+            <div id="ranking_table_segment">
+                <table class="ranking_table">
+                    <tr class="ranking_table_header">
+                        <th class="ranking_position" rowspan="2">Pos.</th>
+                        <th class="ranking_player_header" rowspan="2">Gracz</th>
+                        <th class="ranking_pts" colspan="5">Punkty</th>
+                    </tr>
+                    <tr class="ranking_table_standard">
+                        <td class="ranking_game ranking_game1_td ranking_game_clickable">
+                            <a href="#catan"><div class="ranking_game1">
+                                <img src="img/2025/games/catan-logo.png">
+                            </div></a>
+                        </td>
+                        <td class="ranking_game ranking_game2_td">
+                            TBA
+                        </td>
+                        <td class="ranking_game ranking_game3_td">
+                            TBA
+                        </td>
+                        <td class="ranking_game ranking_game4_td">
+                            TBA
+                        </td>
+                        <td class="ranking_total_header">Total</th>
+                    </tr>
+                    <tr class="ranking_table_standard">
+                        <td class="ranking_table_first_position">1</td>
+                        <td class="ranking_player">Harnoldihno</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">0</td>
+                    </tr>
+                    <tr class="ranking_table_standard">
+                        <td class="ranking_table_first_position">1</td>
+                        <td class="ranking_player">Kostyś</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">0</td>
+                    </tr>
+                    <tr class="ranking_table_standard">
+                        <td class="ranking_table_first_position">1</td>
+                        <td class="ranking_player">Kukuła</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">0</td>
+                    </tr>
+                    <tr class="ranking_table_standard">
+                        <td class="ranking_table_first_position">1</td>
+                        <td class="ranking_player">DamiDami2</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">0</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="ranking_popup">
+                <div id="ranking_popup_container">
+
+                    <div id="ranking_popup_header">
+                        <div id="ranking_popup_title">
+                            PUNKTACJA
+                        </div>
+                        <div id="ranking_popup_close_tab">
+                            <img src="img/close_tab.png" class="close_tab">
+                        </div>
+                    </div>
+            
+                    <div class="ranking_popup_line"></div>
+                    <div class="ranking_popup_subtitle">
+                        Catan
+                    </div>
+                    <div class="ranking_popup_points">
+                        <p> 1 miejsce: 4pkt </p>
+                        <p> 2 miejsce: 3pkt</p>
+                        <p> 3 miejsce: 2pkt</p>
+                        <p> 4 miejsce: 1pkt</p>
+                    </div>
+                    
+                  </div>
+            </div>
+
+            <div id="ranking_description">
+                <div id="ranking_button">
+                    Wyświetl punktację
+                </div>
+            </div>
+            
+        </section>
+
         <section id="catan">
 
             <div id="catan_rules_container">
@@ -118,8 +222,181 @@
             <div id="catan_results_container">
                 <div id="catan_results_box">
                     <div id="catan_results_title">WYNIKI</div>
-                    <div id="catan_results_text">
-                        Gra się jeszcze nie odbyła.
+                    <div id="catan_results_games">
+
+                        <div id="catanBy" class="flipdown"></div>
+                        
+                        <div id="catan_results_games_box">
+                            <div id="catan_results_games_left" onclick="changeCatanRound('previous')"><</div>
+
+                            <div id="catan_results_games_center">
+                                <div id="catan_results_games_top">
+                                    <span id="catan_results_games_round">NaN</span>
+                                </div>
+                                <div id="catan_results_games_content">
+
+                                    <div id="catan_results_round_0">
+                                        <table class="catan_results_table">
+                                            <tr class="catan_results_header">
+                                                <th class="catan_results_header_position">Pos.</th>
+                                                <th class="catan_results_header_player">Gracz</th>
+                                                <th class="catan_results_header_points" title="Średnie miejsce ze wszystkich rund."> Avg. Pos.</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">1.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">2.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">3.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">4.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div id="catan_results_round_1">
+                                        <table class="catan_results_table">
+                                            <tr class="catan_results_header">
+                                                <th class="catan_results_header_position">Pos.</th>
+                                                <th class="catan_results_header_player">Gracz</th>
+                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">1.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">2.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">3.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">4.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div id="catan_results_round_2">
+                                        <table class="catan_results_table">
+                                            <tr class="catan_results_header">
+                                                <th class="catan_results_header_position">Pos.</th>
+                                                <th class="catan_results_header_player">Gracz</th>
+                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">1.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">2.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">3.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">4.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div id="catan_results_round_3">
+                                        <table class="catan_results_table">
+                                            <tr class="catan_results_header">
+                                                <th class="catan_results_header_position">Pos.</th>
+                                                <th class="catan_results_header_player">Gracz</th>
+                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">1.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">2.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">3.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">4.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div id="catan_results_round_4">
+                                        <table class="catan_results_table">
+                                            <tr class="catan_results_header">
+                                                <th class="catan_results_header_position">Pos.</th>
+                                                <th class="catan_results_header_player">Gracz</th>
+                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">1.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">2.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">3.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="catan_results_position">4.</th>
+                                                <td class="catan_results_player">TBD</th>
+                                                <td class="catan_results_points">-</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <div id="catan_results_games_bottom">
+                                    <div class="selector_dot selector_dot_0" onclick='changeCatanRound(0)'></div>
+                                    <div class="selector_dot selector_dot_1" onclick='changeCatanRound(1)'></div>
+                                    <div class="selector_dot selector_dot_2" onclick='changeCatanRound(2)'></div>
+                                    <div class="selector_dot selector_dot_3" onclick='changeCatanRound(3)'></div>
+                                    <div class="selector_dot selector_dot_4" onclick='changeCatanRound(4)'></div>
+                                </div>
+                            </div>
+
+                            <div id="catan_results_games_right" onclick="changeCatanRound('next')">></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -322,6 +599,8 @@
 
     </footer>
 
+    <script src="./flipdown/flipdown.js"></script>
     <script src="./2025.js"></script>
     <script src="./footer.js"></script>
+    
 </body>

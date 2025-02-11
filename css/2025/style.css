@@ -203,6 +203,239 @@ a {
     height: 40px;
 }
 
+#ranking
+{
+    background-color: #b96f00;
+    height: 470px;
+    padding: 40px 10px 10px 10px;
+    color: #FFFFFF;
+}
+
+#ranking_title
+{
+    display: flex;
+    justify-content: center;
+    color: #FFFFFF;
+    width: 100%;
+    font-size: 30px;
+    height: 10%;
+    font-weight: 600;
+}
+
+#ranking_table_segment
+{
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    font-weight: 400;
+    justify-self: center;
+}
+
+.ranking_table
+{
+    text-align: center;
+    border-collapse: collapse;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #d38e27;
+}
+
+.ranking_table th
+{
+    background-color: #a05500;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.ranking_table tr
+{
+    height: 40px;
+}
+
+.ranking_table .ranking_position
+{
+    border: 0px;
+    width: 60px;
+}
+
+.ranking_table .ranking_player_header
+{
+    width: 200px;
+}
+
+.ranking_table .ranking_player
+{
+    padding-left: 20px;
+    text-align: left;
+}
+
+.ranking_table .ranking_game
+{
+    padding: 0px;
+    transition: background-color 0.6s ease;
+    width: 60px;
+}
+
+.ranking_game1,.ranking_game2,.ranking_game3,.ranking_game4
+{
+    padding-top: 4px;
+    height: 100%;
+}
+
+.ranking_game_clickable:hover
+{
+    background-color: #c77c0b;
+    cursor: pointer;
+}
+
+.ranking_table .ranking_total_header
+{
+    width: 60px;
+    font-weight: 800;
+}
+
+.ranking_table .ranking_total
+{
+    width: 60px;
+    font-weight: 800;
+}
+
+.ranking_table .ranking_table_first_position
+{
+    background-color: #c08300;
+    color: #ffffff; 
+}
+
+.ranking_table .ranking_table_second_position
+{
+    background-color: #8b8b8b;
+    color: #ffffff;
+}
+
+.ranking_table .ranking_table_third_position
+{
+    background-color: #7c350c;
+    color: #ffffff;
+}
+
+.ranking_table .ranking_table_fourth_position
+{
+    background-color: #8BA8B7;
+    color: #ffffff;
+}
+
+.ranking_table .ranking_game img
+{
+    width: 26px;
+    height: 26px;
+    align-self: flex-end;
+}
+
+#ranking_description
+{
+    display: flex;
+    justify-content: center;
+    color: #FFFFFF;
+    margin-top: 15px;
+    width: 100%;
+    font-size: 13px;
+    height: 10%;
+    text-decoration: underline;
+}
+
+#ranking_popup
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#ranking_popup_container 
+{
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height: 350px;
+    color: #000000;
+    opacity: 100%;
+    font-family: "Markazi Text", serif;
+}
+
+#ranking_popup_header
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100%;
+}
+
+#ranking_popup_title
+{
+    padding: 5px 0px 5px 30px;
+    font-size: 30px;
+    color: #000000;
+    font-weight: 600;
+    width: 330px;
+    font-family: "Lexend", serif;
+}
+
+#ranking_popup_close_tab
+{
+    align-self: flex-start;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.close_tab
+{
+    width: 20px;
+    height: 20px;
+}
+
+.ranking_popup_line
+{
+    width: 100%;
+    height: 3px;
+    margin: 10px 0px 10px 0px;
+    border-bottom: 3px solid #000000;;
+}
+
+.ranking_popup_subline
+{
+    width: 100%;
+    height: 3px;
+    margin: 10px 0px 10px 0px;
+    font-weight: 500;
+}
+
+.ranking_popup_subtitle
+{
+    font-size: 25px;
+    color: #000000;
+}
+
+#ranking_button
+{
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
 #catan
 {
     width: 100%;
@@ -288,9 +521,13 @@ a {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    width: 75%;
+    width: 100%;
     height: 75%;
-    color: #ffffff;
+}
+
+#catanBy
+{
+    font-size: 20px;
 }
 
 #catan_results_title
@@ -302,18 +539,127 @@ a {
     align-items: center;
     font-size: 50px;
     font-weight: 700;
+    color: #ffffff;
 }
 
-#catan_results_text
+#catan_results_games
 {
     width: 100%;
-    height: 35%;
+    height: 85%;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     font-size: 30px;
     font-weight: 500;
+}
+
+#catan_results_games_box
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 70%;
+    height: 50%;
+    background-color: #ffffff00;
+    color: #ffffff;
+    border-radius: 30pt;
+    /* border: 2px solid #000000; */
+    display: none;
+}
+
+#catan_results_games_left, #catan_results_games_right
+{
+    display: flex;
+    width: 10%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#catan_results_games_center
+{
+    display: flex;
+    width: 80%;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+#catan_results_games_top
+{
+    display: flex;
+    width: 1000%;
+    height: 15%; 
+    justify-content: center;
+    align-items: center;
+}
+
+#catan_results_games_content
+{
+    display: flex;
+    width: 1000%;
+    height: 70%; 
+    font-size: 15px;
+    font-weight: 400;
+    text-align: justify;
+    align-items: center;
+    padding: 5px 5px 5px 5px;
+}
+
+#catan_results_games_bottom
+{
+    display: flex;
+    width: 1000%;
+    height: 15%; 
+    justify-content: center;
+    align-items: center;
+}
+
+.selector_dot
+{
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    border: 2px solid rgb(255, 255, 255);
+    margin: 0px 3px;
+    cursor: pointer;
+}
+
+#catan_results_round_0, #catan_results_round_1, #catan_results_round_2, #catan_results_round_3, #catan_results_round_4
+{
+    display: none;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.catan_results_table
+{
+    width: 80%;
+    height: 80%;
+    text-align: center;
+}
+
+#catan_results_table tr
+{
+    height: 20%;
+}
+
+.catan_results_header_position
+{
+    width: 20%;
+}
+
+.catan_results_header_player
+{
+    width: 60%;
+}
+
+.catan_results_header_points
+{
+    width: 20%;
+    cursor: default;
 }
 
 #catan_map

@@ -36,6 +36,38 @@
     display: none;
 }
 
+#ranking_popup_container
+{
+    width: 250px;
+    height: 370px;
+}
+
+#ranking_popup_title
+{
+    font-size: 20px;
+    width: 180px;
+}
+
+.ranking_table .ranking_pts
+{
+    width: 90px;
+}
+
+.ranking_game
+{
+    display: none;
+}
+
+.ranking_game_result
+{
+    display: none;
+}
+
+.ranking_table .ranking_player_header
+{
+    width: 150px;
+}
+
 #catan
 {
     height: 200vh;
