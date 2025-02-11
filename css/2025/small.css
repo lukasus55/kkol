@@ -96,6 +96,12 @@
     height: 300px;
 }
 
+#catanBy
+{
+    display: flex;
+    justify-content: center;
+}
+
 #catan_results_container
 {
     width: 100%;

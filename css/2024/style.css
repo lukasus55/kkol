@@ -158,7 +158,7 @@ a
 
 #player_first, #player_second, #player_third
 {
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: flex-end;
     flex-wrap: wrap;
