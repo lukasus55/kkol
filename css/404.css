@@ -1,3 +1,9 @@
+@font-face 
+{
+    font-family: 'Archivo Black';
+    src: url("../fonts/Archivo_Black/ArchivoBlack-Regular.ttf");
+}
+
 *
 {
     margin: 0;
