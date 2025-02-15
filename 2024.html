@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
-    <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="./img/logos/icon.jpg" type="image/x-icon">
     <title>Olimpiada Karwińska - 2024</title>
 
     <link rel="stylesheet" href="./css/footer.css">
@@ -17,56 +17,55 @@
     <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/2024/large.css">
     <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/2024/vertical.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Lexend:wght@100..900&family=Markazi+Text:wght@400..700&family=Teko:wght@300..700&display=swap" rel="stylesheet">
+    <link href="./fonts/Lexend/Lexend-VariableFont_wght.ttf" rel="stylesheet">
+    <link href="./fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf" rel="stylesheet">
 </head>
 
 <body>
 
-    <header id="header">
-        <div id="header_container">
+    <header class="header" id="header">
+        <div class="header_container">
 
-            <div id="title">
+            <div class="title">
                 Karwińska Olimpiada
             </div>
 
-            <div id="year">
-                <div id="year_text">
+            <div class="year">
+                <div class="year_text" id="year_text">
                     <a href="#footer">2024</a>
                 </div>
             </div>
 
-            <div id="podium">
+            <div class="podium">
                 <div class="place"> 
-                    <div id="platform_second">
+                    <div class="platform_second" id="platform_second">
                         <div class="platform_inside number_second">2</div>
                     </div>
-                    <div id="player_second">
+                    <div class="player_second" id="player_second">
                         <div class="player_icon">
-                            <img src="img/2024/pfp/2nd.png" id="player_border_second">
+                            <img src="img/2024/pfp/2nd.webp" class="player_border_second">
                         </div>
                         <div class="player_name">Kostyś</div>
                     </div>
                 </div>
                 <div class="place"> 
-                    <div id="platform_first">
+                    <div class="platform_first" id="platform_first">
                         <div class="platform_inside number_first">1</div>
                     </div>
-                    <div id="player_first">
+                    <div class="player_first" id="player_first">
                         <div class="player_icon">
-                            <img src="img/2024/pfp/1st.png" id="player_border_first">
+                            <img src="img/2024/pfp/1st.webp" class="player_border_first">
                         </div>
                         <div class="player_name">Harnoldihno</div>
                     </div>
                 </div>
                 <div class="place"> 
-                    <div id="platform_third">
+                    <div class="platform_third" id="platform_third">
                         <div class="platform_inside number_third">3</div>
                     </div>
-                    <div id="player_third">
+                    <div class="player_third" id="player_third">
                         <div class="player_icon">
-                            <img src="img/2024/pfp/3rd.png" id="player_border_third">
+                            <img src="img/2024/pfp/3rd.webp" class="player_border_third">
                         </div>
                         <div class="player_name">Kukuła</div>
                     </div>
@@ -74,22 +73,22 @@
                 </div>
             </div>
 
-            <div id="buttons">
-                <a href="#ranking"><input id="play_again_button" type="button" value="Zobacz szczegóły"></a>
+            <div class="buttons">
+                <a href="#ranking"><input class="play_again_button" id="play_again_button" type="button" value="Zobacz szczegóły"></a>
             </div>
 
         </div>
     </header>
 
-    <main id="main">
+    <main class="main" id="main">
 
-        <section id="ranking">
+        <section class="ranking" id="ranking">
 
-            <div id="ranking_title">
+            <div class="ranking_title">
                 Wyniki
             </div>
 
-            <div id="ranking_table_segment">
+            <div class="ranking_table_segment">
                 <table class="ranking_table">
                     <tr class="ranking_table_header">
                         <th class="ranking_position" rowspan="2">Pos.</th>
@@ -99,22 +98,22 @@
                     <tr class="ranking_table_standard">
                         <td class="ranking_game ranking_game1_td">
                             <a href="#games"><div class="ranking_game1">
-                                <img src="img/2024/games/golf.png">
+                                <img src="img/2024/games/golf.webp">
                             </div></a>
                         </td>
                         <td class="ranking_game ranking_game2_td">
                             <a href="#games"><div class="ranking_game2">
-                                <img src="img/2024/games/monopoly.png">
+                                <img src="img/2024/games/monopoly.webp">
                             </div></a>
                         </td>
                         <td class="ranking_game ranking_game3_td">
                             <a href="#games"><div class="ranking_game3">
-                                <img src="img/2024/games/pool.png">
+                                <img src="img/2024/games/pool.webp">
                             </div></a>
                         </td>
                         <td class="ranking_game ranking_game4_td">
                             <a href="#games"><div class="ranking_game4">
-                                <img src="img/2024/games/xbox.png">
+                                <img src="img/2024/games/xbox.webp">
                             </div></a>
                         </td>
                         <td class="ranking_total_header">Total</th>
@@ -158,15 +157,15 @@
                 </table>
             </div>
 
-            <div id="ranking_popup">
-                <div id="ranking_popup_container">
+            <div class="ranking_popup" id="ranking_popup">
+                <div class="ranking_popup_container">
 
-                    <div id="ranking_popup_header">
-                        <div id="ranking_popup_title">
+                    <div class="ranking_popup_header">
+                        <div class="ranking_popup_title">
                             PUNKTACJA
                         </div>
-                        <div id="ranking_popup_close_tab">
-                            <img src="img/close_tab.png" class="close_tab">
+                        <div class="ranking_popup_close_tab" id="ranking_popup_close_tab">
+                            <img src="img/close_tab.webp" class="close_tab">
                         </div>
                     </div>
             
@@ -195,58 +194,58 @@
                   </div>
             </div>
 
-            <div id="ranking_description">
-                <div id="ranking_button">
+            <div class="ranking_description">
+                <div class="ranking_button" id="ranking_button">
                     Wyświetl punktację
                 </div>
             </div>
             
         </section>
 
-        <section id="games">
+        <section class="games" id="games">
             
-            <div id="games_selector">
+            <div class="games_selector">
                 <div class="selector_photo">
-                    <img src="img/2024/games/golf_photo.png" class="game1">
+                    <img src="img/2024/games/golf_photo.webp" class="game1">
                 </div>
                 
                 <div class="selector_photo">
-                    <img src="img/2024/games/monopoly_photo.png" class="game2">
+                    <img src="img/2024/games/monopoly_photo.webp" class="game2">
                 </div>
 
                 <div class="selector_photo">
-                    <img src="img/2024/games/pool_photo.png" class="game3">
+                    <img src="img/2024/games/pool_photo.webp" class="game3">
                 </div>
 
                 <div class="selector_photo">
-                    <img src="img/2024/games/xbox_photo.png" class="game4">
+                    <img src="img/2024/games/xbox_photo.webp" class="game4">
                 </div>
             </div>
 
-            <div id="games_results">
+            <div class="games_results" id="games_results">
 
-                <div id="results_title">
-                    <span id="results_title_content">Result</span>
+                <div class="results_title" id="results_title">
+                    <span class="results_title_content" id="results_title_content">Result</span>
                 </div>
 
-                <div id="results_details">
+                <div class="results_details">
 
                     <div class="results_game1">
-                        <div id="game1_details">
-                            <div id="game1_no_details_icon">
-                                <img src="img/err404.png">
+                        <div class="game1_details">
+                            <div class="game1_no_details_icon">
+                                <img src="img/err404.webp">
                             </div>
-                            <div id="game1_no_details_text">
+                            <div class="game1_no_details_text">
                                 Brak szczegółów dla tej gry.
                             </div>
                         </div>
                     </div>
 
                     <div class="results_game2">
-                        <div id="game2_subgame_container">
+                        <div class="game2_subgame_container">
                             <div class="game2_subgames">
                                 <div class="game2_subgames_icon">
-                                    <img src="img/2024/games/monopoly_fortnite1.png">
+                                    <img src="img/2024/games/monopoly_fortnite1.webp">
                                 </div>
                                 <div class="game2_subgames_winner">
                                     Wygrany: Kostyś
@@ -254,7 +253,7 @@
                             </div>
                             <div class="game2_subgames">
                                 <div class="game2_subgames_icon">
-                                    <img src="img/2024/games/monopoly_fortnite2.png">
+                                    <img src="img/2024/games/monopoly_fortnite2.webp">
                                 </div>
                                 <div class="game2_subgames_winner">
                                     Wygrany: Kukuła
@@ -262,7 +261,7 @@
                             </div>
                             <div class="game2_subgames">
                                 <div class="game2_subgames_icon">
-                                    <img src="img/2024/games/monopoly_ub.png">
+                                    <img src="img/2024/games/monopoly_ub.webp">
                                 </div>
                                 <div class="game2_subgames_winner">
                                     Wygrany: DamiDami2
@@ -270,7 +269,7 @@
                             </div>
                             <div class="game2_subgames">
                                 <div class="game2_subgames_icon">
-                                    <img src="img/2024/games/monopoly_cheaters.png">
+                                    <img src="img/2024/games/monopoly_cheaters.webp">
                                 </div>
                                 <div class="game2_subgames_winner">
                                     Wygrany: Harnoldihno
@@ -280,11 +279,11 @@
                     </div>
 
                     <div class="results_game3">
-                        <div id="game3_group_stage">
-                            <div id="game3_group_stage_title">
+                        <div class="game3_group_stage">
+                            <div class="game3_group_stage_title">
                                 Faza grupowa
                             </div>
-                            <div id="game3_group_stage_table">
+                            <div class="game3_group_stage_table">
                                 <table class="group_table">
                                     <tr class="group_table_header">
                                         <th class="group_table_position_header">
@@ -319,7 +318,7 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div id="game3_group_stage_results">
+                            <div class="game3_group_stage_results">
                                 <table class="group_results">
                                     <tr>
                                         <td class="group_results_left">Kostyś</td>
@@ -354,12 +353,12 @@
                                 </table>
                             </div>
                         </div>
-                        <div id="game3_knockout_stage">
-                            <div id="game3_knockout_stage_title">
+                        <div class="game3_knockout_stage">
+                            <div class="game3_knockout_stage_title">
                                 Faza pucharowa
                             </div>
-                            <div id="game3_knockout_stage_matches">
-                                <div id="game3_knockout_stage_final">
+                            <div class="game3_knockout_stage_matches">
+                                <div class="game3_knockout_stage_final">
                                     <div class="game3_match_title">
                                         Finał
                                     </div>
@@ -373,7 +372,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div id="game3_knockout_stage_mini_final">
+                                <div class="game3_knockout_stage_mini_final">
                                     <div class="game3_match_title">
                                         Mecz o 3 miejsce
                                     </div>
@@ -392,17 +391,17 @@
                     </div>
 
                     <div class="results_game4">
-                        <div id="game4_results_image_container">
-                            <img src="img/2024/games/xbox_results.png" id="game4_image">
+                        <div class="game4_results_image_container" id="game4_results_image_container">
+                            <img src="img/2024/games/xbox_results.webp" class="game4_image" id="game4_image">
                         </div>
-                        <div id="game4_results_text_container">
-                            <ul class="game4_results_text_line"> <a href="img/2024/games/xbox_results.png" target="_blank" download> Pobierz wyniki w formacie .png </a></ul>
+                        <div class="game4_results_text_container" id="game4_results_text_container">
+                            <ul class="game4_results_text_line"> <a href="img/2024/games/xbox_results.webp" target="_blank" download> Pobierz wyniki w formacie .webp </a></ul>
                         </div>
                     </div>
 
-                    <div id="game4_popup">
-                        <div id="game4_popup_container">
-                            <img src="img/2024/games/xbox_results.png" id="game4_poup_image">
+                    <div class="game4_popup" id="game4_popup">
+                        <div class="game4_popup_container">
+                            <img src="img/2024/games/xbox_results.webp" class="game4_poup_image">
                         </div>
                     </div>
                 </div>
@@ -410,15 +409,15 @@
 
         </section>
     
-        <div id="year_selector_container">
-            <div id="year_selector">
+        <div class="year_selector_container">
+            <div class="year_selector" id="year_selector">
 
-                <div id="drag_out">
-                    <img src="img/drag_up.png" class="drag_out_img">
+                <div class="drag_out" id="drag_out">
+                    <img src="img/drag_up.webp" class="drag_out_img">
                 </div>
 
-                <div id="year_selector_texts">
-                    <div id="year_selector_title">
+                <div class="year_selector_texts" id="year_selector_texts">
+                    <div class="year_selector_title">
                         Wybierz sezon
                     </div>
                     <div class="year_selector_segments">
@@ -438,28 +437,28 @@
 
     </main>
 
-    <footer id="footer">
+    <footer class="footer" id="footer">
 
-        <div id="author">
+        <div class="author">
             Autor: Łukasz Kostyk
         </div>
-        <div id="footer_menu"><div id="footer_menu_disable">
-            <div id="footer_menu_left">
+        <div class="footer_menu" id="footer_menu"><div class="footer_menu_disable" id="footer_menu_disable">
+            <div class="footer_menu_left">
                 
             </div>
-            <div id="footer_menu_center">
+            <div class="footer_menu_center">
                 <a href="2024">2024</a>
             </div>
-            <div id="footer_menu_right">
+            <div class="footer_menu_right">
                 <div class="footer_menu_right_year">
                     <a href="2025">2025</a>
                 </div>
             </div></div>
 
         </div>
-        <div id="footer_logos">
+        <div class="footer_logos">
             <div class="footer_single_logo">
-                <img src="img/logos/kkol-white.png" class="kkol_footer_logo">
+                <img src="img/logos/kkol-white.webp" class="kkol_footer_logo">
             </div>
             <div class="footer_logo_description">
                 Karwiński Komitet Olimpijski
@@ -467,8 +466,8 @@
         </div>
     </footer>
 
-    <script src="./2024.js"></script>
-    <script src="./footer.js"></script>
+    <script src="./js/2024.js"></script>
+    <script src="./js/footer.js"></script>
 </body>
 
 </html>

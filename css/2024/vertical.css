@@ -1,11 +1,11 @@
 /* max-height:580px */
 
-#title
+.title
 {
     font-size: 20px;
 }
 
-#year
+.year
 {
     margin-top: 4px;
     font-size: 35px;
@@ -21,7 +21,7 @@
     display: none;
 }
 
-#buttons
+.buttons
 {
     margin-top: 20px;
 }

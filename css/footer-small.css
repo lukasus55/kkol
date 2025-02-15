@@ -14,17 +14,17 @@ ul, li {
     justify-content: center;
 }
 
-#footer_menu
+.footer_menu
 {
     display: none;
 }
 
-#footer_logos
+.footer_logos
 {
     width: 50%;
 }
 
-#author
+.author
 {
     width: 50%;
     justify-content: center;

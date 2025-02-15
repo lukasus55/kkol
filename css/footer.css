@@ -1,4 +1,4 @@
-#footer a {
+.footer a {
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -8,19 +8,18 @@
     height: 100%;
 }
 
-#footer
+.footer
 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #ffffff;
     height: 60px;
     width: 100%;
     background-color: #000000;
     color: #ffffff;
 }
 
-#author, #footer_menu, #footer_logos, #footer_menu_disable
+.author, .footer_menu, .footer_logos, .footer_menu_disable
 {
     display: flex;
     justify-content: center;
@@ -28,17 +27,17 @@
     height: 100%;
 }
 
-#author
+.author
 {
     width: 25%;
 }
 
-#footer_logos
+.footer_logos
 {
     width: 25%;
 }
 
-#footer_menu
+.footer_menu
 {
     width: 35%;
     font-weight: 400;
@@ -46,7 +45,7 @@
     transition: 0.5s ease;
 }
 
-#footer_menu_disable
+.footer_menu_disable
 {
     width: 100%;
 }
@@ -81,7 +80,7 @@
     font-size: 15px;
 }
 
-#footer_menu_left
+.footer_menu_left
 {
     display: flex;
     justify-content: flex-end;
@@ -90,7 +89,7 @@
     height: 50px;
 }
 
-#footer_menu_right
+.footer_menu_right
 {
     display: flex;
     justify-content: flex-start;
@@ -99,7 +98,7 @@
     height: 50px;
 }
 
-#footer_menu_center
+.footer_menu_center
 {
     display: flex;
     justify-content: center;
@@ -129,7 +128,7 @@
     border-left: 1px solid white;
 }
 
-#year_selector_container
+.year_selector_container
 {
     display: flex;
     position: relative;
@@ -139,7 +138,7 @@
     height: 20px;
 }
 
-#year_selector
+.year_selector
 {
     position: absolute;
     display: flex;
@@ -162,7 +161,7 @@
     transition: 1s ease;
 }
 
-#drag_out
+.drag_out
 {
     width: 100%;
     display: flex;
@@ -172,7 +171,7 @@
     align-items: flex-start;
 }
 
-#year_selector_texts
+.year_selector_texts
 {
     display: none;
     height: 90%;
@@ -182,7 +181,7 @@
     align-items: center;
 }
 
-#year_selector_title
+.year_selector_title
 {
     display: flex;
     width: 100%;
@@ -205,7 +204,7 @@
     border-right: 2px dotted #ffffff;
 }
 
-#year_selector_container ul, #year_selector_container li {
+.year_selector_container ul, .year_selector_container li {
     list-style-type: none;
     text-align: center;
 }

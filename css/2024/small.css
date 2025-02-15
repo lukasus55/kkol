@@ -1,11 +1,11 @@
 /* max-width:768px*/
 
-#logo
+.logo
 {
     display: none;
 }
 
-#title
+.title
 {
     font-size: 20px;
 }
@@ -26,13 +26,13 @@
     height: 65px;
 }
 
-#ranking_popup_container
+.ranking_popup_container
 {
     width: 250px;
     height: 370px;
 }
 
-#ranking_popup_title
+.ranking_popup_title
 {
     font-size: 20px;
     width: 180px;
@@ -58,7 +58,7 @@
     width: 150px;
 }
 
-#games_selector
+.games_selector
 {
     height: 30vh;
 }
@@ -69,13 +69,13 @@
     width: 50%;
 }
 
-#results_details 
+.results_details 
 {
     height: 80%;
     width: 100%;
 }
 
-#game2_subgame_container
+.game2_subgame_container
 {
     width: 100%;
 }
@@ -86,7 +86,7 @@
     font-size: 80%;
 }
 
-#game2_subgame_container {
+.game2_subgame_container {
     height: 80%;
 }
 
@@ -95,44 +95,44 @@
     width: 85%;
 }
 
-#game3_group_stage
+.game3_group_stage
 {
     width: 100%;
     height: 50%;
 }
 
-#game3_group_stage_results
+.game3_group_stage_results
 {
     display: none;
 }
 
-#game3_group_stage_title
+.game3_group_stage_title
 {
     height: 20%;
 }
 
-#game3_group_stage_table
+.game3_group_stage_table
 {
     height: 80%;
 }
 
-#game3_knockout_stage
+.game3_knockout_stage
 {
     width: 100%;
     height: 50%;
 }
 
-#game3_knockout_stage_final
+.game3_knockout_stage_final
 {
     height: 30%;
 }
 
-#game3_knockout_stage_mini_final
+.game3_knockout_stage_mini_final
 {
     height: 30%;
 }
 
-#game4_results_image_container
+.game4_results_image_container
 {
     width: 80%;
     height: auto;

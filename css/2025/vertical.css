@@ -1,22 +1,22 @@
 /* max-height:580px */
 
-#title
+.title
 {
     font-size: 20px;
 }
 
-#year
+.year
 {
     margin-top: 4px;
     font-size: 35px;
 }
 
-#catan
+.catan
 {
     height: 400vh;
 }
 
-#catan_map_reason, #catan_map_disclaimer
+.catan_map_reason, .catan_map_disclaimer
 {
     width: 90%;
 }

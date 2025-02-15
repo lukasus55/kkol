@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
-    <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="./img/logos/icon.jpg" type="image/x-icon">
     <title>Olimpiada Karwińska</title>
 
     <link rel="stylesheet" href="./css/footer.css">
@@ -16,30 +16,29 @@
     <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/2025/medium.css">
     <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/2025/large.css">
     <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/2025/vertical.css">
-    <link rel="stylesheet" href="./flipdown/flipdown.css">
+    <link rel="stylesheet" href="./css/flipdown.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Lexend:wght@100..900&family=Markazi+Text:wght@400..700&family=Teko:wght@300..700&display=swap" rel="stylesheet">
+    <link href="./fonts/Lexend/Lexend-VariableFont_wght.ttf" rel="stylesheet">
+    <link href="./fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf" rel="stylesheet">
 </head>
 
 <body>
 
-    <header id="header">
+    <header class="header" id="header">
 
-        <div id="header_container">
-            <div id="title">
+        <div class="header_container">
+            <div class="title">
                 Karwińska Olimpiada
             </div>
 
-            <div id="year">
-                <div id="year_text">
+            <div class="year">
+                <div class="year_text" id="year_text">
                     <a href="#footer">2025</a>
                 </div>
             </div>
 
 
-            <div id="timeline">
+            <div class="timeline">
 
                 <div class="timeline_event">
                     <div class="timeline_date"> ??.??.2025 </div>
@@ -47,7 +46,7 @@
                     <div class="timeline_dot timeline_dot_active"></div>
                     <div class="timeline_game clickable" onclick='window.location.href = "#catan";'> 
                         <div class="timeline_name"> Catan </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/catan.png"> </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/catan.webp"> </div>
                     </div>
                 </div>
 
@@ -57,7 +56,7 @@
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
                         <div class="timeline_name"> Gra 2 </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.webp"> </div>
                     </div>
                 </div>
 
@@ -67,7 +66,7 @@
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
                         <div class="timeline_name"> Gra 3 </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.webp"> </div>
                     </div>
                 </div>
 
@@ -77,7 +76,7 @@
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
                         <div class="timeline_name"> Gra 4 </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.png"> </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.webp"> </div>
                     </div>
                 </div>
 
@@ -96,15 +95,15 @@
 
     </header>
 
-    <main id="main">
+    <main class="main" id="main">
 
-        <section id="ranking">
+        <section class="ranking" id="ranking">
 
-            <div id="ranking_title">
+            <div class="ranking_title">
                 Wyniki
             </div>
 
-            <div id="ranking_table_segment">
+            <div class="ranking_table_segment">
                 <table class="ranking_table">
                     <tr class="ranking_table_header">
                         <th class="ranking_position" rowspan="2">Pos.</th>
@@ -114,7 +113,7 @@
                     <tr class="ranking_table_standard">
                         <td class="ranking_game ranking_game1_td ranking_game_clickable">
                             <a href="#catan"><div class="ranking_game1">
-                                <img src="img/2025/games/catan-logo.png">
+                                <img src="img/2025/games/catan-logo.webp">
                             </div></a>
                         </td>
                         <td class="ranking_game ranking_game2_td">
@@ -167,15 +166,15 @@
                 </table>
             </div>
 
-            <div id="ranking_popup">
-                <div id="ranking_popup_container">
+            <div class="ranking_popup" id="ranking_popup">
+                <div class="ranking_popup_container">
 
-                    <div id="ranking_popup_header">
-                        <div id="ranking_popup_title">
+                    <div class="ranking_popup_header">
+                        <div class="ranking_popup_title">
                             PUNKTACJA
                         </div>
-                        <div id="ranking_popup_close_tab">
-                            <img src="img/close_tab.png" class="close_tab">
+                        <div class="ranking_popup_close_tab" id="ranking_popup_close_tab">
+                            <img src="img/close_tab.webp" class="close_tab">
                         </div>
                     </div>
             
@@ -193,45 +192,45 @@
                   </div>
             </div>
 
-            <div id="ranking_description">
-                <div id="ranking_button">
+            <div class="ranking_description">
+                <div class="ranking_button" id="ranking_button">
                     Wyświetl punktację
                 </div>
             </div>
             
         </section>
 
-        <section id="catan">
+        <section class="catan" id="catan">
 
-            <div id="catan_rules_container">
-                <div id="catan_rules_box">
-                    <div id="catan_rules_title">OPIS I ZASADY</div>
-                    <div id="catan_rules_text">
+            <div class="catan_rules_container">
+                <div class="catan_rules_box">
+                    <div class="catan_rules_title">OPIS I ZASADY</div>
+                    <div class="catan_rules_text">
                         Catan to strategiczna gra planszowa, w której gracze rywalizują o dominację na wyspie, budując osady, drogi i miasta. Plansza składa się z heksagonalnych pól reprezentujących różne surowce: drewno, glinę, zboże, owce i rudy. Gracze zdobywają surowce, handlują nimi i rozwijają swoje osady, dążąc do uzyskania 10 punktów zwycięstwa. Rzut kostką określa, które pola produkują surowce w danej turze, a złodziej może blokować dochody. Gra wymaga planowania, negocjacji i elastyczności w strategii, co sprawia, że każda rozgrywka jest unikalna.
                     </div>
-                    <div id="catan_rules_board" onclick='window.location.href = "#catan_map";'>
-                        <img src="img/2025/games/catan-board.png">
+                    <div class="catan_rules_board" onclick='window.location.href = "#catan_map";'>
+                        <img src="img/2025/games/catan-board.webp">
                     </div>
                 </div>
             </div>
 
-            <div id="catan_results_container">
-                <div id="catan_results_box">
-                    <div id="catan_results_title">WYNIKI</div>
-                    <div id="catan_results_games">
+            <div class="catan_results_container">
+                <div class="catan_results_box">
+                    <div class="catan_results_title">WYNIKI</div>
+                    <div class="catan_results_games">
 
-                        <div id="catanBy" class="flipdown"></div>
+                        <div id="catanBy" class="flipdown catanBy"></div>
                         
-                        <div id="catan_results_games_box">
-                            <div id="catan_results_games_left" onclick="changeCatanRound('previous')"><</div>
+                        <div class="catan_results_games_box" id="catan_results_games_box">
+                            <div class="catan_results_games_left" onclick="changeCatanRound('previous')"><</div>
 
-                            <div id="catan_results_games_center">
-                                <div id="catan_results_games_top">
-                                    <span id="catan_results_games_round">NaN</span>
+                            <div class="catan_results_games_center">
+                                <div class="catan_results_games_top">
+                                    <span class="catan_results_games_round" id="catan_results_games_round">NaN</span>
                                 </div>
-                                <div id="catan_results_games_content">
+                                <div class="catan_results_games_content">
 
-                                    <div id="catan_results_round_0">
+                                    <div class="catan_results_round_0" id="catan_results_round_0">
                                         <table class="catan_results_table">
                                             <tr class="catan_results_header">
                                                 <th class="catan_results_header_position">Pos.</th>
@@ -261,7 +260,7 @@
                                         </table>
                                     </div>
 
-                                    <div id="catan_results_round_1">
+                                    <div class="catan_results_round_1" id="catan_results_round_1">
                                         <table class="catan_results_table">
                                             <tr class="catan_results_header">
                                                 <th class="catan_results_header_position">Pos.</th>
@@ -291,7 +290,7 @@
                                         </table>
                                     </div>
 
-                                    <div id="catan_results_round_2">
+                                    <div class="catan_results_round_2" id="catan_results_round_2">
                                         <table class="catan_results_table">
                                             <tr class="catan_results_header">
                                                 <th class="catan_results_header_position">Pos.</th>
@@ -321,7 +320,7 @@
                                         </table>
                                     </div>
 
-                                    <div id="catan_results_round_3">
+                                    <div class="catan_results_round_3" id="catan_results_round_3">
                                         <table class="catan_results_table">
                                             <tr class="catan_results_header">
                                                 <th class="catan_results_header_position">Pos.</th>
@@ -351,7 +350,7 @@
                                         </table>
                                     </div>
 
-                                    <div id="catan_results_round_4">
+                                    <div class="catan_results_round_4" id="catan_results_round_4">
                                         <table class="catan_results_table">
                                             <tr class="catan_results_header">
                                                 <th class="catan_results_header_position">Pos.</th>
@@ -382,7 +381,7 @@
                                     </div>
 
                                 </div>
-                                <div id="catan_results_games_bottom">
+                                <div class="catan_results_games_bottom">
                                     <div class="selector_dot selector_dot_0" onclick='changeCatanRound(0)'></div>
                                     <div class="selector_dot selector_dot_1" onclick='changeCatanRound(1)'></div>
                                     <div class="selector_dot selector_dot_2" onclick='changeCatanRound(2)'></div>
@@ -391,7 +390,7 @@
                                 </div>
                             </div>
 
-                            <div id="catan_results_games_right" onclick="changeCatanRound('next')">></div>
+                            <div class="catan_results_games_right" onclick="changeCatanRound('next')">></div>
                         </div>
                     </div>
                 </div>
@@ -399,42 +398,42 @@
 
         </section>
 
-        <section id="catan_map">
+        <section class="catan_map" id="catan_map">
 
-            <div id="catan_map_title"> MAPA CATANA </div>
-            <div id="catan_map_subtitle"> 
-                <div id="catan_map_reason">
+            <div class="catan_map_title"> MAPA CATANA </div>
+            <div class="catan_map_subtitle"> 
+                <div class="catan_map_reason">
                     W ramach fair play poniżej została umieszczona wersja mapy Catana na której rozgrywana będzie gra tak by każdy miał szansę na przygotowanie strategii. 
                 </div>
-                <div id="catan_map_disclaimer">
+                <div class="catan_map_disclaimer">
                         UWAGA: Mapa może ulec jeszcze zmianie. Ostateczna wersja zostanie zatwierdzona do 31.03.2025r.
                 </div>
             </div>
 
-            <div id="catan_popup">
-                <div id="catan_popup_close">
-                    <img src="img/close_tab.png">
+            <div class="catan_popup" id="catan_popup">
+                <div class="catan_popup_close" id="catan_popup_close">
+                    <img src="img/close_tab.webp">
                 </div>
 
-                <div id="catan_popup_title">
-                    <span id="catan_popup_resource">NaN</span>
+                <div class="catan_popup_title">
+                    <span class="catan_popup_resource" id="catan_popup_resource">NaN</span>
                 </div>
 
-                <div id="catan_popup_stats">
+                <div class="catan_popup_stats" id="catan_popup_stats">
                     <ul>
-                        <li>Potrzebne oczka: <span id="catan_popup_dice">NaN</span></li>
-                        <li>Szansa: <span id="catan_popup_propability">NaN</span></li>
+                        <li>Potrzebne oczka: <span class="catan_popup_dice" id="catan_popup_dice">NaN</span></li>
+                        <li>Szansa: <span class="catan_popup_propability" id="catan_popup_propability">NaN</span></li>
                     </ul>    
                 </div>
 
-                <div id="catan_popup_ship_stats">
-                    1 Dowolne za&nbsp;<span id="catan_popup_proportions">NaN</span>&nbsp;<span id="catan_popup_trade_good">NaN</span>
+                <div class="catan_popup_ship_stats" id="catan_popup_ship_stats">
+                    1 Dowolne za&nbsp;<span class="catan_popup_proportions" id="catan_popup_proportions">NaN</span>&nbsp;<span class="catan_popup_trade_good" id="catan_popup_trade_good">NaN</span>
                 </div>
             </div>
 
-            <div id="catan_interactive_map_container">
+            <div class="catan_interactive_map_container" id="catan_interactive_map_container">
 
-                <div id="catan_interactive_sea"> 
+                <div class="catan_interactive_sea"> 
 
                     <div class="catan_ship clickable" onclick="showCatanPopup('ship', '3', 'Dowolne', this)"></div>
                     <div class="catan_ship clickable" onclick="showCatanPopup('ship', '3', 'Dowolne', this)"></div>
@@ -459,7 +458,7 @@
 
                 </div>
 
-                <div id="catan_interactive_map"> 
+                <div class="catan_interactive_map"> 
                     
                         <div class="catan_interactive_map_row">
                             <div class="catan_hexagon catan_hexagon_bricks" onclick="showCatanPopup('bricks', '6', '13.889%', this)">
@@ -533,19 +532,19 @@
                 </div>
             </div>
 
-            <div id="catan_map_footer"> Naciśnij na pole zasobu lub statek by zobaczyć szczegóły. </div>
+            <div class="catan_map_footer"> Naciśnij na pole zasobu lub statek by zobaczyć szczegóły. </div>
 
         </section>
         
-        <div id="year_selector_container">
-            <div id="year_selector">
+        <div class="year_selector_container">
+            <div class="year_selector" id="year_selector">
 
-                <div id="drag_out">
-                    <img src="img/drag_up.png" class="drag_out_img">
+                <div class="drag_out" id="drag_out">
+                    <img src="img/drag_up.webp" class="drag_out_img">
                 </div>
 
-                <div id="year_selector_texts">
-                    <div id="year_selector_title">
+                <div class="year_selector_texts" id="year_selector_texts">
+                    <div class="year_selector_title">
                         Wybierz sezon
                     </div>
                     <div class="year_selector_segments">
@@ -565,28 +564,28 @@
 
     </main>
 
-    <footer id="footer">
+    <footer class="footer" id="footer">
 
-        <div id="author">
+        <div class="author">
             Autor: Łukasz Kostyk
         </div>
-        <div id="footer_menu"><div id="footer_menu_disable">
-            <div id="footer_menu_left">
+        <div class="footer_menu" id="footer_menu"><div class="footer_menu_disable" id="footer_menu_disable">
+            <div class="footer_menu_left">
                 <div class="footer_menu_left_year">
                     <a href="2024">2024</a>
                 </div>
             </div>
-            <div id="footer_menu_center">
+            <div class="footer_menu_center">
                 <a href="2025">2025</a>
             </div>
-            <div id="footer_menu_right">
+            <div class="footer_menu_right">
 
             </div>
 
         </div></div>
-        <div id="footer_logos">
+        <div class="footer_logos">
             <div class="footer_single_logo">
-                <img src="img/logos/kkol-white.png" class="kkol_footer_logo">
+                <img src="img/logos/kkol-white.webp" class="kkol_footer_logo">
             </div>
             <div class="footer_logo_description">
                 Karwiński Komitet Olimpijski
@@ -595,8 +594,8 @@
 
     </footer>
 
-    <script src="./flipdown/flipdown.js"></script>
-    <script src="./2025.js"></script>
-    <script src="./footer.js"></script>
+    <script src="./js/flipdown.js"></script>
+    <script src="./js/2025.js"></script>
+    <script src="./js/footer.js"></script>
     
 </body>

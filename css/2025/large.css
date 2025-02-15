@@ -1,17 +1,17 @@
 /* min-width:2560px */
 
-#logo img
+.logo img
 {
     width: 250px;
     height: 120px;
 }
 
-#title
+.title
 {
     font-size: 50px;
 }
 
-#year
+.year
 {
     font-size: 85px;
 }
@@ -27,49 +27,49 @@
     font-size: 29px;
 }
 
-#catan_rules_title
+.catan_rules_title
 {
     font-size: 70px;
 }
 
-#catan_rules_text
+.catan_rules_text
 {
     font-size: 23px;
     height: 40%;
 }
 
-#catan_rules_board
+.catan_rules_board
 {
     height: 45%;
 }
 
-#catan_rules_board img
+.catan_rules_board img
 {
     width: 700px;
     height: 700px;
 }
 
-#catan_results_title
+.catan_results_title
 {
     font-size: 70px;
 }
 
-#catan_results_text
+.catan_results_text
 {
     font-size: 45px;
 }
 
-#catan_map
+.catan_map
 {
     height: 1100px;
 }
 
-#catan_map_title
+.catan_map_title
 {
     font-size: 60px;
 }
 
-#catan_interactive_map
+.catan_interactive_map
 {
     width: 400px;
     height: 400px;
@@ -80,7 +80,7 @@
     height: 105px;
 }
 
-#catan_interactive_map_container
+.catan_interactive_map_container
 {
     width: 580px;
     height: 520px;
@@ -93,39 +93,39 @@
     font-size: 30px;
 }
 
-#catan_map_reason
+.catan_map_reason
 {
     font-size: 30px;
 }
 
-#catan_map_disclaimer
+.catan_map_disclaimer
 {
     font-size: 25px;
 }
 
-#catan_popup
+.catan_popup
 {
     width: 300px;
     height: 135px;
 }
 
-#catan_popup_close
+.catan_popup_close
 {
     width: 30px;
     height: 30px;
 }
 
-#catan_popup_resource
+.catan_popup_resource
 {
     font-size: 30px;
 }
 
-#catan_popup_stats
+.catan_popup_stats
 {
     font-size: 21px;
 }
 
-#catan_map_footer
+.catan_map_footer
 {
     font-size: 24px;
 }

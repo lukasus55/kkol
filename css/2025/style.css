@@ -36,20 +36,20 @@ a {
     opacity: 0%;
 }
 
-#logo
+.logo
 {
     position: absolute;
     top: 10px;
     right: 10px;
 }
 
-#logo img
+.logo img
 {
     width: 150px;
     height: 80px;
 }
 
-#header
+.header
 {
     padding: 20px 10px 10px 10px;
     background-color: #ffffea;
@@ -59,7 +59,7 @@ a {
     justify-content: center;
 }
 
-#header_container
+.header_container
 {
     display: flex;
     width: 100%;
@@ -68,7 +68,7 @@ a {
     align-content: start;
 }
 
-#title
+.title
 {
     display: flex;
     justify-content: center;
@@ -77,11 +77,11 @@ a {
     height: 6%;
     font-size: 30px;
     font-weight: 600;
-    /* text-shadow: 1px 1px 3px #636363; */
+    /* text-shadow: 1px 1px 3px .636363; */
     color: #cf7c00
 }
 
-#year
+.year
 {
     display: flex;
     justify-content: center;
@@ -93,7 +93,7 @@ a {
     color: #000000
 }
 
-#tba
+.tba
 {
     display: flex;
     justify-content: center;
@@ -104,7 +104,7 @@ a {
     text-align: center;
 }
 
-#timeline
+.timeline
 {
     display: flex;
     min-height: 50vh;
@@ -198,7 +198,7 @@ a {
     height: 40px;
 }
 
-#ranking
+.ranking
 {
     background-color: #b96f00;
     height: 470px;
@@ -206,7 +206,7 @@ a {
     color: #FFFFFF;
 }
 
-#ranking_title
+.ranking_title
 {
     display: flex;
     justify-content: center;
@@ -217,7 +217,7 @@ a {
     font-weight: 600;
 }
 
-#ranking_table_segment
+.ranking_table_segment
 {
     margin-top: 50px;
     display: flex;
@@ -327,7 +327,7 @@ a {
     align-self: flex-end;
 }
 
-#ranking_description
+.ranking_description
 {
     display: flex;
     justify-content: center;
@@ -339,7 +339,7 @@ a {
     text-decoration: underline;
 }
 
-#ranking_popup
+.ranking_popup
 {
     position: fixed;
     top: 0;
@@ -353,7 +353,7 @@ a {
     z-index: 1000;
 }
 
-#ranking_popup_container 
+.ranking_popup_container 
 {
     background: #ffffff;
     padding: 20px;
@@ -367,7 +367,7 @@ a {
     font-family: "Markazi Text", serif;
 }
 
-#ranking_popup_header
+.ranking_popup_header
 {
     display: flex;
     align-items: center;
@@ -376,7 +376,7 @@ a {
     width: 100%;
 }
 
-#ranking_popup_title
+.ranking_popup_title
 {
     padding: 5px 0px 5px 30px;
     font-size: 30px;
@@ -386,7 +386,7 @@ a {
     font-family: "Lexend", serif;
 }
 
-#ranking_popup_close_tab
+.ranking_popup_close_tab
 {
     align-self: flex-start;
     width: 30px;
@@ -405,7 +405,7 @@ a {
     width: 100%;
     height: 3px;
     margin: 10px 0px 10px 0px;
-    border-bottom: 3px solid #000000;;
+    border-bottom: 3px solid .000000;;
 }
 
 .ranking_popup_subline
@@ -422,7 +422,7 @@ a {
     color: #000000;
 }
 
-#ranking_button
+.ranking_button
 {
     cursor: pointer;
 }
@@ -431,18 +431,18 @@ a {
     display: none;
 }
 
-#catan
+.catan
 {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../../img/2025/games/catan.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../../img/2025/games/catan.webp);
     background-size: cover;
     background-position: center;
     display: flex;
     flex-wrap: wrap;
 }
 
-#catan_rules_container
+.catan_rules_container
 {
     display: flex;
     justify-content: center;
@@ -451,7 +451,7 @@ a {
     height: 100%;
 }
 
-#catan_rules_box
+.catan_rules_box
 {
     display: flex;
     justify-content: center;
@@ -462,7 +462,7 @@ a {
     color: #ffffff;
 }
 
-#catan_rules_title
+.catan_rules_title
 {
     width: 100%;
     height: 15%;
@@ -473,7 +473,7 @@ a {
     font-weight: 700;
 }
 
-#catan_rules_text
+.catan_rules_text
 {
     width: 100%;
     height: 55%;
@@ -483,7 +483,7 @@ a {
     text-align: justify;
 }
 
-#catan_rules_board
+.catan_rules_board
 {
     width: 100%;
     height: 30%;
@@ -494,14 +494,14 @@ a {
     cursor: pointer;
 }
 
-#catan_rules_board img
+.catan_rules_board img
 {
     width: 500px;
     height: 500px;
 }
 
 
-#catan_results_container
+.catan_results_container
 {
     display: flex;
     justify-content: center;
@@ -510,7 +510,7 @@ a {
     height: 100%;
 }
 
-#catan_results_box
+.catan_results_box
 {
     display: flex;
     justify-content: center;
@@ -520,12 +520,12 @@ a {
     height: 75%;
 }
 
-#catanBy
+.catanBy
 {
     font-size: 20px;
 }
 
-#catan_results_title
+.catan_results_title
 {
     width: 100%;
     height: 15%;
@@ -537,7 +537,7 @@ a {
     color: #ffffff;
 }
 
-#catan_results_games
+.catan_results_games
 {
     width: 100%;
     height: 85%;
@@ -549,7 +549,7 @@ a {
     font-weight: 500;
 }
 
-#catan_results_games_box
+.catan_results_games_box
 {
     display: flex;
     flex-wrap: wrap;
@@ -558,11 +558,11 @@ a {
     background-color: #ffffff00;
     color: #ffffff;
     border-radius: 30pt;
-    /* border: 2px solid #000000; */
+    /* border: 2px solid .000000; */
     display: none;
 }
 
-#catan_results_games_left, #catan_results_games_right
+.catan_results_games_left, .catan_results_games_right
 {
     display: flex;
     width: 10%;
@@ -572,7 +572,7 @@ a {
     cursor: pointer;
 }
 
-#catan_results_games_center
+.catan_results_games_center
 {
     display: flex;
     width: 80%;
@@ -580,7 +580,7 @@ a {
     flex-wrap: wrap;
 }
 
-#catan_results_games_top
+.catan_results_games_top
 {
     display: flex;
     width: 1000%;
@@ -589,7 +589,7 @@ a {
     align-items: center;
 }
 
-#catan_results_games_content
+.catan_results_games_content
 {
     display: flex;
     width: 1000%;
@@ -601,7 +601,7 @@ a {
     padding: 5px 5px 5px 5px;
 }
 
-#catan_results_games_bottom
+.catan_results_games_bottom
 {
     display: flex;
     width: 1000%;
@@ -620,7 +620,7 @@ a {
     cursor: pointer;
 }
 
-#catan_results_round_0, #catan_results_round_1, #catan_results_round_2, #catan_results_round_3, #catan_results_round_4
+.catan_results_round_0, .catan_results_round_1, .catan_results_round_2, .catan_results_round_3, .catan_results_round_4
 {
     display: none;
     width: 100%;
@@ -636,7 +636,7 @@ a {
     text-align: center;
 }
 
-#catan_results_table tr
+.catan_results_table tr
 {
     height: 20%;
 }
@@ -657,7 +657,7 @@ a {
     cursor: default;
 }
 
-#catan_map
+.catan_map
 {
     width: 100%;
     height: 800px;
@@ -669,7 +669,7 @@ a {
     flex-wrap: wrap;
 }
 
-#catan_map_title
+.catan_map_title
 {
     width: 100%;
     height: 10%;
@@ -680,7 +680,7 @@ a {
     font-weight: 700;
 }
 
-#catan_map_subtitle
+.catan_map_subtitle
 {
     width: 100%;
     height: 20%;
@@ -692,7 +692,7 @@ a {
     font-weight: 700;
 }
 
-#catan_map_reason, #catan_map_disclaimer
+.catan_map_reason, .catan_map_disclaimer
 {
     display: flex;
     justify-content: center;
@@ -702,12 +702,12 @@ a {
     text-align: center;
 }
 
-#catan_map_disclaimer
+.catan_map_disclaimer
 {
     font-size: 16px;
 }
 
-#catan_interactive_map_container
+.catan_interactive_map_container
 {
     display: flex;
     justify-content: center;
@@ -716,13 +716,13 @@ a {
     width: 450px;
     height: 400px;
     font-weight: 500;
-    background-image: url(../../img/2025/games/catan_icons/normalBackground.png);
-    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../img/2025/games/catan_icons/normalBackground.png'); */
+    background-image: url(../../img/2025/games/catan_icons/normalBackground.webp);
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../img/2025/games/catan_icons/normalBackground.webp'); */
     background-size: cover;
     background-position: center;
 }
 
-#catan_interactive_map
+.catan_interactive_map
 {
     display: flex;
     justify-content: center;
@@ -761,32 +761,32 @@ a {
 
 .catan_hexagon_forest
 {
-    background-image: url(../../img/2025/games/catan_icons/forest.png);
+    background-image: url(../../img/2025/games/catan_icons/forest.webp);
 }
 
 .catan_hexagon_stone
 {
-    background-image: url(../../img/2025/games/catan_icons/stone.png);
+    background-image: url(../../img/2025/games/catan_icons/stone.webp);
 }
 
 .catan_hexagon_plains
 {
-    background-image: url(../../img/2025/games/catan_icons/plains.png);
+    background-image: url(../../img/2025/games/catan_icons/plains.webp);
 }
 
 .catan_hexagon_wheat
 {
-    background-image: url(../../img/2025/games/catan_icons/wheat.png);
+    background-image: url(../../img/2025/games/catan_icons/wheat.webp);
 }
 
 .catan_hexagon_bricks
 {
-    background-image: url(../../img/2025/games/catan_icons/bricks.png);
+    background-image: url(../../img/2025/games/catan_icons/bricks.webp);
 }
 
 .catan_hexagon_desert
 {
-    background-image: url(../../img/2025/games/catan_icons/desert.png);
+    background-image: url(../../img/2025/games/catan_icons/desert.webp);
 }
 
 .catan_hexagon_number
@@ -807,7 +807,7 @@ a {
     color: #ff0000;
 }
 
-#catan_popup
+.catan_popup
 {
     display: flex;
     position: absolute;
@@ -821,7 +821,7 @@ a {
     flex-wrap: wrap;
 }
 
-#catan_popup_close
+.catan_popup_close
 {
     position: absolute;
     width: 20px;
@@ -833,7 +833,7 @@ a {
     cursor: pointer;
 }
 
-#catan_popup_title
+.catan_popup_title
 {
     width: 100%;
     height: 50%;
@@ -844,7 +844,7 @@ a {
     font-weight: 500;
 }
 
-#catan_popup_stats, #catan_popup_ship_stats
+.catan_popup_stats, .catan_popup_ship_stats
 {
     width: 100%;
     height: 50%;
@@ -853,7 +853,7 @@ a {
     justify-content: flex-start;
 }
 
-#catan_popup_ship_stats
+.catan_popup_ship_stats
 {
     display: none;
     justify-content: center;
@@ -861,18 +861,18 @@ a {
     font-size: 14px;
 }
 
-#catan_popup ul 
+.catan_popup ul 
 {
     list-style-type: none;
 }
 
-#catan_popup_close img
+.catan_popup_close img
 {
     width: 100%;
     height: 100%;
 }
 
-#catan_interactive_sea
+.catan_interactive_sea
 {
     position: absolute;
     width: inherit;
@@ -892,7 +892,7 @@ a {
     z-index: 6;
 }
 
-#catan_map_footer
+.catan_map_footer
 {
     width: 100%;
     height: 5%;
