@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
+    <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
+    <title>Olimpiada Karwińska - Profile</title>
+
+    <link rel="stylesheet" href="./css/footer/style.css">
+    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/footer/small.css">
+    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/footer/medium.css">
+    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/footer/large.css">
+    <link rel="stylesheet" href="./css/profiles/style.css">
+    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/profiles/small.css">
+    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/profiles/medium.css">
+    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/profiles/large.css">
+    <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/profiles/vertical.css">
+
+</head>
+
+<body>
+
+    <header id="header" class="header">
+        
+        <!-- SHOWED WHEN PROFILE ID IS SPECIFIED -->
+        <div class="profile_not_specified" id="profile_not_specified">
+            Wyszukaj profil
+        </div>
+
+        <div class="profile_searchbar" id="profile_searchbar">
+            <div class="searchbar_box">
+                <input type="text" id="searchBox" class="searchBox" oninput="performSearch()" placeholder="Szukaj...">
+                <div class="search_results_line" id="search_results_line">
+                    <div class="search_results_line_color"></div>
+                </div>
+            </div>
+            <ul id="results" class="search_results">
+                <!-- JS SCRIPT INSERTING HERE -->
+            </ul>
+        </div>
+
+    </header>
+
+    <main id="main" class="main">
+
+        <!-- SHOWED WHEN PROFILE ID IS SPECIFIED -->
+        <div class="profile_specified" id="profile_specified">
+            
+            <div class="profile_info">
+                <div class="profile_pfp">
+                    <img src="img/placeholder.webp" id="profile_pfp_icon">
+                </div>
+
+                <div class="profile_main_section">
+                    <div class="profile_name_section">
+                        <div class="profile_name_box">
+                            <div class="profile_displayed_name" id="profile_displayed_name"> Uknown </div>
+                            <div class="profile_displayed_id" id="profile_displayed_id"> Uknown </div>
+                            <div class="profile_displayed_champion"> 
+                                <div class="profile_displayed_champion_badge" id="profile_displayed_champion_badge">
+                                    CHAMPION
+                                    <!-- 11.07.2024 -->
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="profile_medals">
+                        <div class="profile_medals_box">
+                            <div class="profile_single_medal">
+                                <div class="profile_single_medal_icon">
+                                    <img src="img/profiles/medal-2nd.webp">
+                                </div>
+                                <div class="profile_single_medal_amount">
+                                    <span id="profile_2nd_medal_amount"> 0 </span>
+                                </div>
+                            </div>
+                            <div class="profile_single_medal">
+                                <div class="profile_single_medal_icon">
+                                    <img src="img/profiles/medal-1st.webp">
+                                </div>
+                                <div class="profile_single_medal_amount">
+                                    <span id="profile_1st_medal_amount"> 0 </span>
+                                </div>
+                            </div>
+                            <div class="profile_single_medal">
+                                <div class="profile_single_medal_icon">
+                                    <img src="img/profiles/medal-3rd.webp">
+                                </div>
+                                <div class="profile_single_medal_amount">
+                                    <span id="profile_3rd_medal_amount"> 0 </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <a href="https://www.flaticon.com/free-icons/medal" title="medal icons">Medal icons created by Freepik - Flaticon</a> -->
+
+            </div>
+
+            <div class="seasons_details">
+
+                <div class="current_season">
+                    <div class="current_season_name"> OBECNY SEZON </div>
+                    <div class="current_season_position_section" id="current_season_position_section">
+                        <div class="current_season_position" id="current_season_position"> #1 </div>
+                        <div class="current_season_points">
+                            <div class="current_season_points_amount" id="current_season_points_amount">0</div>
+                            <div class="current_season_points_name">PTS</div>
+                        </div>
+                    </div>
+                    <div class="current_season_not_playing" id="current_season_not_playing"> Nie bierze udziału w obecnym sezonie. </div>
+                </div>
+
+                <div class="seasons_list" id="seasons_list">
+                    <!-- JS SCRIPT INSERTING HERE -->
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+    <footer>
+        <div id="common-footer"></div>
+    </footer>
+
+    <script src="./js/profiles.js"></script>
+    <!-- footer.html and footer.js loading script -->
+    <script>
+        fetch("./footer.html")
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("common-footer").innerHTML = html;
+
+                // Load footer.js after footer.html is inserted
+                const script = document.createElement("script");
+                script.src = "./js/footer.js";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading footer:", error));
+    </script>
+
+</body>
+
+</html>

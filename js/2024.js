@@ -114,7 +114,6 @@ else
 document.addEventListener("DOMContentLoaded", () => {
     animatePodium();
     changeGame(game1, "300px", "Minigolf", resultsGame1);
-    closeSeletor();
 });
 
 function changeGame(game, height, title, results_game) {

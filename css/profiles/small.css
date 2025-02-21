@@ -1,0 +1,39 @@
+/* max-width:768px*/
+
+.profile_specified
+{
+    width: 375px;
+}
+
+.current_season
+{
+    width: 100%;
+}
+
+.seasons_list
+{
+    width: 100%;
+}
+
+.profile_main_section 
+{
+    height: 100%;
+    width: 255px; 
+}
+
+.profile_name_section
+{
+    height: 40%;
+    width: 255px;
+}
+
+.profile_medals
+{
+    height: 60%;
+    width: 255px;
+}
+
+.profile_info
+{
+    padding: 10px;
+}

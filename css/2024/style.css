@@ -41,6 +41,11 @@ a
     height: 100%;
 }
 
+.clickable
+{
+    cursor: pointer;
+}
+
 .logo
 {
     position: absolute;

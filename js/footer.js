@@ -5,7 +5,7 @@ const yearPopup = document.querySelector('#year_selector');
 const footerYear = document.querySelector('#footer_menu');
 const yearContainer = document.querySelector('#year_selector_texts');
 const footerYearDisable = document.querySelector('#footer_menu_disable');
-let currentYearStatus = 0;
+var currentYearStatus = 0;
 
 var deviceWidthF = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 
@@ -51,11 +51,59 @@ showYearButton.addEventListener('click', () => {
     };
 });
 
-showYearButton2.addEventListener('click', () => {
-    if (currentYearStatus == 0) {
-        showSeletor();
+if (showYearButton2) 
+{
+    showYearButton2.addEventListener('click', () => {
+        if (currentYearStatus == 0) {
+            showSeletor();
+        }
+        else {
+            closeSeletor();
+        };
+    });
+}
+
+
+
+const contact = document.querySelector('#contact');
+const contactButton = document.getElementById("footer_icons_contact");
+const contactContainer = document.querySelector('#contact_container');
+var currentContactStatus = 0;
+
+function showContact() {
+
+    if(deviceWidthF>768)
+        {
+            contact.style.height = "60px"; 
+        }
+    else
+        {
+            contact.style.height = "120px";
+        };
+
+    setTimeout(() => {
+        contactContainer.style.display = "flex";
+    }, 300);
+ 
+    currentContactStatus = 1;
+    contactButton.classList.add('footer_icons_active');
+    
+}
+
+function closeContact() {
+    contactContainer.style.display = "none";
+    contact.style.height = "0px";
+    currentContactStatus = 0;
+    contactButton.classList.remove('footer_icons_active');
+}
+
+contactButton.addEventListener('click', () => {
+    if (currentContactStatus == 0) {
+        showContact()
     }
     else {
-        closeSeletor();
+        closeContact()
     };
 });
+
+

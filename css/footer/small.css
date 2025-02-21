@@ -1,0 +1,45 @@
+/* max-width:768px*/
+
+ul, li {
+    list-style-type: none;
+    text-align: center;
+}
+
+.footer_logo_description
+{
+    display: none;
+}
+
+.footer_single_logo
+{
+    width: 100%;
+    justify-content: center;
+}
+
+.footer_menu
+{
+    display: none;
+}
+
+.footer_logos
+{
+    width: 50%;
+}
+
+.footer_icons
+{
+    width: 50%;
+    justify-content: center;
+    text-align: center;
+}
+
+.contact_container
+{
+    width: 100%
+}
+
+.contact_mail
+{
+    width: 100%;
+    height: 50%;
+}

@@ -1,4 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+
 <head>
-    <meta http-equiv='refresh' content='0; URL=2025'>
+    <meta name="robots" content="noindex">
+    <script src="./js/profile.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
     <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
+    <title>Olimpiada Karwińska</title>
+
+    <link rel="stylesheet" href="./css/footer/style.css">
+    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/footer/small.css">
+    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/footer/medium.css">
+    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/footer/large.css">
+    <link rel="stylesheet" href="./css/home/style.css">
+    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/home/small.css">
+    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/home/medium.css">
+    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/home/large.css">
+    <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/home/vertical.css">
+
 </head>
+
+<body>
+
+    <header id="header" class="header">
+        
+        <div class="logo">
+            <img src="img/logos/kkol.webp">
+        </div>
+
+    </header>
+
+    <main id="main" class="main">
+        
+        <div class="message">
+            STRONA GŁÓWNA W BUDOWIE
+        </div>
+
+        <div class="construction">
+
+            <div clas="construction_icon">
+                <img src="img/home/worker_deafult.webp">
+            </div>
+
+            <div class="construction_list">
+                <table class="construction_tasks">
+                    <tr class="task_in_progress">
+                        <td class="task_worker"><img src="img/home/foreman_deafult.webp"></td>
+                        <td class="task_name">Planowanie</td>
+                        <td class="task_status">-W trakcie-</td>
+                    </tr>
+                    <tr class="task_in_queue">
+                        <td class="task_worker"><img src="img/home/worker_deafult.webp"></td>
+                        <td class="task_name">Budowanie fundamentów</td>
+                        <td class="task_status">-W kolejce-</td>
+                    </tr>
+                    <tr class="task_in_queue">
+                        <td class="task_worker"><img src="img/home/worker_deafult.webp"></td>
+                        <td class="task_name">Umieszczanie obiektów</td>
+                        <td class="task_status">-W kolejce-</td>
+                    </tr>
+                    <tr class="task_in_locked">
+                        <td class="task_worker"><img src="img/home/guard_deafult.webp"></td>
+                        <td class="task_name">Otworzyć drzwi</td>
+                        <td class="task_status">-Zablokowane-</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="subtitle">
+            <div class="button"> <a href="2025.html">
+                Przejdź do sezonu 2025
+            </a> </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div id="common-footer"></div>
+    </footer>
+
+    <!-- footer.html and footer.js loading script -->
+    <script>
+        fetch("./footer.html")
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("common-footer").innerHTML = html;
+
+                // Load footer.js after footer.html is inserted
+                const script = document.createElement("script");
+                script.src = "./js/footer.js";
+                document.body.appendChild(script);
+            })
+            .catch(error => console.error("Error loading footer:", error));
+    </script>
+
+
+</body>
+
+</html>

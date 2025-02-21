@@ -1,5 +1,13 @@
-RewriteEngine on
-#does not apply to existing directories (if the folder exists on the server then don't change anything)
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.html -f
-RewriteRule ^(.*)$ $1.html [NC,L]
+Options +FollowSymLinks
+
+RewriteEngine On
+
+# Requests without extensions
+RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{3,4}
+RewriteCond %{REQUEST_URI} !\.(js|json)$
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ $1.html [L]
+
+# Redirect 'home.html' to 'index.html'
+RewriteRule ^home\.html$ index.html [L]
+
