@@ -13,6 +13,3 @@ RewriteCond %{REQUEST_URI} !\.(js|json)$
 RewriteCond %{REQUEST_URI} !/$
 RewriteRule ^(.*)$ $1.html [L]
 
-# Redirect index.html to home.html
-RewriteRule ^index\.html$ home.html [L]
-
