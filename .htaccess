@@ -2,12 +2,17 @@ Options +FollowSymLinks
 
 RewriteEngine On
 
+# Profile ID Rewrite
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^id/([^/.]+)$ profiles.html?id=$1 [L]
+
 # Requests without extensions
 RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{3,4}
 RewriteCond %{REQUEST_URI} !\.(js|json)$
 RewriteCond %{REQUEST_URI} !/$
 RewriteRule ^(.*)$ $1.html [L]
 
-# Redirect 'home.html' to 'index.html'
-RewriteRule ^home\.html$ index.html [L]
+# Redirect index.html to home.html
+RewriteRule ^index\.html$ home.html [L]
 

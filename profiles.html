@@ -4,18 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
-    <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
+
+    <!-- <base href="/"> -->
+
+    <!-- Uncomment this only when editing locally -->
+    <base href="/kkol/"> 
+
+    <link rel="shortcut icon" href="img/logos/icon.png" type="image/x-icon">
     <title>Olimpiada Karwińska - Profile</title>
 
-    <link rel="stylesheet" href="./css/footer/style.css">
-    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/footer/small.css">
-    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/footer/medium.css">
-    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/footer/large.css">
-    <link rel="stylesheet" href="./css/profiles/style.css">
-    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/profiles/small.css">
-    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/profiles/medium.css">
-    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/profiles/large.css">
-    <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/profiles/vertical.css">
+    <link rel="stylesheet" href="css/footer/style.css">
+    <link rel="stylesheet" media="screen and (max-width:768px)" href="css/footer/small.css">
+    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="css/footer/medium.css">
+    <link rel="stylesheet" media="screen and (min-width:2560px)" href="css/footer/large.css">
+    <link rel="stylesheet" href="css/profiles/style.css">
+    <link rel="stylesheet" media="screen and (max-width:768px)" href="css/profiles/small.css">
+    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="css/profiles/medium.css">
+    <link rel="stylesheet" media="screen and (min-width:2560px)" href="css/profiles/large.css">
+    <link rel="stylesheet" media="screen and (max-height:580px)" href="css/profiles/vertical.css">
 
 </head>
 
@@ -129,10 +135,10 @@
         <div id="common-footer"></div>
     </footer>
 
-    <script src="./js/profiles.js"></script>
+    <script src="js/profiles.js"></script>
     <!-- footer.html and footer.js loading script -->
     <script>
-        fetch("./footer.html")
+        fetch("footer.html")
             .then(response => response.text())
             .then(html => {
                 document.getElementById("common-footer").innerHTML = html;
