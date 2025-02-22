@@ -1,6 +1,5 @@
-const pathSegments = window.location.pathname.split("/").filter(Boolean);
-// Check if the first segment is 'id' and get the second segment as the ID
-const profileID = pathSegments[pathSegments.length - 2] === "id" ? pathSegments[pathSegments.length - 1] : null;
+const params = new URLSearchParams(document.location.search);
+const profileID = params.get("id");
 
 var deviceWidth = screen.width;
 
@@ -185,7 +184,6 @@ fetch('./data.json')
       else {
         // Show when incorrect ?id= in url
         console.log("Profile ID not found in data");
-        window.location.href = "profiles";
       };
     } 
     else {
@@ -274,7 +272,7 @@ function displayResults(results) {
         listSpanName.textContent = result.name;
         listSpanId.textContent = result.id;
         listSpanPfp.src = `img/profiles/pfp/${result.pfp}`;
-        listLink.href = `id/${result.id}`;
+        listLink.href = `profiles?id=${result.id}`;
         listItem.appendChild(listLink);
         listLink.appendChild(listSpanPfp);
         listLink.appendChild(listSpanName);
