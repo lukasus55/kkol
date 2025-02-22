@@ -5,6 +5,17 @@
 <!-- To see the page locally remove the slashes on the start of the urls. Example: change from /css/404.css to css/404.css DON'T UPLOAD VERSION WITH THIS URL TYPES TO SERVER -->
 
 <head>
+
+    <script>
+        const pathSegments = window.location.pathname.split("/").filter(Boolean);
+        
+        // If the first segment is 'id', redirect to profiles.html with the correct ID
+        if (pathSegments[0] === "id" && pathSegments[1]) {
+            const userId = pathSegments[1];
+            window.location.replace(`/profiles.html?id=${userId}`);
+        }
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
     <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon">
