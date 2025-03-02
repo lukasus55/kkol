@@ -5,7 +5,7 @@ var deviceWidth = screen.width;
 
 let profileIDList = [];
 
-fetch('./data.json')
+fetch('./profiles.json')
   .then(response => response.json())
   .then(data => {
 
@@ -54,15 +54,15 @@ fetch('./data.json')
 
           if (profile.results[currentSeason].position == 1)
           {
-            current_season_position_displayed.style.color = "#e0a500"
+            current_season_position_displayed.style.color = "var(--gold400)"
           }
-          if (profile.results[currentSeason].position == 2)
+          else if (profile.results[currentSeason].position == 2)
           {
-            current_season_position_displayed.style.color = "#999999"
+            current_season_position_displayed.style.color = "var(--silver400)"
           }
-          if (profile.results[currentSeason].position == 3)
+          else if (profile.results[currentSeason].position == 3)
           {
-            current_season_position_displayed.style.color = "#994a00"
+            current_season_position_displayed.style.color = "var(--brown400)"
           }
 
         }
@@ -121,15 +121,15 @@ fetch('./data.json')
 
               if (profileThisSeason.position == 1)
               {
-                seasonPosition.style.color = "#e0a500";
+                seasonPosition.style.color = "var(--gold400)"
               }
-              if (profileThisSeason.position == 2)
+              else if (profileThisSeason.position == 2)
               {
-                seasonPosition.style.color = "#999999";
+                seasonPosition.style.color = "var(--silver400)"
               }
-              if (profileThisSeason.position == 3)
+              else if (profileThisSeason.position == 3)
               {
-                seasonPosition.style.color = "#994a00";
+                seasonPosition.style.color = "var(--brown400)"
               }
       
               seasonsList.appendChild(seasonItem);

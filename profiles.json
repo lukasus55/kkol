@@ -1,5 +1,6 @@
 {
-    "kostys": {
+    "kostys": 
+    {
         "id": "kostys",
         "displayed_name": "Kostyś",
         "profile_picture": 
@@ -32,7 +33,8 @@
         "total_attended": 2,
         "joined": "2024-07-11T12:00:00.000Z"
     },
-    "harnas": {
+    "harnas": 
+    {
         "id": "harnas",
         "displayed_name": "Harnoldihno",
         "profile_picture":
@@ -65,7 +67,8 @@
         "total_attended": 2,
         "joined": "2024-07-11T12:00:00.000Z"
     },
-    "damidami2": {
+    "damidami2": 
+    {
         "id": "damidami2",
         "displayed_name": "DamiDami2",
         "profile_picture":
@@ -98,7 +101,8 @@
         "total_attended": 2,
         "joined": "2024-07-11T12:00:00.000Z"
     },
-    "kukula": {
+    "kukula": 
+    {
         "id": "kukula",
         "displayed_name": "Kukuła",
         "profile_picture":

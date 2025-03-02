@@ -2,17 +2,11 @@
 <html lang="pl">
 
 <head>
-    <meta name="robots" content="noindex">
-    <script src="./js/profile.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
     <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
     <title>Olimpiada Karwińska</title>
 
-    <link rel="stylesheet" href="./css/footer/style.css">
-    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/footer/small.css">
-    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/footer/medium.css">
-    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/footer/large.css">
     <link rel="stylesheet" href="./css/home/style.css">
     <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/home/small.css">
     <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/home/medium.css">
@@ -24,80 +18,122 @@
 <body>
 
     <header id="header" class="header">
-        
-        <div class="logo">
-            <img src="img/logos/kkol.webp">
-        </div>
-
+        <div class="title"> Karwińska&nbsp; <span class="title_subtext"> Olimpiada </span></div>
     </header>
 
     <main id="main" class="main">
-        
-        <div class="message">
-            STRONA GŁÓWNA W BUDOWIE
-        </div>
+        <section class="events">
+            <div class="events_container">
 
-        <div class="construction">
+                <div class="single_event">
+                    <div class="event_status">
+                        POPRZEDNIE
+                    </div>
+                    <a href="2024#games"><div class="event_main">
+                        <div class="event_image">
+                            <img src="./img/home/events/s2024_xbox.webp">
+                        </div>
+                        <div class="event_details">
+                            <div class="event_title">
+                                7-BÓJ KINECTOWY
+                            </div>
+                            <div class="event_date">
+                                27.09.2024
+                            </div>
+                        </div>
+                    </div></a>
+                </div>
+    
+                <div class="single_event">
+                    <div class="event_status">
+                        TERAZ
+                    </div>
+                    <a href="2025"><div class="event_main">
+                        <div class="event_image">
+                            <img src="./img/home/events/s2025_logo.webp">
+                        </div>
+                        <div class="event_details">
+                            <div class="event_title">
+                                POCZĄTEK SEZONU 2025
+                            </div>
+                            <div class="event_date">
+                                01.06.2025
+                            </div>
+                        </div>
+                    </div></a>
+                </div>
 
-            <div clas="construction_icon">
-                <img src="img/home/worker_deafult.webp">
+                <div class="single_event">
+                    <div class="event_status">
+                        NASTĘPNE
+                    </div>
+                    <a href="2025#catan"><div class="event_main">
+                        <div class="event_image">
+                            <img src="./img/home/events/s2025_catan.webp">
+                        </div>
+                        <div class="event_details">
+                            <div class="event_title">
+                                SETTLERS OF CATAN
+                            </div>
+                            <div class="event_date">
+                                ??.??.2025
+                            </div>
+                        </div>
+                    </div></a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="more">
+
+            <div class="champion">
+                <div class="champion_title"> OBECNY MISTRZ </div>
+                <div class="champion_content">
+                    <a href="profiles?id=harnas">
+                        <div class="champion_crown">
+                            <img src="img/home/champions/crown.webp">
+                        </div>
+                        <div class="champion_icon">
+                            <img src="img/home/champions/s2025_champion.webp">
+                        </div>
+                        <div class="champion_name"> <span class="champion_name_text"> Harnoldihno </span></div>
+                    </a>
+                </div>
             </div>
 
-            <div class="construction_list">
-                <table class="construction_tasks">
-                    <tr class="task_in_progress">
-                        <td class="task_worker"><img src="img/home/foreman_deafult.webp"></td>
-                        <td class="task_name">Planowanie</td>
-                        <td class="task_status">-W trakcie-</td>
-                    </tr>
-                    <tr class="task_in_queue">
-                        <td class="task_worker"><img src="img/home/worker_deafult.webp"></td>
-                        <td class="task_name">Budowanie fundamentów</td>
-                        <td class="task_status">-W kolejce-</td>
-                    </tr>
-                    <tr class="task_in_queue">
-                        <td class="task_worker"><img src="img/home/worker_deafult.webp"></td>
-                        <td class="task_name">Umieszczanie obiektów</td>
-                        <td class="task_status">-W kolejce-</td>
-                    </tr>
-                    <tr class="task_in_locked">
-                        <td class="task_worker"><img src="img/home/guard_deafult.webp"></td>
-                        <td class="task_name">Otworzyć drzwi</td>
-                        <td class="task_status">-Zablokowane-</td>
-                    </tr>
-                </table>
+            <div class="about_section">
+                <div class="about">
+                    <div class="about_title"> CZYM JEST KARWIŃSKA OLIMPIADA? </div>
+                    <div class="about_content">
+                        <div class="about_text">
+                            <span class="about_text_title"> Karwińska Olimpiada </span>to coroczne wydarzenie podczas którego stała grupa czterech uczestników rywalizuje w różnorodnych konkurencjach, takich jak gry planszowe, bilard, minigolf itp. W tym roku odbędzie się druga edycja tego turnieju.
+                        </div>
+                    </div>
+                </div>
             </div>
 
-        </div>
+            <div class="seasons">
+                <div class="seasons_title"> SEZONY </div>
+                <div class="seasons_content">
+                    <ul class="seasons_list">
+                        <li> <a href=2025> 2025 </a></li>
+                        <li> <a href=2024> 2024 </a></li>
+                    </ul>
+                </div>
+            </div>
 
-        <div class="subtitle">
-            <div class="button"> <a href="2025.html">
-                Przejdź do sezonu 2025
-            </a> </div>
-        </div>
-
+        </section>
     </main>
 
     <footer>
         <div id="common-footer"></div>
     </footer>
 
+    <script src="./js/home.js"></script>
     <!-- footer.html and footer.js loading script -->
-    <script>
-        fetch("./footer.html")
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("common-footer").innerHTML = html;
-
-                // Load footer.js after footer.html is inserted
-                const script = document.createElement("script");
-                script.src = "./js/footer.js";
-                document.body.appendChild(script);
-            })
-            .catch(error => console.error("Error loading footer:", error));
-    </script>
-
-
+    <script src="./js/footer-loader.js"></script>
+    
 </body>
 
 </html>

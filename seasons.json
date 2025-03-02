@@ -1,0 +1,36 @@
+{
+    "2024":
+    {
+        "standings":
+        {
+            "1": "harnas",
+            "2": "kostys",
+            "3": "kukula",
+            "4": "damidami2"
+        },
+        "games":
+        {
+            "details": false,
+            "started": true,
+            "finished": true
+        }
+    },
+
+    "2025":
+    {
+        "standings":
+        {
+            "1": "harnas",
+            "2": "kostys",
+            "3": "kukula",
+            "4": "damidami2"
+        },
+        "games":
+        {
+            "details": false,
+            "started": false,
+            "finished": false
+        }
+    }
+    
+}

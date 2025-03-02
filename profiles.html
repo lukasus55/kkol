@@ -8,15 +8,8 @@
     <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
     <title>Olimpiada Karwińska - Profile</title>
 
-    <link rel="stylesheet" href="./css/footer/style.css">
-    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/footer/small.css">
-    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/footer/medium.css">
-    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/footer/large.css">
     <link rel="stylesheet" href="./css/profiles/style.css">
     <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/profiles/small.css">
-    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/profiles/medium.css">
-    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/profiles/large.css">
-    <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/profiles/vertical.css">
 
 </head>
 
@@ -109,7 +102,7 @@
                         <div class="current_season_position" id="current_season_position"> #1 </div>
                         <div class="current_season_points">
                             <div class="current_season_points_amount" id="current_season_points_amount">0</div>
-                            <div class="current_season_points_name">PTS</div>
+                            <div class="current_season_points_name">PKT</div>
                         </div>
                     </div>
                     <div class="current_season_not_playing" id="current_season_not_playing"> Nie bierze udziału w obecnym sezonie. </div>
@@ -132,19 +125,7 @@
 
     <script src="./js/profiles.js"></script>
     <!-- footer.html and footer.js loading script -->
-    <script>
-        fetch("./footer.html")
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("common-footer").innerHTML = html;
-
-                // Load footer.js after footer.html is inserted
-                const script = document.createElement("script");
-                script.src = "./js/footer.js";
-                document.body.appendChild(script);
-            })
-            .catch(error => console.error("Error loading footer:", error));
-    </script>
+    <script src="./js/footer-loader.js"></script>
 
 </body>
 

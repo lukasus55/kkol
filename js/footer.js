@@ -10,7 +10,7 @@ var currentYearStatus = 0;
 var deviceWidthF = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 
 function showSeletor() {
-    yearPopup.style.backgroundColor = "#000000";
+    yearPopup.style.backgroundColor = "#141212";
     if(deviceWidthF<2560)
         {
             yearPopup.style.height = "200px"; 
@@ -30,7 +30,7 @@ function showSeletor() {
 }
 
 function closeSeletor() {
-    yearPopup.style.backgroundColor = "#00000000";
+    yearPopup.style.backgroundColor = "#14121200";
     yearPopup.style.height = "20px";
     showYearButtonIcon.style.rotate = "0deg";
     footerYear.style.opacity = 1;

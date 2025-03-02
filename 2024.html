@@ -7,13 +7,8 @@
     <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
     <title>Olimpiada Karwińska - 2024</title>
 
-    <link rel="stylesheet" href="./css/footer/style.css">
-    <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/footer/small.css">
-    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/footer/medium.css">
-    <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/footer/large.css">
     <link rel="stylesheet" href="./css/2024/style.css">
     <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/2024/small.css">
-    <link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="./css/2024/medium.css">
     <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/2024/large.css">
     <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/2024/vertical.css">
 </head>
@@ -115,44 +110,49 @@
                         </td>
                         <td class="ranking_total_header">Total</th>
                     </tr>
-                    <tr class="ranking_table_standard">
-                        <td class="ranking_table_first_position">1</td>
-                        <td class="ranking_player">Harnoldihno</td>
-                        <td class="ranking_game_result">2</td>
-                        <td class="ranking_game_result">4</td>
-                        <td class="ranking_game_result">4</td>
-                        <td class="ranking_game_result">8</td>
-                        <td class="ranking_total">18</td>
+                    <tr class="ranking_table_standard" id="ranking_pos_1">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
                     </tr>
-                    <tr class="ranking_table_standard">
-                        <td class="ranking_table_second_position">2</td>
-                        <td class="ranking_player">Kostyś</td>
-                        <td class="ranking_game_result">2</td>
-                        <td class="ranking_game_result">4</td>
-                        <td class="ranking_game_result">2</td>
-                        <td class="ranking_game_result">8</td>
-                        <td class="ranking_total">16</td>
+                    <tr class="ranking_table_standard" id="ranking_pos_2">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
                     </tr>
-                    <tr class="ranking_table_standard">
-                        <td class="ranking_table_third_position">3</td>
-                        <td class="ranking_player">Kukuła</td>
-                        <td class="ranking_game_result">4</td>
-                        <td class="ranking_game_result">4</td>
-                        <td class="ranking_game_result">3</td>
-                        <td class="ranking_game_result">2</td>
-                        <td class="ranking_total">13</td>
+                    <tr class="ranking_table_standard" id="ranking_pos_3">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
                     </tr>
-                    <tr class="ranking_table_standard">
-                        <td class="ranking_table_fourth_position">4</td>
-                        <td class="ranking_player">DamiDami2</td>
-                        <td class="ranking_game_result">3</td>
-                        <td class="ranking_game_result">4</td>
-                        <td class="ranking_game_result">1</td>
-                        <td class="ranking_game_result">4</td>
-                        <td class="ranking_total">12</td>
+                    <tr class="ranking_table_standard" id="ranking_pos_4">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
                     </tr>
                 </table>
             </div>
+
+            <script src="./js/table-loader.js"></script>
+            <script type="text/javascript">
+                tableLoader(2024);
+            </script>
 
             <div class="ranking_popup" id="ranking_popup">
                 <div class="ranking_popup_container">
@@ -413,19 +413,7 @@
     </footer>
         
     <!-- footer.html and footer.js loading script -->
-    <script>
-        fetch("./footer.html")
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("common-footer").innerHTML = html;
-
-                // Load footer.js after footer.html is inserted
-                const script = document.createElement("script");
-                script.src = "./js/footer.js";
-                document.body.appendChild(script);
-            })
-            .catch(error => console.error("Error loading footer:", error));
-    </script>
+    <script src="./js/footer-loader.js"></script>
 
     <script src="./js/2024.js"></script>
 
