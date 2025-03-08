@@ -274,6 +274,9 @@ a
     height: 470px;
     padding: 40px 10px 10px 10px;
     color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .ranking_title
