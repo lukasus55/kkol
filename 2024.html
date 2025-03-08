@@ -12,6 +12,7 @@
     <link rel="stylesheet" media="screen and (max-width:768px)" href="./css/2024/small.css">
     <link rel="stylesheet" media="screen and (min-width:2560px)" href="./css/2024/large.css">
     <link rel="stylesheet" media="screen and (max-height:580px)" href="./css/2024/vertical.css">
+    
 </head>
 
 <body>
@@ -150,8 +151,9 @@
                 </table>
             </div>
 
-            <script src="./js/table-loader.js"></script>
-            <script type="text/javascript">
+            <script src="./js/table-loader.js" type="module"></script>
+            <script type="module">
+                import tableLoader from "./js/table-loader.js"
                 tableLoader(2024);
             </script>
 
@@ -412,12 +414,11 @@
     <footer>
         <div id="common-footer"></div>
     </footer>
-        
+       
+    <script src="./js/2024.js"></script>
     <!-- footer.html and footer.js loading script -->
     <script src="./js/footer-loader.js"></script>
-
-    <script src="./js/2024.js"></script>
-
+    
 </body>
 
 </html>
