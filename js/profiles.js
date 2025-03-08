@@ -184,6 +184,7 @@ fetch('./profiles.json')
       else {
         // Show when incorrect ?id= in url
         console.log("Profile ID not found in data");
+        window.location.replace("profiles");
       };
     } 
     else {
