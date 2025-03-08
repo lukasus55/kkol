@@ -1,7 +1,7 @@
 @font-face 
 {
-    font-family: 'Archivo Black';
-    src: url("../../fonts/Archivo_Black/ArchivoBlack-Regular.ttf");
+    font-family: 'Lexend';
+    src: url("../../fonts/Lexend/Lexend-VariableFont_wght.ttf");
 }
 
 :root {
@@ -14,7 +14,8 @@
     width: 100%;
     position: fixed;
     z-index: 200;
-    bottom: 0%
+    bottom: 0%;
+    font-family: "Lexend", serif;
 }
 
 .footer_bar

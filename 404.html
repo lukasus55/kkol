@@ -2,16 +2,20 @@
 <html lang="pl">
 
 <!-- IMPORTANT NOTE: THEY MIGHT BE SOME PROBLEMS WITH DIRECTIONS WHILE DISPLAYING THIS PAGE LOCALLY BUT EVERYTHING WILL BE OK NO THE SEREVER -->
-<!-- To see the page locally remove the slashes on the start of the urls. Example: change from /css/404.css to css/404.css DON'T UPLOAD VERSION WITH THIS URL TYPES TO SERVER -->
+<!-- To see the page locally uncomennt <base href="./"> and comment <base href="/">-->
 
 <head>
 
+    <!-- <base href="./"> -->
+    <base href="/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
-    <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon">
+    <meta name="description" content="Karwińska Olimpiada - Bład 404.">
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="img/logos/icon.png" type="image/x-icon">
     <title> Not Found</title>
 
-    <link rel="stylesheet" href="/css/404.css">
+    <link rel="stylesheet" href="css/404.css">
 </head>
 
 <body>
@@ -19,16 +23,16 @@
     <main class="main">
         
         <div class="logo">
-            <img src="/img/logos/kkol-white.webp">
+            <img src="img/logos/kkol-white.webp">
         </div>
 
         <div class="err_icon">
-            <img src="/img/err404.webp">
+            <img src="img/err404-red-gradient.webp">
         </div>
 
         <div class="text">
             <div class="title">
-                Błąd 404
+                Błąd&nbsp;<span class="text404">404</span>
             </div>
             <div class="description">
                 Żądany adres URL nie został znaleziony na serwerze.
@@ -45,5 +49,12 @@
 
     </main>
 
+
+    <footer>
+        <div id="common-footer"></div>
+    </footer>
+
+    <!-- footer.html and footer.js loading script -->
+    <script src="js/footer-loader.js"></script>
 
 </body>
