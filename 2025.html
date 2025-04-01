@@ -41,7 +41,17 @@
                     <div class="timeline_dot timeline_dot_active"></div>
                     <div class="timeline_game clickable" onclick='window.location.href = "#catan";'> 
                         <div class="timeline_name"> Catan </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/catan.webp" alt="Logo gry Settlers of Catan"> </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/catan.webp" alt="Napis catan na tle gór"> </div>
+                    </div>
+                </div>
+
+                <div class="timeline_event">
+                    <div class="timeline_date"> ??.??.2025 </div>
+                    <div class="timeline_line"></div>
+                    <div class="timeline_dot"></div>
+                    <div class="timeline_game clickable" onclick='window.location.href = "#pummel";'> 
+                        <div class="timeline_name"> Pummel </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/pummel.webp" alt="Biłay napis Pummel Party na niebieskim tle"> </div>
                     </div>
                 </div>
 
@@ -50,8 +60,8 @@
                     <div class="timeline_line"></div>
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
-                        <div class="timeline_name"> Gra 2 </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.webp" alt="Biały napis TBA na czarnym tle"> </div>
+                        <div class="timeline_name"> Codenames </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/codenames.webp" alt="Biały napis Codenames na tle 2 czarnych konturów postaci"> </div>
                     </div>
                 </div>
 
@@ -60,18 +70,8 @@
                     <div class="timeline_line"></div>
                     <div class="timeline_dot"></div>
                     <div class="timeline_game"> 
-                        <div class="timeline_name"> Gra 3 </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.webp" alt="Biały napis TBA na czarnym tle"> </div>
-                    </div>
-                </div>
-
-                <div class="timeline_event">
-                    <div class="timeline_date"> ??.??.2025 </div>
-                    <div class="timeline_line"></div>
-                    <div class="timeline_dot"></div>
-                    <div class="timeline_game"> 
-                        <div class="timeline_name"> Gra 4 </div>
-                        <div class="timeline_icon"> <img src="./img/2025/games/gametba.webp" alt="Biały napis TBA na czarnym tle"> </div>
+                        <div class="timeline_name"> Escape Room </div>
+                        <div class="timeline_icon"> <img src="./img/2025/games/escape-room.webp" alt="Biurko na którym znajduje się broń, zegarek, zdjęcia, dyktafon i teczka z poszlakami."> </div>
                     </div>
                 </div>
 
@@ -107,18 +107,24 @@
                     </tr>
                     <tr class="ranking_table_standard">
                         <td class="ranking_game ranking_game1_td ranking_game_clickable">
-                            <a href="#catan"><div class="ranking_game1">
+                            <a href="#catan"><div class="ranking_game1" title="Catan">
                                 <img src="img/2025/games/catan-logo.webp" alt="Hexagonalna mapa catana w czarno-białym wariancie">
                             </div></a>
                         </td>
-                        <td class="ranking_game ranking_game2_td">
-                            TBA
+                        <td class="ranking_game ranking_game2_td ranking_game_clickable">
+                            <a href="#pummel"><div class="ranking_game2" title="Pummel Party">
+                                <img src="img/2025/games/pummel-logo.webp">
+                            </div></a>
                         </td>
                         <td class="ranking_game ranking_game3_td">
-                            TBA
+                            <a href="#"><div class="ranking_game3" title="Codenames">
+                                <img src="img/2025/games/codenames-logo.webp">
+                            </div></a>
                         </td>
                         <td class="ranking_game ranking_game4_td">
-                            TBA
+                            <a href="#"><div class="ranking_game3" title="Escape Room">
+                                <img src="img/2025/games/escape-room-logo.webp">
+                            </div></a>
                         </td>
                         <td class="ranking_total_header">Total</th>
                     </tr>
@@ -181,7 +187,7 @@
             
                     <div class="ranking_popup_line"></div>
                     <div class="ranking_popup_subtitle">
-                        Catan
+                        Catan, Pummel, Codenames, Escape Room
                     </div>
                     <div class="ranking_popup_points">
                         <p> 1 miejsce: 4pkt </p>
@@ -406,9 +412,6 @@
                 <div class="catan_map_reason">
                     W ramach fair play poniżej została umieszczona wersja mapy Catana na której rozgrywana będzie gra tak by każdy miał szansę na przygotowanie strategii. 
                 </div>
-                <div class="catan_map_disclaimer">
-                        UWAGA: Mapa może ulec jeszcze zmianie. Ostateczna wersja zostanie zatwierdzona do 30.04.2025r.
-                </div>
             </div>
 
             <div class="catan_popup" id="catan_popup">
@@ -535,6 +538,10 @@
 
             <div class="catan_map_footer"> Naciśnij na pole zasobu lub statek by zobaczyć szczegóły. </div>
 
+        </section>
+
+        <section class="pummel" id="pummel">
+            <div class="pummel_under_construction"> SEKCJA W TRAKCIE BUDOWY </div>
         </section>
 
     </main>

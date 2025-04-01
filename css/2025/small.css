@@ -8,7 +8,12 @@
 .timeline_game
 {
     width: 2%;
-    padding: 10px 0px 10px 30px;
+    padding-top: 10px;
+}
+
+.timeline_icon
+{
+    height: 100%;
 }
 
 .timeline_date
@@ -24,14 +29,6 @@
 }
 
 .timeline_name
-{
-    font-size: 18px;
-    height: 100%;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.timeline_icon
 {
     display: none;
 }
@@ -70,7 +67,7 @@
 
 .catan
 {
-    height: 200vh;
+    height: 150vh;
 }
 
 .catan_rules_container

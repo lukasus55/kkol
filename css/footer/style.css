@@ -39,17 +39,17 @@
 
 .footer_icons
 {
-    width: 25%;
+    width: 35%;
 }
 
 .footer_logos
 {
-    width: 25%;
+    width: 35%;
 }
 
 .footer_menu
 {
-    width: 35%;
+    width: 30%;
     font-weight: 400;
     opacity: 100%;
     transition: 0.5s ease;
@@ -103,6 +103,12 @@
     border-bottom: 2px solid #ffffff;
 }
 
+.square_footer_logo
+{
+    width: 40px;
+    height: 40px;
+}
+
 .kkol_footer_logo
 {
     width: 98px;
@@ -111,26 +117,12 @@
 
 .footer_single_logo
 {
-    padding-right: 5px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     height: 100%;
-    width: 33%;
-}
-
-.footer_logo_description
-{
-    padding-left: 5px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    height: 100%;
-    width: 67%; 
-    font-family: "Archivo Black", serif;
-    font-weight: 300;
-    font-style: normal;
-    font-size: 15px;
+    max-width: 28%;
+    margin: 0px 20px;
 }
 
 .footer_menu_left

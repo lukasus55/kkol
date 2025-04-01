@@ -1,19 +1,10 @@
 /* max-width:992px */
 /* min-width:768px */
 
-.timeline_name
-{
-    font-size: 16px;
-}
-
 .timeline_game
 {
-    width: 40%;
-}
-
-.timeline_date
-{
-    width: 40%;
+    width: 2%;
+    padding-top: 10px;
 }
 
 .timeline_wide
@@ -23,15 +14,6 @@
 }
 
 .timeline_name
-{
-    font-size: 23px;
-    height: 100%;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-
-.timeline_icon
 {
     display: none;
 }
