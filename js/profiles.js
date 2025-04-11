@@ -155,8 +155,10 @@ async function loadProfiles()
             }
   
             seasonItem.appendChild(seasonDetails);
+            const gamesAmount = season==="2025" ? 5 : 4;
+            console.log(gamesAmount)
   
-            for(let i = 0; i < 4; i++){
+            for(let i = 0; i < gamesAmount; i++){
               const seasonGame = document.createElement('div');
               const seasonGameTitle = document.createElement('div');
               const seasonGamePoints = document.createElement('div');
@@ -179,6 +181,7 @@ async function loadProfiles()
               seasonDetails.appendChild(seasonGame);
               seasonGame.appendChild(seasonGameTitle);
               seasonGame.appendChild(seasonGamePoints);
+              if (season==="2025") {seasonGame.style.width = "20%";}
             }
           }
   
