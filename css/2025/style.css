@@ -63,7 +63,6 @@ a {
 {
     padding: 20px 10px 10px 10px;
     background-color: #ffffea;
-    height: 100vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -84,11 +83,11 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 6%;
+    height: 60px;
     font-size: 30px;
     font-weight: 600;
     /* text-shadow: 1px 1px 3px .636363; */
-    color: #cf7c00
+    color: #cf7c00;
 }
 
 .year
@@ -97,7 +96,7 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 7%;
+    height: 70px;
     font-size: 50px;
     font-weight: 600;
     color: #000000
@@ -114,98 +113,92 @@ a {
     text-align: center;
 }
 
-.timeline
+.timeline 
 {
-    display: flex;
-    min-height: 50vh;
-    height: 87%;
-    width: 100%;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    padding-top: 20px;
+    position: relative;
+    width: 700px;
+    margin: 2rem auto;
+    padding: 2rem 0;
 }
-
-.timeline_event
+  
+.timeline::before 
 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 20%;
-}
-
-.timeline_date
-{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 10%;
-    min-width: 150px;
-    height: 100%;
-    padding-right: 50px;
-}
-
-.timeline_game
-{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 10%;
-    min-width: 150px;
-    height: 100%;
-    font-size: 20px;
-    font-weight: 500;
-    padding: 10px 0px 10px 50px;
-}
-
-.timeline_wide
-{
-    width: 30%;
-    cursor: default;
-}
-
-.timeline_name
-{
-    display: flex;
-    width: 100%;
-    height: 20%;
-    text-align: center;
-    justify-content: center;
-}
-
-.timeline_icon
-{
-    padding: 10px 0px 10px 0px;
-    width: 100%;
-    height: 80%;
-}
-
-.timeline_icon img
-{
-    width: 100%;
-    height: 100%;
-}
-
-.timeline_line
-{
-    min-width: 8px;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px; /* thicker for visibility */
     height: 100%;
     background-color: #cf7c00;
+    z-index: 0; /* behind dots */
 }
-
-.timeline_dot
+  
+.timeline-event 
+{
+    position: relative;
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+  
+.timeline-dot 
 {
     position: absolute;
-    width: 25px;
-    height: 25px;
-    background-color: #cf7c00;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: #cf7c00;
+    z-index: 2; /* above line */
 }
 
-.timeline_dot_active
+.timeline-dot.current
 {
-    width: 40px;
-    height: 40px;
+
+    box-shadow: 0 0 0 2px #cf7c00;
+}
+  
+.timeline-content 
+{
+    position: relative;
+    width: 45%;
+    border-radius: 8px;
+    z-index: 1;
+
+}
+  
+.timeline-event.left .timeline-content 
+{
+    margin-left: 0;
+    margin-right: auto;
+    text-align: right;
+}
+  
+.timeline-event.right .timeline-content 
+{
+    margin-right: 0;
+    margin-left: auto;
+    text-align: left;
+}
+  
+.timeline-content h3 
+{
+    margin: 0;
+    font-size: 1.2rem;
+}
+  
+.timeline-content span 
+{
+    font-size: 0.9rem;
+    color: gray;
+}
+  
+.timeline-content p 
+{
+    margin-top: 0.5rem;
 }
 
 .ranking
@@ -247,6 +240,7 @@ a {
     font-weight: 600;
     color: #ffffff;
     background-color: #d38e27;
+    font-size: 16px;
 }
 
 .ranking_table th
