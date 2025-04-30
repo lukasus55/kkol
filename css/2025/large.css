@@ -32,38 +32,6 @@ html
     font-size: 29px;
 }
 
-.catan_rules_title
-{
-    font-size: 70px;
-}
-
-.catan_rules_text
-{
-    font-size: 23px;
-    height: 40%;
-}
-
-.catan_rules_board
-{
-    height: 45%;
-}
-
-.catan_rules_board img
-{
-    width: 700px;
-    height: 700px;
-}
-
-.catan_results_title
-{
-    font-size: 70px;
-}
-
-.catan_results_text
-{
-    font-size: 45px;
-}
-
 .catan_map
 {
     height: 1100px;

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
-    <meta name="description" content="Sezon 2025 Karwińskiej Olimpiady rozpocznie się 01.06.2025. Ogłoszone gry: Settlers of Catan.">
+    <meta name="description" content="Sezon 2025 Karwińskiej Olimpiady jest w trakcie. Najbliższa gra: Settlers of Catan.">
     <link rel="shortcut icon" href="./img/logos/icon.png" type="image/x-icon">
     <title>Olimpiada Karwińska - 2025</title>
 
@@ -92,10 +92,20 @@
 
     <main class="main" id="main">
 
+        <section class="format" id="format">
+            <div class="format_title"> <span class="main_title_text"> FORMAT I ZASADY </span> </div>
+            <div class="format_video"> 
+                <video poster="./img/2025/format-explainer-thumbnail.png" onloadstart="this.volume=0.3" controls class="format_video_player">
+                    <source src="./videos/2025/format-explainer.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video> 
+            </div>
+        </section>
+
         <section class="ranking" id="ranking">
 
             <div class="ranking_title">
-                Wyniki
+                <span class="main_title_text"> RANKING </span>
             </div>
 
             <div class="ranking_table_segment">
@@ -105,7 +115,7 @@
                         <th class="ranking_player_header" rowspan="2">Gracz</th>
                         <th class="ranking_pts" colspan="6">Punkty</th>
                     </tr>
-                    <tr class="ranking_table_standard">
+                    <tr class="ranking_table_games_icons">
                         <td class="ranking_game ranking_game1_td ranking_game_clickable">
                             <a href="#catan"><div class="ranking_game1" title="Catan">
                                 <img src="img/2025/games/catan-logo.webp" alt="Hexagonalna mapa catana w czarno-białym wariancie">
@@ -116,18 +126,18 @@
                                 <img src="img/2025/games/codenames-logo.webp">
                             </div></a>
                         </td>
-                        <td class="ranking_game ranking_game3_td">
-                            <a href="#"><div class="ranking_game3" title="Zoltar">
+                        <td class="ranking_game ranking_game3_td ranking_game_clickable">
+                            <a href="#zoltar"><div class="ranking_game3" title="Zoltar">
                                 <img src="img/2025/games/zoltar-logo.webp">
                             </div></a>
                         </td>
-                        <td class="ranking_game ranking_game4_td">
-                            <a href="#"><div class="ranking_game4" title="Escape Room">
+                        <td class="ranking_game ranking_game4_td ranking_game_clickable">
+                            <a href="#room"><div class="ranking_game4" title="Escape Room">
                                 <img src="img/2025/games/escape-room-logo.webp">
                             </div></a>
                         </td>
-                        <td class="ranking_game ranking_game5_td">
-                            <a href="#"><div class="ranking_game5" title="Pummel Party">
+                        <td class="ranking_game ranking_game5_td ranking_game_clickable">
+                            <a href="#pummel"><div class="ranking_game5" title="Pummel Party">
                                 <img src="img/2025/games/pummel-logo.webp">
                             </div></a>
                         </td>
@@ -181,237 +191,74 @@
                 import tableLoader from "./js/table-loader.js"
                 tableLoader(2025);
             </script>
-
-            <div class="ranking_popup" id="ranking_popup">
-                <div class="ranking_popup_container">
-
-                    <div class="ranking_popup_header">
-                        <div class="ranking_popup_title">
-                            PUNKTACJA
-                        </div>
-                        <div class="ranking_popup_close_tab" id="ranking_popup_close_tab">
-                            <img src="img/close_tab.webp" class="close_tab">
-                        </div>
-                    </div>
-            
-                    <div class="ranking_popup_line"></div>
-                    <div class="ranking_popup_subtitle">
-                        Wszystkie gry
-                    </div>
-                    <div class="ranking_popup_points">
-                        <p> 1 miejsce: 4pkt </p>
-                        <p> 2 miejsce: 3pkt</p>
-                        <p> 3 miejsce: 2pkt</p>
-                        <p> 4 miejsce: 1pkt</p>
-                    </div>
-                    
-                  </div>
-            </div>
-
-            <div class="ranking_description">
-                <div class="ranking_button" id="ranking_button">
-                    Wyświetl punktację
-                </div>
-            </div>
             
         </section>
 
-        <section class="catan" id="catan">
+        <section class="games" id="games">
+            <div class="games_title"> <span class="main_title_text"> KONKURENCJE </span> </div>
+            <div class="games_list">
 
-            <div class="catan_rules_container">
-                <div class="catan_rules_box">
-                    <div class="catan_rules_title">OPIS I ZASADY</div>
-                    <div class="catan_rules_text">
-                        Catan to strategiczna gra planszowa, w której gracze rywalizują o dominację na wyspie, budując osady, drogi i miasta. Plansza składa się z heksagonalnych pól reprezentujących różne surowce: drewno, glinę, zboże, owce i rudy. Gracze zdobywają surowce, handlują nimi i rozwijają swoje osady, dążąc do uzyskania 10 punktów zwycięstwa. Rzut kostką określa, które pola produkują surowce w danej turze, a złodziej może blokować dochody. Gra wymaga planowania, negocjacji i elastyczności w strategii, co sprawia, że każda rozgrywka jest unikalna.
+                <div class="games_single_game" id="catan">
+                    <div class="games_single_game_image">
+                        <img src="img/2025/games/catan.webp">
                     </div>
-                    <div class="catan_rules_board" onclick='window.location.href = "#catan_map";'>
-                        <img src="img/2025/games/catan-board.webp" alt="Mapa gry catan.">
-                    </div>
-                </div>
-            </div>
-
-            <div class="catan_results_container">
-                <div class="catan_results_box">
-                    <div class="catan_results_title">WYNIKI</div>
-                    <div class="catan_results_games">
-
-                        <div id="catanBy" class="flipdown catanBy"></div>
-                        
-                        <div class="catan_results_games_box" id="catan_results_games_box">
-                            <div class="catan_results_games_left" onclick="changeCatanRound('previous')"><</div>
-
-                            <div class="catan_results_games_center">
-                                <div class="catan_results_games_top">
-                                    <span class="catan_results_games_round" id="catan_results_games_round">NaN</span>
-                                </div>
-                                <div class="catan_results_games_content">
-
-                                    <div class="catan_results_round_0" id="catan_results_round_0">
-                                        <table class="catan_results_table">
-                                            <tr class="catan_results_header">
-                                                <th class="catan_results_header_position">Pos.</th>
-                                                <th class="catan_results_header_player">Gracz</th>
-                                                <th class="catan_results_header_points" title="Średnie miejsce ze wszystkich rund."> Avg. Pos.</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">1.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">2.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">3.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">4.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                    <div class="catan_results_round_1" id="catan_results_round_1">
-                                        <table class="catan_results_table">
-                                            <tr class="catan_results_header">
-                                                <th class="catan_results_header_position">Pos.</th>
-                                                <th class="catan_results_header_player">Gracz</th>
-                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">1.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">2.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">3.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">4.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                    <div class="catan_results_round_2" id="catan_results_round_2">
-                                        <table class="catan_results_table">
-                                            <tr class="catan_results_header">
-                                                <th class="catan_results_header_position">Pos.</th>
-                                                <th class="catan_results_header_player">Gracz</th>
-                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">1.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">2.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">3.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">4.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                    <div class="catan_results_round_3" id="catan_results_round_3">
-                                        <table class="catan_results_table">
-                                            <tr class="catan_results_header">
-                                                <th class="catan_results_header_position">Pos.</th>
-                                                <th class="catan_results_header_player">Gracz</th>
-                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">1.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">2.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">3.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">4.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                    <div class="catan_results_round_4" id="catan_results_round_4">
-                                        <table class="catan_results_table">
-                                            <tr class="catan_results_header">
-                                                <th class="catan_results_header_position">Pos.</th>
-                                                <th class="catan_results_header_player">Gracz</th>
-                                                <th class="catan_results_header_points" title="Punkty zwycięstwa zdobyte w danej rundzie."> Vic. pts. </th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">1.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">2.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">3.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="catan_results_position">4.</th>
-                                                <td class="catan_results_player">TBD</th>
-                                                <td class="catan_results_points">-</th>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                </div>
-                                <div class="catan_results_games_bottom">
-                                    <div class="selector_dot selector_dot_0" onclick='changeCatanRound(0)'></div>
-                                    <div class="selector_dot selector_dot_1" onclick='changeCatanRound(1)'></div>
-                                    <div class="selector_dot selector_dot_2" onclick='changeCatanRound(2)'></div>
-                                    <div class="selector_dot selector_dot_3" onclick='changeCatanRound(3)'></div>
-                                    <div class="selector_dot selector_dot_4" onclick='changeCatanRound(4)'></div>
-                                </div>
-                            </div>
-
-                            <div class="catan_results_games_right" onclick="changeCatanRound('next')">></div>
+                    <div class="games_single_game_details">
+                        <div class="games_single_game_title">Settlers of Catan</div>
+                        <div class="games_single_game_description">Catan to strategiczna gra planszowa, w której gracze rywalizują o dominację na wyspie, budując osady, drogi i miasta. Plansza składa się z heksagonalnych pól reprezentujących różne surowce: drewno, glinę, zboże, owce i rudy. Gracze zdobywają surowce, handlują nimi i rozwijają swoje osady, dążąc do uzyskania 10 punktów zwycięstwa.
                         </div>
+                        <div class="games_single_game_results"> <a href="https://www.catan.com/" target="_blank"> Zobacz więcej </a> </div>
                     </div>
                 </div>
-            </div>
 
+                <div class="games_single_game_reversed" id="codenames">
+                    <div class="games_single_game_image_reversed">
+                        <img src="img/2025/games/codenames.webp">
+                    </div>
+                    <div class="games_single_game_details">
+                        <div class="games_single_game_title">Codenames</div>
+                        <div class="games_single_game_description">Codenames to drużynowa gra słowna, w której gracze starają się odgadnąć hasła swojej drużyny na podstawie wskazówek od mistrza szpiegów. Liczy się spryt, skojarzenia i unikanie zakazanych słów, zwłaszcza tego jednego — zabójcy, który kończy grę.
+                        </div>
+                        <div class="games_single_game_results"> <a href="https://codenames.game/" target="_blank"> Zagraj online </a> </div>
+                    </div>
+                </div>
+
+                <div class="games_single_game">
+                    <div class="games_single_game_image" id="zoltar">
+                        <img src="img/2025/games/zoltar.webp">
+                    </div>
+                    <div class="games_single_game_details">
+                        <div class="games_single_game_title">Zoltar</div>
+                        <div class="games_single_game_description">Zoltar to zespołowa gra akcji rozgrywana w futurystycznej arenie, gdzie drużyny walczą ze sobą przy użyciu nowoczesnego sprzętu. Gra łączy elementy laser tagu i sportowej rywalizacji, stawiając na refleks, strategię i współpracę. Efekty świetlne, dym i dynamiczne tempo tworzą intensywne, wciągające doświadczenie.
+                        </div>
+                        <div class="games_single_game_results"> <a href="https://www.zoltar.pl/" target="_blank"> Zobacz więcej </a> </div>
+                    </div>
+                </div>
+
+                <div class="games_single_game_reversed">
+                    <div class="games_single_game_image_reversed" id="room">
+                        <img src="img/2025/games/escape-room.webp">
+                    </div>
+                    <div class="games_single_game_details">
+                        <div class="games_single_game_title">Escape Room</div>
+                        <div class="games_single_game_description"> Rywalizacja dwóch drużyn w escape roomie to pojedynek na spryt, logikę i współpracę. Obie ekipy wchodzą do identycznych pokoi i mają to samo zadanie: jak najszybciej rozwiązać zagadki i wydostać się z zamkniętego pomieszczenia. Liczy się czas, precyzja i dobra komunikacja – zwycięża drużyna, która pierwsza znajdzie wyjście.
+                        </div>
+                        <div class="games_single_game_results"> <a href="https://escapemegdynia.pl/" target="_blank"> Zobacz więcej </a> </div>
+                    </div>
+                </div>
+
+                <div class="games_single_game">
+                    <div class="games_single_game_image" id="pummel">
+                        <img src="img/2025/games/pummel.webp">
+                    </div>
+                    <div class="games_single_game_details">
+                        <div class="games_single_game_title">Pummel Party</div>
+                        <div class="games_single_game_description">Pummel Party to imprezowa gra multiplayer, w której gracze rywalizują na planszy pełnej pułapek i minigier. Każdy walczy o przewagę, używając szalonych broni i przeszkadzając rywalom na wszelkie możliwe sposoby. To mieszanka zręczności, strategii i czystego chaosu.
+                        </div>
+                        <div class="games_single_game_results"> <a href="https://store.steampowered.com/app/880940/Pummel_Party/" target="_blank"> Zobacz więcej </a> </div>
+                    </div>
+                </div>
+
+            </div>
         </section>
 
         <section class="catan_map" id="catan_map">
@@ -547,10 +394,6 @@
 
             <div class="catan_map_footer"> Naciśnij na pole zasobu lub statek by zobaczyć szczegóły. </div>
 
-        </section>
-
-        <section class="codenames" id="codenames">
-            <div class="codenames_under_construction"> SEKCJA W TRAKCIE BUDOWY </div>
         </section>
 
     </main>
