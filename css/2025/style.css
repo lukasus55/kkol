@@ -28,7 +28,7 @@ html
 
 body
 {
-    background-color: #ffffea;
+    background-color: #251706;
 }
 
 a {
@@ -219,7 +219,7 @@ a {
 .format
 {
     width: 100%;
-    height: 400px;
+    height: 440px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -249,12 +249,71 @@ a {
     justify-content: center;
     align-items: center;
     height: 320px;
+    width: 100%;
 }
 
 .format_video_player
 {
     width: 480px;
     height: 270px;
+}
+
+.fromat_details
+{
+    height: 40px;
+}
+
+.format_details_button
+{
+    width: 150px;
+    height: 40px;
+    background-color: #251706;
+    color: #adadad;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s;
+    border: 1px solid #464646;
+    cursor: pointer;
+    display: flex;
+    border-radius: 5pt;
+}
+
+.format_details_button:hover
+{
+    color: #fff;
+    border: 1px solid #ffffff;
+}
+
+.format_details_button:hover .format_details_button_icon img
+{
+    opacity: 100%;
+}
+
+.format_details_button_text
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 80%;
+}
+
+.format_details_button_icon 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 20%;
+}
+
+.format_details_button_icon img
+{
+    opacity: 70%;
+    width: 15px;
+    height: 15px;
+    transition: all 0.3s;
 }
 
 .ranking
@@ -307,7 +366,7 @@ a {
 
 .ranking_table .ranking_table_standard
 {
-    background-color: #fff;
+    background-color: #F4F5E9;
     color: #000000;
     border-top: 10px solid #251706;
     border-bottom: 10px solid #251706;
@@ -592,7 +651,7 @@ a {
 {
     width: 100%;
     height: 700px;
-    padding: 20px 10px 0px 10px;
+    padding: 20px 10px 20px 10px;
     /* background-color: #cf7c00; */
     display: flex;
     justify-content: center;
@@ -600,7 +659,6 @@ a {
     flex-wrap: wrap;
     background-color: #ffffea;
     color: #000000;
-    margin-bottom: 120px;
 }
 
 .catan_map_title
@@ -836,4 +894,129 @@ a {
     font-size: 16px;
     font-weight: 500;
     text-align: center;
+}
+
+.download
+{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 120px;
+    flex-wrap: wrap;
+}
+
+.download_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.download_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 350px;
+    margin-top: 20px;
+}
+
+.download_single_file
+{
+    width: 100%;
+    height: 50px;
+    background-color: #e4e4e4;
+    margin: 10px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    color: #000000;
+    border-radius: 5pt;
+}
+
+.download_single_file_icon
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+.download_single_file_icon_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50pt;
+    background-color: #ffffff;
+}
+
+.download_single_file_icon_container img
+{
+    width: 25px;
+    height: 25px;
+}
+
+.download_single_file_text
+{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 65%;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+.download_single_file_title
+{
+    display: flex;
+    align-items: center;
+    font-size: 17px;
+    width: 100%;
+    height: 60%;
+}
+
+.download_single_file_name
+{
+    display: flex;
+    align-items: flex-start;
+    font-size: 11px;
+    width: 100%;
+    height: 40%;
+    color: #494949;
+}
+
+.download_single_file_download
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    height: 100%;
+    border-radius: 0pt 5pt 5pt 0pt;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.download_single_file_download:hover
+{
+    background-color: #d1d1d1;
+}
+
+.download_single_file_download_icon
+{
+    width: 25px;
+    height: 25px;
+    scale: 100%;
+    transition: all 0.3s;
+}
+
+.download_single_file_download:hover .download_single_file_download_icon
+{
+    scale: 115%;
 }

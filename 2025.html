@@ -49,7 +49,7 @@
                   </div>
                 </div>
 
-                <div class="timeline-event left">
+                <div class="timeline-event left clickable"  onclick='window.location.href = "#zoltar";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                       <h3>Zoltar</h3>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 
-                <div class="timeline-event right">
+                <div class="timeline-event right clickable"  onclick='window.location.href = "#room";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <h3>Escape Room</h3>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-event left">
+                <div class="timeline-event left clickable"  onclick='window.location.href = "#pummel";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                       <h3>Pummel</h3>
@@ -73,16 +73,13 @@
                     </div>
                 </div>
                 
-                <div class="timeline-event right">
+                <div class="timeline-event right clickable"  onclick='window.location.href = "#codenames";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <h3>Dogrywki</h3>
                         <span>Wrzesień 2025</span>
                     </div>
                 </div>
-                
-              
-                <!-- Continue alternating -->
               </div>
               
 
@@ -99,6 +96,12 @@
                     <source src="./videos/2025/format-explainer.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video> 
+            </div>
+            <div class="format_details"> 
+                <button class="format_details_button" onclick="window.location.href='#download'"> 
+                    <div class="format_details_button_text"> Zobacz więcej </div>
+                    <div class="format_details_button_icon"> <img src="./img/double_down_arrows.webp"> </div>
+                </button>
             </div>
         </section>
 
@@ -394,6 +397,15 @@
 
             <div class="catan_map_footer"> Naciśnij na pole zasobu lub statek by zobaczyć szczegóły. </div>
 
+        </section>
+
+        <section class="download" id="download">
+            <div class="download_title"> <span class="main_title_text"> Pliki do pobrania </span> </div>
+            <div class="download_container">
+
+                Nie dodano jeszcze żadnych plików.
+
+            </div>
         </section>
 
     </main>
