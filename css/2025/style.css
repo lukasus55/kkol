@@ -914,6 +914,57 @@ a {
     margin-top: 40px;
 }
 
+.download_legend
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.download_legend_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 30px;
+    width: 500px;
+    font-size: 13px;
+    flex-wrap: wrap;
+}
+
+.download_lengend_single_type
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.download_legend_rectangle
+{
+    width: 30px;
+    height: 10px;
+    margin-right: 5px;
+}
+
+.download_legend_type_rules
+{
+    background-color: red;
+}
+
+.download_legend_type_results
+{
+    background-color: blue;
+}
+
+.download_legend_type_other
+{
+    background-color: yellow;
+}
+
 .download_container
 {
     display: flex;
@@ -1019,4 +1070,28 @@ a {
 .download_single_file_download:hover .download_single_file_download_icon
 {
     scale: 115%;
+}
+
+.download_single_file_download a
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.download_type_rules
+{
+    border-left: 5px solid red;
+}
+
+.download_type_results
+{
+    border-left: 5px solid blue;
+}
+
+.download_type_other
+{
+    border-left: 5px solid yellow;
 }
