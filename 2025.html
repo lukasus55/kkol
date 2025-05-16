@@ -114,7 +114,7 @@
             <div class="ranking_table_segment">
                 <table class="ranking_table">
                     <tr class="ranking_table_header">
-                        <th class="ranking_position" rowspan="2">Pos.</th>
+                        <th class="ranking_position" rowspan="2">Poz.</th>
                         <th class="ranking_player_header" rowspan="2">Gracz</th>
                         <th class="ranking_pts" colspan="6">Punkty</th>
                     </tr>
@@ -189,6 +189,12 @@
                 </table>
             </div>
 
+            <div class="ranking_button_section">
+                <button class="ranking_details_button" onclick="showResultsPopup()"> 
+                    <div class="ranking_details_button_text"> Szczegóły </div>
+                </button>
+            </div>
+
             <script src="./js/table-loader.js" type="module"></script>
             <script type="module">
                 import tableLoader from "./js/table-loader.js"
@@ -196,6 +202,116 @@
             </script>
             
         </section>
+
+        <div class="results_popup" id="results_popup">
+            <div class="results_container" id="results_container">
+                <div class="results_close_button" id="results_close_button" onclick="closeResultsPopup()">
+                    <img src="img/close_tab_black.webp" class="results_close_button_icon" style="width:25px; height:25px;">
+                </div>
+                <div class="results_game" id="results_game">
+                    <div class="results_title" id="results_title"></div>
+                    <div class="results_box" id="results_box"> 
+                        <div class="results_single_game" id="results_game_noResults"> Ta gra się jeszcze nie odbyła. </div>
+                        <div class="results_single_game results_game_catan" id="results_game_catan">
+                            <table class="results_game_catan_table">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" class="results_game_catan_position"> Poz. </th>
+                                        <th rowspan="2" class="results_game_catan_player"> Gracz </th>
+                                        <th colspan="2" class="results_game_catan_round"> Runda 1 </th>
+                                        <th colspan="2" class="results_game_catan_round"> Runda 2 </th>
+                                        <th colspan="2" class="results_game_catan_round"> Total </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="results_game_catan_position" title="Punkty gry"> Pkt. </th>
+                                        <th class="results_game_catan_vp" title="Victory Points (Punkty pomocnicze gry)"> VP </th>
+                                        <th class="results_game_catan_position" title="Punkty gry"> Pkt. </th>
+                                        <th class="results_game_catan_vp" title="Victory Points (Punkty pomocnicze gry)"> VP </th>
+                                        <th class="results_game_catan_position" title="Punkty gry"> Pkt. </th>
+                                        <th class="results_game_catan_vp" title="Victory Points (Punkty pomocnicze gry)"> VP </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td> 1 </td>
+                                        <td class="results_game_catan_player_name"> Harnoldihno </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> 0 </td>
+                                        <td> 0 </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td> 1 </td>
+                                        <td class="results_game_catan_player_name"> Kostyś </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> 0 </td>
+                                        <td> 0 </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td> 1 </td>
+                                        <td class="results_game_catan_player_name"> Kukuła </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> 0 </td>
+                                        <td> 0 </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td> 1 </td>
+                                        <td class="results_game_catan_player_name"> DamiDami2 </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> 0 </td>
+                                        <td> 0 </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="results_choose_game" id="results_choose_game"> Wybierz grę </div>
+                <div class="results_footer">
+                    <div class="results_footer_disabled" id="results_footer_disabled"></div>
+                    <div class="results_footer_container">
+                        <div class="results_footer_container_single_game" title="Catan" id="results_footer_catan" onclick="showGameResults(`catan`)">
+                            <img src="img/2025/games/catan-logo-black.webp">
+                        </div>
+                    </div>
+                    <div class="results_footer_container">
+                        <div class="results_footer_container_single_game" title="Codenames" id="results_footer_codenames" onclick="showGameResults(`codenames`)">
+                            <img src="img/2025/games/codenames-logo-black.webp">
+                        </div>
+                    </div>
+                    <div class="results_footer_container">
+                        <div class="results_footer_container_single_game" title="Zoltar" id="results_footer_zoltar" onclick="showGameResults(`zoltar`)">
+                            <img src="img/2025/games/zoltar-logo-black.webp">
+                        </div>
+                    </div>
+                    <div class="results_footer_container">
+                        <div class="results_footer_container_single_game" title="Escape Room" id="results_footer_room" onclick="showGameResults(`room`)">
+                            <img src="img/2025/games/escape-room-logo-black.webp">
+                        </div>
+                    </div>
+                    <div class="results_footer_container">
+                        <div class="results_footer_container_single_game" title="Pummel Party" id="results_footer_pummel" onclick="showGameResults(`pummel`)">
+                            <img src="img/2025/games/pummel-logo-black.webp">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <section class="games" id="games">
             <div class="games_title"> <span class="main_title_text"> KONKURENCJE </span> </div>

@@ -224,6 +224,7 @@ a {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    margin-bottom: 50px;
 }
 
 .format_title
@@ -318,7 +319,7 @@ a {
 
 .ranking
 {
-    height: 400px;
+    height: 500px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -450,6 +451,47 @@ a {
     align-self: flex-end;
 }
 
+.ranking_button_section
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.ranking_details_button
+{
+    width: 150px;
+    height: 40px;
+    background-color: #251706;
+    color: #adadad;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s;
+    border: 1px solid #464646;
+    cursor: pointer;
+    display: flex;
+    border-radius: 5pt;
+}
+
+.ranking_details_button:hover
+{
+    color: #fff;
+    border: 1px solid #ffffff;
+    opacity: 100%;
+}
+
+.ranking_details_button_text
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
 .close_tab
 {
     width: 20px;
@@ -485,6 +527,240 @@ a {
 
 .hidden {
     display: none;
+}
+
+@keyframes fadeIn {
+    from {
+      scale: 0;
+    }
+    to {
+      scale: 1;
+    }
+}
+
+.results_popup
+{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 100;
+    background-color: #00000063;
+}
+
+.results_container
+{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 110;
+    width: 700px;
+    height: 100px;
+    background-color: #FBAB18;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    border-radius: 5pt;
+    transition: 1s;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    overflow: auto;
+}
+
+.results_close_button
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 0%;
+    left: calc(100% - 50px);
+    cursor: pointer;
+    z-index: 150;
+}
+
+.results_close_button_icon
+{
+    height: 25px;
+    width: 25px;
+    scale: 1.0;
+    transition: 0.2s;
+}
+
+.results_close_button:hover .results_close_button_icon
+{
+    scale: 1.3;
+}
+
+.results_game
+{
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 450px;
+    color: #000000;
+}
+
+.results_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    font-size: 2rem;
+    font-weight: 700;
+    animation: fadeIn 1s;
+}
+
+.results_choose_game
+{
+    display: none;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    transition: 1s;
+}
+
+.results_footer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    border-radius: 0pt 0pt 5pt 5pt;
+    animation: appearFromLeft 1s;
+}
+
+.results_footer_disabled
+{
+    display: none;
+    bottom: 0px;
+    left: 0%;
+    z-index: 120;
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    cursor: not-allowed;
+}
+
+.results_footer_container
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    z-index: 110;
+}
+
+.results_footer_container_single_game
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    opacity: 50%;
+    margin: 0px 5px;
+}
+
+.results_footer_container_single_game:hover
+{
+    opacity: 100%;
+}
+
+.results_footer_container_single_game img
+{
+    width: 30px;
+    height: 30px;
+    transition: 0.2s;
+}
+
+.results_footer_container_single_game:hover img
+{
+    scale: 1.15;   
+}
+
+.results_footer_container_single_game_active
+{
+    border-bottom: 3px solid black;
+    opacity: 100%;
+}
+
+.results_box
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 390px;
+    animation: fadeIn 1s;
+}
+
+.results_game_catan
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80%;
+    height: 100%;
+}
+
+.results_game_catan_table
+{
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 16px;
+}
+
+.results_game_catan_table th
+{
+    height: 20px;
+}
+
+.results_game_catan_table tbody tr
+{
+    height: 30px;
+}
+
+.results_game_catan_position
+{
+    width: 50px;
+}
+
+.results_game_catan_player
+{
+    width: 120px;
+}
+
+.results_game_catan_player_name
+{
+    text-align: left;
+}
+
+.results_game_catan_round
+{
+    width: 100px;
+}
+
+.results_game_catan_points
+{
+    width: 50px;
+}
+
+.results_game_catan_vp
+{
+    width: 50px;
 }
 
 .games

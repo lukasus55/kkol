@@ -1,4 +1,120 @@
 var deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+var deviceHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+
+const resultsPopup = document.querySelector('#results_popup');
+const resultsContainer = document.querySelector('#results_container');
+const resultsGameSection = document.querySelector('#results_game');
+const resultsChooseGame = document.querySelector('#results_choose_game');
+const resultsFooterDisabler = document.querySelector('#results_footer_disabled');
+
+resultsPopup.style.display = "none";
+
+function closeResultsPopup()
+{
+    resultsPopup.style.display = "none";
+}
+
+const resultsTitle = document.querySelector('#results_title');
+
+function showResultsPopup(game)
+{
+
+    resultsGameSection.style.display = "none";
+    resultsPopup.style.display = "flex";
+
+    if (!game) 
+    {
+        const gamesIcons = document.querySelectorAll('.results_footer_container_single_game');
+        gamesIcons.forEach(item => {
+            item.classList.remove("results_footer_container_single_game_active");
+        });
+
+        resultsContainer.style.height = "100px";
+        resultsChooseGame.style.scale = "1";
+        resultsGameSection.style.display = "none";
+        resultsChooseGame.style.display = "flex";
+    }
+    else
+    {
+        showGameResults(game);
+    }
+
+}
+
+function showGameResults(game)
+{
+    if (!game) 
+    {
+        console.error('ERROR: ResultsPopup - Game not specified!');
+        return;
+    }
+
+    const isAlreadySelected = document.querySelector(`#results_footer_${game}`).classList.value.includes('results_footer_container_single_game_active') //Checks if it is already showing this game
+    if (isAlreadySelected)
+    {
+        hideGameResults(game);
+        return;
+    }
+
+    const gamesIcons = document.querySelectorAll('.results_footer_container_single_game');
+    gamesIcons.forEach(item => {
+        item.classList.remove("results_footer_container_single_game_active");
+    });
+
+    const thisGameIcon  = document.querySelector(`#results_footer_${game}`);
+    thisGameIcon.classList.add("results_footer_container_single_game_active");
+
+    resultsContainer.style.height = Math.min(deviceHeight-150,500)+"px";
+    resultsChooseGame.style.scale = "0";
+    resultsGameSection.style.scale = "1";
+    resultsFooterDisabler.style.display = "flex";
+    setTimeout(() => {
+        resultsGameSection.style.display = "flex";
+        resultsChooseGame.style.display = "none";
+        resultsFooterDisabler.style.display = "none";
+    }, "1000");
+
+    let title = game.toUpperCase();
+    if (game==='room') { title = 'ESCAPE ROOM' }
+    if (game==='pummel') { title = 'PUMMEL PARTY' }
+
+    resultsTitle.textContent = title;
+
+    const gamesBoxes = document.querySelectorAll('.results_single_game');
+
+    const finishedGames = ['catan']
+    const isFinished = finishedGames.includes(game);
+    let thisGameBox = document.querySelector(`#results_game_noResults`);
+
+    if (isFinished) 
+    {
+        thisGameBox = document.querySelector(`#results_game_${game}`);
+    }
+
+    gamesBoxes.forEach(item => {
+        item.style.display = "none";
+    });
+
+    thisGameBox.style.display = "flex";
+}
+
+function hideGameResults(game)
+{
+    console.log(`test`)
+    resultsContainer.style.height = "100px";
+    resultsChooseGame.style.display = "flex";
+    resultsChooseGame.style.scale = "1";
+    resultsGameSection.style.scale = "0";
+    resultsGameSection.style.display = "none";
+    resultsFooterDisabler.style.display = "flex";
+
+    const thisGameIcon  = document.querySelector(`#results_footer_${game}`);
+    thisGameIcon.classList.remove("results_footer_container_single_game_active");
+
+    setTimeout(() => {
+        resultsFooterDisabler.style.display = "none";
+    }, "1000");
+}
 
 const catanPopup = document.querySelector('#catan_popup');
 const catanPopupWidth = document.getElementById("catan_popup").offsetWidth

@@ -39,6 +39,11 @@
     height: 180px;
 }
 
+.ranking
+{
+    height: 440px;
+}
+
 .ranking_popup_container
 {
     width: 250px;
@@ -70,6 +75,12 @@
 {
     width: 150px;
 }
+
+.ranking_button_section
+{
+    display: none;
+}
+
 
 @keyframes appearFromLeft {
     from {
