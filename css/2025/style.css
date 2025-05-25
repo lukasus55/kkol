@@ -1,13 +1,13 @@
 @font-face 
 {
     font-family: 'Markazi Text';
-    src: url("../../fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf");
+    src: url("../../../fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf");
 }
 
 @font-face 
 {
     font-family: 'Lexend';
-    src: url("../../fonts/Lexend/Lexend-VariableFont_wght.ttf");
+    src: url("../../../fonts/Lexend/Lexend-VariableFont_wght.ttf");
 }
 
 *
@@ -41,9 +41,62 @@ a {
     cursor: pointer;
 }
 
-.invisible
+.hidden 
 {
-    opacity: 0%;
+    opacity: 0;
+    transition: 1s;
+    filter: blur(3px);
+    transform: translateY(2rem);
+}
+
+.show
+{
+    opacity: 100%;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.hiddenSingle
+{
+    opacity: 0;
+    transition: 0.5s;;
+    transform: translateY(2rem);
+}
+
+.showSingle
+{
+    opacity: 100%;
+    transform: translateY(0);
+}
+
+.hiddenSingle:nth-child(1)
+{
+    transition-delay: 200ms;
+}
+
+.hiddenSingle:nth-child(2)
+{
+    transition-delay: 400ms;
+}
+
+.hiddenSingle:nth-child(3)
+{
+    transition-delay: 600ms;
+}
+
+.hiddenSingle:nth-child(4)
+{
+    transition-delay: 600ms;
+}
+
+.hiddenSingle:nth-child(5)
+{
+    transition-delay: 800ms;
+}
+
+.hiddenSingle:nth-child(6)
+{
+    transition-delay: 1000ms;
 }
 
 .logo
@@ -525,10 +578,6 @@ a {
     cursor: pointer;
 }
 
-.hidden {
-    display: none;
-}
-
 @keyframes fadeIn {
     from {
       scale: 0;
@@ -553,7 +602,7 @@ a {
 .results_container
 {
     position: fixed;
-    top: 50%;
+    top: 45%;
     left: 50%;
     z-index: 110;
     width: 700px;
@@ -604,7 +653,7 @@ a {
     align-self: center;
     flex-wrap: wrap;
     width: 100%;
-    height: 450px;
+    height: 350px;
     color: #000000;
 }
 
@@ -638,18 +687,6 @@ a {
     height: 50px;
     border-radius: 0pt 0pt 5pt 5pt;
     animation: appearFromLeft 1s;
-}
-
-.results_footer_disabled
-{
-    display: none;
-    bottom: 0px;
-    left: 0%;
-    z-index: 120;
-    position: absolute;
-    width: 100%;
-    height: 50px;
-    cursor: not-allowed;
 }
 
 .results_footer_container
@@ -703,7 +740,7 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 390px;
+    height: 290px;
     animation: fadeIn 1s;
 }
 
@@ -927,249 +964,108 @@ a {
 {
     width: 100%;
     height: 700px;
-    padding: 20px 10px 20px 10px;
     /* background-color: #cf7c00; */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    background-color: #ffffea;
-    color: #000000;
-}
-
-.catan_map_title
-{
-    width: 100%;
-    height: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 50px;
-    font-weight: 700;
-}
-
-.catan_map_subtitle
-{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.catan_map_reason, .catan_map_disclaimer
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50%;
-    width: 51%;
-    text-align: center;
-}
-
-.catan_map_disclaimer
-{
-    font-size: 16px;
-}
-
-.catan_interactive_map_container
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 450px;
-    height: 400px;
-    font-weight: 500;
-    background-image: url(../../img/2025/games/catan_icons/normalBackground.webp);
-    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../img/2025/games/catan_icons/normalBackground.webp'); */
-    background-size: cover;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),  rgba(0, 0, 0, 0.5)), url("/img/2025/catan-panorma.webp");
+    color: #ffffff;
+    background-repeat: no-repeat;
     background-position: center;
-}
-
-.catan_interactive_map
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 300px;
-    height: 300px;
-    font-weight: 500;
-}
-
-.catan_interactive_map_row
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 20%;
-}
-
-.catan_hexagon 
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80px; /* adjust to control the size  */
-    aspect-ratio: cos(30deg);
-    clip-path: polygon(-50% 50%,50% 100%,150% 50%,50% 0);
-    background: #3B8686;
-    color: #ffefb1;
-    font-size: 20px;
     background-size: cover;
-    background-position: center;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.catan_hexagon_forest
-{
-    background-image: url(../../img/2025/games/catan_icons/forest.webp);
-}
-
-.catan_hexagon_stone
-{
-    background-image: url(../../img/2025/games/catan_icons/stone.webp);
-}
-
-.catan_hexagon_plains
-{
-    background-image: url(../../img/2025/games/catan_icons/plains.webp);
-}
-
-.catan_hexagon_wheat
-{
-    background-image: url(../../img/2025/games/catan_icons/wheat.webp);
-}
-
-.catan_hexagon_bricks
-{
-    background-image: url(../../img/2025/games/catan_icons/bricks.webp);
-}
-
-.catan_hexagon_desert
-{
-    background-image: url(../../img/2025/games/catan_icons/desert.webp);
-}
-
-.catan_hexagon_number
-{
-    width: 30px;
-    height: 30px;
-    background-color: #ffefb1;
-    color: #000000;
-    border-radius: 20px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    border: 1px solid black;
 }
 
-.catan_hexagon_number_red
+.catan_box
 {
-    color: #ff0000;
-}
-
-.catan_popup
-{
-    display: flex;
-    position: absolute;
-    width: 200px;
-    height: 110px;
-    background-color: #ffffff;
-    z-index: 100;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 10px 10px 10px 10px;
-    flex-wrap: wrap;
-}
-
-.catan_popup_close
-{
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: #ffffff;
-    z-index: 100;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-}
-
-.catan_popup_title
-{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    align-items: center;
-    font-size: 22px;
-    justify-content: center;
-    font-weight: 500;
-}
-
-.catan_popup_stats, .catan_popup_ship_stats
-{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
-
-.catan_popup_ship_stats
-{
-    display: none;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-}
-
-.catan_popup ul 
-{
-    list-style-type: none;
-}
-
-.catan_popup_close img
-{
-    width: 100%;
+    width: max(550px, 60%);
     height: 100%;
-}
-
-.catan_interactive_sea
-{
-    position: absolute;
-    width: inherit;
-    height: inherit;
-    z-index: 5;
     display: flex;
     justify-content: flex-start;
-    align-items: flex-start;
+}
+
+.catan_left
+{
+    display: flex;
+    justify-content: center;
+    width: 550px;
+    height: 100%;
+    color: #ffffff;
     flex-wrap: wrap;
 }
 
-.catan_ship
+.catan_empty_space
 {
-    position: relative;
-    width: 50%;
-    height: 14.28%;
-    z-index: 6;
-}
-
-.catan_map_footer
-{
-    width: 100%;
-    height: 5%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
-    font-weight: 500;
+    height: 25%;
+    width: 100%;
+}
+
+.catan_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 30%;
+    width: 100%;
+    padding-bottom: 30px;
+    font-size: 60px;
+    font-weight: 900;
+    flex-wrap: wrap;
+}
+
+.catan_title span
+{
+    display: flex;
+    height: 50px;
+    width: 100%;
     text-align: center;
+    align-items: center;
+}
+
+.catan_details
+{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 10%;
+    width: 100%;
+    padding: 0px 120px 0px 0px;
+    font-size: 13px;
+}
+
+.catan_details_text
+{
+    text-align: left;
+    width: 100%;
+}
+
+.catan_button_section
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 35%;
+    width: 100%;
+}
+
+.catan_button
+{
+    color: #fff;
+    border: none;
+    background-color: hsla(0, 0%, 100%, .2);
+    width: 200px;
+    height: 45px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 25pt;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.catan_button:hover
+{
+    scale: 1.05;
 }
 
 .download

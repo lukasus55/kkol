@@ -131,52 +131,40 @@
     height: auto;
 }
 
-.catan_map
+.catan_box
 {
-    height: 500px;
+    width: min(550px, 100%);
 }
 
-.catan_map_title
+.catan_left
 {
-    font-size: 25px;
+    width: 100%;
 }
 
-.catan_map_subtitle
+.catan_title
 {
-    height: 35%;
+    font-size: 40px;
+    font-weight: 900;
+    height: 25%;
 }
 
-.catan_map_reason, .catan_map_disclaimer
+.catan_details
 {
-    width: 90%;
-    font-size: 13px;
+    padding: 0px 10px;
 }
 
-.catan_interactive_map
+.catan_details_text
 {
-    width: 200px;
-    height: 200px;
+    text-align: justify;
 }
 
-.catan_hexagon 
+.catan_button_section
 {
-    height: 55px;
+    padding-top: 30px;
+    justify-content: center;
 }
 
-.catan_interactive_map_container
+.catan_title span
 {
-    width: 300px;
-    height: 250px;
-}
-
-.catan_hexagon_number
-{
-    height: 20px;
-    width: 20px;
-    font-size: 14px;
-}
-
-.catan_map_footer
-{
-    font-size: 10px;
+    justify-content: center;
 }

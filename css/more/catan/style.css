@@ -1,0 +1,297 @@
+@font-face 
+{
+    font-family: 'Lexend';
+    src: url("/fonts/Lexend/Lexend-VariableFont_wght.ttf");
+}
+
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html
+{
+    font-family: "Lexend", serif;
+    font-weight: normal;
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body
+{
+    background: #1F1C1C;
+
+    color: #fff;
+    padding-bottom: 100px;
+}
+
+a
+{
+    text-decoration: none;
+    color: inherit;
+}
+
+.clickable
+{
+    cursor: pointer;
+}
+
+.invisible
+{
+    opacity: 0%;
+}
+
+.round
+{
+    width: 100%;
+    height: 550px;
+    padding: 20px 10px 20px 10px;
+    /* background-color: #cf7c00; */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.round_title
+{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: 700;
+}
+
+.round_title_number
+{
+    color: #ce6c6c;
+}
+
+.catan_map_subtitle
+{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.catan_map_reason, .catan_map_disclaimer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 51%;
+    text-align: center;
+}
+
+.catan_map_disclaimer
+{
+    font-size: 16px;
+}
+
+.catan_interactive_map_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 450px;
+    height: 400px;
+    font-weight: 500;
+    background-image: url(/img/2025/games/catan_icons/normalBackground.webp);
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/img/2025/games/catan_icons/normalBackground.webp'); */
+    background-size: cover;
+    background-position: center;
+}
+
+.catan_interactive_map
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 300px;
+    height: 300px;
+    font-weight: 500;
+}
+
+.catan_interactive_map_row
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 20%;
+}
+
+.catan_hexagon, .catan_hexagon_2
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px; /* adjust to control the size  */
+    aspect-ratio: cos(30deg);
+    clip-path: polygon(-50% 50%,50% 100%,150% 50%,50% 0);
+    background: #3B8686;
+    color: #ffefb1;
+    font-size: 20px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.catan_hexagon_forest, .catan_hexagon_forest_2
+{
+    background-image: url(/img/2025/games/catan_icons/forest.webp);
+}
+
+.catan_hexagon_stone, .catan_hexagon_stone_2
+{
+    background-image: url(/img/2025/games/catan_icons/stone.webp);
+}
+
+.catan_hexagon_plains, .catan_hexagon_plains_2
+{
+    background-image: url(/img/2025/games/catan_icons/plains.webp);
+}
+
+.catan_hexagon_wheat, .catan_hexagon_wheat_2
+{
+    background-image: url(/img/2025/games/catan_icons/wheat.webp);
+}
+
+.catan_hexagon_bricks, .catan_hexagon_bricks_2
+{
+    background-image: url(/img/2025/games/catan_icons/bricks.webp);
+}
+
+.catan_hexagon_desert, .catan_hexagon_desert_2
+{
+    background-image: url(/img/2025/games/catan_icons/desert.webp);
+}
+
+.catan_hexagon_number
+{
+    width: 30px;
+    height: 30px;
+    background-color: #ffefb1;
+    color: #000000;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.catan_hexagon_number_red
+{
+    color: #ff0000;
+}
+
+.catan_popup, .catan_popup_2
+{
+    display: none;
+    position: absolute;
+    width: 200px;
+    height: 110px;
+    background-color: #ffffff;
+    z-index: 100;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10px 10px 10px 10px;
+    flex-wrap: wrap;
+    color: #000000;
+}
+
+.catan_popup_close
+{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    z-index: 100;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.catan_popup_title
+{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.catan_popup_stats, .catan_popup_ship_stats
+{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.catan_popup_ship_stats
+{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+.catan_popup ul 
+{
+    list-style-type: none;
+}
+
+.catan_popup_close img
+{
+    width: 100%;
+    height: 100%;
+}
+
+.catan_interactive_sea
+{
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    z-index: 5;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.catan_ship, .catan_ship_2
+{
+    position: relative;
+    width: 50%;
+    height: 14.28%;
+    z-index: 6;
+}
+
+.catan_map_footer
+{
+    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}

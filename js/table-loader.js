@@ -1,4 +1,4 @@
-import { loadData } from "./helpers.js";
+import { loadData } from "/js/helpers.js";
 
 let standings = [];
 
@@ -7,7 +7,7 @@ export default async function tableLoader(loadedSeason) {
     let data;
 
     //defining standings
-    data = await loadData('./seasons.json');
+    data = await loadData('/seasons.json');
 
     let season = data[loadedSeason];
 
@@ -17,7 +17,7 @@ export default async function tableLoader(loadedSeason) {
     }
 
     //displaying results
-    data = await loadData('./profiles.json');
+    data = await loadData('/profiles.json');
     for(let i = 0; i < standings.length; i++){
         const player_id = standings[i];
         const player = data[player_id];
