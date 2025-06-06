@@ -35,7 +35,7 @@
                   <div class="timeline-dot current"></div>
                   <div class="timeline-content">
                     <h3>Catan</h3>
-                    <span>Czerwiec 2025</span>
+                    <span>Lipiec 2025</span>
                   </div>
                 </div>
               
@@ -51,7 +51,7 @@
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                       <h3>Zoltar</h3>
-                      <span>Lipiec 2025</span>
+                      <span>Sierpień 2025</span>
                     </div>
                 </div>
                 
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 
-                <div class="timeline-event right clickable"  onclick='window.location.href = "#codenames";'>
+                <div class="timeline-event right clickable"  onclick='window.location.href = "#tiebreaker";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <h3>Dogrywki</h3>
@@ -86,22 +86,6 @@
     </header>
 
     <main class="main" id="main">
-
-        <section class="format" id="format">
-            <div class="format_title"> <span class="main_title_text"> FORMAT I ZASADY </span> </div>
-            <div class="format_video"> 
-                <video poster="/img/2025/format-explainer-thumbnail.png" onloadstart="this.volume=0.3" controls class="format_video_player">
-                    <source src="/videos/2025/format-explainer.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video> 
-            </div>
-            <div class="format_details"> 
-                <button class="format_details_button" onclick="window.location.href='#download'"> 
-                    <div class="format_details_button_text"> Zobacz więcej </div>
-                    <div class="format_details_button_icon"> <img src="/img/double_down_arrows.webp"> </div>
-                </button>
-            </div>
-        </section>
 
         <section class="ranking" id="ranking">
 
@@ -311,6 +295,22 @@
             </div>
         </div>
 
+        <section class="format" id="format">
+            <div class="format_title"> <span class="main_title_text"> FORMAT I ZASADY </span> </div>
+            <div class="format_video"> 
+                <video poster="/img/2025/format-explainer-thumbnail.png" onloadstart="this.volume=0.3" controls class="format_video_player">
+                    <source src="/videos/2025/format-explainer.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video> 
+            </div>
+            <div class="format_details"> 
+                <button class="format_details_button" onclick="window.location.href='#download'"> 
+                    <div class="format_details_button_text"> Zobacz więcej </div>
+                    <div class="format_details_button_icon"> <img src="/img/double_down_arrows.webp"> </div>
+                </button>
+            </div>
+        </section>
+
         <section class="games" id="games">
             <div class="games_title"> <span class="main_title_text"> KONKURENCJE </span> </div>
             <div class="games_list">
@@ -372,6 +372,18 @@
                         <div class="games_single_game_description">Pummel Party to imprezowa gra multiplayer, w której gracze rywalizują na planszy pełnej pułapek i minigier. Każdy walczy o przewagę, używając szalonych broni i przeszkadzając rywalom na wszelkie możliwe sposoby. To mieszanka zręczności, strategii i czystego chaosu.
                         </div>
                         <div class="games_single_game_results"> <a href="https://store.steampowered.com/app/880940/Pummel_Party/" target="_blank"> Zobacz więcej </a> </div>
+                    </div>
+                </div>
+
+                <div class="games_single_game_reversed">
+                    <div class="games_single_game_image_reversed" id="tiebreaker">
+                        <img src="/img/2025/games/gametba.webp">
+                    </div>
+                    <div class="games_single_game_details">
+                        <div class="games_single_game_title">Dogrywki</div>
+                        <div class="games_single_game_description"> Dodatkowa runda w razie remisu. Szeczgóły w krótce.
+                        </div>
+                        <div class="games_single_game_results">  </div>
                     </div>
                 </div>
 

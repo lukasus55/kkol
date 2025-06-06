@@ -1,109 +1,78 @@
-const showYearButton = document.querySelector('#drag_out');
-const showYearButton2 = document.querySelector('#year_text');
-const showYearButtonIcon = document.querySelector('.drag_out_img');
-const yearPopup = document.querySelector('#year_selector');
-const footerYear = document.querySelector('#footer_menu');
-const yearContainer = document.querySelector('#year_selector_texts');
-const footerYearDisable = document.querySelector('#footer_menu_disable');
-var currentYearStatus = 0;
+//==================== SEASON SELECTOR SECTION ====================
 
-var deviceWidthF = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+const showSelectorButton = document.querySelector('#show_selector_button');
+const selectorContainer = document.querySelector('#season_selector_container');
+const selectorBox = document.querySelector('#season_selector_box');
 
-function showSeletor() {
-    yearPopup.style.backgroundColor = "#141212";
-    if(deviceWidthF<2560)
-        {
-            yearPopup.style.height = "200px"; 
-        }
-    else
-        {
-            yearPopup.style.height = "300px";
-        };
-    showYearButtonIcon.style.rotate = "180deg";
-    footerYear.style.opacity = 0;
-    currentYearStatus = 1;
-    yearContainer.style.display = "flex";
+let isMobile = window.innerWidth<=768;
 
-    setTimeout(() => {
-        footerYearDisable.style.display = "none";
-    }, 500);
-}
+window.onresize = () => {
+    isMobile = window.innerWidth<=768;
+};
 
-function closeSeletor() {
-    yearPopup.style.backgroundColor = "#14121200";
-    yearPopup.style.height = "20px";
-    showYearButtonIcon.style.rotate = "0deg";
-    footerYear.style.opacity = 1;
-    currentYearStatus = 0;
-    yearContainer.style.display = "none";
+let hideTimeout;
 
-    setTimeout(() => {
-        footerYearDisable.style.display = "flex";
-    }, 500);
-}
-
-showYearButton.addEventListener('click', () => {
-    if (currentYearStatus == 0) {
-        showSeletor();
-    }
-    else {
-        closeSeletor();
-    };
-});
-
-if (showYearButton2) 
+function hideSelector()
 {
-    showYearButton2.addEventListener('click', () => {
-        if (currentYearStatus == 0) {
-            showSeletor();
+        selectorContainer.classList.remove('show');
+        showSelectorButton.classList.remove('active');
+}
+
+function showSelector()
+{
+        clearTimeout(hideTimeout); // Cancel any pending hide
+        selectorContainer.classList.add('show');
+        showSelectorButton.classList.add('active');
+}
+
+function trytHideSelector()
+{
+    hideTimeout = setTimeout(() => {
+        if (!selectorContainer.matches(':hover') && !showSelectorButton.matches(':hover') && !isMobile) {
+            hideSelector()
         }
-        else {
-            closeSeletor();
-        };
-    });
+    }, 100);
 }
 
+showSelectorButton.addEventListener("mouseenter", () => {
+    if(isMobile) {return;}
+    showSelector()
+});
 
+selectorContainer.addEventListener("mouseenter", () => {
+    clearTimeout(hideTimeout);
+});
 
-const contact = document.querySelector('#contact');
-const contactButton = document.getElementById("footer_icons_contact");
-const contactContainer = document.querySelector('#contact_container');
-var currentContactStatus = 0;
+showSelectorButton.addEventListener("mouseleave", trytHideSelector);
+selectorContainer.addEventListener("mouseleave", trytHideSelector);
 
-function showContact() {
-
-    if(deviceWidthF>768)
-        {
-            contact.style.height = "60px"; 
-        }
-    else
-        {
-            contact.style.height = "120px";
-        };
-
-    setTimeout(() => {
-        contactContainer.style.display = "flex";
-    }, 300);
- 
-    currentContactStatus = 1;
-    contactButton.classList.add('footer_icons_active');
-    
-}
-
-function closeContact() {
-    contactContainer.style.display = "none";
-    contact.style.height = "0px";
-    currentContactStatus = 0;
-    contactButton.classList.remove('footer_icons_active');
-}
-
-contactButton.addEventListener('click', () => {
-    if (currentContactStatus == 0) {
-        showContact()
+showSelectorButton.addEventListener("click", () => {
+    if(selectorContainer.classList.contains("show"))
+    {
+        hideSelector();
     }
-    else {
-        closeContact()
-    };
+    else
+    {
+        showSelector();
+    }
 });
 
 
+//==================== CONTACT SECTION ====================
+
+const showContactButton = document.querySelector('#show_contact_button');
+const contactContainer = document.querySelector('#contact_container');
+
+showContactButton.addEventListener("click", () => {
+    console.log(contactContainer.classList)
+    if(contactContainer.classList.contains("show"))
+    {
+        contactContainer.classList.remove("show");
+        showContactButton.classList.remove("active");
+    }
+    else
+    {
+        contactContainer.classList.add("show");
+        showContactButton.classList.add("active");
+    }
+});

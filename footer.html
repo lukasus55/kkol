@@ -1,90 +1,66 @@
 <link rel="stylesheet" href="/css/footer/style.css">
 <link rel="stylesheet" media="screen and (max-width:768px)" href="/css/footer/small.css">
-<link rel="stylesheet" media="screen and (max-width:992px) and (min-width: 768px)" href="/css/footer/medium.css">
-<link rel="stylesheet" media="screen and (min-width:2560px)" href="/css/footer/large.css">
 <script>
     window.location.replace("home");
 </script>
 
-<div class="footer_bar_container">
-    <div class="year_selector_container">
-        <div class="year_selector" id="year_selector">
+<div class="footer_container">
 
-            <div class="drag_out" id="drag_out">
-                <img src="/img/drag_up.webp" class="drag_out_img">
+    <div class="footer_season_selector" id="season_selector_container">
+        <div class="footer_season_selector_single_season_container">
+            <div class="footer_season_selector_single_season">
+                <a href="/2025">
+                    <div class="selector_single_season_icon"> 
+                        <img src="/img/s25_logo.webp" width="30px" height="30px">    
+                    </div>
+                    <div class="selector_single_season_name"> SEZON 2025 </div>
+                </a>
             </div>
-
-            <div class="year_selector_texts" id="year_selector_texts">
-                <div class="year_selector_title">
-                    Wybierz sezon
-                </div>
-                <div class="year_selector_segments">
-                    <li><a href="/2025">2025</a></li>
-                    <li><a href="/2024">2024</a></li>
-                </div>
-                <div class="year_selector_segments year_selector_center_segment">
-                    
-                </div>
-                <div class="year_selector_segments">
-                    
-                </div>
-            </div>
-
         </div>
-    </div>    
-
+        
+        <div class="footer_season_selector_single_season_container">
+            <div class="footer_season_selector_single_season">
+                <a href="/2024">
+                    <div class="selector_single_season_icon"> 
+                        <img src="/img/s24_logo.webp" width="30px" height="30px">    
+                    </div>
+                    <div class="selector_single_season_name"> SEZON 2024 </div>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <div class="footer_bar">
-
-        <div class="footer_icons">
-            <div class="footer_icons_single_icon" title="Strona Główna">
-                <a href="/home" class="fullLink"> <img src="/img/home_icon.webp" alt="Biała ikona domu"> </a> 
+        <a href="/home">
+            <div class="footer_bar_button" title="Strona Główna">
+                <img src="/img/home_icon.webp">
             </div>
-            <div class="footer_icons_single_icon footer_icons_contact" id="footer_icons_contact" title="Kontakt">
-                <a href="#contact" class="fullLink"> <img src="/img/contact_icon.webp" alt="Biała ikona telefonu"> </a>
-            </div>
-            <div class="footer_icons_single_icon" title="Profile">
-                <a href="/profiles" class="fullLink"> <img src="/img/profile_icon.webp" alt="Biała ikona człowieka"> </a>
-            </div>
+        </a>
+        <div class="footer_bar_button" title="Kontakt" id="show_contact_button">
+            <img src="/img/contact_icon.webp">
         </div>
-
-        <div class="footer_menu" id="footer_menu"><div class="footer_menu_disable" id="footer_menu_disable">
-            <div class="footer_menu_left">
-                <div class="footer_menu_left_year" id="footer_menu_left_year">
-                    <a href="/2024" id="footer_menu_left_year_link"><span id="footer_menu_left_year_text"> 2024 </span></a>
-                </div>
-            </div>
-            <div class="footer_menu_center">
-                <a href="/2025" id="footer_menu_center_year_link"><span id="footer_menu_center_year_text"> 2025 </span></a>
-            </div>
-            <div class="footer_menu_right">
-            </div>
-        </div></div>
-
-        <div class="footer_logos">
-            <div class="footer_single_logo">
-                <img src="/img/logos/olympic-logo.webp" class="square_footer_logo" title="Olimpiada Karwińska">
-            </div>
-            <div class="footer_single_logo">
-                <img src="/img/logos/kkol-white.webp" class="kkol_footer_logo" alt="Napis KKOL w białej obramówce." title="Karwiński Komitet Olimpijski">
-            </div>
-            <div class="footer_single_logo">
-                <img src="/img/logos/es-logo.webp" class="square_footer_logo" alt="Jasnozielony napis ES na zielono-niebieskim tle." title="ES.company">
-            </div>
+        <div class="footer_bar_button" title="Sezony" id="show_selector_button">
+            <img src="/img/calendar_icon.webp">
         </div>
-
+        <a href="/profiles">
+            <div class="footer_bar_button" title="Profile">
+                <img src="/img/profile_icon.webp">
+            </div>
+        </a>
+        <a href="/settings">
+            <div class="footer_bar_button" title="Ustawienia">
+                <img src="/img/settings_icon.webp">
+            </div>
+        </a>
     </div>
 
-    <div class="contact" id="contact">
-
-            <div class="contact_container" id="contact_container">
-                <div class="contact_mail">
-                    Kontakt z administratorem strony:&nbsp;<a href="mailto:admin@kkol.pl" class="mail_link"> admin@kkol.pl </a>
-                </div>
-                <div class="contact_mail">
-                    Kontakt z zarządem KKOL:&nbsp;<a href="mailto:zarzad@kkol.pl" class="mail_link"> zarzad@kkol.pl </a>
-                </div>
-            </div>
-            
+    <div class="footer_contact_container" id="contact_container">
+        <div class="footer_contact_mail">
+            Kontakt z administratorem strony:&nbsp;<a href="mailto:admin@kkol.pl" class="mail_link"> admin@kkol.pl </a>
+        </div>
+        <div class="footer_contact_mail">
+            Kontakt z zarządem KKOL:&nbsp;<a href="mailto:zarzad@kkol.pl" class="mail_link"> zarzad@kkol.pl </a>
+        </div>
     </div>
+
 </div>
