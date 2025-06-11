@@ -4,43 +4,6 @@
     src: url("../../../fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf");
 }
 
-@font-face 
-{
-    font-family: 'Lexend';
-    src: url("../../../fonts/Lexend/Lexend-VariableFont_wght.ttf");
-}
-
-*
-{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html
-{
-    font-family: "Lexend", serif;
-    font-weight: normal;
-    scroll-behavior: smooth;
-    color: #000000;
-    font-size: 16px;
-}
-
-body
-{
-    background: #141212;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.clickable
-{
-    cursor: pointer;
-}
-
 .hidden 
 {
     opacity: 0;
@@ -99,6 +62,11 @@ a {
     transition-delay: 1000ms;
 }
 
+.header
+{
+    color: #000000;
+}
+
 .logo
 {
     position: absolute;
@@ -108,13 +76,13 @@ a {
 
 .logo img
 {
-    width: 150px;
-    height: 80px;
+    width: 9.375rem;
+    height: 5rem;
 }
 
 .header
 {
-    padding: 20px 10px 10px 10px;
+    padding: 1.25rem 0.625rem 0.625rem 0.625rem;
     background-color: #ffffea;
     display: flex;
     flex-direction: row;
@@ -136,8 +104,8 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 60px;
-    font-size: 30px;
+    height: 3.75rem;
+    font-size: 1.875rem;
     font-weight: 600;
     /* text-shadow: 1px 1px 3px .636363; */
     color: #cf7c00;
@@ -149,8 +117,8 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 70px;
-    font-size: 50px;
+    height: 4.375rem;
+    font-size: 3.125rem;
     font-weight: 600;
     color: #000000
 }
@@ -162,14 +130,14 @@ a {
     align-items: center;
     width: 100%; 
     height: 87%;
-    font-size: 40px;
+    font-size: 2.5rem;
     text-align: center;
 }
 
 .timeline 
 {
     position: relative;
-    width: 700px;
+    width: 43.75rem;
     margin: 2rem auto;
     padding: 2rem 0;
 }
@@ -181,7 +149,7 @@ a {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 4px; /* thicker for visibility */
+    width: 0.25rem; /* thicker for visibility */
     height: 100%;
     background-color: #cf7c00;
     z-index: 0; /* behind dots */
@@ -203,7 +171,7 @@ a {
     width: 1.2rem;
     height: 1.2rem;
     border-radius: 50%;
-    border: 2px solid white;
+    border: 0.125rem solid white;
     background: #cf7c00;
     z-index: 2; /* above line */
 }
@@ -262,21 +230,21 @@ a {
 
 .main_title_text
 {
-    font-size: 30px;
-    border-left: 10px solid #FAE577;
-    padding-left: 10px ;
+    font-size: 1.875rem;
+    border-left: 0.625rem solid #FAE577;
+    padding-left: 0.625rem ;
     font-weight: 700;
 }
 
 .format
 {
     width: 100%;
-    height: 440px;
+    height: 27.5rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px;
+    margin-bottom: 3.125rem;
 }
 
 .format_title
@@ -285,15 +253,15 @@ a {
     justify-content: center;
     align-items: flex-end;
     width: 100%;
-    font-size: 30px;
+    font-size: 1.875rem;
     font-weight: 700;
-    height: 80px;
+    height: 5rem;
 }
 
 .format_title_text
 {
-    border-left: 10px solid #FAE577;
-    padding-left: 10px ;
+    border-left: 0.625rem solid #FAE577;
+    padding-left: 0.625rem ;
 }
 
 .format_video
@@ -301,35 +269,35 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 320px;
+    height: 20rem;
     width: 100%;
 }
 
 .format_video_player
 {
-    width: 480px;
-    height: 270px;
+    width: 30rem;
+    height: 16.875rem;
 }
 
 .fromat_details
 {
-    height: 40px;
+    height: 2.5rem;
 }
 
 .format_details_button
 {
-    width: 150px;
-    height: 40px;
+    width: 9.375rem;
+    height: 2.5rem;
     background-color: #251706;
     color: #adadad;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     border: none;
     transition: all 0.3s;
-    border: 1px solid #464646;
+    border: 0.0625rem solid #464646;
     cursor: pointer;
     display: flex;
-    border-radius: 5pt;
+    border-radius: 0.3125rem;
 }
 
 .format_details_button:hover
@@ -364,18 +332,18 @@ a {
 .format_details_button_icon img
 {
     opacity: 70%;
-    width: 15px;
-    height: 15px;
+    width: 0.9375rem;
+    height: 0.9375rem;
     transition: all 0.3s;
 }
 
 .ranking
 {
-    height: 500px;
+    height: 31.25rem;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 20px;
+    margin-top: 1.25rem;
 }
 
 .ranking_title
@@ -385,7 +353,7 @@ a {
     align-items: center;
     color: #FFFFFF;
     width: 100%;
-    height: 80px;
+    height: 5rem;
 }
 
 .ranking_table_segment
@@ -403,7 +371,7 @@ a {
     border-collapse: collapse;
     font-weight: 600;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .ranking_table th
@@ -414,29 +382,29 @@ a {
 
 .ranking_table tr
 {
-    height: 40px;
+    height: 2.5rem;
 }
 
 .ranking_table .ranking_table_standard
 {
     background-color: #F4F5E9;
     color: #000000;
-    border-top: 10px solid #251706;
-    border-bottom: 10px solid #251706;
-    height: 50px;
+    border-top: 0.625rem solid #251706;
+    border-bottom: 0.625rem solid #251706;
+    height: 3.125rem;
 }
 
 .ranking_table .ranking_table_position
 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
-    width: 60px;
+    width: 3.75rem;
     text-align: center;
 }
 
 .ranking_table .ranking_player_header
 {
-    width: 160px;
+    width: 10rem;
 }
 
 .ranking_table .ranking_player
@@ -446,60 +414,39 @@ a {
 
 .ranking_table .ranking_game
 {
-    padding: 0px;
+    padding: 0rem;
     transition: background-color 0.6s ease;
-    width: 60px;
+    width: 3.75rem;
     opacity: 80%;
+}
+
+.ranking_game:hover
+{
+    opacity: 100%;
 }
 
 .ranking_game1,.ranking_game2,.ranking_game3,.ranking_game4
 {
-    padding-top: 4px;
+    padding-top: 0.25rem;
     height: 100%;
-}
-
-.ranking_game_clickable:hover
-{
-    opacity: 100%;
-    cursor: pointer;
 }
 
 .ranking_table .ranking_total_header
 {
-    width: 60px;
+    width: 3.75rem;
     font-weight: 800;
 }
 
 .ranking_table .ranking_total
 {
-    width: 60px;
+    width: 3.75rem;
     font-weight: 800;
-}
-
-.ranking_table .ranking_table_first_position
-{
-    color: #c08300;
-}
-
-.ranking_table .ranking_table_second_position
-{
-    color: #8b8b8b;
-}
-
-.ranking_table .ranking_table_third_position
-{
-    color: #7c350c;
-}
-
-.ranking_table .ranking_table_fourth_position
-{
-    color: #8BA8B7;
 }
 
 .ranking_table .ranking_game img
 {
-    width: 26px;
-    height: 26px;
+    width: 1.625rem;
+    height: 1.625rem;
     align-self: flex-end;
 }
 
@@ -508,24 +455,24 @@ a {
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-top: 20px;
-    margin-bottom: 40px;
+    margin-top: 1.25rem;
+    margin-bottom: 2.5rem;
 }
 
 .ranking_details_button
 {
-    width: 150px;
-    height: 40px;
+    width: 9.375rem;
+    height: 2.5rem;
     background-color: #251706;
     color: #adadad;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     border: none;
     transition: all 0.3s;
-    border: 1px solid #464646;
+    border: 0.0625rem solid #464646;
     cursor: pointer;
     display: flex;
-    border-radius: 5pt;
+    border-radius: 0.3125rem;
 }
 
 .ranking_details_button:hover
@@ -546,29 +493,29 @@ a {
 
 .close_tab
 {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 .ranking_popup_line
 {
     width: 100%;
-    height: 3px;
-    margin: 10px 0px 10px 0px;
-    border-bottom: 3px solid .000000;;
+    height: 0.1875rem;
+    margin: 0.625rem 0rem 0.625rem 0rem;
+    border-bottom: 0.1875rem solid .000000;;
 }
 
 .ranking_popup_subline
 {
     width: 100%;
-    height: 3px;
-    margin: 10px 0px 10px 0px;
+    height: 0.1875rem;
+    margin: 0.625rem 0rem 0.625rem 0rem;
     font-weight: 500;
 }
 
 .ranking_popup_subtitle
 {
-    font-size: 25px;
+    font-size: 1.5625rem;
     color: #000000;
 }
 
@@ -604,12 +551,12 @@ a {
     top: 45%;
     left: 50%;
     z-index: 110;
-    width: 700px;
-    height: 100px;
+    width: 43.75rem;
+    height: min(calc(100% - 150px),25rem);
     background-color: #FBAB18;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    border-radius: 5pt;
+    box-shadow: 0 0 0.625rem rgba(0,0,0,0.3);
+    border-radius: 0.3125rem;
     transition: 1s;
     display: flex;
     justify-content: center;
@@ -624,18 +571,18 @@ a {
     justify-content: center;
     align-items: center;
     position: absolute;
-    width: 50px;
-    height: 50px;
+    width: 3.125rem;
+    height: 3.125rem;
     top: 0%;
-    left: calc(100% - 50px);
+    left: calc(100% - 3.125rem);
     cursor: pointer;
     z-index: 150;
 }
 
 .results_close_button_icon
 {
-    height: 25px;
-    width: 25px;
+    height: 1.5625rem;
+    width: 1.5625rem;
     scale: 1.0;
     transition: 0.2s;
 }
@@ -652,7 +599,7 @@ a {
     align-self: center;
     flex-wrap: wrap;
     width: 100%;
-    height: 350px;
+    height: 21.875rem;
     color: #000000;
 }
 
@@ -662,7 +609,7 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 60px;
+    height: 3.75rem;
     font-size: 2rem;
     font-weight: 700;
     animation: fadeIn 1s;
@@ -671,7 +618,7 @@ a {
 .results_choose_game
 {
     display: none;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #000000;
     transition: 1s;
@@ -683,8 +630,8 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 50px;
-    border-radius: 0pt 0pt 5pt 5pt;
+    height: 3.125rem;
+    border-radius: 0pt 0pt 0.3125rem 0.3125rem;
     animation: appearFromLeft 1s;
 }
 
@@ -694,7 +641,7 @@ a {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    height: 40px;
+    height: 2.5rem;
     z-index: 110;
 }
 
@@ -703,11 +650,18 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     cursor: pointer;
     opacity: 50%;
-    margin: 0px 5px;
+    margin: 0rem 0.3125rem;
+}
+
+.results_footer_container_single_game img
+{
+    width: 1.875rem;
+    height: 1.875rem;
+    transition: 0.2s;
 }
 
 .results_footer_container_single_game:hover
@@ -717,8 +671,8 @@ a {
 
 .results_footer_container_single_game img
 {
-    width: 30px;
-    height: 30px;
+    width: 1.875rem;
+    height: 1.875rem;
     transition: 0.2s;
 }
 
@@ -739,7 +693,7 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 290px;
+    height: 18.125rem;
     animation: fadeIn 1s;
 }
 
@@ -756,47 +710,42 @@ a {
 {
     border-collapse: collapse;
     text-align: center;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .results_game_catan_table th
 {
-    height: 20px;
+    height: 1.25rem;
 }
 
 .results_game_catan_table tbody tr
 {
-    height: 30px;
+    height: 1.875rem;
 }
 
 .results_game_catan_position
 {
-    width: 50px;
+    width: 3.125rem;
 }
 
 .results_game_catan_player
 {
-    width: 120px;
-}
-
-.results_game_catan_player_name
-{
-    text-align: left;
+    width: 7.5rem;
 }
 
 .results_game_catan_round
 {
-    width: 100px;
+    width: 6.25rem;
 }
 
 .results_game_catan_points
 {
-    width: 50px;
+    width: 3.125rem;
 }
 
 .results_game_catan_vp
 {
-    width: 50px;
+    width: 3.125rem;
 }
 
 .games
@@ -813,9 +762,9 @@ a {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 40px;
-    margin-top: 40px;
-    margin-bottom: 20px;
+    height: 2.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
 }
 
 @keyframes appearFromLeft {
@@ -846,16 +795,16 @@ a {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    width: 600px;
-    padding-bottom: 20px;
+    width: 37.5rem;
+    padding-bottom: 1.25rem;
 }
 
 .games_single_game
 {
     display: flex;
     width: 100%;
-    height: 150px;
-    margin: 40px 0px;
+    height: 9.375rem;
+    margin: 2.5rem 0rem;
     animation: appearFromLeft linear;
     animation-timeline: view();
     animation-range: entry 0% cover 35%;
@@ -866,8 +815,8 @@ a {
 {
     display: flex;
     width: 100%;
-    height: 150px;
-    margin: 40px 0px;
+    height: 9.375rem;
+    margin: 2.5rem 0rem;
     flex-direction: row-reverse;
     animation: appearFromRight linear;
     animation-timeline: view();
@@ -880,9 +829,9 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 280px;
+    width: 17.5rem;
     height: 100%;
-    margin-right: 20px;
+    margin-right: 1.25rem;
 }
 
 .games_single_game_image_reversed
@@ -890,15 +839,15 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 280px;
+    width: 17.5rem;
     height: 100%;
-    margin-left: 20px;
+    margin-left: 1.25rem;
 }
 
 .games_single_game_image img, .games_single_game_image_reversed img
 {
-    width: 280px;
-    height: 150px;
+    width: 17.5rem;
+    height: 9.375rem;
 }
 
 .games_single_game_details
@@ -906,7 +855,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
+    width: 18.75rem;
     height: 100%;
     flex-wrap: wrap;
 }
@@ -920,7 +869,7 @@ a {
     height: 15%;
     font-weight: 700;
     color: #ffe6be;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .text_reversed
@@ -933,7 +882,7 @@ a {
     width: 100%;
     height: 70%;
     text-align: justify;
-    font-size: 12px;
+    font-size: 0.75rem;
     display: flex;
     align-items: stretch;
 }
@@ -943,7 +892,7 @@ a {
     width: 100%;
     height: 15%;
     color: #ffe6be;
-    font-size: 12px;
+    font-size: 0.75rem;
     text-decoration: underline;
     display: flex;
     align-items: flex-end;
@@ -962,7 +911,7 @@ a {
 .catan_map
 {
     width: 100%;
-    height: 700px;
+    height: 43.75rem;
     /* background-color: #cf7c00; */
     background-image: linear-gradient(rgba(0, 0, 0, 0.5),  rgba(0, 0, 0, 0.5)), url("/img/2025/catan-panorma.webp");
     color: #ffffff;
@@ -975,7 +924,7 @@ a {
 
 .catan_box
 {
-    width: max(550px, 60%);
+    width: max(34.375rem, 60%);
     height: 100%;
     display: flex;
     justify-content: flex-start;
@@ -985,7 +934,7 @@ a {
 {
     display: flex;
     justify-content: center;
-    width: 550px;
+    width: 34.375rem;
     height: 100%;
     color: #ffffff;
     flex-wrap: wrap;
@@ -1007,8 +956,8 @@ a {
     align-items: flex-end;
     height: 30%;
     width: 100%;
-    padding-bottom: 30px;
-    font-size: 60px;
+    padding-bottom: 1.875rem;
+    font-size: 3.75rem;
     font-weight: 900;
     flex-wrap: wrap;
 }
@@ -1016,7 +965,7 @@ a {
 .catan_title span
 {
     display: flex;
-    height: 50px;
+    height: 3.125rem;
     width: 100%;
     text-align: center;
     align-items: center;
@@ -1029,8 +978,8 @@ a {
     align-items: flex-start;
     height: 10%;
     width: 100%;
-    padding: 0px 120px 0px 0px;
-    font-size: 13px;
+    padding: 0rem 7.5rem 0rem 0rem;
+    font-size: 0.8125rem;
 }
 
 .catan_details_text
@@ -1053,11 +1002,11 @@ a {
     color: #fff;
     border: none;
     background-color: hsla(0, 0%, 100%, .2);
-    width: 200px;
-    height: 45px;
-    font-size: 18px;
+    width: 12.5rem;
+    height: 2.8125rem;
+    font-size: 1.125rem;
     font-weight: 700;
-    border-radius: 25pt;
+    border-radius: 1.5625rem;
     cursor: pointer;
     transition: 0.2s;
 }
@@ -1071,7 +1020,7 @@ a {
 {
     display: flex;
     justify-content: center;
-    padding-bottom: 120px;
+    padding-bottom: 7.5rem;
     flex-wrap: wrap;
 }
 
@@ -1080,9 +1029,9 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 30px;
+    height: 1.875rem;
     width: 100%;
-    margin-top: 40px;
+    margin-top: 2.5rem;
 }
 
 .download_legend
@@ -1090,7 +1039,7 @@ a {
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 1.25rem;
 }
 
 .download_legend_container
@@ -1098,9 +1047,9 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 30px;
-    width: 500px;
-    font-size: 13px;
+    min-height: 1.875rem;
+    width: 31.25rem;
+    font-size: 0.8125rem;
     flex-wrap: wrap;
 }
 
@@ -1110,15 +1059,15 @@ a {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    margin-right: 15px;
-    margin-left: 15px;
+    margin-right: 0.9375rem;
+    margin-left: 0.9375rem;
 }
 
 .download_legend_rectangle
 {
-    width: 30px;
-    height: 10px;
-    margin-right: 5px;
+    width: 1.875rem;
+    height: 0.625rem;
+    margin-right: 0.3125rem;
 }
 
 .download_legend_type_rules
@@ -1142,20 +1091,20 @@ a {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    width: 350px;
-    margin-top: 20px;
+    width: 21.875rem;
+    margin-top: 1.25rem;
 }
 
 .download_single_file
 {
     width: 100%;
-    height: 50px;
+    height: 3.125rem;
     background-color: #e4e4e4;
-    margin: 10px 0px;
+    margin: 0.625rem 0rem;
     display: flex;
     flex-wrap: wrap;
     color: #000000;
-    border-radius: 5pt;
+    border-radius: 0.3125rem;
 }
 
 .download_single_file_icon
@@ -1172,16 +1121,16 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50pt;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 3.125rem;
     background-color: #ffffff;
 }
 
 .download_single_file_icon_container img
 {
-    width: 25px;
-    height: 25px;
+    width: 1.5625rem;
+    height: 1.5625rem;
 }
 
 .download_single_file_text
@@ -1198,7 +1147,7 @@ a {
 {
     display: flex;
     align-items: center;
-    font-size: 17px;
+    font-size: 1.0625rem;
     width: 100%;
     height: 60%;
 }
@@ -1207,7 +1156,7 @@ a {
 {
     display: flex;
     align-items: flex-start;
-    font-size: 11px;
+    font-size: 0.6875rem;
     width: 100%;
     height: 40%;
     color: #494949;
@@ -1220,7 +1169,7 @@ a {
     align-items: center;
     width: 15%;
     height: 100%;
-    border-radius: 0pt 5pt 5pt 0pt;
+    border-radius: 0pt 0.3125rem 0.3125rem 0pt;
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -1232,8 +1181,8 @@ a {
 
 .download_single_file_download_icon
 {
-    width: 25px;
-    height: 25px;
+    width: 1.5625rem;
+    height: 1.5625rem;
     scale: 100%;
     transition: all 0.3s;
 }
@@ -1254,15 +1203,15 @@ a {
 
 .download_type_rules
 {
-    border-left: 5px solid red;
+    border-left: 0.3125rem solid red;
 }
 
 .download_type_results
 {
-    border-left: 5px solid blue;
+    border-left: 0.3125rem solid blue;
 }
 
 .download_type_other
 {
-    border-left: 5px solid yellow;
+    border-left: 0.3125rem solid yellow;
 }

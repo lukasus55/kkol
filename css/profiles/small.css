@@ -18,22 +18,32 @@
 .profile_main_section 
 {
     height: 100%;
-    width: 255px; 
+    width: 200px;
+}
+
+.profile_pfp
+{
+    width: 100px;
 }
 
 .profile_name_section
 {
     height: 40%;
-    width: 255px;
+    width: 200px;
 }
 
 .profile_medals
 {
     height: 60%;
-    width: 255px;
+    width: 200px;
 }
 
 .profile_info
 {
     padding: 10px;
+}
+
+.single_season
+{
+    width: 100%;
 }

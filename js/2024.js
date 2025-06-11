@@ -132,9 +132,9 @@ function changeGame(game, height, title, results_game) {
 
     game.style.opacity = 1;
 
-    if ((height == "800px") && (deviceWidth<=768))
+    if ((height == "50rem") && (deviceWidth<=768))
     {
-        height = "300px"
+        height = "18.75rem"
     }
 
     resultsContainer.style.height = height;
@@ -148,34 +148,34 @@ function changeGame(game, height, title, results_game) {
 }
 
 game1.addEventListener('click', () => {
-    changeGame(game1, "300px", "Minigolf", resultsGame1);
+    changeGame(game1, "18.75rem", "Minigolf", resultsGame1);
 });
 
 game2.addEventListener('click', () => {
-    changeGame(game2, "500px", "Monopoly", resultsGame2);
+    changeGame(game2, "31.25rem", "Monopoly", resultsGame2);
 });
 
 game3.addEventListener('click', () => {
-    changeGame(game3, "550px", "Bilard", resultsGame3);
+    changeGame(game3, "34.375rem", "Bilard", resultsGame3);
 });
 
 game4.addEventListener('click', () => {
-    changeGame(game4, "800px", "Kinect", resultsGame4);
+    changeGame(game4, "50rem", "Kinect", resultsGame4);
 });
 
 rgame1.addEventListener('click', () => {
-    changeGame(game1, "300px", "Minigolf", resultsGame1);
+    changeGame(game1, "18.75rem", "Minigolf", resultsGame1);
 });
 
 rgame2.addEventListener('click', () => {
-    changeGame(game2, "500px", "Monopoly", resultsGame2);
+    changeGame(game2, "31.25rem", "Monopoly", resultsGame2);
 });
 
 rgame3.addEventListener('click', () => {
-    changeGame(game3, "550px", "Bilard", resultsGame3);
+    changeGame(game3, "34.375rem", "Bilard", resultsGame3);
 });
 
 rgame4.addEventListener('click', () => {
-    changeGame(game4, "800px", "Kinect", resultsGame4);
+    changeGame(game4, "50rem", "Kinect", resultsGame4);
 });
 // document.getElementById("#button").onclick = doFunction;

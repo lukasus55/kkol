@@ -1,23 +1,6 @@
 /* max-width:992px */
 /* min-width:768px */
 
-.timeline_game
-{
-    width: 2%;
-    padding-top: 10px;
-}
-
-.timeline_wide
-{
-    width: 40%;
-    cursor: default;
-}
-
-.timeline_name
-{
-    display: none;
-}
-
 @keyframes appearFromLeft {
     from {
         opacity: 0;

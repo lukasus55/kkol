@@ -31,7 +31,7 @@ function showResultsPopup(game)
             item.classList.remove("results_footer_container_single_game_active");
         });
 
-        resultsContainer.style.height = "100px";
+        resultsContainer.style.height = "6.25rem";
         resultsChooseGame.style.scale = "1";
         resultsGameSection.style.display = "none";
         resultsChooseGame.style.display = "flex";
@@ -56,6 +56,7 @@ function showGameResults(game)
         return;
     }
 
+    resultsContainer.style.height = "min(calc(100% - 150px),25rem)";
     const isAlreadySelected = document.querySelector(`#results_footer_${game}`).classList.value.includes('results_footer_container_single_game_active') //Checks if it is already showing this game
     if (isAlreadySelected)
     {
@@ -68,7 +69,7 @@ function showGameResults(game)
         item.classList.remove("results_footer_container_single_game_active");
     });
 
-    resultsContainer.style.height = Math.min(deviceHeight-150,400)+"px";
+    // resultsContainer.style.height = Math.min(deviceHeight-150,400)+"px";
     resultsChooseGame.style.scale = "0";
     resultsGameSection.style.scale = "1";
 
@@ -111,7 +112,7 @@ function showGameResults(game)
 
 function hideGameResults(game)
 {
-    resultsContainer.style.height = "100px";
+    resultsContainer.style.height = "6.25rem"; // Reset height to default
     resultsChooseGame.style.display = "flex";
     resultsChooseGame.style.scale = "1";
     resultsGameSection.style.scale = "0";

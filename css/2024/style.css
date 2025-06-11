@@ -2,68 +2,32 @@
 {
     font-family: 'Markazi Text';
     src: url("../../fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf");
-}
-
-@font-face 
-{
-    font-family: 'Lexend';
-    src: url("../../fonts/Lexend/Lexend-VariableFont_wght.ttf");
-}
-
-*
-{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html
-{
-    font-family: "Lexend", serif;
     font-weight: normal;
-    scroll-behavior: smooth;
-    color: #000000;
-}
-
-body
-{
-    background-color: #eaf6ff;
-}
-
-a
-{
-    text-decoration: none;
-    color:inherit;
-    justify-content: center;
-    align-items: center;
-}
-
-.clickable
-{
-    cursor: pointer;
+    font-style: normal;
 }
 
 .logo
 {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 0.625rem;
+    right: 0.625rem;
 }
 
 .logo img
 {
-    width: 150px;
-    height: 80px;
+    width: 9.375rem;
+    height: 5rem;
 }
 
 .header
 {
-    padding: 20px 10px 10px 10px;
+    padding: 1.25rem 0.625rem 0.625rem 0.625rem;
     background-color: #eaf6ff;
     height: 100vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    color: #000000;
 }
 
 .header_container
@@ -82,7 +46,7 @@ a
     align-items: center;
     width: 100%;
     height: 6%;
-    font-size: 30px;
+    font-size: 1.875rem;
     font-weight: 600;
     /* text-shadow: 1px 1px 3px .636363; */
     color: #0050c7
@@ -95,7 +59,7 @@ a
     align-items: center;
     width: 100%;
     height: 7%;
-    font-size: 50px;
+    font-size: 3.125rem;
     font-weight: 600;
     color: #000000
 }
@@ -198,10 +162,10 @@ a
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 25px;
+    font-size: 1.5625rem;
     font-weight: 600;
     width: 100%;
-    height: 40px;
+    height: 2.5rem;
 }
 
 .player_icon
@@ -210,15 +174,15 @@ a
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100px;
+    height: 6.25rem;
 }
 
 .player_icon img
 {
-    border: 5px solid;
+    border: 0.3125rem solid;
     border-radius: 20pc;
-    width: 80px;
-    height: 80px;
+    width: 5rem;
+    height: 5rem;
 }
 
 .player_icon .player_border_first
@@ -242,34 +206,35 @@ a
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
-    margin-top: 50px;
+    margin-top: 3.125rem;
 }
 
 .play_again_button
 {
-    width: 160px;
-    height: 40px;
+    width: 13rem;
+    height: 2.5rem;
     font-weight: 600;
-    border-radius: 30px;
+    border-radius: 1.875rem;
     transition: opacity 1s ease, color 0.6s ease, background-color 0.6s ease;
     color: #002e74;
     background-color: #ffffff;
-    border: 4px solid #002e74;
+    border: 0.25rem solid #002e74;
     cursor: pointer;
+    font-size: 1.2rem;
 }
 
 .play_again_button:hover
 {
     color: #ffffff;
     background-color: #003688;
-    border: 4px solid #002e74;
+    border: 0.25rem solid #002e74;
 }
 
 .ranking
 {
     background-color: #001a6e;
-    height: 470px;
-    padding: 40px 10px 10px 10px;
+    height: 29.375rem;
+    padding: 2.5rem 0.625rem 0.625rem 0.625rem;
     color: #FFFFFF;
     display: flex;
     justify-content: center;
@@ -282,14 +247,14 @@ a
     justify-content: center;
     color: #FFFFFF;
     width: 100%;
-    font-size: 30px;
+    font-size: 1.875rem;
     height: 10%;
     font-weight: 600;
 }
 
 .ranking_table_segment
 {
-    margin-top: 50px;
+    margin-top: 3.125rem;
     display: flex;
     justify-content: center;
     width: 90%;
@@ -315,38 +280,38 @@ a
 
 .ranking_table tr
 {
-    height: 40px;
+    height: 2.5rem;
 }
 
 .ranking_table .ranking_position
 {
-    border: 0px;
-    width: 60px;
+    border: 0rem;
+    width: 3.75rem;
 }
 
 .ranking_table .ranking_player_header
 {
-    width: 200px;
+    width: 12.5rem;
 }
 
 .ranking_table .ranking_player
 {
-    padding-left: 20px;
+    padding-left: 1.25rem;
     text-align: left;
 }
 
 .ranking_table .ranking_game
 {
-    padding: 0px;
+    padding: 0rem;
     transition: background-color 0.6s ease;
     cursor: pointer;
-    width: 60px;
+    width: 3.75rem;
     opacity: 90%;
 }
 
 .ranking_game1,.ranking_game2,.ranking_game3,.ranking_game4
 {
-    padding-top: 4px;
+    padding-top: 0.25rem;
     height: 100%;
     width: 100%;
 }
@@ -360,13 +325,13 @@ a
 
 .ranking_table .ranking_total_header
 {
-    width: 60px;
+    width: 3.75rem;
     font-weight: 800;
 }
 
 .ranking_table .ranking_total
 {
-    width: 60px;
+    width: 3.75rem;
     font-weight: 800;
 }
 
@@ -396,8 +361,8 @@ a
 
 .ranking_table .ranking_game img
 {
-    width: 26px;
-    height: 26px;
+    width: 1.625rem;
+    height: 1.625rem;
     align-self: flex-end;
 }
 
@@ -406,9 +371,9 @@ a
     display: flex;
     justify-content: center;
     color: #FFFFFF;
-    margin-top: 15px;
+    margin-top: 0.9375rem;
     width: 100%;
-    font-size: 13px;
+    font-size: 0.8125rem;
     height: 10%;
     text-decoration: underline;
 }
@@ -424,18 +389,18 @@ a
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 100;
 }
 
 .ranking_popup_container 
 {
     background: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 1.25rem;
+    border-radius: 0.625rem;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    height: 350px;
+    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+    width: 25rem;
+    height: 21.875rem;
     color: #000000;
     opacity: 100%;
     font-family: "Markazi Text", serif;
@@ -446,53 +411,53 @@ a
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 50px;
+    height: 3.125rem;
     width: 100%;
 }
 
 .ranking_popup_title
 {
-    padding: 5px 0px 5px 30px;
-    font-size: 30px;
+    padding: 0.3125rem 0rem 0.3125rem 1.875rem;
+    font-size: 1.875rem;
     color: #000000;
     font-weight: 600;
-    width: 330px;
+    width: 20.625rem;
     font-family: "Lexend", serif;
 }
 
 .ranking_popup_close_tab
 {
     align-self: flex-start;
-    width: 30px;
-    height: 30px;
+    width: 1.875rem;
+    height: 1.875rem;
     cursor: pointer;
 }
 
 .close_tab
 {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 .ranking_popup_line
 {
     width: 100%;
-    height: 3px;
-    margin: 10px 0px 10px 0px;
-    border-bottom: 3px solid .000000;;
+    height: 0.1875rem;
+    margin: 0.625rem 0rem 0.625rem 0rem;
+    border-bottom: 0.1875rem solid .000000;;
 }
 
 .ranking_popup_subline
 {
     width: 100%;
-    height: 3px;
-    margin: 10px 0px 10px 0px;
+    height: 0.1875rem;
+    margin: 0.625rem 0rem 0.625rem 0rem;
     font-weight: 500;
 }
 
 .ranking_popup_subtitle
 {
-    font-size: 25px;
+    font-size: 1.5625rem;
     color: #000000;
 }
 
@@ -508,14 +473,14 @@ a
 .games
 {
     background-color: #eaf6ff;
-    min-height: 300px;
+    min-height: 18.75rem;
     color: #000000;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     font-family: "Lexend", serif;
     font-weight: normal;
-    margin-bottom: 70px;
+    margin-bottom: 4.375rem;
 }
 
 .games_selector
@@ -557,22 +522,22 @@ a
 {
     display: flex;
     width: 100%;
-    height: 500px;
+    height: 31.25rem;
     justify-content: center;
     transition: 0.5s ease;
     flex-wrap: wrap;
-    padding: 10px 10px 10px 10px;
+    padding: 0.625rem 0.625rem 0.625rem 0.625rem;
 }
 
 .results_title
 {
-    margin-top: 20px;
+    margin-top: 1.25rem;
     display: flex;
     justify-content: center;
     align-items: start;
-    height: 50px;
+    height: 3.125rem;
     width: 80%;
-    font-size: 30px;
+    font-size: 1.875rem;
     font-weight: 600;
 }
 
@@ -613,7 +578,7 @@ a
     justify-content: center;
     flex-wrap: wrap;
     width: 90%;
-    height: 100px;
+    height: 6.25rem;
 }
 
 .game1_no_details_icon
@@ -636,8 +601,8 @@ a
 
 .game1_no_details_icon img
 {
-    width: 50px;
-    height: 50px;
+    width: 3.125rem;
+    height: 3.125rem;
 }
 
 .results_game2
@@ -655,7 +620,7 @@ a
     flex-wrap: wrap;
     width: 70%;
     height: 100%;
-    max-width: 700px;
+    max-width: 43.75rem;
 }
 
 .game2_subgames
@@ -678,10 +643,10 @@ a
 
 .game2_subgames_icon img
 {
-    border: 4px solid black;
+    border: 0.25rem solid black;
     width: 75%;
     height: 100%;
-    border-radius: 10pt;
+    border-radius: 0.625rem;
 }
 
 .game2_subgames_winner
@@ -715,7 +680,7 @@ a
     align-items: center;
     width: 100%;
     height: 10%;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 500;
 }
 
@@ -747,23 +712,23 @@ a
 
 .group_table_position_header
 {
-    width: 50px;
+    width: 3.125rem;
 }
 
 .group_table_player
 {
-    width: 150px;
+    width: 9.375rem;
 }
 
 .group_table .group_table_player_name
 {
-    padding-left: 3px;
+    padding-left: 0.1875rem;
     text-align: left;
 }
 
 .group_table_pts_header
 {
-    width: 60px;
+    width: 3.75rem;
 }
 
 .game3_group_stage_results
@@ -782,28 +747,28 @@ a
 
 .group_results_left
 {
-    margin-right: 5px;
-    width: 120px;
+    margin-right: 0.3125rem;
+    width: 7.5rem;
     text-align: right;
 }
 
 .group_results_right
 {
-    margin-left: 5px;
-    width: 120px;
+    margin-left: 0.3125rem;
+    width: 7.5rem;
     text-align: left;
 }
 
 .group_results_score
 {
     text-align: center;
-    width: 50px;
+    width: 3.125rem;
     font-weight: 600;
 }
 
 .group_results_round_end
 {
-    border-top: 1px solid black;
+    border-top: 0.0625rem solid black;
 }
 
 .game3_knockout_stage
@@ -849,7 +814,7 @@ a
     align-items: center;
     width: 100%;
     height: 40%;
-    font-size: 18px;
+    font-size: 1.125rem;
 }
 
 .game3_match_results
@@ -859,20 +824,20 @@ a
     align-items: center;
     width: 100%;
     height: 60%;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .knockout_results
 {
-    border-bottom: 2px solid #001a6e;
-    border-top: 2px solid #001a6e;
+    border-bottom: 0.125rem solid #001a6e;
+    border-top: 0.125rem solid #001a6e;
     border-collapse: collapse;
 }
 
 .knockout_result
 {
-    margin-right: 5px;
-    width: 120px;
+    margin-right: 0.3125rem;
+    width: 7.5rem;
     text-align: right;
     text-align: center;
     /* border: 1px solid .000000; */
@@ -887,9 +852,9 @@ a
 
 .game4_results_image_container
 {
-    width: 500px;
-    height: 640px;
-    border: 1px solid black
+    width: 31.25rem;
+    height: 40rem;
+    border: 0.0625rem solid black
 }
 
 .game4_results_image_container img
@@ -904,17 +869,18 @@ a
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    width: 500px;
-    height: 70px;
+    width: 31.25rem;
+    height: 4.375rem;
+    text-align: center;
 }
 
 .game4_results_text_line
 {
     width: 100%;
-    height: 20px;
+    height: 1.25rem;
     text-decoration: solid;
     color: #000000;
-    font-size: 13px;
+    font-size: 0.8125rem;
     text-decoration: underline;
 }
 
@@ -934,8 +900,8 @@ a
 
 .game4_popup_container 
 {
-    padding: 20px;
-    border-radius: 10px;
+    padding: 1.25rem;
+    border-radius: 0.625rem;
     text-align: center;
     width: auto;
     height: 100vh;
@@ -946,7 +912,7 @@ a
 {
     width: 100%;
     height: 100%;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.1);
 }
 
 .game4_image

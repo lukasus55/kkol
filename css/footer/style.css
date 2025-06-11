@@ -62,8 +62,8 @@
     flex-wrap: wrap;
     height: 80%;
     cursor: pointer;
-    width: 200px;
-    border-radius: 5pt;
+    width: 80%;
+    border-radius: 0.3em;
 }
 
 .footer_season_selector_single_season a
@@ -86,15 +86,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60px;
+    width: 2.1em;
     height: 100%;
     font-weight: 600;
 }
 
 .selector_single_season_icon img
 {
-    width: 30px;
-    height: 30px;
+    width: 1.2em;
+    height: 1.2em;
     border-radius: 3pt;
 }
 
@@ -103,7 +103,7 @@
     display: flex;
     justify-content: left;
     align-items: center;
-    width: 140px;
+    width: 8em;
     height: 100%;
     font-size: 0.7em;
     font-weight: 600 ;
@@ -212,15 +212,35 @@
 }
 
 @media (min-width: 2560px) {
-  .footer_bar, .footer_contact_container
+  .footer_bar, .footer_contact_container, .footer_season_selector_single_season_container
   {
     font-size: 33px;
+  }
+
+  .footer_season_selector
+  {
+    width: 350px;
+  }
+
+  .footer_season_selector.show
+  {
+    height: 4.8em;
   }
 }
 
 @media (min-width: 3840px) {
-  .footer_bar, .footer_contact_container
+  .footer_bar, .footer_contact_container, .footer_season_selector_single_season_container
   {
     font-size: 50px;
+  }
+
+  .footer_season_selector
+  {
+    width: 500px;
+  }
+
+  .footer_season_selector.show
+  {
+    height: 6.8em;
   }
 }
