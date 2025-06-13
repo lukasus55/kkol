@@ -516,3 +516,54 @@ main
     align-items: flex-start;
     padding-top: 0.1875rem;
 }
+
+@media (max-width:768px) 
+{
+    .profile_specified
+    {
+        width: 375px;
+    }
+
+    .current_season
+    {
+        width: 100%;
+    }
+
+    .seasons_list
+    {
+        width: 100%;
+    }
+
+    .profile_main_section 
+    {
+        height: 100%;
+        width: 200px;
+    }
+
+    .profile_pfp
+    {
+        width: 100px;
+    }
+
+    .profile_name_section
+    {
+        height: 40%;
+        width: 200px;
+    }
+
+    .profile_medals
+    {
+        height: 60%;
+        width: 200px;
+    }
+
+    .profile_info
+    {
+        padding: 10px;
+    }
+
+    .single_season
+    {
+        width: 100%;
+    }
+}

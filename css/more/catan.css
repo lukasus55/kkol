@@ -256,3 +256,35 @@
     text-align: center;
     margin-bottom: 4rem;
 }
+
+@media (max-width:768px) 
+{
+    .catan_interactive_map
+    {
+        width: 200px;
+        height: 200px;
+    }
+
+    .catan_hexagon, .catan_hexagon_2
+    {
+        height: 55px;
+    }
+
+    .catan_interactive_map_container
+    {
+        width: 300px;
+        height: 250px;
+    }
+
+    .catan_hexagon_number
+    {
+        height: 20px;
+        width: 20px;
+        font-size: 14px;
+    }
+
+    .catan_map_footer
+    {
+        font-size: 10px;
+    }
+}

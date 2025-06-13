@@ -196,7 +196,7 @@ async function loadProfiles()
   else {
     profile_not_specified.style.display = "flex";
     profile_specified.style.display = "none";
-    document.querySelector(`#header`).style.height = "100vh";
+    document.querySelector(`#header`).style.height = "calc(100vh - 60px)";
     console.log("Profile ID not specified");
   };
 

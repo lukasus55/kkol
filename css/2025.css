@@ -1,0 +1,1390 @@
+@font-face 
+{
+    font-family: 'Markazi Text';
+    src: url("../../../fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf");
+}
+
+.hidden 
+{
+    opacity: 0;
+    transition: 1s;
+    filter: blur(3px);
+    transform: translateY(2rem);
+}
+
+.show
+{
+    opacity: 100%;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.hiddenSingle
+{
+    opacity: 0;
+    transition: 0.5s;;
+    transform: translateY(2rem);
+}
+
+.showSingle
+{
+    opacity: 100%;
+    transform: translateY(0);
+}
+
+.hiddenSingle:nth-child(1)
+{
+    transition-delay: 200ms;
+}
+
+.hiddenSingle:nth-child(2)
+{
+    transition-delay: 400ms;
+}
+
+.hiddenSingle:nth-child(3)
+{
+    transition-delay: 600ms;
+}
+
+.hiddenSingle:nth-child(4)
+{
+    transition-delay: 600ms;
+}
+
+.hiddenSingle:nth-child(5)
+{
+    transition-delay: 800ms;
+}
+
+.hiddenSingle:nth-child(6)
+{
+    transition-delay: 1000ms;
+}
+
+.header
+{
+    color: #000000;
+}
+
+.logo
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.logo img
+{
+    width: 9.375rem;
+    height: 5rem;
+}
+
+.header
+{
+    padding: 1.25rem 0.625rem 0.625rem 0.625rem;
+    background-color: #ffffea;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.header_container
+{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: start;
+}
+
+.title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 3.75rem;
+    font-size: 1.875rem;
+    font-weight: 600;
+    /* text-shadow: 1px 1px 3px .636363; */
+    color: #cf7c00;
+}
+
+.year
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 4.375rem;
+    font-size: 3.125rem;
+    font-weight: 600;
+    color: #000000
+}
+
+.tba
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    height: 87%;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.timeline 
+{
+    position: relative;
+    width: 43.75rem;
+    margin: 2rem auto;
+    padding: 2rem 0;
+}
+  
+.timeline::before 
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0.25rem; /* thicker for visibility */
+    height: 100%;
+    background-color: #cf7c00;
+    z-index: 0; /* behind dots */
+}
+  
+.timeline-event 
+{
+    position: relative;
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+  
+.timeline-dot 
+{
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    border: 0.125rem solid white;
+    background: #cf7c00;
+    z-index: 2; /* above line */
+}
+
+.timeline-dot.current
+{
+
+    box-shadow: 0 0 0 2px #cf7c00;
+}
+  
+.timeline-content 
+{
+    position: relative;
+    width: 45%;
+    border-radius: 8px;
+    z-index: 1;
+
+}
+  
+.timeline-event.left .timeline-content 
+{
+    margin-left: 0;
+    margin-right: auto;
+    text-align: right;
+}
+  
+.timeline-event.right .timeline-content 
+{
+    margin-right: 0;
+    margin-left: auto;
+    text-align: left;
+}
+  
+.timeline-content h3 
+{
+    margin: 0;
+    font-size: 1.2rem;
+}
+  
+.timeline-content span 
+{
+    font-size: 0.9rem;
+    color: gray;
+}
+  
+.timeline-content p 
+{
+    margin-top: 0.5rem;
+}
+
+.main
+{
+    background-color: #251706;
+    color: #fff;
+}
+
+.main_title_text
+{
+    font-size: 1.875rem;
+    border-left: 0.625rem solid #FAE577;
+    padding-left: 0.625rem ;
+    font-weight: 700;
+}
+
+.format
+{
+    width: 100%;
+    height: 27.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3.125rem;
+}
+
+.format_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    font-size: 1.875rem;
+    font-weight: 700;
+    height: 5rem;
+}
+
+.format_title_text
+{
+    border-left: 0.625rem solid #FAE577;
+    padding-left: 0.625rem ;
+}
+
+.format_video
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20rem;
+    width: 100%;
+}
+
+.format_video_player
+{
+    width: 30rem;
+    height: 16.875rem;
+}
+
+.fromat_details
+{
+    height: 2.5rem;
+}
+
+.format_details_button
+{
+    width: 9.375rem;
+    height: 2.5rem;
+    background-color: #251706;
+    color: #adadad;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s;
+    border: 0.0625rem solid #464646;
+    cursor: pointer;
+    display: flex;
+    border-radius: 0.3125rem;
+}
+
+.format_details_button:hover
+{
+    color: #fff;
+    border: 1px solid #ffffff;
+}
+
+.format_details_button:hover .format_details_button_icon img
+{
+    opacity: 100%;
+}
+
+.format_details_button_text
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 80%;
+}
+
+.format_details_button_icon 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 20%;
+}
+
+.format_details_button_icon img
+{
+    opacity: 70%;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    transition: all 0.3s;
+}
+
+.ranking
+{
+    height: 31.25rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+}
+
+.ranking_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+    width: 100%;
+    height: 5rem;
+}
+
+.ranking_table_segment
+{
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    font-weight: 400;
+    justify-self: center;
+}
+
+.ranking_table
+{
+    text-align: center;
+    border-collapse: collapse;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.ranking_table th
+{
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.ranking_table tr
+{
+    height: 2.5rem;
+}
+
+.ranking_table .ranking_table_standard
+{
+    background-color: #F4F5E9;
+    color: #000000;
+    border-top: 0.625rem solid #251706;
+    border-bottom: 0.625rem solid #251706;
+    height: 3.125rem;
+}
+
+.ranking_table .ranking_table_position
+{
+    font-size: 1.25rem;
+    font-weight: 700;
+    width: 3.75rem;
+    text-align: center;
+}
+
+.ranking_table .ranking_player_header
+{
+    width: 10rem;
+}
+
+.ranking_table .ranking_player
+{
+    text-align: left;
+}
+
+.ranking_table .ranking_game
+{
+    padding: 0rem;
+    transition: background-color 0.6s ease;
+    width: 3.75rem;
+    opacity: 80%;
+}
+
+.ranking_game:hover
+{
+    opacity: 100%;
+}
+
+.ranking_game1,.ranking_game2,.ranking_game3,.ranking_game4
+{
+    padding-top: 0.25rem;
+    height: 100%;
+}
+
+.ranking_table .ranking_total_header
+{
+    width: 3.75rem;
+    font-weight: 800;
+}
+
+.ranking_table .ranking_total
+{
+    width: 3.75rem;
+    font-weight: 800;
+}
+
+.ranking_table .ranking_game img
+{
+    width: 1.625rem;
+    height: 1.625rem;
+    align-self: flex-end;
+}
+
+.ranking_button_section
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.ranking_details_button
+{
+    width: 9.375rem;
+    height: 2.5rem;
+    background-color: #251706;
+    color: #adadad;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s;
+    border: 0.0625rem solid #464646;
+    cursor: pointer;
+    display: flex;
+    border-radius: 0.3125rem;
+}
+
+.ranking_details_button:hover
+{
+    color: #fff;
+    border: 1px solid #ffffff;
+    opacity: 100%;
+}
+
+.ranking_details_button_text
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.close_tab
+{
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.ranking_popup_line
+{
+    width: 100%;
+    height: 0.1875rem;
+    margin: 0.625rem 0rem 0.625rem 0rem;
+    border-bottom: 0.1875rem solid .000000;;
+}
+
+.ranking_popup_subline
+{
+    width: 100%;
+    height: 0.1875rem;
+    margin: 0.625rem 0rem 0.625rem 0rem;
+    font-weight: 500;
+}
+
+.ranking_popup_subtitle
+{
+    font-size: 1.5625rem;
+    color: #000000;
+}
+
+.ranking_button
+{
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from {
+      scale: 0;
+    }
+    to {
+      scale: 1;
+    }
+}
+
+.results_popup
+{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 100;
+    background-color: #00000063;
+}
+
+.results_container
+{
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    z-index: 110;
+    width: 43.75rem;
+    height: min(calc(100% - 150px),25rem);
+    background-color: #FBAB18;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0.625rem rgba(0,0,0,0.3);
+    border-radius: 0.3125rem;
+    transition: 1s;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    overflow: auto;
+}
+
+.results_close_button
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 3.125rem;
+    height: 3.125rem;
+    top: 0%;
+    left: calc(100% - 3.125rem);
+    cursor: pointer;
+    z-index: 150;
+}
+
+.results_close_button_icon
+{
+    height: 1.5625rem;
+    width: 1.5625rem;
+    scale: 1.0;
+    transition: 0.2s;
+}
+
+.results_close_button:hover .results_close_button_icon
+{
+    scale: 1.3;
+}
+
+.results_game
+{
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 21.875rem;
+    color: #000000;
+}
+
+.results_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 3.75rem;
+    font-size: 2rem;
+    font-weight: 700;
+    animation: fadeIn 1s;
+}
+
+.results_choose_game
+{
+    display: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000000;
+    transition: 1s;
+}
+
+.results_footer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 3.125rem;
+    border-radius: 0pt 0pt 0.3125rem 0.3125rem;
+    animation: appearFromLeft 1s;
+}
+
+.results_footer_container
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 2.5rem;
+    z-index: 110;
+}
+
+.results_footer_container_single_game
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    opacity: 50%;
+    margin: 0rem 0.3125rem;
+}
+
+.results_footer_container_single_game img
+{
+    width: 1.875rem;
+    height: 1.875rem;
+    transition: 0.2s;
+}
+
+.results_footer_container_single_game:hover
+{
+    opacity: 100%;
+}
+
+.results_footer_container_single_game img
+{
+    width: 1.875rem;
+    height: 1.875rem;
+    transition: 0.2s;
+}
+
+.results_footer_container_single_game:hover img
+{
+    scale: 1.15;   
+}
+
+.results_footer_container_single_game_active
+{
+    border-bottom: 3px solid black;
+    opacity: 100%;
+}
+
+.results_box
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 18.125rem;
+    animation: fadeIn 1s;
+}
+
+.results_game_catan
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80%;
+    height: 100%;
+}
+
+.results_game_catan_table
+{
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.results_game_catan_table th
+{
+    height: 1.25rem;
+}
+
+.results_game_catan_table tbody tr
+{
+    height: 1.875rem;
+}
+
+.results_game_catan_position
+{
+    width: 3.125rem;
+}
+
+.results_game_catan_player
+{
+    width: 7.5rem;
+}
+
+.results_game_catan_round
+{
+    width: 6.25rem;
+}
+
+.results_game_catan_points
+{
+    width: 3.125rem;
+}
+
+.results_game_catan_vp
+{
+    width: 3.125rem;
+}
+
+.games
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.games_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 2.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+}
+
+@keyframes appearFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-200px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+@keyframes appearFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(200px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+.games_list
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 37.5rem;
+    padding-bottom: 1.25rem;
+}
+
+.games_single_game
+{
+    display: flex;
+    width: 100%;
+    height: 9.375rem;
+    margin: 2.5rem 0rem;
+    animation: appearFromLeft linear;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+    justify-content: center;
+}
+
+.games_single_game_reversed
+{
+    display: flex;
+    width: 100%;
+    height: 9.375rem;
+    margin: 2.5rem 0rem;
+    flex-direction: row-reverse;
+    animation: appearFromRight linear;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+    justify-content: center;
+}
+
+.games_single_game_image
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 17.5rem;
+    height: 100%;
+    margin-right: 1.25rem;
+}
+
+.games_single_game_image_reversed
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 17.5rem;
+    height: 100%;
+    margin-left: 1.25rem;
+}
+
+.games_single_game_image img, .games_single_game_image_reversed img
+{
+    width: 17.5rem;
+    height: 9.375rem;
+}
+
+.games_single_game_details
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 18.75rem;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+.games_single_game_title
+{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    height: 15%;
+    font-weight: 700;
+    color: #ffe6be;
+    font-size: 1rem;
+}
+
+.text_reversed
+{
+    justify-content: flex-end;
+}
+
+.games_single_game_description
+{
+    width: 100%;
+    height: 70%;
+    text-align: justify;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: stretch;
+}
+
+.games_single_game_results
+{
+    width: 100%;
+    height: 15%;
+    color: #ffe6be;
+    font-size: 0.75rem;
+    text-decoration: underline;
+    display: flex;
+    align-items: flex-end;
+}
+
+.games_single_game_results a
+{
+    opacity: 70%;
+}
+
+.games_single_game_results a:hover
+{
+    opacity: 100%;
+}
+
+.catan_map
+{
+    width: 100%;
+    height: 43.75rem;
+    /* background-color: #cf7c00; */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),  rgba(0, 0, 0, 0.5)), url("/img/2025/catan-panorma.webp");
+    color: #ffffff;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+}
+
+.catan_box
+{
+    width: max(34.375rem, 60%);
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.catan_left
+{
+    display: flex;
+    justify-content: center;
+    width: 34.375rem;
+    height: 100%;
+    color: #ffffff;
+    flex-wrap: wrap;
+}
+
+.catan_empty_space
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25%;
+    width: 100%;
+}
+
+.catan_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 30%;
+    width: 100%;
+    padding-bottom: 1.875rem;
+    font-size: 3.75rem;
+    font-weight: 900;
+    flex-wrap: wrap;
+}
+
+.catan_title span
+{
+    display: flex;
+    height: 3.125rem;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+}
+
+.catan_details
+{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 10%;
+    width: 100%;
+    padding: 0rem 7.5rem 0rem 0rem;
+    font-size: 0.8125rem;
+}
+
+.catan_details_text
+{
+    text-align: left;
+    width: 100%;
+}
+
+.catan_button_section
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 35%;
+    width: 100%;
+}
+
+.catan_button
+{
+    color: #fff;
+    border: none;
+    background-color: hsla(0, 0%, 100%, .2);
+    width: 12.5rem;
+    height: 2.8125rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    border-radius: 1.5625rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.catan_button:hover
+{
+    scale: 1.05;
+}
+
+.download
+{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 7.5rem;
+    flex-wrap: wrap;
+}
+
+.download_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.875rem;
+    width: 100%;
+    margin-top: 2.5rem;
+}
+
+.download_legend
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.25rem;
+}
+
+.download_legend_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 1.875rem;
+    width: 31.25rem;
+    font-size: 0.8125rem;
+    flex-wrap: wrap;
+}
+
+.download_lengend_single_type
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-right: 0.9375rem;
+    margin-left: 0.9375rem;
+}
+
+.download_legend_rectangle
+{
+    width: 1.875rem;
+    height: 0.625rem;
+    margin-right: 0.3125rem;
+}
+
+.download_legend_type_rules
+{
+    background-color: red;
+}
+
+.download_legend_type_results
+{
+    background-color: blue;
+}
+
+.download_legend_type_other
+{
+    background-color: yellow;
+}
+
+.download_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 21.875rem;
+    margin-top: 1.25rem;
+}
+
+.download_single_file
+{
+    width: 100%;
+    height: 3.125rem;
+    background-color: #e4e4e4;
+    margin: 0.625rem 0rem;
+    display: flex;
+    flex-wrap: wrap;
+    color: #000000;
+    border-radius: 0.3125rem;
+}
+
+.download_single_file_icon
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+.download_single_file_icon_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 3.125rem;
+    background-color: #ffffff;
+}
+
+.download_single_file_icon_container img
+{
+    width: 1.5625rem;
+    height: 1.5625rem;
+}
+
+.download_single_file_text
+{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 65%;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+.download_single_file_title
+{
+    display: flex;
+    align-items: center;
+    font-size: 1.0625rem;
+    width: 100%;
+    height: 60%;
+}
+
+.download_single_file_name
+{
+    display: flex;
+    align-items: flex-start;
+    font-size: 0.6875rem;
+    width: 100%;
+    height: 40%;
+    color: #494949;
+}
+
+.download_single_file_download
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    height: 100%;
+    border-radius: 0pt 0.3125rem 0.3125rem 0pt;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.download_single_file_download:hover
+{
+    background-color: #d1d1d1;
+}
+
+.download_single_file_download_icon
+{
+    width: 1.5625rem;
+    height: 1.5625rem;
+    scale: 100%;
+    transition: all 0.3s;
+}
+
+.download_single_file_download:hover .download_single_file_download_icon
+{
+    scale: 115%;
+}
+
+.download_single_file_download a
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.download_type_rules
+{
+    border-left: 0.3125rem solid red;
+}
+
+.download_type_results
+{
+    border-left: 0.3125rem solid blue;
+}
+
+.download_type_other
+{
+    border-left: 0.3125rem solid yellow;
+}
+
+@media (max-width:768px) 
+{
+    .logo
+    {
+        display: none;
+    }
+
+    .timeline_game
+    {
+        width: 2%;
+        padding-top: 10px;
+    }
+
+    .timeline_icon
+    {
+        height: 100%;
+    }
+
+    .timeline_date
+    {
+        width: 20%;
+        padding-right: 30px;
+    }
+
+    .timeline_wide
+    {
+        width: 20%;
+        cursor: default;
+    }
+
+    .timeline_name
+    {
+        display: none;
+    }
+
+    .format_video_player
+    {
+        width: 320px;
+        height: 180px;
+    }
+
+    .ranking
+    {
+        margin-bottom: 20px;
+        height: 25rem;
+    }
+
+    .ranking_popup_container
+    {
+        width: 250px;
+        height: 370px;
+    }
+
+    .ranking_popup_title
+    {
+        font-size: 20px;
+        width: 180px;
+    }
+
+    .ranking_table .ranking_pts
+    {
+        width: 90px;
+    }
+
+    .ranking_game
+    {
+        display: none;
+    }
+
+    .ranking_game_result
+    {
+        display: none;
+    }
+
+    .ranking_table .ranking_player_header
+    {
+        width: 150px;
+    }
+
+    .ranking_button_section
+    {
+        display: none;
+    }
+
+
+    @keyframes appearFromLeft {
+        from {
+            opacity: 0;
+            scale: 0%;
+        }
+        to {
+            opacity: 1;
+            scale: 100%;
+        }
+    }
+
+    @keyframes appearFromRight {
+        from {
+            opacity: 0;
+            scale: 0%;
+        }
+        to {
+            opacity: 1;
+            scale: 100%;
+        }
+    }
+
+    .games_single_game, .games_single_game_reversed
+    {
+        width: max(80%, 320px);
+        height: auto;
+    }
+
+    .games_single_game_image, .games_single_game_image_reversed
+    {
+        display: none;
+    }
+
+    .games_single_game_details
+    {
+    width: 80%;
+    height: auto;
+    }
+
+    .games_single_game_title, .games_single_game_results
+    {
+        height: 23px;
+    }
+
+    .games_single_game_description
+    {
+        height: auto;
+    }
+
+    .catan_box
+    {
+        width: min(550px, 100%);
+    }
+
+    .catan_left
+    {
+        width: 100%;
+    }
+
+    .catan_title
+    {
+        font-size: 30px;
+        font-weight: 900;
+        height: 25%;
+    }
+
+    .catan_details
+    {
+        padding: 0px 10px;
+    }
+
+    .catan_details_text
+    {
+        text-align: justify;
+    }
+
+    .catan_button_section
+    {
+        padding-top: 30px;
+        justify-content: center;
+    }
+
+    .catan_title span
+    {
+        justify-content: center;
+    }
+}

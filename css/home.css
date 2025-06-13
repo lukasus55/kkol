@@ -366,3 +366,37 @@
 {
     border-bottom: 1px solid var(--main700);
 }
+
+@media (max-width:768px) 
+{
+    .title
+    {
+        font-size: 25px;
+    }
+
+    .events_container
+    {
+        justify-content: space-evenly;
+        width: 250px;
+    }
+
+    .more
+    {
+        flex-wrap: wrap;
+    }
+
+    .seasons
+    {
+        display: none;
+    }
+
+    .champion
+    {
+        margin-top: 60px;
+    }
+
+    .about
+    {
+        margin-bottom: 50px;
+    }
+}

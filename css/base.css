@@ -1,90 +1,94 @@
 @font-face 
 {
-    font-family: 'Lexend';
-    src: url("/fonts/Lexend/Lexend-VariableFont_wght.ttf");
+  font-family: 'Lexend';
+  src: url("/fonts/Lexend/Lexend-VariableFont_wght.ttf");
 }
 
 *
 {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-:root {
-    --main50: #141212;
-    --main100: #1f1c1c;
-    --main200: #3c3131;
-    --main250: #4b4040;
-    --main300: #584f4f;
-    --main400: #807777;
-    --main500: #8f7575;
-    --main600: #ad7474;
-    --main700: #ce6c6c;
-    --main800: #e85353;
-    --main900: #e00000;
-    --gray0: #363636;
-    --gray100: #363636;
-    --gray200: #1f1f1f;
-    --gray250: #4d4d4d;
-    --gray300: #585858;
-    --gray400: #838383;
-    --gray500: #adadad;
-    --gray600: #acacac;
-    --gray700: #c0c0c0;
-    --gray800: #e6e6e6;
-    --gray900: #ffffff;
-    --gold300: #c08300;
-    --gold400: #e0a500;
-    --silver300: #8b8b8b;
-    --silver400: #a5a5a5;
-    --brown300: #7c350c;
-    --brown400: #994514;
-    --fourth300: #8BA8B7;
-    --fourth400: #9ac5db;
-    --footer700: #ce6c6c;
-    --footer50: #141212;
-    --footer100: #242020;
-  }
+:root
+{
+  --main50: #141212;
+  --main100: #1f1c1c;
+  --main200: #3c3131;
+  --main250: #4b4040;
+  --main300: #584f4f;
+  --main400: #807777;
+  --main500: #8f7575;
+  --main600: #ad7474;
+  --main700: #ce6c6c;
+  --main800: #e85353;
+  --main900: #e00000;
+  --gray0: #363636;
+  --gray100: #363636;
+  --gray200: #1f1f1f;
+  --gray250: #4d4d4d;
+  --gray300: #585858;
+  --gray400: #838383;
+  --gray500: #adadad;
+  --gray600: #acacac;
+  --gray700: #c0c0c0;
+  --gray800: #e6e6e6;
+  --gray900: #ffffff;
+  --gold300: #c08300;
+  --gold400: #e0a500;
+  --silver300: #8b8b8b;
+  --silver400: #a5a5a5;
+  --brown300: #7c350c;
+  --brown400: #994514;
+  --fourth300: #8BA8B7;
+  --fourth400: #9ac5db;
+  --footer700: #ce6c6c;
+  --footer50: #141212;
+  --footer100: #242020;
+}
 
 html {
-    font-size: 16px;
-    font-family: "Lexend", serif;
-    font-weight: normal;
-    scroll-behavior: smooth;
+  font-size: 16px;
+  font-family: "Lexend", serif;
+  font-weight: normal;
+  scroll-behavior: smooth;
 }
 
 body
 {
-    background: #1F1C1C;
-    color: #fff;
-    padding-bottom: 60px;
+  background: #1F1C1C;
+  color: #fff;
+  padding-bottom: 60px;
 }
 
 a
 {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
 
 .clickable
 {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-@media (min-width: 2560px) {
+@media (min-width: 2560px) 
+{
   html {
     font-size: 21px;
   }
 }
 
-@media (min-width: 3840px) {
+@media (min-width: 3840px) 
+{
   html {
     font-size: 32px;
   }
 }
 
-@media (max-width: 1366px) {
+@media (max-width: 1366px) 
+{
   html {
     font-size: 11px;
   }

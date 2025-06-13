@@ -211,7 +211,27 @@
     text-decoration: underline;
 }
 
-@media (min-width: 2560px) {
+@media (max-width:768px) 
+{
+    .footer_bar
+    {
+        justify-content: space-around;
+    }
+
+    .footer_contact_container.show
+    {
+        height: 4.8em;
+    }
+
+    .footer_contact_mail
+    {
+        height: 50%;
+        width: 100%;
+    }
+}
+
+@media (min-width: 2560px) 
+{
   .footer_bar, .footer_contact_container, .footer_season_selector_single_season_container
   {
     font-size: 33px;
@@ -228,7 +248,8 @@
   }
 }
 
-@media (min-width: 3840px) {
+@media (min-width: 3840px) 
+{
   .footer_bar, .footer_contact_container, .footer_season_selector_single_season_container
   {
     font-size: 50px;
