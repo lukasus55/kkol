@@ -1,3 +1,5 @@
+import { defaultTournament } from "./defaults";
+
 const path = window.location.pathname;
 const playerID = path.split("/").pop();
 
@@ -11,7 +13,8 @@ async function loadProfiles()
 {
 
     const playerData = await loadData('/players.json');
-    const player = playerData[playerID];
+    const player = playerData[playerID] ?? {};
+    const playerTournaments = player.tournaments ?? {};
     const tournamentsData = await loadData('/tournaments.json');
     let tournaments = [];
 
@@ -24,15 +27,18 @@ async function loadProfiles()
     // Sort tournaments by timestamp descending (newest first)
     tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
 
-    function createTournamentDiv(tournament) {
+    function createTournamentDiv(tournament = defaultTournament) {
 
         const seasonItem = document.createElement('div');
         seasonItem.classList.add('player_single_tournament');
 
+        const tournamentDetails = tournament.details;
+        const playerTournamentData = playerTournaments[tournament.id] ?? {};
+
         // Title
         const title = document.createElement('div');
         title.classList.add('player_single_tournament_title');
-        title.style.backgroundColor = `#${tournament.details.theme_color}`;
+        title.style.backgroundColor = `#${tournamentDetails.theme_color}`;
         title.textContent = tournament.displayed_name;
         seasonItem.appendChild(title);
 
@@ -47,24 +53,24 @@ async function loadProfiles()
 
         const position = document.createElement('div');
         position.classList.add('player_single_tournament_stats_position');
-        position.textContent = `#${player.tournaments[tournament.id].position}`;
+        position.textContent = `#${playerTournamentData.position}`;
 
         statsHeader.appendChild(position);
 
         // Some games don't have pointing system.
-        if(player.tournaments[tournament.id].games_points)
+        if(playerTournamentData.games_points)
         {
             const points = document.createElement('div');
             points.classList.add('player_single_tournament_stats_points');
 
             const pointsNumber = document.createElement('div');
             pointsNumber.classList.add('player_single_tournament_stats_points_number');
-            pointsNumber.textContent = `${player.tournaments[tournament.id].total_points}`;
+            pointsNumber.textContent = `${playerTournamentData.total_points ?? 0}`;
 
             const pointsTitle = document.createElement('div');
             pointsTitle.classList.add('player_single_tournament_stats_points_title');
             pointsTitle.textContent = 'PKT';
-            pointsTitle.style.color = `#${tournament.details.theme_color}`;
+            pointsTitle.style.color = `#${tournamentDetails.theme_color}`;
 
             points.appendChild(pointsNumber);
             points.appendChild(pointsTitle);
@@ -77,25 +83,25 @@ async function loadProfiles()
         statsDetails.classList.add('player_single_tournament_stats_details');
 
         const ul = document.createElement('ul');
-        ul.style.color = `#${tournament.details.theme_color}`;
+        ul.style.color = `#${tournamentDetails.theme_color}`;
 
         const li1 = document.createElement('li');
         const img1 = document.createElement('img');
         img1.src = '/img/players/calendar_icon.webp';
         li1.appendChild(img1);
-        li1.append(` ` + tournament.details.displayed_date);
+        li1.append(` ` + tournamentDetails.displayed_date);
 
         const li2 = document.createElement('li');
         const img2 = document.createElement('img');
         img2.src = '/img/players/profile_icon.webp';
         li2.appendChild(img2);
-        li2.append(` ${tournament.details.players} graczy`);
+        li2.append(` ${tournamentDetails.players} graczy`);
 
         const li3 = document.createElement('li');
         const img3 = document.createElement('img');
         img3.src = '/img/players/trophy_icon.webp';
         li3.appendChild(img3);
-        li3.append(` ${tournament.details.tier}-Tier`);
+        li3.append(` ${tournamentDetails.tier}-Tier`);
 
         ul.appendChild(li1);
         ul.appendChild(li2);
