@@ -1,4 +1,26 @@
-import { defaultTournament } from "./defaults";
+// Default values
+
+const defaultTournamentThemeColor = '#ffffff';
+const defaultTournamentDisplayDate = '-';
+const defaultTournamentPlayersCount = 0;
+const defaultTournamentTier = "A";
+const defaultTournamentType = "minor";
+const defaultTournamentId = "default";
+const defaultTournamentDisplayName = ""
+
+const defaultTournament = {
+    details: {
+        theme_color: defaultTournamentThemeColor,
+        displayed_date: defaultTournamentDisplayDate,
+        players: defaultTournamentPlayersCount,
+        tier: defaultTournamentTier,
+    },
+    type: defaultTournamentType,
+    id: defaultTournamentId,
+    displayed_name: defaultTournamentDisplayName
+}
+
+//
 
 const path = window.location.pathname;
 const playerID = path.split("/").pop();
@@ -38,7 +60,7 @@ async function loadProfiles()
         // Title
         const title = document.createElement('div');
         title.classList.add('player_single_tournament_title');
-        title.style.backgroundColor = `#${tournamentDetails.theme_color}`;
+        title.style.backgroundColor = `${tournamentDetails.theme_color}`;
         title.textContent = tournament.displayed_name;
         seasonItem.appendChild(title);
 
@@ -53,7 +75,7 @@ async function loadProfiles()
 
         const position = document.createElement('div');
         position.classList.add('player_single_tournament_stats_position');
-        position.textContent = `#${playerTournamentData.position}`;
+        position.textContent = `#${playerTournamentData.position ?? ``}`;
 
         statsHeader.appendChild(position);
 
@@ -70,7 +92,7 @@ async function loadProfiles()
             const pointsTitle = document.createElement('div');
             pointsTitle.classList.add('player_single_tournament_stats_points_title');
             pointsTitle.textContent = 'PKT';
-            pointsTitle.style.color = `#${tournamentDetails.theme_color}`;
+            pointsTitle.style.color = `${tournamentDetails.theme_color}`;
 
             points.appendChild(pointsNumber);
             points.appendChild(pointsTitle);
@@ -83,7 +105,7 @@ async function loadProfiles()
         statsDetails.classList.add('player_single_tournament_stats_details');
 
         const ul = document.createElement('ul');
-        ul.style.color = `#${tournamentDetails.theme_color}`;
+        ul.style.color = `${tournamentDetails.theme_color}`;
 
         const li1 = document.createElement('li');
         const img1 = document.createElement('img');

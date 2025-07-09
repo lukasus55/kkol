@@ -18,7 +18,7 @@
             "displayed_date": "2024",
             "players": 4,
             "tier": "S",
-            "theme_color": "00B3FF"
+            "theme_color": "#00B3FF"
         }
     },
     "kol2025":
@@ -40,10 +40,10 @@
             "displayed_date": "2025",
             "players": 4,
             "tier": "S",
-            "theme_color": "BF8328"
+            "theme_color": "#BF8328"
         }
     },
-    "pokerE1":
+    "pokerE2":
     {
         "id": "pokerE1",
         "displayed_name": "POKER EDYCJA I",
@@ -61,7 +61,7 @@
             "displayed_date": "03.07.2025",
             "players": 3,
             "tier": "B",
-            "theme_color": "008c1a"
+            "theme_color": "#008c1a"
         }
     }
 }
