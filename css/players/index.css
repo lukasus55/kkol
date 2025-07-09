@@ -1,0 +1,98 @@
+.disclaimer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 80vh;
+    font-size: 5rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.players_container
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: calc(100vh - 60px);
+}
+
+.players_panorama {
+    width: 25%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+    transition: 0.5s;
+    position: relative;
+    overflow: hidden;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.players_panorama::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-position: inherit;
+    background-repeat: inherit;
+    background-size: inherit;
+    filter: inherit;
+    z-index: 1;
+    transition: transform 0.5s, filter 0.5s;
+    pointer-events: none;
+    filter: brightness(20%);
+}
+
+.players_panorama:hover::after {
+    transform: scale(1.08);
+    filter: brightness(40%);
+}
+
+.players_panorama > * {
+    position: relative;
+    z-index: 2;
+}
+
+.players_panorama:nth-child(1n) { background-image: url('/img/players/pfp/harnas.webp'); }
+.players_panorama:nth-child(2n) { background-image: url('/img/players/pfp/kostys.webp'); }
+.players_panorama:nth-child(3n) { background-image: url('/img/players/pfp/kukula.webp'); }
+.players_panorama:nth-child(4n) { background-image: url('/img/players/pfp/damidami2.webp'); }
+
+.players_panorama_content
+{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    opacity: 50%;
+    transition: 0.5s opacity;
+    flex-wrap: wrap;
+}
+
+.players_panorama:hover .players_panorama_content {
+    opacity: 100%;
+}
+
+/* Responsive width logic for hover effect */
+.players_container:hover .players_panorama {
+    width: 20%;
+    font-size: 3rem;
+}
+
+.players_container:hover .players_panorama:hover {
+    width: 40%;
+    font-size: 4rem;
+}
+
+.players_panorama:hover ~ .players_panorama {
+    width: 20%;
+}
+
+.players_panorama_champion {
+    color: rgb(211, 172, 0);
+}

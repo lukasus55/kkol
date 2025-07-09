@@ -1,0 +1,225 @@
+.disclaimer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 80vh;
+    font-size: 5rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.player_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70rem;
+    margin-left: auto;
+    margin-right: auto;
+    flex-wrap: wrap;
+    padding-top: 50px;
+}
+
+.player_banner
+{
+    width: 100%;
+    height: 15rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("url_of_image");
+    font-size: 4rem;
+    font-weight: 600;
+}
+
+.player_banner_name
+{
+    filter: brightness(100%)
+}
+
+.player_banner_damidami2 { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/damidami2.webp'); }
+.player_banner_kostys { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/kostys.webp'); }
+.player_banner_harnas { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/harnas.webp'); }
+.player_banner_kukula { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/kukula.webp'); }
+
+.player_header
+{
+    width: 100%;
+    height: 2rem;
+    margin-top: 40px;
+    background-color: var(--main800);
+    border-radius: 0pt 0pt 1.2rem 1.2rem;
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.2rem;
+}
+
+.player_header_title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    font-weight: 600;
+    border: 2px solid var(--main100);
+}
+
+.player_tournaments
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.player_torunaments_splitted
+{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 50%;
+    flex-wrap: wrap;
+}
+
+.player_single_tournament
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    color: black;
+    flex-wrap: wrap;
+    border-radius: 15pt;
+    overflow: hidden;
+    margin-bottom: 4rem;
+}
+
+.player_single_tournament_title
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    font-weight: 600;
+    width: 100%;
+}
+
+.player_single_tournament_stats
+{
+    min-height: 12rem;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+}
+
+.player_single_tournament_stats_header
+{
+    display: flex;
+    flex-wrap: wrap;
+    height: 4rem;
+    width: 100%;
+}
+
+.player_single_tournament_stats_position, .player_single_tournament_stats_points
+{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+.player_single_tournament_stats_position
+{
+    width: 80%;
+    padding-left: 2rem;
+    font-weight: 700;
+}
+
+.player_single_tournament_stats_points
+{
+    width: 20%;
+    justify-content: flex-end;
+}
+
+.player_single_tournament_stats_position
+{
+    font-size: 2rem;
+}
+
+.player_single_tournament_stats_points_number, .player_single_tournament_stats_points_title
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 50%;
+}
+
+.player_single_tournament_stats_points_number
+{
+    align-items: flex-end;
+}
+
+.player_single_tournament_stats_details
+{
+    display: flex;
+    width: 100%;
+    padding: 0.5rem 2rem 0rem 2rem;
+}
+
+.player_single_tournament_stats_details ul
+{
+    list-style-type: none;
+    width: 50%;
+}
+
+.player_single_tournament_stats_details ul li
+{
+    margin-bottom: 8px;
+}
+
+.player_single_tournament_stats_details ul li img
+{
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.player_single_tournament_stats_logo
+{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 50%;
+}
+
+.player_single_tournament_stats_logo img
+{
+    width: 4rem;
+    height: 4rem;
+}
+
+@media (max-width:768px) 
+{
+
+
+    .player_torunaments_splitted
+    {
+        width: 100%;
+    }
+
+    .player_single_tournament
+    {
+        width: 45%;
+        margin-left: 20%;
+        margin-right: 20%;
+    }
+}

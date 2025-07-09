@@ -1,0 +1,67 @@
+{
+    "kol2024":
+    {
+        "id": "kol2024",
+        "displayed_name": "SEZON 2024",
+        "logo_exists": true,
+        "type": "major",
+        "standings":
+        {
+            "1": "harnas",
+            "2": "kostys",
+            "3": "kukula",
+            "4": "damidami2"
+        },
+        "details":
+        {
+            "timestamp": 1717243200,
+            "displayed_date": "2024",
+            "players": 4,
+            "tier": "S",
+            "theme_color": "00B3FF"
+        }
+    },
+    "kol2025":
+    {
+        "id": "kol2025",
+        "displayed_name": "SEZON 2025",
+        "logo_exists": true,
+        "type": "major",
+        "standings":
+        {
+            "1": "harnas",
+            "2": "kostys",
+            "3": "kukula",
+            "4": "damidami2"
+        },
+        "details":
+        {
+            "timestamp": 1748779200,
+            "displayed_date": "2025",
+            "players": 4,
+            "tier": "S",
+            "theme_color": "BF8328"
+        }
+    },
+    "pokerE1":
+    {
+        "id": "pokerE1",
+        "displayed_name": "POKER EDYCJA I",
+        "logo_exists": false,
+        "type": "minor",
+        "standings":
+        {
+            "1": "kukula",
+            "2": "kostys",
+            "3": "damidami2"
+        },
+        "details":
+        {
+            "timestamp": 1751540400,
+            "displayed_date": "03.07.2025",
+            "players": 3,
+            "tier": "B",
+            "theme_color": "008c1a"
+        }
+    }
+}
