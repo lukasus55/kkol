@@ -43,7 +43,7 @@
             "theme_color": "#BF8328"
         }
     },
-    "pokerE2":
+    "pokerE1":
     {
         "id": "pokerE1",
         "displayed_name": "POKER EDYCJA I",
@@ -62,6 +62,48 @@
             "players": 3,
             "tier": "B",
             "theme_color": "#008c1a"
+        }
+    },
+    "pokerE2":
+    {
+        "id": "pokerE2",
+        "displayed_name": "POKER EDYCJA II",
+        "logo_exists": false,
+        "type": "minor",
+        "standings":
+        {
+            "1": "kukula",
+            "2": "kostys",
+            "3": "damidami2"
+        },
+        "details":
+        {
+            "timestamp": 1754650800,
+            "displayed_date": "08.08.2025",
+            "players": 3,
+            "tier": "B",
+            "theme_color": "#008c1a"
+        }
+    },
+    "monopolyE1":
+    {
+        "id": "monopolyE1",
+        "displayed_name": "MONOPOLY EDYCJA I",
+        "logo_exists": false,
+        "type": "minor",
+        "standings":
+        {
+            "1": "kukula",
+            "2": "kostys",
+            "3": "damidami2"
+        },
+        "details":
+        {
+            "timestamp": 1754658000,
+            "displayed_date": "08.08.2025",
+            "players": 3,
+            "tier": "B",
+            "theme_color": "#dbc5c5"
         }
     }
 }

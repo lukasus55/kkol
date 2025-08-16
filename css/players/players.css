@@ -1,21 +1,9 @@
-.disclaimer
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 80vh;
-    font-size: 5rem;
-    text-align: center;
-    font-weight: 700;
-}
-
 .player_container
 {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 70rem;
+    width: 65%;
     margin-left: auto;
     margin-right: auto;
     flex-wrap: wrap;
@@ -82,11 +70,7 @@
 
 .player_torunaments_splitted
 {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
     width: 50%;
-    flex-wrap: wrap;
 }
 
 .player_single_tournament
@@ -100,6 +84,8 @@
     border-radius: 15pt;
     overflow: hidden;
     margin-bottom: 4rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .player_single_tournament_title
@@ -207,10 +193,38 @@
     height: 4rem;
 }
 
+.player_mobile_header
+{
+    display: none;
+    width: 100%;
+    height: 2rem;
+    margin-top: 40px;
+    background-color: var(--main800);
+    border-radius: 0pt 0pt 1.2rem 1.2rem;
+    color: #fff;
+    flex-wrap: wrap;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+}
+
+#tournament_header_mobile
+{
+    width: 100%;
+}
+
 @media (max-width:768px) 
 {
 
+    .player_container
+    {
+        width: 100%;
+    }
 
+    .player_mobile_header
+    {
+        display: flex;
+    }
+    
     .player_torunaments_splitted
     {
         width: 100%;
@@ -218,8 +232,16 @@
 
     .player_single_tournament
     {
-        width: 45%;
-        margin-left: 20%;
-        margin-right: 20%;
+        width: 80%;
+    }
+
+    #tournament_header_major
+    {
+        width: 100%;
+    }
+
+    #tournament_header_minor
+    {
+        display: none;
     }
 }

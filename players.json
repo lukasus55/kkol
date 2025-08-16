@@ -36,6 +36,20 @@
                 "attended": true,
                 "finished": true,
                 "position": 2
+            },
+            "pokerE2":
+            {
+                "id": "pokerE2",
+                "attended": true,
+                "finished": true,
+                "position": 2
+            },
+            "monopolyE1":
+            {
+                "id": "monopolyE1",
+                "attended": true,
+                "finished": true,
+                "position": 2
             }
         },
         "medals": [0,1,0],
@@ -113,6 +127,20 @@
                 "attended": true,
                 "finished": true,
                 "position": 3
+            },
+            "pokerE2":
+            {
+                "id": "pokerE2",
+                "attended": true,
+                "finished": true,
+                "position": 3
+            },
+            "monopolyE1":
+            {
+                "id": "monopolyE1",
+                "attended": true,
+                "finished": true,
+                "position": 3
             }
         },
         "medals": [0,0,0],
@@ -152,6 +180,20 @@
             "pokerE1":
             {
                 "id": "pokerE1",
+                "attended": true,
+                "finished": true,
+                "position": 1
+            },
+            "pokerE2":
+            {
+                "id": "pokerE2",
+                "attended": true,
+                "finished": true,
+                "position": 1
+            },
+            "monopolyE1":
+            {
+                "id": "monopolyE1",
                 "attended": true,
                 "finished": true,
                 "position": 1
