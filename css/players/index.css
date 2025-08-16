@@ -96,3 +96,12 @@
 .players_panorama_champion {
     color: rgb(211, 172, 0);
 }
+
+@media (max-width:768px) 
+{
+    .players_panorama 
+    {
+        width: 100%;
+        height: 25%;
+    }
+}
