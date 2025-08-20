@@ -24,6 +24,7 @@
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("url_of_image");
     font-size: 4rem;
     font-weight: 600;
+    position: relative;
 }
 
 .player_banner_name
@@ -35,6 +36,123 @@
 .player_banner_kostys { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/kostys.webp'); }
 .player_banner_harnas { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/harnas.webp'); }
 .player_banner_kukula { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/kukula.webp'); }
+
+.player_banner_badges
+{
+    display: flex;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 1rem;
+    font-size: 1rem;
+    justify-content: center;
+    height: 2.5rem;
+    align-items: center;
+}
+
+.player_banner_single_badge
+{
+    margin-left: 1rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 10pt;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.player_banner_single_badge:hover
+{
+    scale: 1.1;
+}
+
+
+.banner_s-tier 
+{ 
+    background: #e6b800; 
+    background: linear-gradient(90deg, rgba(230, 184, 0, 1) 0%, rgba(255, 128, 0, 1) 100%); 
+    box-shadow: 0px 0px 20px 10px rgb(212, 156, 0);
+    animation: glowPulse 1.5s infinite alternate;
+}
+
+@keyframes glowPulse {
+    0% 
+    {
+        box-shadow: 0px 0px 20px 0px rgb(212, 156, 0);
+    }
+    100% 
+    {
+        box-shadow: 0px 0px 40px 10px rgb(212, 156, 0);
+    }
+}
+
+.banner_a-tier { background: #7c00cf; background: linear-gradient(90deg, rgba(124, 0, 207, 1) 0%, rgba(163, 53, 238, 1) 100%);}
+.banner_b-tier { background-color: var(--rare); }
+
+.player_details
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    font-weight: 700;
+    width: 100%;
+}
+
+.player_details.hidden
+{
+    height: 0rem;
+    visibility: hidden;
+    opacity: 0%;
+}
+
+.player_details.visible
+{
+    height: 2rem;
+    visibility: visible;
+    opacity: 100%;
+}
+
+.player_details.s-tier { background-color: var(--legendary); }
+.player_details.a-tier { background-color: var(--epic); }
+.player_details.b-tier { background-color: var(--rare); }
+
+.player_details_scroller {
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+    position: relative;
+    height: 2rem;
+    box-sizing: border-box;
+}
+
+.player_details_scroller_inner {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: scroll-left-right 12s linear infinite alternate;
+    padding: 0; 
+    justify-content: flex-start; 
+    width: auto; 
+}
+
+@keyframes scroll-left-right {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-1 * var(--scroll-distance, 0px)));
+    }
+}
+
+.player_details_tournament
+{
+    margin: 0rem 0.7rem;
+    height: 2rem;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    white-space: nowrap;
+}
 
 .player_header
 {
