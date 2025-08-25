@@ -44,16 +44,8 @@
                     <span>Sierpień 2025</span>
                   </div>
                 </div>
-
-                <div class="timeline-event left clickable"  onclick='window.location.href = "#zoltar";'>
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                      <h3>Zoltar</h3>
-                      <span>TBA</span>
-                    </div>
-                </div>
                 
-                <div class="timeline-event right clickable"  onclick='window.location.href = "#room";'>
+                <div class="timeline-event left clickable"  onclick='window.location.href = "#room";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <h3>Escape Room</h3>
@@ -61,7 +53,7 @@
                     </div>
                 </div>
 
-                <div class="timeline-event left clickable"  onclick='window.location.href = "#pummel";'>
+                <div class="timeline-event right clickable"  onclick='window.location.href = "#pummel";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                       <h3>Pummel</h3>
@@ -69,13 +61,22 @@
                     </div>
                 </div>
                 
-                <div class="timeline-event right clickable"  onclick='window.location.href = "#tiebreaker";'>
+                <div class="timeline-event left clickable"  onclick='window.location.href = "#tiebreaker";'>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
                         <h3>Dogrywki</h3>
                         <span>TBA</span>
                     </div>
                 </div>
+
+                <div class="timeline-event right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                      <h3>Koniec sezonu</h3>
+                      <span>31.12.2025</span>
+                    </div>
+                </div>
+
               </div>
               
 
@@ -109,18 +110,13 @@
                                 <img src="/img/2025/games/codenames-logo.webp">
                             </div></a>
                         </td>
-                        <td class="ranking_game ranking_game3_td ranking_game_clickable">
-                            <a href="#zoltar"><div class="ranking_game3" title="Zoltar">
-                                <img src="/img/2025/games/zoltar-logo.webp">
-                            </div></a>
-                        </td>
                         <td class="ranking_game ranking_game4_td ranking_game_clickable">
-                            <a href="#room"><div class="ranking_game4" title="Escape Room">
+                            <a href="#room"><div class="ranking_game3" title="Escape Room">
                                 <img src="/img/2025/games/escape-room-logo.webp">
                             </div></a>
                         </td>
                         <td class="ranking_game ranking_game5_td ranking_game_clickable">
-                            <a href="#pummel"><div class="ranking_game5" title="Pummel Party">
+                            <a href="#pummel"><div class="ranking_game4" title="Pummel Party">
                                 <img src="/img/2025/games/pummel-logo.webp">
                             </div></a>
                         </td>
@@ -129,7 +125,6 @@
                     <tr class="ranking_table_standard" id="ranking_pos_1">
                         <td class="ranking_table_position">-</td>
                         <td class="ranking_player">-</td>
-                        <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
@@ -143,7 +138,6 @@
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
-                        <td class="ranking_game_result">-</td>
                         <td class="ranking_total">-</td>
                     </tr>
                     <tr class="ranking_table_standard" id="ranking_pos_3">
@@ -153,13 +147,11 @@
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
-                        <td class="ranking_game_result">-</td>
                         <td class="ranking_total">-</td>
                     </tr>
                     <tr class="ranking_table_standard" id="ranking_pos_4">
                         <td class="ranking_table_position">-</td>
                         <td class="ranking_player">-</td>
-                        <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
                         <td class="ranking_game_result">-</td>
@@ -275,11 +267,6 @@
                         </div>
                     </div>
                     <div class="results_footer_container">
-                        <div class="results_footer_container_single_game" title="Zoltar" id="results_footer_zoltar" onclick="showGameResults(`zoltar`)">
-                            <img src="/img/2025/games/zoltar-logo-black.webp">
-                        </div>
-                    </div>
-                    <div class="results_footer_container">
                         <div class="results_footer_container_single_game" title="Escape Room" id="results_footer_room" onclick="showGameResults(`room`)">
                             <img src="/img/2025/games/escape-room-logo-black.webp">
                         </div>
@@ -338,19 +325,7 @@
                 </div>
 
                 <div class="games_single_game">
-                    <div class="games_single_game_image" id="zoltar">
-                        <img src="/img/2025/games/zoltar.webp">
-                    </div>
-                    <div class="games_single_game_details">
-                        <div class="games_single_game_title">Zoltar</div>
-                        <div class="games_single_game_description">Zoltar to zespołowa gra akcji rozgrywana w futurystycznej arenie, gdzie drużyny walczą ze sobą przy użyciu nowoczesnego sprzętu. Gra łączy elementy laser tagu i sportowej rywalizacji, stawiając na refleks, strategię i współpracę. Efekty świetlne, dym i dynamiczne tempo tworzą intensywne, wciągające doświadczenie.
-                        </div>
-                        <div class="games_single_game_results"> <a href="https://www.zoltar.pl/" target="_blank"> Zobacz więcej </a> </div>
-                    </div>
-                </div>
-
-                <div class="games_single_game_reversed">
-                    <div class="games_single_game_image_reversed" id="room">
+                    <div class="games_single_game_image" id="room">
                         <img src="/img/2025/games/escape-room.webp">
                     </div>
                     <div class="games_single_game_details">
@@ -361,8 +336,8 @@
                     </div>
                 </div>
 
-                <div class="games_single_game">
-                    <div class="games_single_game_image" id="pummel">
+                <div class="games_single_game_reversed">
+                    <div class="games_single_game_image_reversed" id="pummel">
                         <img src="/img/2025/games/pummel.webp">
                     </div>
                     <div class="games_single_game_details">
