@@ -25,10 +25,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["-","-","-","-"],
-                "games_points": ["-","-","-","-"],
+                "games_positions": ["1","-","-","-"],
+                "games_points": ["4","-","-","-"],
                 "position": 1,
-                "total_points": 0
+                "total_points": 4
             },
             "pokerE1":
             {
@@ -81,10 +81,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["-","-","-","-"],
-                "games_points": ["-","-","-","-"],
-                "position": 1,
-                "total_points": 0
+                "games_positions": ["3","-","-","-"],
+                "games_points": ["2","-","-","-"],
+                "position": 3,
+                "total_points": 2
             }
         },
         "medals": [1,0,0],
@@ -116,10 +116,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["-","-","-","-"],
-                "games_points": ["-","-","-","-"],
+                "games_positions": ["1","-","-","-"],
+                "games_points": ["4","-","-","-"],
                 "position": 1,
-                "total_points": 0
+                "total_points": 4
             },
             "pokerE1":
             {
@@ -172,10 +172,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["-","-","-","-"],
-                "games_points": ["-","-","-","-"],
-                "position": 1,
-                "total_points": 0
+                "games_positions": ["3","-","-","-"],
+                "games_points": ["2","-","-","-"],
+                "position": 3,
+                "total_points": 2
             },
             "pokerE1":
             {
