@@ -4,65 +4,6 @@
     src: url("../fonts/Archivo_Black/ArchivoBlack-Regular.ttf");
 }
 
-:root {
-    --main50: #141212;
-    --main100: #1f1c1c;
-    --main200: #3c3131;
-    --main250: #4b4040;
-    --main300: #584f4f;
-    --main400: #807777;
-    --main500: #8f7575;
-    --main600: #ad7474;
-    --main700: #ce6c6c;
-    --main800: #e85353;
-    --main900: #e00000;
-    --gray0: #363636;
-    --gray100: #363636;
-    --gray200: #1f1f1f;
-    --gray250: #4d4d4d;
-    --gray300: #585858;
-    --gray400: #838383;
-    --gray500: #adadad;
-    --gray600: #acacac;
-    --gray700: #c0c0c0;
-    --gray800: #e6e6e6;
-    --gray900: #ffffff;
-  }
-
-*
-{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html
-{
-    font-weight: normal;
-    scroll-behavior: smooth;
-    color: #000000;
-}
-
-body
-{
-    background-color: var(--main100);
-    font-family: "Archivo Black", serif;
-    font-weight: 400;
-    font-style: normal;
-    color: #ffffff;
-}
-
-a
-{
-    text-decoration: none;
-    color:inherit;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-}
-
 .main
 {
     height: 100vh;
@@ -71,6 +12,22 @@ a
     align-items: center;
     flex-wrap: wrap;
     padding: 20px 10px 20px 10px;
+    background-color: var(--main100);
+    font-family: "Archivo Black", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #ffffff;
+}
+
+.button_container a
+{
+    text-decoration: none;
+    color:inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 .logo
