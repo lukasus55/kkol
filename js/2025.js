@@ -94,7 +94,7 @@ function showGameResults(game)
 
     const gamesBoxes = document.querySelectorAll('.results_single_game');
 
-    const finishedGames = ['catan']
+    const finishedGames = ['catan', 'codenames']
     const isFinished = finishedGames.includes(game);
     let thisGameBox = document.querySelector(`#results_game_noResults`);
 

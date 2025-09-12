@@ -694,7 +694,10 @@
     animation: fadeIn 1s;
 }
 
-.results_game_catan
+
+/* Common table popup elements */
+
+.results_game_catan, .results_game_codenames
 {
     display: flex;
     justify-content: space-around;
@@ -703,32 +706,35 @@
     height: 100%;
 }
 
-.results_game_catan_table
+.results_game_table
 {
     border-collapse: collapse;
     text-align: center;
     font-size: 1rem;
 }
 
-.results_game_catan_table th
+.results_game_table th
 {
     height: 1.25rem;
 }
 
-.results_game_catan_table tbody tr
+.results_game_table tbody tr
 {
     height: 1.875rem;
 }
 
-.results_game_catan_position
+.results_game_position
 {
     width: 3.125rem;
 }
 
-.results_game_catan_player
+.results_game_player
 {
     width: 7.5rem;
 }
+
+
+/* Games individual table popup elements */
 
 .results_game_catan_round
 {
@@ -743,6 +749,22 @@
 .results_game_catan_vp
 {
     width: 3.125rem;
+}
+
+
+.results_game_codenames_round
+{
+    width: 2.125rem;
+}
+
+.results_game_codenames .win
+{
+    color: #36c000;
+}
+
+.results_game_codenames .loss
+{
+    color: #ff0000;
 }
 
 .games

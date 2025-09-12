@@ -25,8 +25,8 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["1","1","-","-"],
-                "games_points": ["4","4","-","-"],
+                "games_positions": [1,1,"-","-"],
+                "games_points": [4,4,"-","-"],
                 "position": 1,
                 "total_points": 8
             },
@@ -81,8 +81,8 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["3","2","-","-"],
-                "games_points": ["2","3","-","-"],
+                "games_positions": [3,2,"-","-"],
+                "games_points": [2,3,"-","-"],
                 "position": 3,
                 "total_points": 5
             }
@@ -116,8 +116,8 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["1","2","-","-"],
-                "games_points": ["4","3","-","-"],
+                "games_positions": [1,2,"-","-"],
+                "games_points": [4,3,"-","-"],
                 "position": 2,
                 "total_points": 7
             },
@@ -172,8 +172,8 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["3","2","-","-"],
-                "games_points": ["2","3","-","-"],
+                "games_positions": [3,2,"-","-"],
+                "games_points": [2,3,"-","-"],
                 "position": 3,
                 "total_points": 5
             },
