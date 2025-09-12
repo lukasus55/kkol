@@ -25,10 +25,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["1","-","-","-"],
-                "games_points": ["4","-","-","-"],
+                "games_positions": ["1","1","-","-"],
+                "games_points": ["4","4","-","-"],
                 "position": 1,
-                "total_points": 4
+                "total_points": 8
             },
             "pokerE1":
             {
@@ -81,10 +81,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["3","-","-","-"],
-                "games_points": ["2","-","-","-"],
+                "games_positions": ["3","2","-","-"],
+                "games_points": ["2","3","-","-"],
                 "position": 3,
-                "total_points": 2
+                "total_points": 5
             }
         },
         "medals": [1,0,0],
@@ -108,7 +108,7 @@
                 "finished": true,
                 "games_positions": [2,4,1,3],
                 "games_points": [3,4,1,4],
-                "position": 4,
+                "position": 2,
                 "total_points": 12
             },
             "kol2025":
@@ -116,10 +116,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["1","-","-","-"],
-                "games_points": ["4","-","-","-"],
-                "position": 1,
-                "total_points": 4
+                "games_positions": ["1","2","-","-"],
+                "games_points": ["4","3","-","-"],
+                "position": 2,
+                "total_points": 7
             },
             "pokerE1":
             {
@@ -172,10 +172,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": ["3","-","-","-"],
-                "games_points": ["2","-","-","-"],
+                "games_positions": ["3","2","-","-"],
+                "games_points": ["2","3","-","-"],
                 "position": 3,
-                "total_points": 2
+                "total_points": 5
             },
             "pokerE1":
             {
