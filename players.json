@@ -25,10 +25,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": [1,1,"-","-"],
-                "games_points": [4,4,"-","-"],
+                "games_positions": [1,1,1,"-"],
+                "games_points": [4,4,4,"-"],
                 "position": 1,
-                "total_points": 8
+                "total_points": 12
             },
             "pokerE1":
             {
@@ -81,10 +81,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": [3,2,"-","-"],
-                "games_points": [2,3,"-","-"],
+                "games_positions": [3,2,3,"-"],
+                "games_points": [2,3,2,"-"],
                 "position": 3,
-                "total_points": 5
+                "total_points": 7
             }
         },
         "medals": [1,0,0],
@@ -116,10 +116,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": [1,2,"-","-"],
-                "games_points": [4,3,"-","-"],
+                "games_positions": [1,2,2,"-"],
+                "games_points": [4,3,3,"-"],
                 "position": 2,
-                "total_points": 7
+                "total_points": 10
             },
             "pokerE1":
             {
@@ -172,10 +172,10 @@
                 "id": "kol2025",
                 "attended": true,
                 "finished": false,
-                "games_positions": [3,2,"-","-"],
-                "games_points": [2,3,"-","-"],
-                "position": 3,
-                "total_points": 5
+                "games_positions": [3,2,4,"-"],
+                "games_points": [2,3,1,"-"],
+                "position": 4,
+                "total_points": 6
             },
             "pokerE1":
             {

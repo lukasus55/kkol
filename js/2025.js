@@ -87,14 +87,14 @@ function showGameResults(game)
     }, "1000");
 
     let title = game.toUpperCase();
-    if (game==='room') { title = 'ESCAPE ROOM' }
+    if (game==='brain') { title = 'BRAIN SHOW' }
     if (game==='pummel') { title = 'PUMMEL PARTY' }
 
     resultsTitle.textContent = title;
 
     const gamesBoxes = document.querySelectorAll('.results_single_game');
 
-    const finishedGames = ['catan', 'codenames']
+    const finishedGames = ['catan', 'codenames', 'brain']
     const isFinished = finishedGames.includes(game);
     let thisGameBox = document.querySelector(`#results_game_noResults`);
 

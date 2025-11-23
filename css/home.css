@@ -420,4 +420,14 @@
     {
         margin-bottom: 50px;
     }
+
+    .about_section
+    {
+        width: 80%;
+    }
+
+    .seasons
+    {
+        display: none;
+    }
 }
