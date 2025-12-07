@@ -233,107 +233,6 @@
     font-weight: 700;
 }
 
-.format
-{
-    width: 100%;
-    height: 27.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 3.125rem;
-}
-
-.format_title
-{
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    width: 100%;
-    font-size: 1.875rem;
-    font-weight: 700;
-    height: 5rem;
-}
-
-.format_title_text
-{
-    border-left: 0.625rem solid #FAE577;
-    padding-left: 0.625rem ;
-}
-
-.format_video
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 20rem;
-    width: 100%;
-}
-
-.format_video_player
-{
-    width: 30rem;
-    height: 16.875rem;
-}
-
-.fromat_details
-{
-    height: 2.5rem;
-}
-
-.format_details_button
-{
-    width: 9.375rem;
-    height: 2.5rem;
-    background-color: #251706;
-    color: #adadad;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    transition: all 0.3s;
-    border: 0.0625rem solid #464646;
-    cursor: pointer;
-    display: flex;
-    border-radius: 0.3125rem;
-}
-
-.format_details_button:hover
-{
-    color: #fff;
-    border: 1px solid #ffffff;
-}
-
-.format_details_button:hover .format_details_button_icon img
-{
-    opacity: 100%;
-}
-
-.format_details_button_text
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 80%;
-}
-
-.format_details_button_icon 
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 20%;
-}
-
-.format_details_button_icon img
-{
-    opacity: 70%;
-    width: 0.9375rem;
-    height: 0.9375rem;
-    transition: all 0.3s;
-}
-
 .ranking
 {
     height: 31.25rem;
@@ -1301,12 +1200,6 @@ background: linear-gradient(180deg, rgba(37, 23, 6, 1) 0%, rgba(29, 12, 12, 1) 7
     .timeline_name
     {
         display: none;
-    }
-
-    .format_video_player
-    {
-        width: 320px;
-        height: 180px;
     }
 
     .ranking
