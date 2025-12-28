@@ -1,0 +1,68 @@
+body
+{
+    background-color: #eaffeb;
+    color: #000000;
+}
+
+.header
+{
+    color: #000000;
+    padding: 1.25rem 0.625rem 0.625rem 0.625rem;
+    background-color: #eaffeb;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.header_container
+{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: start;
+}
+
+.title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 3.75rem;
+    font-size: 1.875rem;
+    font-weight: 600;
+    /* text-shadow: 1px 1px 3px .636363; */
+    color: #11cf00;
+}
+
+.year
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 4.375rem;
+    font-size: 3.125rem;
+    font-weight: 600;
+    color: #000000
+}
+
+/* .main
+{
+    background-color: #251706;
+    color: #fff;
+} */
+
+.tba
+{
+    display: flex;
+    width: 100vw;
+    height: 30vh;
+    margin-top: 10rem;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
+    text-align: center;
+    font-weight: 700;
+}

@@ -58,12 +58,6 @@
 {
     transition-delay: 1000ms;
 }
-
-.header
-{
-    color: #000000;
-}
-
 .logo
 {
     position: absolute;
@@ -79,6 +73,7 @@
 
 .header
 {
+    color: #000000;
     padding: 1.25rem 0.625rem 0.625rem 0.625rem;
     background-color: #ffffea;
     display: flex;
