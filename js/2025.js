@@ -166,3 +166,44 @@ const listObserver = new IntersectionObserver((entries) => {
 
 const hiddenListofElements = document.querySelectorAll('.hiddenList')
 hiddenListofElements.forEach((el) => listObserver.observe(el));
+
+
+/* champion animation */
+document.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('championSection');
+    const colors = ['#FFD700', '#C0C0C0', '#ffffff', '#B8860B']; // Gold, Silver, White
+
+    function createConfetti() {
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.top = -10 + 'px';
+            
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.width = Math.random() * 10 + 5 + 'px';
+            confetti.style.height = Math.random() * 10 + 5 + 'px';
+            
+            confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+
+            section.appendChild(confetti);
+
+            // remove after animation to clean DOM
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                createConfetti();
+            }
+        });
+    });
+
+    observer.observe(section);
+});
