@@ -66,3 +66,91 @@ body
     text-align: center;
     font-weight: 700;
 }
+
+.timeline 
+{
+    position: relative;
+    width: 43.75rem;
+    margin: 2rem auto;
+    padding: 2rem 0;
+}
+  
+.timeline::before 
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0.25rem; /* thicker for visibility */
+    height: 100%;
+    background-color: #cf7c00;
+    z-index: 0; /* behind dots */
+}
+  
+.timeline-event 
+{
+    position: relative;
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+  
+.timeline-dot 
+{
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    border: 0.125rem solid white;
+    background: #cf7c00;
+    z-index: 2; /* above line */
+}
+
+.timeline-dot.current
+{
+
+    box-shadow: 0 0 0 2px #cf7c00;
+}
+  
+.timeline-content 
+{
+    position: relative;
+    width: 45%;
+    border-radius: 8px;
+    z-index: 1;
+
+}
+  
+.timeline-event.left .timeline-content 
+{
+    margin-left: 0;
+    margin-right: auto;
+    text-align: right;
+}
+  
+.timeline-event.right .timeline-content 
+{
+    margin-right: 0;
+    margin-left: auto;
+    text-align: left;
+}
+  
+.timeline-content h3 
+{
+    margin: 0;
+    font-size: 1.2rem;
+}
+  
+.timeline-content span 
+{
+    font-size: 0.9rem;
+    color: gray;
+}
+  
+.timeline-content p 
+{
+    margin-top: 0.5rem;
+}
