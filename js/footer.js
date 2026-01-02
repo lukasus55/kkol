@@ -1,7 +1,5 @@
 //==================== SEASON SELECTOR SECTION ====================
 
-console.log('test')
-
 const showSelectorButton = document.querySelector('#show_selector_button');
 const selectorContainer = document.querySelector('#season_selector_container');
 const selectorBox = document.querySelector('#season_selector_box');

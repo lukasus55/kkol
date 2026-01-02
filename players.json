@@ -30,6 +30,16 @@
                 "position": 1,
                 "total_points": 12
             },
+            "kol2026":
+            {
+                "id": "kol2026",
+                "attended": true,
+                "finished": false,
+                "games_positions": ["-","-","-","-","-","-"],
+                "games_points": ["-","-","-","-","-","-"],
+                "position": 1,
+                "total_points": 0
+            },
             "pokerE1":
             {
                 "id": "pokerE1",
@@ -85,6 +95,16 @@
                 "games_points": [2,3,2],
                 "position": 3,
                 "total_points": 7
+            },
+            "kol2026":
+            {
+                "id": "kol2026",
+                "attended": true,
+                "finished": false,
+                "games_positions": ["-","-","-","-","-","-"],
+                "games_points": ["-","-","-","-","-","-"],
+                "position": 1,
+                "total_points": 0
             }
         },
         "medals": [1,0,0],
@@ -120,6 +140,16 @@
                 "games_points": [4,3,3],
                 "position": 2,
                 "total_points": 10
+            },
+            "kol2026":
+            {
+                "id": "kol2026",
+                "attended": true,
+                "finished": false,
+                "games_positions": ["-","-","-","-","-","-"],
+                "games_points": ["-","-","-","-","-","-"],
+                "position": 1,
+                "total_points": 0
             },
             "pokerE1":
             {
@@ -176,6 +206,16 @@
                 "games_points": [2,3,1],
                 "position": 4,
                 "total_points": 6
+            },
+            "kol2026":
+            {
+                "id": "kol2026",
+                "attended": true,
+                "finished": false,
+                "games_positions": ["-","-","-","-","-","-"],
+                "games_points": ["-","-","-","-","-","-"],
+                "position": 1,
+                "total_points": 0
             },
             "pokerE1":
             {
