@@ -1,29 +1,127 @@
+:root
+{
+    --color-onyx: #0D0A0B;
+    --color-charcoal-blue: #303238;
+    --color-lavender-mist: #F3EFF5;
+    --color-lime-moss: #72B01D;
+    --color-green: #3F7D20;
+}
+
 body
 {
-    background-color: #eaffeb;
-    color: #000000;
+    background-color: var(--color-onyx);
+    color: #ffffff;
+    padding-top: 5rem;
+}
+
+.hidden 
+{
+    opacity: 0;
+    transition: 1s;
+    filter: blur(3px);
+    transform: translateY(2rem);
+    transition-delay: 200ms;
+}
+
+.show
+{
+    opacity: 100%;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.hiddenSingle
+{
+    opacity: 0;
+    transition: 0.5s;
+    transform: translateY(2rem);
+    transition-delay: 200ms;
+}
+
+.showSingle
+{
+    opacity: 100%;
+    transform: translateY(0);
+}
+
+.hiddenSingle:nth-child(2)
+{
+    transition-delay: 400ms;
+}
+
+.hiddenSingle:nth-child(3)
+{
+    transition-delay: 600ms;
+}
+
+.hiddenSingle:nth-child(4)
+{
+    transition-delay: 800ms;
+}
+
+.hiddenSingle:nth-child(5)
+{
+    transition-delay: 1000ms;
+}
+
+.hiddenSingle:nth-child(6)
+{
+    transition-delay: 1200ms;
+}
+
+.hiddenSingle:nth-child(7)
+{
+    transition-delay: 1400ms;
+}
+
+.hiddenSingle:nth-child(8)
+{
+    transition-delay: 1600ms;
 }
 
 .header
 {
-    color: #000000;
     padding: 1.25rem 0.625rem 0.625rem 0.625rem;
-    background-color: #eaffeb;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .header_container
 {
-    display: flex;
+    display: grid;
     width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: start;
+    min-height: 10vh;
+    grid-template-columns: 6fr 6fr 6fr;
+    padding: 0px 20px;
+    grid-template-areas:
+    "empty season buttons"
 }
 
-.title
+.header_container .season
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    transition: all 0.4s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.header_container .season.hide-season {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+.header_container .title
 {
     display: flex;
     justify-content: center;
@@ -32,11 +130,10 @@ body
     height: 3.75rem;
     font-size: 1.875rem;
     font-weight: 600;
-    /* text-shadow: 1px 1px 3px .636363; */
-    color: #11cf00;
+    color: var(--color-lime-moss)
 }
 
-.year
+.header_container .year
 {
     display: flex;
     justify-content: center;
@@ -45,112 +142,317 @@ body
     height: 4.375rem;
     font-size: 3.125rem;
     font-weight: 600;
-    color: #000000
+    color: var(--color-lavender-mist);
+}
+
+.header_container .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    height: 100%;
+}
+
+.buttons a {
+    text-decoration: none;
+    width: max-content; 
+}
+
+.header_container .single_button {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 4rem;
+    height: 4rem;
+    border-radius: 12px;
+    padding: 0 1rem;
+    background-color: var(--color-charcoal-blue);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    position: relative;
+}
+
+.header_container .single_button .icon-mask {
+    min-width: 2rem; 
+    height: 2rem;
+    background-color: var(--color-lime-moss);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-image: var(--icon-url);
+    mask-image: var(--icon-url);
+    transition: all 0.3s ease;
+}
+
+.header_container .single_button .label {
+    color: var(--color-lavender-mist);
+    font-weight: 700;
+    font-size: 1.2rem;
+    opacity: 0;
+    max-width: 0;
+    white-space: nowrap;
+    margin-left: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+}
+
+/* INTERACTION LOGIC */
+.buttons a:hover .single_button {
+    width: 11rem;  
+    padding: 0 1.5rem;
+    opacity: 1;
+    background-color: var(--color-lime-moss);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4), 
+                0 0 20px rgba(114, 176, 29, 0.4);
+    justify-content: flex-start; 
+}
+
+.buttons a:hover .single_button .icon-mask {
+    opacity: 1;
+    transform: scale(1);
+    background-color: var(--color-lavender-mist);
+}
+
+.buttons a:hover .single_button .label {
+    opacity: 1;
+    max-width: 100px;
+    margin-left: 10px;
+    transform: translateX(0);
 }
 
 /* .main
 {
-    background-color: #251706;
-    color: #fff;
+    padding-top: 5rem;
 } */
 
-.tba
+.schedule
 {
     display: flex;
-    width: 100vw;
-    height: 30vh;
-    margin-top: 10rem;
+    width: 100%;
+    flex-wrap: wrap;
+    font-size: 3.75rem;
+    font-weight: 900;
+    justify-content: center;
+}
+
+.schedule_table
+{
+    margin: 5rem 0px;
+    display: flex;
+    width: 70%;
+    flex-wrap: wrap;
+}
+
+.schedule_event
+{
+    display: flex;
+    width: 100%;
+}
+
+.schedule_event .date
+{
+    display: flex;
+    width: 15%;
+    color: var(--color-lime-moss)
+}
+
+.schedule_event .name
+{
+    display: flex;
+    width: 85%;
+}
+
+.main_title_text
+{
+    font-size: 3.75rem;
+    font-weight: 900;
+}
+
+.ranking
+{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 5.25rem;
+    margin-bottom: 4rem;
+}
+
+.ranking_title
+{
+    display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 5rem;
-    text-align: center;
-    font-weight: 700;
-}
-
-.timeline 
-{
-    position: relative;
-    width: 43.75rem;
-    margin: 2rem auto;
-    padding: 2rem 0;
-}
-  
-.timeline::before 
-{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0.25rem; /* thicker for visibility */
-    height: 100%;
-    background-color: #cf7c00;
-    z-index: 0; /* behind dots */
-}
-  
-.timeline-event 
-{
-    position: relative;
+    color: var(--color-lavender-mist);
     width: 100%;
-    margin-bottom: 2.5rem;
-}
-  
-.timeline-dot 
-{
-    position: absolute;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1.2rem;
-    height: 1.2rem;
-    border-radius: 50%;
-    border: 0.125rem solid white;
-    background: #cf7c00;
-    z-index: 2; /* above line */
+    height: 5rem;
+    margin-bottom: 3rem;
 }
 
-.timeline-dot.current
+.ranking_table_segment
 {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    font-weight: 400;
+    justify-self: center;
+}
 
-    box-shadow: 0 0 0 2px #cf7c00;
-}
-  
-.timeline-content 
+.ranking_table
 {
-    position: relative;
-    width: 45%;
-    border-radius: 8px;
-    z-index: 1;
+    text-align: center;
+    border-collapse: collapse;
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--color-lavender-mist);
+    font-size: 2.75rem;
+}
 
-}
-  
-.timeline-event.left .timeline-content 
+.ranking_table th
 {
-    margin-left: 0;
-    margin-right: auto;
-    text-align: right;
+    color: var(--color-lime-moss);
 }
-  
-.timeline-event.right .timeline-content 
+
+.ranking_table tr
 {
-    margin-right: 0;
-    margin-left: auto;
+    height: 2.5rem;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ranking_table .ranking_table_standard {
+    height: 6.125rem;
+    opacity: 0;
+    animation-fill-mode: forwards;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.ranking_table .ranking_table_standard.animate-row {
+    animation-name: fadeInUp;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+}
+
+.ranking_table .ranking_position
+{
+    width: 5.75rem;
+    text-align: center;
+}
+
+.ranking_table .ranking_player_header
+{
+    width: 10rem;
+}
+
+.ranking_table .ranking_player
+{
     text-align: left;
 }
-  
-.timeline-content h3 
+
+.ranking_table .ranking_game
 {
-    margin: 0;
-    font-size: 1.2rem;
+    padding: 0rem;
+    transition: background-color 0.6s ease;
+    width: 5.75rem;
+    opacity: 100%;
 }
-  
-.timeline-content span 
+
+.ranking_game1,.ranking_game2,.ranking_game3,.ranking_game4
 {
-    font-size: 0.9rem;
-    color: gray;
+    padding-top: 0.25rem;
+    height: 100%;
 }
-  
-.timeline-content p 
+
+.ranking_table .ranking_total_header
 {
-    margin-top: 0.5rem;
+    width: 3.75rem;
+}
+
+.ranking_table .ranking_total
+{
+    width: 3.75rem;
+}
+
+.ranking_table .ranking_game img
+{
+    width: 2.625rem;
+    height: 2.625rem;
+    align-self: flex-end;
+}
+
+@media (max-width:768px)
+{
+
+    .schedule
+    {
+        font-size: 1.75rem;
+    }
+
+    .schedule_event .date
+    {
+        display: flex;
+        width: 20%;
+        color: var(--color-lime-moss)
+    }
+
+    .schedule_event .name
+    {
+        display: flex;
+        width: 80%;
+    }
+
+    .header_container
+    {
+        display: grid;
+        width: 100%;
+        height: 10vh;
+        grid-template-columns: 6fr;
+        padding: 0px 20px;
+        grid-template-areas:
+        "season"
+    }
+
+    .header_container .buttons
+    {
+        display: none;
+    }
+
+    .ranking
+    {
+        margin-bottom: 20px;
+        height: 25rem;
+    }
+
+    .ranking_table .ranking_pts
+    {
+        width: 90px;
+    }
+
+    .ranking_game
+    {
+        display: none;
+    }
+
+    .ranking_game_result
+    {
+        display: none;
+    }
+
+    .ranking_table .ranking_player_header
+    {
+        width: 150px;
+    }
+
 }

@@ -18,60 +18,217 @@
     <header class="header" id="header">
 
         <div class="header_container">
-            <div class="title">
-                Karwińska Olimpiada
-            </div>
 
-            <div class="year">
-                <div class="year_text" id="year_text">
-                    2026
-                </div>
-            </div>
+            <div class="empty"></div>
 
-            <!-- <div class="timeline">
+            <div class="season">
+                <div class="title">
+                    Karwińska Olimpiada
+                </div>
 
-                <div class="timeline-event left clickable" onclick='window.location.href = "#catan";'>
-                  <div class="timeline-dot"></div>
-                  <div class="timeline-content">
-                    <h3>Catan</h3>
-                    <span>26.08.2025</span>
-                  </div>
-                </div>
-              
-                <div class="timeline-event right clickable" onclick='window.location.href = "#codenames";'>
-                  <div class="timeline-dot"></div>
-                  <div class="timeline-content">
-                    <h3>Codenames</h3>
-                    <span>11.09.2025 - 12.09.2025</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-event left clickable"  onclick='window.location.href = "#brain";'>
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h3>Brain Show</h3>
-                        <span>23.11.2025</span>
+                <div class="year">
+                    <div class="year_text" id="year_text">
+                        2026
                     </div>
                 </div>
+            </div>
 
-                <div class="timeline-event right">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                      <h3>Koniec sezonu</h3>
-                      <span>28.02.2026</span>
+
+            <div class="buttons">
+
+                <a href="#pociag">
+                    <div class="single_button">
+                        <img src="/img/2026/TrainIcon.webp">
                     </div>
-                </div>
+                </a>
 
-            </div>  -->
-              
+                <a href="#golf">
+                    <div class="single_button">
+                        <img src="/img/2026/GolfIcon.webp">
+                    </div>
+                </a>
+
+                <a href="#splendor">
+                    <div class="single_button">
+                        <img src="/img/2026/SplendorIcon.webp">
+                    </div>
+                </a>
+
+                <a href="#pummel">
+                    <div class="single_button">
+                        <img src="/img/2026/PummelIcon.webp">
+                    </div>
+                </a>
+
+                <a href="#geometry">
+                    <div class="single_button">
+                        <img src="/img/2026/GeometryIcon.webp">
+                    </div>
+                </a>
+
+                <a href="#dart">
+                    <div class="single_button">
+                        <img src="/img/2026/DartIcon.webp">
+                    </div>
+                </a>
+
+            </div>
+
         </div>
 
     </header>
 
     <main class="main" id="main">
 
-        <section class="tba" id="tba">
-            SZCZEGÓŁY W KRÓTCE
+        <section class="schedule">
+            <div class="schedule_table hiddenList">
+                <div class="schedule_event hiddenSingle">
+                    <div class="date"> TBA </div>
+                    <div class="name"> Wsiąść do Pociągu </div>
+                </div>
+                <div class="schedule_event hiddenSingle">
+                    <div class="date"> TBA </div>
+                    <div class="name"> Golf With Your Friends </div>
+                </div>
+                <div class="schedule_event hiddenSingle">
+                    <div class="date"> TBA </div>
+                    <div class="name"> Splendor </div>
+                </div>
+                <div class="schedule_event hiddenSingle">
+                    <div class="date"> TBA </div>
+                    <div class="name"> Pummel Party </div>
+                </div>
+                <div class="schedule_event hiddenSingle">
+                    <div class="date"> TBA </div>
+                    <div class="name"> Finał Geometry Dash </div>
+                </div>
+                <div class="schedule_event hiddenSingle">
+                    <div class="date"> TBA </div>
+                    <div class="name"> Dart </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ranking" id="ranking">
+
+            <div class="ranking_title">
+                <span class="main_title_text"> RANKING </span>
+            </div>
+
+            <div class="ranking_table_segment">
+                <table class="ranking_table">
+                    <tr class="ranking_table_header">
+                        <th class="ranking_position">#</th>
+                        <th class="ranking_player_header">Gracz</th>
+                        <th class="ranking_game ranking_game1_td">
+                            <div class="ranking_game1" title="Wsiąść do Pociągu: Europa">
+                                <img src="/img/2026/TrainIcon.webp">
+                            </div>
+                        </th>
+                        <th class="ranking_game ranking_game2_td">
+                            <div class="ranking_game2" title="Golf With Your Friends">
+                                <img src="/img/2026/GolfIcon.webp">
+                            </div>
+                        </th>
+                        <th class="ranking_game ranking_game3_td">
+                            <div class="ranking_game3" title="Splendor">
+                                <img src="/img/2026/SplendorIcon.webp">
+                            </div>
+                        </th>
+                            <td class="ranking_game ranking_game4_td">
+                            <div class="ranking_game4" title="Pummel Party">
+                                <img src="/img/2026/PummelIcon.webp">
+                            </div>
+                        </th>
+                        <th class="ranking_game ranking_game5_td">
+                            <div class="ranking_game5" title="Geometry Dash">
+                                <img src="/img/2026/GeometryIcon.webp">
+                            </div>
+                        </th>
+                        <th class="ranking_game ranking_game6_td">
+                            <div class="ranking_game6" title="Dart">
+                                <img src="/img/2026/DartIcon.webp">
+                            </div>
+                        </th>
+                        <th class="ranking_total_header">Total</th>
+                    </tr>
+                    <tr class="ranking_table_standard" id="ranking_pos_1">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
+                    </tr>
+                    <tr class="ranking_table_standard" id="ranking_pos_2">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
+                    </tr>
+                    <tr class="ranking_table_standard" id="ranking_pos_3">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
+                    </tr>
+                    <tr class="ranking_table_standard" id="ranking_pos_4">
+                        <td class="ranking_table_position">-</td>
+                        <td class="ranking_player">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_game_result">-</td>
+                        <td class="ranking_total">-</td>
+                    </tr>
+                </table>
+            </div>
+
+            <script type="module">
+                import tableLoader from "/js/table-loader.js";
+
+                await tableLoader(`kol2026`);
+
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.1
+                };
+
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const rows = document.querySelectorAll('.ranking_table_standard');
+                            
+                            rows.forEach((row, index) => {
+                                row.style.animationDelay = `${index * 100}ms`;
+                                row.classList.add('animate-row');
+                            });
+
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+
+                const table = document.querySelector('.ranking_table');
+                if (table) observer.observe(table); 
+            </script>
+
         </section>
 
     </main>
@@ -83,6 +240,6 @@
     <!-- footer.html and footer.js loading script -->
     <script src="/js/footer-loader.js"></script>
 
-    <script defer src="/js/2025.js"></script>
+    <script defer src="/js/2026.js"></script>
     
 </body>
