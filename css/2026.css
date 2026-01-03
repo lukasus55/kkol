@@ -5,17 +5,14 @@
     --color-lavender-mist: #F3EFF5;
     --color-lime-moss: #72B01D;
     --color-green: #3F7D20;
+    --color-dark-green: #305120;
 }
 
 body
 {
     background-color: var(--color-onyx);
     color: #ffffff;
-    padding-top: 8rem;
-    padding-bottom: 16rem;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    padding-bottom: 60px;
 }
 
 .hidden 
@@ -83,7 +80,7 @@ body
     transition-delay: 1600ms;
 }
 
-.header
+.navbar
 {
     padding: 1.25rem 0.625rem 0.625rem 0.625rem;
     display: flex;
@@ -97,7 +94,7 @@ body
     z-index: 1000;
 }
 
-.header_container
+.navbar_container
 {
     display: grid;
     width: 100%;
@@ -108,7 +105,7 @@ body
     "logo season buttons"
 }
 
-.header_container .logo
+.navbar_container .logo
 {
     display: flex;
     width: 100%;
@@ -120,18 +117,18 @@ body
     pointer-events: none;
 }
 
-.header_container .logo.show-logo {
+.navbar_container .logo.show-logo {
     opacity: 1;
     pointer-events: all;
 }
 
-.header_container .logo img
+.navbar_container .logo img
 {
     width: 6rem;
     height: 6rem;
 }
 
-.header_container .season
+.navbar_container .season
 {
     display: flex;
     justify-content: center;
@@ -142,13 +139,13 @@ body
     transform: translateX(0);
 }
 
-.header_container .season.hide-season {
+.navbar_container .season.hide-season {
     opacity: 0;
     transform: translateX(-200px);
     pointer-events: none;
 }
 
-.header_container .title
+.navbar_container .title
 {
     display: flex;
     justify-content: center;
@@ -160,7 +157,7 @@ body
     color: var(--color-lime-moss)
 }
 
-.header_container .year
+.navbar_container .year
 {
     display: flex;
     justify-content: center;
@@ -172,7 +169,7 @@ body
     color: var(--color-lavender-mist);
 }
 
-.header_container .buttons {
+.navbar_container .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,12 +177,8 @@ body
     height: 100%;
 }
 
-.buttons a {
-    text-decoration: none;
-    width: max-content; 
-}
-
-.header_container .single_button {
+/* STANDARD BUTTON (Expands on Hover) */
+.single_button {
     display: flex;
     align-items: center;
     justify-content: center; 
@@ -200,10 +193,10 @@ body
     position: relative;
 }
 
-.header_container .single_button .icon-mask {
+.single_button .icon-mask {
     min-width: 2rem; 
     height: 2rem;
-    background-color: var(--color-lime-moss);
+    background-color: var(--color-lime-moss); 
     -webkit-mask-size: contain;
     mask-size: contain;
     -webkit-mask-repeat: no-repeat;
@@ -215,8 +208,8 @@ body
     transition: all 0.3s ease;
 }
 
-.header_container .single_button .label {
-    color: var(--color-lavender-mist);
+.single_button .label {
+    color: var(--color-charcoal-blue);
     font-weight: 700;
     font-size: 1.2rem;
     opacity: 0;
@@ -227,34 +220,212 @@ body
     transition: all 0.3s ease;
 }
 
-/* INTERACTION LOGIC */
 .buttons a:hover .single_button {
-    width: 11rem;  
+    width: 11rem;
     padding: 0 1.5rem;
-    opacity: 1;
     background-color: var(--color-lime-moss);
     box-shadow: 0 10px 20px rgba(0,0,0,0.4), 
                 0 0 20px rgba(114, 176, 29, 0.4);
-    justify-content: flex-start; 
+    justify-content: space-between;
 }
 
 .buttons a:hover .single_button .icon-mask {
-    opacity: 1;
-    transform: scale(1);
-    background-color: var(--color-lavender-mist);
+    background-color: var(--color-charcoal-blue);
 }
 
 .buttons a:hover .single_button .label {
     opacity: 1;
-    max-width: 100px;
+    max-width: 150px;
     margin-left: 10px;
     transform: translateX(0);
 }
 
-/* .main
+
+/* WIDE BUTTON (Static, Color Swap)*/
+.single_wide_button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    width: 11rem; 
+    height: 4rem;
+    padding: 0 1.5rem;
+    border-radius: 12px;
+    
+    background-color: var(--color-lime-moss);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.single_wide_button .icon-mask {
+    min-width: 2rem; 
+    height: 2rem;
+    background-color: var(--color-charcoal-blue); 
+    
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-image: var(--icon-url);
+    mask-image: var(--icon-url);
+    transition: all 0.3s ease;
+}
+
+.single_wide_button .label {
+    color: var(--color-charcoal-blue);
+    font-weight: 700;
+    font-size: 1.2rem;
+    opacity: 1;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+/* --- Hover Effect (Color Swap) --- */
+.single_wide_button:hover {
+    background-color: var(--color-charcoal-blue);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4), 
+                0 0 20px rgba(114, 176, 29, 0.2);
+}
+
+.single_wide_button:hover .icon-mask {
+    background-color: var(--color-lime-moss);
+}
+
+.single_wide_button:hover .label {
+    color: var(--color-lime-moss);
+}
+
+/* Helper to hide raw images in both button types */
+.single_button img, .single_wide_button img {
+    display: none;
+}
+
+.section_shadow 
 {
-    padding-top: 5rem;
-} */
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1), 
+                0 10px 15px -3px rgba(114, 176, 29, 0.15);
+    border-bottom: 1px solid rgba(114, 176, 29, 0.3);
+}
+
+.header
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background: url("/img/2026/BlurryGradient1.webp");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 8rem;
+    scroll-snap-type: y mandatory;
+}
+
+.header_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    font-weight: 900;
+    padding: 8rem 8rem;
+}
+
+.header_half
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    flex-wrap: wrap;
+}
+
+.header_half .title
+{
+    display: flex;
+    width: 100%;
+    font-size: 3.75rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.header_half .stats
+{
+    display: flex;
+    width: 80%;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.header_half .stats .single_stat
+{
+    display: flex;
+    width: 20%;
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+.header_half .stats .single_stat .stat_value
+{
+    display: flex;
+    width: 100%;
+    height: 60%;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 3rem;
+    font-variant-numeric: tabular-nums; 
+}
+
+
+.header_half .stats .single_stat .stat_name
+{
+    display: flex;
+    width: 100%;
+    height: 40%;
+    justify-content: center;
+    align-items: flex-start;
+    color: var(--color-lime-moss);
+}
+
+.header_half .games 
+{
+    width: 80%;
+}
+
+.header_half .learn_games
+{
+    display: flex;
+    width: 100%;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.header_half .buttons
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+}
+
+.header_half .buttons a
+{
+    display: flex;
+}
 
 .schedule
 {
@@ -264,13 +435,12 @@ body
     font-size: 3.75rem;
     font-weight: 900;
     justify-content: center;
-    margin-top: 4rem;
+    padding: 4rem;
     scroll-snap-type: y mandatory;
 }
 
 .schedule_table
 {
-    margin-top: 4rem;
     display: flex;
     width: 70%;
     flex-wrap: wrap;
@@ -306,9 +476,13 @@ body
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 4rem;
     width: 100%;
     scroll-snap-type: y mandatory;
+    background: url("/img/2026/BlurryGradient2.webp");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 4rem 0rem;
 }
 
 .ranking_title
@@ -424,6 +598,17 @@ body
 
 @media (max-width:768px)
 {
+    .header_half
+    {
+        width: 100%;
+        margin-bottom: 4rem;
+    }
+
+    .header_container
+    {
+        padding: 8rem 1rem;
+    }
+
     .schedule
     {
         font-size: 1.75rem;
@@ -439,11 +624,17 @@ body
         font-size: 2rem;
     }
 
+    .schedule_table
+    {
+        width: 90%;
+    }
+
     .schedule_event .date
     {
         display: flex;
         width: 20%;
-        color: var(--color-lime-moss)
+        color: var(--color-lime-moss);
+        margin-right: 1rem;
     }
 
     .schedule_event .name
@@ -452,7 +643,7 @@ body
         width: 80%;
     }
 
-    .header_container
+    .navbar_container
     {
         display: grid;
         width: 100%;
@@ -463,12 +654,12 @@ body
         "season"
     }
 
-    .header_container .logo
+    .navbar_container .logo
     {
         display: none;
     }
 
-    .header_container .buttons
+    .navbar_container .buttons
     {
         display: none;
     }

@@ -15,9 +15,9 @@
 
 <body>
 
-    <header class="header" id="header">
+    <nav class="navbar" id="navbar">
 
-        <div class="header_container">
+        <div class="navbar_container">
 
             <div class="logo">
                 <a href="/2026">
@@ -40,39 +40,24 @@
 
             <div class="buttons">
 
-                <a href="#pociag">
+                <a href="#schedule">
                     <div class="single_button">
-                        <img src="/img/2026/TrainIcon.webp">
+                        <img src="/img/2026/ScheduleIcon.svg">
+                        <span class="label"> Kalendarz </span>
                     </div>
                 </a>
 
-                <a href="#golf">
+                <a href="#ranking">
                     <div class="single_button">
-                        <img src="/img/2026/GolfIcon.webp">
+                        <img src="/img/2026/RankingIcon.svg">
+                        <span class="label"> Ranking </span>
                     </div>
                 </a>
 
-                <a href="#splendor">
+                <a href="#games">
                     <div class="single_button">
-                        <img src="/img/2026/SplendorIcon.webp">
-                    </div>
-                </a>
-
-                <a href="#pummel">
-                    <div class="single_button">
-                        <img src="/img/2026/PummelIcon.webp">
-                    </div>
-                </a>
-
-                <a href="#geometry">
-                    <div class="single_button">
-                        <img src="/img/2026/GeometryIcon.webp">
-                    </div>
-                </a>
-
-                <a href="#dart">
-                    <div class="single_button">
-                        <img src="/img/2026/DartIcon.webp">
+                        <img src="/img/2026/GamesIcon.svg">
+                        <span class="label"> Gry </span>
                     </div>
                 </a>
 
@@ -80,44 +65,122 @@
 
         </div>
 
+    </nav>
+
+    <header class="header section_shadow" id="header">
+        <div class="header_container">
+
+            <div class="header_half">
+
+                <div class="title"> W TYM SEZONIE </div>
+
+                <div class="stats"> 
+                    <div class="single_stat">
+                        <div class="stat_value"> 6 </div> 
+                        <div class="stat_name"> GIER </div> 
+                    </div>
+                    <div class="single_stat">
+                        <div class="stat_value"> 4 </div> 
+                        <div class="stat_name"> GRACZY </div> 
+                    </div>
+                    <div class="single_stat">
+                        <div class="stat_value"> 1 </div> 
+                        <div class="stat_name"> TYTUŁ </div> 
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="header_half">
+                <div class="games">
+                    <div class="learn_games"> Poznaj gry </div>
+                    <div class="buttons hiddenList">
+
+                        <a href="#pociag" class="hiddenSingle">
+                            <div class="single_wide_button">
+                                <img src="/img/2026/TrainIcon.webp">
+                                <span class="label"> Pociągi </span>
+                            </div>
+                        </a>
+
+                        <a href="#golf" class="hiddenSingle">
+                            <div class="single_wide_button">
+                                <img src="/img/2026/GolfIcon.webp">
+                                <span class="label"> Golf </span>
+                            </div>
+                        </a>
+
+                        <a href="#splendor" class="hiddenSingle">
+                            <div class="single_wide_button">
+                                <img src="/img/2026/SplendorIcon.webp">
+                                <span class="label"> Splendor </span>
+                            </div>
+                        </a>
+
+                        <a href="#pummel" class="hiddenSingle">
+                            <div class="single_wide_button">
+                                <img src="/img/2026/PummelIcon.webp">
+                                <span class="label"> Pummel </span>
+                            </div>
+                        </a>
+
+                        <a href="#geometry" class="hiddenSingle">
+                            <div class="single_wide_button">
+                                <img src="/img/2026/GeometryIcon.webp">
+                                <span class="label"> GD </span>
+                            </div>
+                        </a>
+
+                        <a href="#dart" class="hiddenSingle">
+                            <div class="single_wide_button">
+                                <img src="/img/2026/DartIcon.webp">
+                                <span class="label"> Dart </span>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </header>
 
     <main class="main" id="main">
 
-        <section class="schedule">
-            <div class="schedule_table hiddenList">
-                <div class="schedule_event hiddenSingle">
+        <section class="schedule section_shadow" id="schedule">
+            <div class="schedule_table">
+                <div class="schedule_event">
                     <div class="date"> FEB </div>
                     <div class="name"> Start Geometry Dash </div>
                 </div>
-                <div class="schedule_event hiddenSingle">
+                <div class="schedule_event">
                     <div class="date"> TBA </div>
                     <div class="name"> Wsiąść do Pociągu </div>
                 </div>
-                <div class="schedule_event hiddenSingle">
+                <div class="schedule_event">
                     <div class="date"> TBA </div>
                     <div class="name"> Golf With Your Friends </div>
                 </div>
-                <div class="schedule_event hiddenSingle">
+                <div class="schedule_event">
                     <div class="date"> TBA </div>
                     <div class="name"> Splendor </div>
                 </div>
-                <div class="schedule_event hiddenSingle">
+                <div class="schedule_event">
                     <div class="date"> TBA </div>
                     <div class="name"> Pummel Party </div>
                 </div>
-                <div class="schedule_event hiddenSingle">
+                <div class="schedule_event">
                     <div class="date"> TBA </div>
                     <div class="name"> Finał Geometry Dash </div>
                 </div>
-                <div class="schedule_event hiddenSingle">
+                <div class="schedule_event">
                     <div class="date"> TBA </div>
                     <div class="name"> Dart </div>
                 </div>
             </div>
         </section>
 
-        <section class="ranking" id="ranking">
+        <section class="ranking section_shadow" id="ranking">
 
             <div class="ranking_title">
                 <span class="main_title_text"> RANKING </span>

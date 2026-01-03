@@ -1,29 +1,27 @@
-// Header buttons logic
-document.querySelectorAll('.buttons a').forEach(anchor => {
-    const button = anchor.querySelector('.single_button');
-    const img = button.querySelector('img');
+// Buttons logic
+// Select both types of buttons
+const selector = '.buttons a .single_button, .buttons a .single_wide_button';
 
-    if (img) {
+document.querySelectorAll(selector).forEach(button => {
+    const img = button.querySelector('img');
+    const existingLabel = button.querySelector('.label');
+
+    if (img && existingLabel) {
         const iconDiv = document.createElement('div');
         iconDiv.className = 'icon-mask';
         iconDiv.style.setProperty('--icon-url', `url('${img.src}')`);
         
-        const gameName = anchor.getAttribute('href').replace('#', '');
-        const labelSpan = document.createElement('span');
-        labelSpan.className = 'label';
-        labelSpan.innerText = gameName.charAt(0).toUpperCase() + gameName.slice(1);
-
         button.innerHTML = ''; 
         button.appendChild(iconDiv);
-        button.appendChild(labelSpan);
+        button.appendChild(existingLabel);
     }
 });
 
 // Header scrolling logic
-const logoDiv = document.querySelector('.header_container .logo');
-const seasonDiv = document.querySelector('.header_container .season');
+const logoDiv = document.querySelector('.navbar_container .logo');
+const seasonDiv = document.querySelector('.navbar_container .season');
 const mainSection = document.querySelector('.main');
-const logoThreshold = mainSection.getBoundingClientRect().height - window.screen.height; // pixel value
+const logoThreshold = 1; // pixel value
 
 window.addEventListener('scroll', () => {
 
@@ -73,3 +71,45 @@ const listObserver = new IntersectionObserver((entries) => {
 
 const hiddenListofElements = document.querySelectorAll('.hiddenList')
 hiddenListofElements.forEach((el) => listObserver.observe(el));
+
+
+const stats = document.querySelectorAll('.stat_value');
+
+const observer2 = new IntersectionObserver((entries, observer2) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const counter = entry.target;
+            const target = parseInt(counter.innerText);
+            
+            counter.innerText = '0';
+            
+            const duration = Math.min(1000, Math.max(600, target * 200));
+            
+            animateCount(counter, 0, target, duration);
+            
+            observer2.unobserve(counter);
+        }
+    });
+}, { threshold: 0.5 }); // Trigger when 50% of the item is visible
+
+stats.forEach(stat => observer2.observe(stat));
+
+// helper function
+function animateCount(element, start, end, duration) {
+    let startTimestamp = null;
+    
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        element.innerText = Math.floor(progress * (end - start) + start);
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            element.innerText = end;
+        }
+    };
+    
+    window.requestAnimationFrame(step);
+}
