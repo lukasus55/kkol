@@ -12,6 +12,7 @@ body
     background-color: var(--color-onyx);
     color: #ffffff;
     padding-top: 5rem;
+    padding-bottom: 15rem;
 }
 
 .hidden 
@@ -237,6 +238,8 @@ body
     font-size: 3.75rem;
     font-weight: 900;
     justify-content: center;
+    margin-top: 5rem;
+    scroll-snap-type: y mandatory;
 }
 
 .schedule_table
@@ -278,7 +281,8 @@ body
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 5.25rem;
-    margin-bottom: 4rem;
+    width: 100%;
+    scroll-snap-type: y mandatory;
 }
 
 .ranking_title
@@ -394,10 +398,19 @@ body
 
 @media (max-width:768px)
 {
-
     .schedule
     {
         font-size: 1.75rem;
+    }
+
+    .main_title_text
+    {
+        font-size: 2.5rem;
+    }
+
+    .ranking .ranking_table
+    {
+        font-size: 2rem;
     }
 
     .schedule_event .date
@@ -427,12 +440,6 @@ body
     .header_container .buttons
     {
         display: none;
-    }
-
-    .ranking
-    {
-        margin-bottom: 20px;
-        height: 25rem;
     }
 
     .ranking_table .ranking_pts
