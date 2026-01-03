@@ -72,7 +72,6 @@ const listObserver = new IntersectionObserver((entries) => {
 const hiddenListofElements = document.querySelectorAll('.hiddenList')
 hiddenListofElements.forEach((el) => listObserver.observe(el));
 
-
 const stats = document.querySelectorAll('.stat_value');
 
 const observer2 = new IntersectionObserver((entries, observer2) => {
@@ -113,3 +112,20 @@ function animateCount(element, start, end, duration) {
     
     window.requestAnimationFrame(step);
 }
+
+
+// Game cards mod switch logic
+document.querySelectorAll('.game_card').forEach(card => {
+    card.addEventListener('click', () => {
+        card.classList.toggle('view-results');
+        
+        // Update the Text inside the button
+        const textSpan = card.querySelector('.indicator_text');
+        
+        if (card.classList.contains('view-results')) {
+            textSpan.innerText = "INFO";
+        } else {
+            textSpan.innerText = "STATS";
+        }
+    });
+});

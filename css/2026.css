@@ -465,10 +465,13 @@ body
     width: 85%;
 }
 
-.main_title_text
+.section_title
 {
+    text-align: center;
+    color: var(--color-lavender-mist);
     font-size: 3.75rem;
     font-weight: 900;
+    margin-bottom: 4rem;
 }
 
 .ranking
@@ -596,6 +599,245 @@ body
     align-self: flex-end;
 }
 
+.games_section 
+{
+    padding: 4rem 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.games_grid 
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+    gap: 2rem;
+}
+
+.game_card 
+{
+    background-color: var(--color-charcoal-blue);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.05); /* Subtle border */
+    max-width: 90vw;
+}
+
+.game_card:hover 
+{
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5), 
+                0 0 20px rgba(114, 176, 29, 0.1); /* Slight Lime Glow */
+}
+
+.card_header 
+{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-onyx);
+}
+
+.card_icon img 
+{
+    width: 3rem;
+    height: 3rem;
+    filter: brightness(0) invert(1); 
+}
+
+.card_title h3 
+{
+    margin: 0;
+    color: var(--color-lime-moss);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.card_title .subtitle 
+{
+    color: rgba(243, 239, 245, 0.5);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.game_table 
+{
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-lavender-mist);
+}
+
+.game_table th 
+{
+    text-align: left;
+    font-size: 0.9rem;
+    color: rgba(243, 239, 245, 0.6);
+    padding-bottom: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.game_table td 
+{
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 1.1rem;
+}
+
+.game_table tr:last-child td 
+{
+    border-bottom: none;
+}
+
+.game_table .player_name 
+{
+    font-weight: 600;
+}
+
+.game_table .text-right 
+{
+    text-align: right;
+}
+
+.game_table .highlight {
+    color: var(--color-lime-moss);
+    font-weight: 800;
+}
+
+.game_card 
+{
+    background-color: var(--color-charcoal-blue);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.game_card:hover 
+{
+    transform: translateY(-5px);
+    border-color: var(--color-lime-moss);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5), 
+                0 0 20px rgba(114, 176, 29, 0.1);
+}
+
+.card_header 
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-onyx);
+}
+
+.header_left 
+{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.toggle_indicator 
+{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(0,0,0,0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.indicator_text 
+{
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-lime-moss);
+    letter-spacing: 1px;
+}
+
+.indicator_icon 
+{
+    font-size: 1.2rem;
+    color: var(--color-lavender-mist);
+    line-height: 1;
+}
+
+.game_card:hover .toggle_indicator 
+{
+    background-color: var(--color-lime-moss);
+}
+
+.game_card:hover .indicator_text { color: var(--color-charcoal-blue); }
+.game_card:hover .indicator_icon { color: var(--color-charcoal-blue); }
+
+.card_body 
+{
+    position: relative;
+    min-height: 13rem;
+}
+
+.content_desc 
+{
+    color: rgba(243, 239, 245, 0.8);
+    line-height: 1.6;
+    font-size: 1rem;
+    opacity: 1;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: relative;
+}
+
+.content_desc .highlight_text 
+{
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-lime-moss);
+    font-weight: 600;
+}
+
+.content_stats 
+{
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.game_card.view-results .content_desc 
+{
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+.game_card.view-results .content_stats 
+{
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.game_card.view-results .toggle_indicator 
+{
+    background-color: var(--color-lavender-mist);
+}
+.game_card.view-results .indicator_text { color: var(--color-charcoal-blue); }
+.game_card.view-results .indicator_icon { color: var(--color-charcoal-blue); }
+
 @media (max-width:768px)
 {
     .header_half
@@ -614,7 +856,7 @@ body
         font-size: 1.75rem;
     }
 
-    .main_title_text
+    .section_title
     {
         font-size: 2.5rem;
     }
