@@ -20,16 +20,21 @@ document.querySelectorAll('.buttons a').forEach(anchor => {
 });
 
 // Header scrolling logic
-const headerDiv = document.querySelector('.header_container');
+const logoDiv = document.querySelector('.header_container .logo');
 const seasonDiv = document.querySelector('.header_container .season');
-const threshold = 1; // Pixel value to trigger the hide
+const mainSection = document.querySelector('.main');
+const logoThreshold = mainSection.getBoundingClientRect().height - window.screen.height; // pixel value
 
 window.addEventListener('scroll', () => {
-    if (window.scrollY > threshold) {
+
+    if (window.scrollY > logoThreshold) {
         seasonDiv.classList.add('hide-season');
+        logoDiv.classList.add('show-logo');
     } else {
         seasonDiv.classList.remove('hide-season');
+        logoDiv.classList.remove('show-logo');
     }
+
 });
 
 // Scroll animations logic

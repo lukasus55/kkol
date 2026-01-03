@@ -47,7 +47,7 @@
     {
         "id": "kol2026",
         "displayed_name": "SEZON 2026",
-        "logo_exists": false,
+        "logo_exists": true,
         "type": "major",
         "standings":
         {
@@ -62,7 +62,7 @@
             "displayed_date": "2026 ",
             "players": 4,
             "tier": "S",
-            "theme_color": "#11cf00"
+            "theme_color": "#72B01D"
         }
     },
     "pokerE1":

@@ -11,8 +11,11 @@ body
 {
     background-color: var(--color-onyx);
     color: #ffffff;
-    padding-top: 5rem;
-    padding-bottom: 15rem;
+    padding-top: 8rem;
+    padding-bottom: 16rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .hidden 
@@ -102,7 +105,30 @@ body
     grid-template-columns: 6fr 6fr 6fr;
     padding: 0px 20px;
     grid-template-areas:
-    "empty season buttons"
+    "logo season buttons"
+}
+
+.header_container .logo
+{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    transition: all 0.4s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.header_container .logo.show-logo {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.header_container .logo img
+{
+    width: 6rem;
+    height: 6rem;
 }
 
 .header_container .season
@@ -113,12 +139,12 @@ body
     flex-wrap: wrap;
     transition: all 0.4s ease;
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
 .header_container .season.hide-season {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateX(-200px);
     pointer-events: none;
 }
 
@@ -238,13 +264,13 @@ body
     font-size: 3.75rem;
     font-weight: 900;
     justify-content: center;
-    margin-top: 5rem;
+    margin-top: 4rem;
     scroll-snap-type: y mandatory;
 }
 
 .schedule_table
 {
-    margin: 5rem 0px;
+    margin-top: 4rem;
     display: flex;
     width: 70%;
     flex-wrap: wrap;
@@ -280,7 +306,7 @@ body
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 5.25rem;
+    margin-top: 4rem;
     width: 100%;
     scroll-snap-type: y mandatory;
 }
@@ -435,6 +461,11 @@ body
         padding: 0px 20px;
         grid-template-areas:
         "season"
+    }
+
+    .header_container .logo
+    {
+        display: none;
     }
 
     .header_container .buttons
