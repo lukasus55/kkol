@@ -91,7 +91,7 @@ body
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 100;
 }
 
 .navbar_container
@@ -472,6 +472,7 @@ body
     font-size: 3.75rem;
     font-weight: 900;
     margin-bottom: 4rem;
+    width: 100%;
 }
 
 .ranking
@@ -789,7 +790,7 @@ body
 
 .content_desc 
 {
-    color: rgba(243, 239, 245, 0.8);
+    color: var(--gray700);
     line-height: 1.6;
     font-size: 1rem;
     opacity: 1;
@@ -837,6 +838,102 @@ body
 }
 .game_card.view-results .indicator_text { color: var(--color-charcoal-blue); }
 .game_card.view-results .indicator_icon { color: var(--color-charcoal-blue); }
+
+.simple_button
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--color-lime-moss);
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 8rem;
+    height: 2rem;
+}
+
+.simple_button_text 
+{
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-charcoal-blue);
+    letter-spacing: 1px;
+}
+
+.simple_button_icon 
+{
+    font-size: 1.2rem;
+    color: var(--color-charcoal-blue);
+    line-height: 1;
+}
+
+.simple_button:hover
+{
+    background-color: var(--color-charcoal-blue);
+}
+
+.simple_button:hover .simple_button_text{ color: var(--color-lime-moss); }
+.simple_button:hover .simple_button_icon { color: var(--color-lime-moss); }
+
+.game_details
+{
+    padding: 4rem 20px;
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.game_details .laptop
+{
+    display: flex;
+    justify-content: center;
+    width: 50%;
+}
+
+.game_details .laptop img
+{
+    width: min(30rem, 90%);
+}
+
+.game_details .text
+{
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: fit-content;
+}
+
+.game_details .title
+{
+    display: flex;
+    width: 100%;
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.game_details .subtitle
+{
+    display: flex;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--gray700);
+}
+
+.game_details .button
+{
+    display: flex;
+    width: 100%;
+    margin-top: 1rem;
+}
 
 @media (max-width:768px)
 {
@@ -924,6 +1021,22 @@ body
     .ranking_table .ranking_player_header
     {
         width: 150px;
+    }
+
+    .game_details .laptop
+    {
+        width: 100%;
+    }
+
+    .game_details .text
+    {
+        margin-top: 4rem;
+        width: 100%;
+    }
+
+    .game_details .text *
+    {
+        justify-content: center;
     }
 
 }
