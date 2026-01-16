@@ -1,0 +1,64 @@
+{
+    "levels":
+    [
+
+        {
+            "id": 1, 
+            "name": "Stereo Madness", 
+            "difficulty": "Easy", 
+            "players":
+            [
+                {                    
+                    "name": "Kostyś",
+                    "position": "1",
+                    "score": "0"
+                },
+                {                    
+                    "name": "DamiDami2",
+                    "position": "1",
+                    "score": "0"
+                },
+                {                    
+                    "name": "Harnoldihno",
+                    "position": "1",
+                    "score": "0"
+                },
+                {                    
+                    "name": "Kukuła",
+                    "position": "1",
+                    "score": "0"
+                }
+            ]
+        },
+
+        {
+            "id": 2, 
+            "name": "Back On Track", 
+            "difficulty": "Easy", 
+            "players":
+            [
+                {                    
+                    "name": "Kostyś",
+                    "position": "1",
+                    "score": "0"
+                },
+                {                    
+                    "name": "DamiDami2",
+                    "position": "1",
+                    "score": "0"
+                },
+                {                    
+                    "name": "Harnoldihno",
+                    "position": "1",
+                    "score": "0"
+                },
+                {                    
+                    "name": "Kukuła",
+                    "position": "1",
+                    "score": "0"
+                }
+            ]
+        }
+
+    ]
+}
