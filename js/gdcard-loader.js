@@ -1,17 +1,3 @@
-// kiedy nie robisz strony w reactcie i musisz stworzyć takie coś
-// ⠉⠉⠉⣿⡿⠿⠛⠋⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⣻⣩⣉⠉⠉
-// ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⣀⣀⣀⣀⣀⣀⡀⠄⠄⠉⠉⠄⠄⠄
-// ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣠⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⠄⠄⠄⠄
-// ⠄⠄⠄⠄⠄⠄⠄⠄⠄⢤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠄⠄⠄
-// ⡄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠉⠄⠉⠉⠉⣋⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⢷⡀⠄⠄
-// ⣿⡄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠠⣾⣿⣷⣄⣀⣀⣀⣠⣄⣢⣤⣤⣾⣿⡀⠄
-// ⣿⠃⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣹⣿⣿⡿⠿⣿⣿⣿⣿⣿⣿⣿⣿⢟⢁⣠
-// ⣿⣿⣄⣀⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠉⠉⣉⣉⣰⣿⣿⣿⣿⣷⣥⡀⠉⢁⡥⠈
-// ⣿⣿⣿⢹⣇⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠒⠛⠛⠋⠉⠉⠛⢻⣿⣿⣷⢀⡭⣤⠄
-// ⣿⣿⣿⡼⣿⠷⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⣀⣠⣿⣟⢷⢾⣊⠄⠄
-// ⠉⠉⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠈⣈⣉⣭⣽⡿⠟⢉⢴⣿⡇⣺⣿⣷
-// ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠁⠐⢊⣡⣴⣾⣥⣿⣿⣿
-
 import { loadData, loadHtml } from "/js/helpers.js";
 
 export default async function gdLoader() {
@@ -61,15 +47,21 @@ export default async function gdLoader() {
             const player = sortedPlayers[i];
 
             const playerNameText = document.querySelector(`#gd_card_${id} ` +`#gd_player_${i+1} ` + `.gd_player_name`);
+            const cubeImage = document.querySelector(`#gd_card_${id} ` +`#gd_player_${i+1} ` + `.gd_player_cube img`);
             const progressText = document.querySelector(`#gd_card_${id} ` +`#gd_player_${i+1} ` + `.gd_progress_text`);
             const progressFill = document.querySelector(`#gd_card_${id} ` +`#gd_player_${i+1} ` + `.gd_progress_fill`);
             const positionText = document.querySelector(`#gd_card_${id} ` +`#gd_player_${i+1} ` + `.gd_player_position`);
 
             playerNameText.textContent = player.name;
+            cubeImage.src = `/img/2026/GDCubes/${player.name}.webp`
             progressText.textContent = `${player.score}%`;
             progressFill.style.width = `${player.score}%`;
             positionText.textContent = `#${player.position}`;
         }
+
+        const htmlProfile = await loadHtml("https://gdbrowser.com/u/harnoldihno")
+        console.log(htmlProfile)
+        const popup = document.querySelector(`#gd_card_${id} ` + ".popup");
 
     };
 
