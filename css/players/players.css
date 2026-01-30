@@ -1,3 +1,11 @@
+:root
+{
+    --legendary: #FF8000;
+    --epic: #A335EE;
+    --rare: #0070DD;
+    --uncommon: #1EFF00;
+}
+
 .player_container
 {
     display: flex;
