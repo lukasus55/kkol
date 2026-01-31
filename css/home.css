@@ -162,6 +162,12 @@ section .title
     position: relative
 }
 
+.event_spacer
+{
+    width: 30rem;
+    height: 15rem;
+}
+
 .event_photo, .event_text
 {
     display: flex;
@@ -176,52 +182,39 @@ section .title
     border-radius: 5pt 0pt 0pt 5pt;
 }
 
-.event_badge
+.event_buttons
 {
     position: absolute;
     bottom: 0;
-    left: 0;
-    background-color: var(--color-charcoal-blue);
+    left: 17.5rem;
     padding: 1rem 1rem 1rem 0rem;
-    -webkit-box-shadow: 22px 8px 24px 0px rgba(0, 0, 0, 1);
-    -moz-box-shadow: 22px 8px 24px 0px rgba(0, 0, 0, 1);
-    box-shadow: 22px 8px 24px 0px rgba(0, 0, 0, 1);
     border-radius: 0pt 10pt 0pt 5pt;
-}
-
-.event_banner_single_badge
-{
-    display: flex;
-    justify-content: center;
-    margin-left: 1rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 10pt;
-    transition: 0.3s;
-    width: 5rem;
     z-index: 10;
 }
 
-.banner_s-tier 
-{ 
-    background: #e6b800; 
-    background: linear-gradient(90deg, rgba(230, 184, 0, 1) 0%, rgba(255, 128, 0, 1) 100%); 
-    box-shadow: 0px 0px 20px 10px rgb(212, 156, 0);
-    animation: glowPulse 1.5s infinite alternate;
+.button_event
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0rem;
+    gap: .6rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 2.4rem;
+    width: 10rem;
+    font-size: 1.1rem;
+    background-color: var(--color-lime-moss);
+    color: var(--color-charcoal-blue);
+    -webkit-box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
 }
 
-@keyframes glowPulse {
-    0% 
-    {
-        box-shadow: 0px 0px 20px 0px rgb(212, 156, 0);
-    }
-    100% 
-    {
-        box-shadow: 0px 0px 40px 10px rgb(212, 156, 0);
-    }
+.button_event:hover
+{
+    scale: 1.1;
 }
-
-.banner_a-tier { background: #7c00cf; background: linear-gradient(90deg, rgba(124, 0, 207, 1) 0%, rgba(163, 53, 238, 1) 100%);}
-.banner_b-tier { background-color: var(--rare); }
 
 .event_text
 {
@@ -281,5 +274,15 @@ section .title
     {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .cards_container
+    {
+        width: 95%;
+    }
+    
+    .event_spacer
+    {
+        display: none;
     }
 }
