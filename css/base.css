@@ -70,3 +70,68 @@ a
     font-size: 11px;
   }
 }
+
+.hidden 
+{
+    opacity: 0;
+    transition: 1s;
+    filter: blur(3px);
+    transform: translateY(2rem);
+    transition-delay: 200ms;
+}
+
+.show
+{
+    opacity: 100%;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.hiddenSingle
+{
+    opacity: 0;
+    transition: 0.5s;
+    transform: translateY(2rem);
+    transition-delay: 200ms;
+}
+
+.showSingle
+{
+    opacity: 100%;
+    transform: translateY(0);
+}
+
+.hiddenSingle:nth-child(2)
+{
+    transition-delay: 400ms;
+}
+
+.hiddenSingle:nth-child(3)
+{
+    transition-delay: 600ms;
+}
+
+.hiddenSingle:nth-child(4)
+{
+    transition-delay: 800ms;
+}
+
+.hiddenSingle:nth-child(5)
+{
+    transition-delay: 1000ms;
+}
+
+.hiddenSingle:nth-child(6)
+{
+    transition-delay: 1200ms;
+}
+
+.hiddenSingle:nth-child(7)
+{
+    transition-delay: 1400ms;
+}
+
+.hiddenSingle:nth-child(8)
+{
+    transition-delay: 1600ms;
+}
