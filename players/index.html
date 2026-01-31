@@ -14,34 +14,36 @@
 
 <body>
 
-    <div class="players_container">
-        <div class="players_panorama">
-            <a href="/players/harnas" class="players_panorama_content">
-                Harnoldihno
-            </a>
-        </div>
-        <div class="players_panorama players_panorama_champion">
-            <a href="/players/kostys" class="players_panorama_content">
-                Kostyś
-            </a>
-        </div>
-        <div class="players_panorama">
-            <a href="/players/kukula" class="players_panorama_content">
-                Kukuła
-            </a>
-        </div>
-        <div class="players_panorama">
-            <a href="/players/damidami2" class="players_panorama_content">
-                DamiDami2
-            </a>
-        </div>
-    </div>
+    <div class="title"> Ranking KKOL </div>
 
+    <div class="container">
+        
+
+        <div class="leaderboard">
+            <div class="player header"> 
+                <div class="name"> 
+                    NAZWA
+                </div>
+                <div class="major"> S-SCORE </div>
+                <div class="minor"> AB-SCORE </div>
+                <div class="ranking"> RANKING </div>
+            </div>
+        </div>
+
+        <div class="explainer"> 
+            Wzór na ranking KKOL to suma następujących elementów: <br>
+            - S-SCORE: Średnia z 2 ostatnich turniejów S-Tier (15pkt, 10pkt, 5pkt) <br>
+            - AB-SCORE: Średnia z 3 ostatnich turniejów A-Tier lub B-Tier (7pkt, 4pkt, 1pkt)
+        </div>
+
+    </div>
+    
     <footer>
         <div id="common-footer">
         </div>
     </footer>
 
+    <script type="module" src="/js/players-index.js"></script>
     <!-- footer.html and footer.js loading script -->
     <script src="/js/footer-loader.js"></script>
 
