@@ -20,8 +20,6 @@ async function createTournamentsDiv()
         const winnerId = tournament.standings[1];
         const winnerName = isFinished ? players[winnerId].displayed_name : `TBD`;
 
-        console.log(tournament)
-
         const cardHTML = `
             <div class="card"> 
                 <div class="name"> ${tournamentName} </div>
