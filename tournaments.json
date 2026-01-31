@@ -5,6 +5,7 @@
         "displayed_name": "SEZON 2024",
         "logo_exists": true,
         "type": "major",
+        "finished": true,
         "standings":
         {
             "1": "harnas",
@@ -27,6 +28,7 @@
         "displayed_name": "SEZON 2025",
         "logo_exists": true,
         "type": "major",
+        "finished": true,
         "standings":
         {
             "1": "kostys",
@@ -49,6 +51,7 @@
         "displayed_name": "SEZON 2026",
         "logo_exists": true,
         "type": "major",
+        "finished": false,
         "standings":
         {
             "1": "kostys",
@@ -71,6 +74,7 @@
         "displayed_name": "POKER EDYCJA I",
         "logo_exists": false,
         "type": "minor",
+        "finished": true,
         "standings":
         {
             "1": "kukula",
@@ -92,6 +96,7 @@
         "displayed_name": "POKER EDYCJA II",
         "logo_exists": false,
         "type": "minor",
+        "finished": true,
         "standings":
         {
             "1": "kukula",
@@ -113,6 +118,7 @@
         "displayed_name": "MONOPOLY EDYCJA I",
         "logo_exists": false,
         "type": "minor",
+        "finished": true,
         "standings":
         {
             "1": "kukula",
