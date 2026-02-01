@@ -4,6 +4,8 @@
         "id": "kol2024",
         "displayed_name": "SEZON 2024",
         "logo_exists": true,
+        "page_exists": true,
+        "page_url": "2024",
         "type": "major",
         "finished": true,
         "standings":
@@ -27,6 +29,8 @@
         "id": "kol2025",
         "displayed_name": "SEZON 2025",
         "logo_exists": true,
+        "page_exists": true,
+        "page_url": "2025",
         "type": "major",
         "finished": true,
         "standings":
@@ -50,6 +54,8 @@
         "id": "kol2026",
         "displayed_name": "SEZON 2026",
         "logo_exists": true,
+        "page_exists": true,
+        "page_url": "2026",
         "type": "major",
         "finished": false,
         "standings":
@@ -73,6 +79,8 @@
         "id": "pokerE1",
         "displayed_name": "POKER EDYCJA I",
         "logo_exists": false,
+        "page_exists": false,
+        "page_url": "",
         "type": "minor",
         "finished": true,
         "standings":
@@ -95,6 +103,8 @@
         "id": "pokerE2",
         "displayed_name": "POKER EDYCJA II",
         "logo_exists": false,
+        "page_exists": false,
+        "page_url": "",
         "type": "minor",
         "finished": true,
         "standings":
@@ -117,6 +127,8 @@
         "id": "monopolyE1",
         "displayed_name": "MONOPOLY EDYCJA I",
         "logo_exists": false,
+        "page_exists": false,
+        "page_url": "",
         "type": "minor",
         "finished": true,
         "standings":

@@ -17,12 +17,20 @@ async function createTournamentsDiv()
         const tournamentTier = tournament.details.tier;
         const isFinished = tournament.finished;
 
+        const tournamentPageExists = tournament.page_exists;
+        const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
+
         const winnerId = tournament.standings[1];
         const winnerName = isFinished ? players[winnerId].displayed_name : `TBD`;
 
         const cardHTML = `
             <div class="card"> 
-                <div class="name"> ${tournamentName} </div>
+                <div class="name"> 
+                    ${tournamentPageExists ? `
+                        <a href="/${tournamentPageUrl}"> ${tournamentName} </a>` 
+                        : `${tournamentName}` 
+                    }
+                </div>
                 <div class="tier"> ${tournamentTier}-Tier </div>
                 <div class="date"> ${tournamentDate} </div>
                 <div class="winner"> 

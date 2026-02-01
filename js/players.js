@@ -180,12 +180,17 @@ async function loadProfiles()
         const tournamentTier = tournament.details.tier;
         const playerPosition = playerTournamentData.position;
 
-        const winnerId = tournament.standings[1];
-        const winnerName = `t`
+        const tournamentPageExists = tournament.page_exists;
+        const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
 
         const cardHTML = `
             <div class="card"> 
-                <div class="name"> ${tournamentName ?? '-'} </div>
+                <div class="name"> 
+                    ${tournamentPageExists ? `
+                        <a href="/${tournamentPageUrl}"> ${tournamentName} </a>` 
+                        : `${tournamentName}` 
+                    } 
+                </div>
                 <div class="position"> ${playerPosition && isTorunamentFinished ? `#${playerPosition}` : `-`} </div>
                 <div class="tier"> ${tournamentTier ?? '?'}-Tier </div>
                 <div class="date"> ${tournamentDate ?? '-'} </div>

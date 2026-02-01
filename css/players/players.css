@@ -199,6 +199,11 @@
     padding: 1rem;
 }
 
+.card a
+{
+    text-decoration: underline;
+}
+
 .card.header
 {
     font-size: 0.8rem;
