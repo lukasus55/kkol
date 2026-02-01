@@ -1,36 +1,7 @@
-// Default values
-
-const defaultTournamentThemeColor = '#ffffff';
-const defaultTournamentDisplayDate = '-';
-const defaultTournamentPlayersCount = 0;
-const defaultTournamentTier = "A";
-const defaultTournamentType = "minor";
-const defaultTournamentId = "default";
-const defaultTournamentDisplayName = ""
-
-const defaultTournament = {
-    details: {
-        theme_color: defaultTournamentThemeColor,
-        displayed_date: defaultTournamentDisplayDate,
-        players: defaultTournamentPlayersCount,
-        tier: defaultTournamentTier,
-    },
-    type: defaultTournamentType,
-    id: defaultTournamentId,
-    displayed_name: defaultTournamentDisplayName
-}
-
-//
+import { loadData } from "./helpers.js";
 
 const path = window.location.pathname;
 const playerID = path.split("/").pop();
-
-async function loadData(url) {
-  let response = await fetch(url);
-  let data = await response.json();
-  return data;
-}
-
 
 function switchDetails(tier)
 {
@@ -196,114 +167,36 @@ async function loadProfiles()
         }
     }
 
-    function createTournamentDiv(tournament = defaultTournament) {
+    function createTournamentDiv(tournament) {
 
-        const seasonItem = document.createElement('div');
-        seasonItem.classList.add('player_single_tournament');
+        if (!tournament) return;
 
-        const tournamentDetails = tournament.details;
         const playerTournamentData = playerTournaments[tournament.id] ?? {};
-        
-        // Title
-        const title = document.createElement('div');
-        title.classList.add('player_single_tournament_title');
-        title.style.backgroundColor = `${tournamentDetails.theme_color}`;
-        title.textContent = tournament.displayed_name;
-        seasonItem.appendChild(title);
 
-        // Stats container
-        const stats = document.createElement('div');
-        stats.classList.add('player_single_tournament_stats');
-        stats.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/img/players/tournaments/bckg/${tournament.id}.webp')`;
+        const tournamentName = tournament.displayed_name;
+        const tournamentDate = tournament.details.displayed_date;
+        const tournamentTier = tournament.details.tier;
+        const playerPosition = playerTournamentData.position;
 
-        // Stats header
-        const statsHeader = document.createElement('div');
-        statsHeader.classList.add('player_single_tournament_stats_header');
+        const winnerId = tournament.standings[1];
+        const winnerName = `t`
 
-        const position = document.createElement('div');
-        position.classList.add('player_single_tournament_stats_position');
-        position.textContent = `#${playerTournamentData.position ?? ``}`;
+        const cardHTML = `
+            <div class="card"> 
+                <div class="name"> ${tournamentName ?? '-'} </div>
+                <div class="position"> #${playerPosition ?? ''} </div>
+                <div class="tier"> ${tournamentTier ?? '?'}-Tier </div>
+                <div class="date"> ${tournamentDate ?? '-'} </div>
+            </div>
+        `;
 
-        statsHeader.appendChild(position);
-
-        // Some games don't have pointing system.
-        if(playerTournamentData.games_points)
-        {
-            const points = document.createElement('div');
-            points.classList.add('player_single_tournament_stats_points');
-
-            const pointsNumber = document.createElement('div');
-            pointsNumber.classList.add('player_single_tournament_stats_points_number');
-            pointsNumber.textContent = `${playerTournamentData.total_points ?? 0}`;
-
-            const pointsTitle = document.createElement('div');
-            pointsTitle.classList.add('player_single_tournament_stats_points_title');
-            pointsTitle.textContent = 'PKT';
-            pointsTitle.style.color = `${tournamentDetails.theme_color}`;
-
-            points.appendChild(pointsNumber);
-            points.appendChild(pointsTitle);
-
-            statsHeader.appendChild(points);
-        }
-
-        // Stats details
-        const statsDetails = document.createElement('div');
-        statsDetails.classList.add('player_single_tournament_stats_details');
-
-        const ul = document.createElement('ul');
-        ul.style.color = `${tournamentDetails.theme_color}`;
-
-        const li1 = document.createElement('li');
-        const img1 = document.createElement('img');
-        img1.src = '/img/players/calendar_icon.webp';
-        li1.appendChild(img1);
-        li1.append(` ` + tournamentDetails.displayed_date);
-
-        const li2 = document.createElement('li');
-        const img2 = document.createElement('img');
-        img2.src = '/img/players/profile_icon.webp';
-        li2.appendChild(img2);
-        li2.append(` ${tournamentDetails.players} graczy`);
-
-        const li3 = document.createElement('li');
-        const img3 = document.createElement('img');
-        img3.src = '/img/players/trophy_icon.webp';
-        li3.appendChild(img3);
-        li3.append(` ${tournamentDetails.tier}-Tier`);
-
-        ul.appendChild(li1);
-        ul.appendChild(li2);
-        ul.appendChild(li3);
-
-        statsDetails.appendChild(ul);
-
-        // Logo
-        if (tournament.logo_exists)
-        {
-            const logoDiv = document.createElement('div');
-            logoDiv.classList.add('player_single_tournament_stats_logo');
-            const logoImg = document.createElement('img');
-            logoImg.src = `/img/players/tournaments/logo/${tournament.id}.webp`;
-            logoDiv.appendChild(logoImg);
-
-            statsDetails.appendChild(logoDiv);
-        }
-
-
-        stats.appendChild(statsHeader);
-        stats.appendChild(statsDetails);
-
-        seasonItem.appendChild(stats);
-
-        // Append to #torunament_major or #torunament_minor
-        const container = document.getElementById(`tournament_${tournament.type}`);
-        if (container) {
-            container.appendChild(seasonItem);
-        }
+        const container = document.querySelector(`#player_tournaments`);
+        // 'beforeend' puts it after the last child, but inside the container
+        container.insertAdjacentHTML('beforeend', cardHTML);
 
     }
 
+    console.log(tournaments)
     tournaments.forEach(tournament => {
         createTournamentDiv(tournament)
     });

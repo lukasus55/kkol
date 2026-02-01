@@ -59,12 +59,17 @@ body
     padding: 1rem;
 }
 
-.player
+.player:nth-child(odd)
 {
-    background-color: var(--color-charcoal-blue);
+    background-color: #232429;
 }
 
-.header
+.player:nth-child(even)
+{
+    background-color: #303238;
+}
+
+.player.header
 {
     background-color: var(--color-lime-moss);
     color: var(--color-lavender-mist);
