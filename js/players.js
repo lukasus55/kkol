@@ -1,4 +1,4 @@
-import { loadData } from "./helpers.js";
+import { calculateRanking, loadData } from "./helpers.js";
 
 const path = window.location.pathname;
 const playerID = path.split("/").pop();
@@ -167,7 +167,7 @@ async function loadProfiles()
         }
     }
 
-    function createTournamentDiv(tournament) {
+    async function createTournamentDiv(tournament) {
 
         if (!tournament) return;
 
@@ -191,15 +191,43 @@ async function loadProfiles()
         `;
 
         const container = document.querySelector(`#player_tournaments`);
-        // 'beforeend' puts it after the last child, but inside the container
         container.insertAdjacentHTML('beforeend', cardHTML);
 
     }
 
-    console.log(tournaments)
     tournaments.forEach(tournament => {
         createTournamentDiv(tournament)
     });
+
+    async function createStatsDiv()
+    {
+        const leaderboard = await calculateRanking();
+        console.log(leaderboard[playerID]);
+        const playerRanking = leaderboard[playerID];
+        const majorRanking = playerRanking.majorRanking;
+        const minorRanking = playerRanking.minorRanking;
+        const kkolRanking = playerRanking.ranking;
+
+        const cardHTML = `
+            <div class="stats_single_stat">
+                <div class="single_stat_name"> Ranking KKOL </div>
+                <div class="single_stat_value"> ${kkolRanking} </div>
+            </div>
+            <div class="stats_single_stat">
+                <div class="single_stat_name"> S-Score </div>
+                <div class="single_stat_value"> ${majorRanking} </div>
+            </div>
+            <div class="stats_single_stat">
+                <div class="single_stat_name"> AB-Score </div>
+                <div class="single_stat_value"> ${minorRanking} </div>
+            </div>
+        `
+
+        const container = document.querySelector(`#stats`);
+        container.insertAdjacentHTML('beforeend', cardHTML);
+    }
+
+    createStatsDiv()
 
 }
 

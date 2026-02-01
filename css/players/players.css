@@ -177,7 +177,7 @@
 .player_grid
 {
     display: grid;
-    grid-template-columns: 7fr 3fr;
+    grid-template-columns: 8fr 2fr;
     width: 100%;
 }
 
@@ -267,7 +267,7 @@
     color: var(--color-lavender-mist);
 }
 
-.player_stats
+.player_stats_container
 {
     display: flex;
     flex-wrap: wrap;
@@ -276,12 +276,44 @@
     padding-left: 1rem;
 }
 
-.stat
+.stats
 {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
     background-color: var(--color-charcoal-blue);
-    padding: 1rem;
-    height: 12rem;
+    height: min-content;
+    gap: .5rem;
+    padding-bottom: 1rem;
+}
+
+.stats_single_stat
+{
+    display: flex;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0rem 1rem;
+}
+
+.stats_single_stat.header
+{
+    background-color: var(--color-lime-moss);
+    padding: .3rem 1rem;
+    display: flex;
+    justify-content: center;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.single_stat_name
+{
+    width: 70%;
+    color: var(--color-lime-moss);
+}
+
+.single_stat_value
+{
+    width: 30%;
 }
 
 @media (max-width:768px) 
