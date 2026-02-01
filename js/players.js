@@ -171,6 +171,8 @@ async function loadProfiles()
 
         if (!tournament) return;
 
+        const isTorunamentFinished = tournament.finished
+
         const playerTournamentData = playerTournaments[tournament.id] ?? {};
 
         const tournamentName = tournament.displayed_name;
@@ -184,7 +186,7 @@ async function loadProfiles()
         const cardHTML = `
             <div class="card"> 
                 <div class="name"> ${tournamentName ?? '-'} </div>
-                <div class="position"> #${playerPosition ?? ''} </div>
+                <div class="position"> ${playerPosition && isTorunamentFinished ? `#${playerPosition}` : `-`} </div>
                 <div class="tier"> ${tournamentTier ?? '?'}-Tier </div>
                 <div class="date"> ${tournamentDate ?? '-'} </div>
             </div>
@@ -202,7 +204,6 @@ async function loadProfiles()
     async function createStatsDiv()
     {
         const leaderboard = await calculateRanking();
-        console.log(leaderboard[playerID]);
         const playerRanking = leaderboard[playerID];
         const majorRanking = playerRanking.majorRanking;
         const minorRanking = playerRanking.minorRanking;
