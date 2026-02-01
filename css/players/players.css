@@ -15,7 +15,7 @@
     margin-left: auto;
     margin-right: auto;
     flex-wrap: wrap;
-    padding-top: 50px;
+    padding: 5rem 0;
 }
 
 .player_banner
@@ -178,6 +178,7 @@
 {
     display: grid;
     grid-template-columns: 8fr 2fr;
+    gap: 2rem;
     width: 100%;
 }
 
@@ -187,7 +188,6 @@
     flex-wrap: wrap;
     width: 100%;
     margin-top: 40px;
-    padding-right: 1rem;
 }
 
 .card
@@ -273,7 +273,7 @@
     flex-wrap: wrap;
     width: 100%;
     margin-top: 40px;
-    padding-left: 1rem;
+    justify-content: center;
 }
 
 .stats
@@ -322,10 +322,22 @@
     .player_container
     {
         width: 100%;
+        padding: 0 0 5rem 0;
     }
 
     .player_mobile_header
     {
         display: flex;
+    }
+
+    .player_grid
+    {
+        grid-template-columns: 1fr;
+        width: 95%;
+    }
+
+    .stats
+    {
+        width: 50%;
     }
 }
