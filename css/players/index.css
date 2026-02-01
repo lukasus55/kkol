@@ -71,8 +71,10 @@ body
 
 .player.header
 {
-    background-color: var(--color-lime-moss);
-    color: var(--color-lavender-mist);
+    font-size: 0.8rem;
+    padding: .5rem 1rem;
+    background-color: var(--color-lime-moss) !important;
+    color: var(--color-lavender-mist) !important;
     font-weight: 700;
 }
 

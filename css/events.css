@@ -14,7 +14,6 @@
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 2rem;
 }
 
 .card
@@ -25,12 +24,30 @@
     width: min(90%, 70rem);
     background-color: var(--color-charcoal-blue);
     padding: 1rem;
-    border-radius: 5pt;
+}
+
+.card:nth-child(odd)
+{
+    background-color: #232429;
+}
+
+.card:nth-child(even)
+{
+    background-color: #303238;
 }
 
 .card a
 {
     text-decoration: underline;
+}
+
+.card.header
+{
+    font-size: 0.8rem;
+    padding: .5rem 1rem;
+    background-color: var(--color-lime-moss) !important;
+    color: var(--color-lavender-mist) !important;
+    font-weight: 700;
 }
 
 .card .name
@@ -40,6 +57,11 @@
     width: 40%;
     height: 100%;
     color: var(--color-lime-moss);
+}
+
+.card.header .name
+{
+    color: var(--color-lavender-mist);
 }
 
 .card .tier
@@ -57,6 +79,11 @@
     width: 20%;
     height: 100%;
     color: var(--color-lime-moss);
+}
+
+.card.header .date
+{
+    color: var(--color-lavender-mist);
 }
 
 .card .winner
