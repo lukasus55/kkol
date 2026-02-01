@@ -28,7 +28,7 @@
 
 .round_title_number
 {
-    color: #ce6c6c;
+    color: var(--color-lime-moss);
 }
 
 .catan_map_subtitle

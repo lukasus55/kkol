@@ -13,43 +13,16 @@
 
 :root
 {
-  --main50: #141212;
-  --main100: #1f1c1c;
-  --main200: #3c3131;
-  --main250: #4b4040;
-  --main300: #584f4f;
-  --main400: #807777;
-  --main500: #8f7575;
-  --main600: #ad7474;
-  --main700: #ce6c6c;
-  --main800: #e85353;
-  --main900: #e00000;
-  --gray0: #363636;
-  --gray100: #363636;
-  --gray200: #1f1f1f;
-  --gray250: #4d4d4d;
-  --gray300: #585858;
-  --gray400: #838383;
-  --gray500: #adadad;
-  --gray600: #acacac;
-  --gray700: #c0c0c0;
-  --gray800: #e6e6e6;
-  --gray900: #ffffff;
-  --gold300: #c08300;
-  --gold400: #e0a500;
-  --silver300: #8b8b8b;
-  --silver400: #a5a5a5;
-  --brown300: #7c350c;
-  --brown400: #994514;
-  --fourth300: #8BA8B7;
-  --fourth400: #9ac5db;
   --footer700: #ce6c6c;
   --footer50: #141212;
   --footer100: #242020;
-  --legendary: #FF8000;
-  --epic: #A335EE;
-  --rare: #0070DD;
-  --uncommon: #1EFF00;
+  --color-onyx: #0D0A0B;
+  --color-charcoal-blue: #303238;
+  --color-lavender-mist: #F3EFF5;
+  --color-lime-moss: #72B01D;
+  --color-green: #3F7D20;
+  --color-dark-green: #305120;
+
 }
 
 html {
@@ -61,8 +34,8 @@ html {
 
 body
 {
-  background: #1F1C1C;
-  color: #fff;
+  background: var(--color-onyx);
+  color: var(--color-lavender-mist);
   padding-bottom: 60px;
 }
 
@@ -96,4 +69,69 @@ a
   html {
     font-size: 11px;
   }
+}
+
+.hidden 
+{
+    opacity: 0;
+    transition: 1s;
+    filter: blur(3px);
+    transform: translateY(2rem);
+    transition-delay: 200ms;
+}
+
+.show
+{
+    opacity: 100%;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.hiddenSingle
+{
+    opacity: 0;
+    transition: 0.5s;
+    transform: translateY(2rem);
+    transition-delay: 200ms;
+}
+
+.showSingle
+{
+    opacity: 100%;
+    transform: translateY(0);
+}
+
+.hiddenSingle:nth-child(2)
+{
+    transition-delay: 400ms;
+}
+
+.hiddenSingle:nth-child(3)
+{
+    transition-delay: 600ms;
+}
+
+.hiddenSingle:nth-child(4)
+{
+    transition-delay: 800ms;
+}
+
+.hiddenSingle:nth-child(5)
+{
+    transition-delay: 1000ms;
+}
+
+.hiddenSingle:nth-child(6)
+{
+    transition-delay: 1200ms;
+}
+
+.hiddenSingle:nth-child(7)
+{
+    transition-delay: 1400ms;
+}
+
+.hiddenSingle:nth-child(8)
+{
+    transition-delay: 1600ms;
 }

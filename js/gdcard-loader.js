@@ -59,8 +59,7 @@ export default async function gdLoader() {
             positionText.textContent = `#${player.position}`;
         }
 
-        const htmlProfile = await loadHtml("https://gdbrowser.com/u/harnoldihno")
-        console.log(htmlProfile)
+        const htmlProfile = await loadHtml("https://gdbrowser.com/u/harnoldihno");
         const popup = document.querySelector(`#gd_card_${id} ` + ".popup");
 
     };

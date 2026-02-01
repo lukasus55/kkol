@@ -136,12 +136,12 @@
     overflow: hidden;
     text-align: center;
     min-height: 400px;
-    border-bottom: 4px solid var(--gold400);
+    border-bottom: 4px solid #e0a500;
     width: 100%;
 }
 
 .champion_title {
-    color: var(--gold400);
+    color: #e0a500;
     text-transform: uppercase;
     letter-spacing: 4px;
     font-size: 1.5rem;
@@ -172,7 +172,7 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    border: 8px solid var(--gold400);
+    border: 8px solid #e0a500;
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
     transition: transform 0.3s ease;
 }

@@ -1,10 +1,3 @@
-body
-{
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
 .title
 {
     display: flex;
@@ -18,58 +11,37 @@ body
 .container
 {
     display: flex;
-    width: min(90vw, 40rem);
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.disclaimer
-{
-    display: flex;
+    width: 100%;
     justify-content: center;
-    color: #646464;
-    width: 100%;
-    padding: 1rem 0rem;
-}
-
-.explainer
-{
-    display: flex;
-    justify-content: center;
-    color: #646464;
-    width: 100%;
-    padding: 1rem 0rem;
-}
-
-.leaderboard
-{
-    display: flex;
     flex-wrap: wrap;
-    width: 100%;
-    padding: 1rem 0rem;
 }
 
-.player
+.card
 {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: min(90%, 70rem);
     background-color: var(--color-charcoal-blue);
     padding: 1rem;
 }
 
-.player:nth-child(odd)
+.card:nth-child(odd)
 {
     background-color: #232429;
 }
 
-.player:nth-child(even)
+.card:nth-child(even)
 {
     background-color: #303238;
 }
 
-.player.header
+.card a
+{
+    text-decoration: underline;
+}
+
+.card.header
 {
     font-size: 0.8rem;
     padding: .5rem 1rem;
@@ -78,63 +50,63 @@ body
     font-weight: 700;
 }
 
-.player .name
+.card .name
 {
     display: flex;
     align-items: center;
     width: 40%;
     height: 100%;
-
+    color: var(--color-lime-moss);
 }
 
-.player .name a
+.card.header .name
+{
+    color: var(--color-lavender-mist);
+}
+
+.card .tier
+{
+    display: flex;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+.card .date
+{
+    display: flex;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+    color: var(--color-lime-moss);
+}
+
+.card.header .date
+{
+    color: var(--color-lavender-mist);
+}
+
+.card .winner
+{
+    display: flex;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+.card .winner a
 {
     display: flex;
     align-items: center;
     width: 100%;
     height: 100%;
     gap: .3rem;
-    text-decoration: underline;
 }
 
-.player .name img
+.card .winner img
 {
     width: 1rem;
     height: 1rem;
     border-radius: 25pt;
     margin-top: .1rem;
-}
-
-.player .major
-{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 20%;
-    height: 100%;
-}
-
-.player .minor
-{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 20%;
-    height: 100%;
-}
-
-.player .ranking
-{
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 20%;
-    height: 100%;
-    color: var(--color-lime-moss);
-    font-weight: 700;
-}
-
-.header .ranking
-{
-    color: var(--color-lavender-mist) !important;
 }

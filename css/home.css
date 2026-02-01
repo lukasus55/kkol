@@ -1,435 +1,395 @@
-.header
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar 
+{
+    display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+html 
+{
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+html 
+{
+    scroll-behavior: smooth;
+}
+
+body
+{
+    padding-bottom: max(80px, 20vh);
+}
+
+.section_shadow 
+{
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1), 
+                0 10px 15px -3px rgba(114, 176, 29, 0.15);
+    border-bottom: 1px solid rgba(114, 176, 29, 0.3);
+}
+
+header
 {
     display: flex;
-    height: 6.25rem;
-    justify-content: center;
+    height: 100vh;
     align-items: center;
-    padding: 1.25rem 0.625rem 0.625rem 0.625rem;
-}
-
-.title
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.875rem;
-    font-weight: 600;
-    width: 100%;
-}
-
-.title_subtext
-{
-    color: var(--main700);
-}
-
-.main
-{
-    margin-top: 3.125rem;
-    width: 100%;
-    justify-content: center;
-    align-items: flex-start;
     flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
 }
 
-.events
+header .spacer
+{
+    width: 100%;
+    height: 20%;
+}
+
+header .title
+{
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 5rem;
+    font-weight: 700;
+    height: min-content;
+    width: 100%;
+}
+
+header .title * 
+{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.title_top
+{
+    color: var(--color-lime-moss)
+}
+
+.buttons
+{
+    width: 100%;
+    gap: 4rem;
+}
+
+.buttons_grid
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    width: 50%;
+    margin: 0 25%;
+
+}
+
+.button_standard
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0rem;
+    gap: .6rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 2.4rem;
+    width: 12rem;
+    font-size: 1.1rem;
+    border: 1px solid;
+    border-color: var(--color-dark-green);
+    opacity: 80%;
+}
+
+.button_standard img
+{
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.button_standard:hover
+{
+    border-color: var(--color-lime-moss);
+    opacity: 100%;
+}
+
+section
+{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 4rem;
+}
+
+section .title
+{
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
+    width: 100%;
+}
+
+.about_container
+{
+    width: 50%;
+    text-align: justify;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.about_name
+{
+
+    font-weight: 700;
+    color: var(--color-lime-moss);
+}
+
+.cards_container
 {
     display: flex;
     justify-content: space-around;
-    width: 100%;
-    min-height: 17.188rem;
-}
-
-.events_container
-{
-    display: flex;
-    width: 56.25rem;
-    height: 100%;
-    justify-content: space-between;
     flex-wrap: wrap;
+    width: 60%;
+    gap: 2rem;
 }
 
-.single_event
+.event_card
 {
     display: flex;
-    width: 15.625rem;
-    justify-content: center;
+    flex-wrap: wrap;
+    width: 30rem;
+    height: 15rem;
+    background-color: var(--color-charcoal-blue);
+    border-radius: 5pt;
+    position: relative
+}
+
+.event_spacer
+{
+    width: 30rem;
+    height: 15rem;
+}
+
+.event_photo, .event_text
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+}
+
+.event_photo img
+{
+    width: 100%;
+    height: 100%;
+    border-radius: 5pt 0pt 0pt 5pt;
+}
+
+.event_buttons
+{
+    position: absolute;
+    bottom: 0;
+    left: 17.5rem;
+    padding: 1rem 1rem 1rem 0rem;
+    border-radius: 0pt 10pt 0pt 5pt;
+    z-index: 10;
+}
+
+.button_event
+{
+    display: flex;
     align-items: center;
-    height: 100%;
-    flex-wrap: wrap;
-}
-
-.event_status
-{
-    width: 100%;
-    height: 2.188rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-}
-
-.event_main
-{
-    width: 100%;
-    height: 14.375rem;
-    border-radius: 0pt 0pt 0.938rem 0pt;
+    justify-content: center;
+    padding: 1rem 0rem;
+    gap: .6rem;
+    transition: all 0.3s ease;
     cursor: pointer;
+    height: 2.4rem;
+    width: 10rem;
+    font-size: 1.1rem;
+    background-color: var(--color-lime-moss);
+    color: var(--color-charcoal-blue);
+    -webkit-box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
 }
 
-.event_image
+.button_event:hover
 {
-    width: 100%;
-    height: 8.125rem;
-    overflow: hidden;
+    scale: 1.1;
 }
 
-.event_image img
+.event_text
 {
-    width: 15.625rem;
-    height: 8.125rem;
-    opacity: 60%;
-    transition: 0.3s ease-in-out;
+    padding: 1rem 0rem;
 }
 
-.event_main:hover .event_image img
+.event_title, .event_details
 {
-    opacity: 100%;
-    transform: scale(1.1);
-}
-
-.event_details 
-{
-    margin-top: 0.625rem;
-    width: 100%;
-    height: 4.375rem;
-    border-color: var(--main400);
-    border-style: solid;
-    border-width: 0rem 0.063rem 0.063rem 0rem;
     display: flex;
     flex-wrap: wrap;
-    padding: 0rem 0rem 0.313rem 0rem;
-    transition: 0.3s ease-in-out;
-}
-
-.event_main:hover .event_details
-{
-    border-color: var(--main700);
+    width: 100%;
 }
 
 .event_title
 {
-    width: 100%;
-    height: 70%;
-    display: flex;
-    align-items: flex-start;
-    font-weight: 500;
-    color: var(--gray400);
-    text-align: left;
-    transition: 0.3s ease-in-out;
-}
-
-.event_main:hover .event_title
-{
-    color: var(--gray900);
-}
-
-.event_date 
-{
-    width: 100%;
-    height: 30%;
-    display: flex;
-    align-items: flex-end;
-    font-size: 0.875rem;
-}
-
-.more
-{
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-top: 3rem;
-}
-
-.about_section
-{
-    display: flex;
-    width: 75rem;
-    align-items: center;
-    justify-content: center;
-}
-
-.about
-{
-    display: flex;
-    width: 40rem;
-    flex-wrap: wrap;
-}
-
-.about_title
-{
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    text-align: center;
-    width: 100%;
-    height: 10%;
-    font-size: 1.188rem;
-    font-weight: 600;
-}
-
-.about_content
-{
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-    height: 90%;
-    text-align: justify;
-}
-
-.about_text
-{
-    padding: 0.313rem 0.625rem 0.625rem 0.625rem;
-    border-color: var(--main700);
-    border-style: solid;
-    border-width: 0rem 0rem 0.063rem 0rem;
-    font-size: 0.938rem;
-    line-height: 1.438rem;
-}
-
-.about_text_title
-{
-    color: var(--main700);
-    font-weight: 550;
-}
-
-.seasons
-{
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-top: 3rem;
-    flex-wrap: wrap;
-}
-
-.seasons a
-{
-    display: flex;
-    margin-left: 20%;
-    margin-right: 20%;
-    margin-bottom: 1.5rem;
-}
-
-.seasons_single
-{
-    display: flex;
-    width: 50rem;
-    height: 4rem;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    font-size: 2.6rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: var(--gray800);
+    text-align: center;
+    color: var(--color-lime-moss);
+    height: 70%;
 }
 
-.seasons_2024 { background-image: url("/img/home/seasons/s2024_panorama.webp"); }
-.seasons_2025 { background-image: url("/img/home/seasons/s2025_panorama.webp"); }
-.seasons_2026 { background-image: url("/img/home/seasons/s2026_panorama.webp"); }
-.seasons_2027 { background-image: url("/img/home/seasons/s2027_panorama.webp"); }
-.seasons_2028 { background-image: url("/img/home/seasons/s2028_panorama.webp"); }
-
-.seasons_single_title
+.event_winner_title, .event_winner_name
 {
-    visibility: visible;
     display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
-    height: 100%;
-    transition: 0.4s;
+    justify-content: center;
 }
 
-.seasons_single_results
+.event_winner_title
 {
-    visibility: hidden;
-    opacity: 0%;
+    font-size: 0.8rem;
+    color: #8d8d8d
+}
+
+.event_details a
+{
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    gap: .3rem;
+}
+
+.event_winner_name img
+{
+    margin-top: .4rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 25pt;
+}
+
+.events_see_all
+{
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 0%;
-    height: 100%;
-    transition: 0.4s;
+    width: 100%;
 }
 
-.seasons_single:hover .seasons_single_title
+.tools .title
 {
-    width: 40%;
+    margin-bottom: 0rem;
 }
 
-.seasons_single:hover .seasons_single_results
+.tools_subtitle
 {
-    visibility: visible;
-    opacity: 100%;
+    display: flex;
+    justify-content: center;
     width: 60%;
+    text-align: justify;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 4rem;
 }
 
-.seasons_single_player
+.tools_highlit
+{
+    font-weight: 700;
+    color: var(--color-lime-moss);
+}
+
+.tools_container
 {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 0rem 0.5rem;
+    flex-wrap: wrap;
+    width: 90%;
+    gap: 4rem;
 }
 
-.seasons_single_player_image
+.tools_card
+{
+    width: 24rem;
+    height: 14rem;
+    background-color: var(--color-charcoal-blue);
+    border-radius: 5pt;
+    -webkit-box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 24px 7px rgba(0, 0, 0, 1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid var(--color-charcoal-blue);
+}
+
+.tools_card:hover
+{
+    transform: translateY(-20px);
+    border-color: var(--color-lime-moss);
+}
+
+.tools_card_logo
 {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 1.5rem;
     width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.15s linear; 
+    height: 6rem;
 }
 
-@keyframes flipInX {
-  from {
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-    -webkit-animation-timing-function: ease-in;
-    animation-timing-function: ease-in;
-    opacity: 0;
-  }
-
-  40% {
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
-    -webkit-animation-timing-function: ease-in;
-    animation-timing-function: ease-in;
-  }
-
-  60% {
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
-    opacity: 1;
-  }
-
-  80% {
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
-  }
-
-  to {
-    -webkit-transform: perspective(400px);
-    transform: perspective(400px);
-  }
-}
-
-@keyframes flipInXFade {
-  0% {
-    opacity: 0;
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-  }
-  40% {
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
-  }
-  60% {
-    opacity: 1;
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
-  }
-  80% {
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
-  }
-  100% {
-    opacity: 1;
-    -webkit-transform: perspective(400px);
-    transform: perspective(400px);
-  }
-}
-
-@keyframes flipOutXFade {
-  from {
-    opacity: 1;
-    -webkit-transform: perspective(400px);
-    transform: perspective(400px);
-  }
-  to {
-    opacity: 0;
-    -webkit-transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
-  }
-}
-
-/* Fade in with flip on hover, fade out fast on unhover */
-.seasons_single:hover .seasons_single_player_image {
-    animation: flipInXFade 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
-    opacity: 1;
-    transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1); /* slow fade in */
-}
-.seasons_single:not(:hover) .seasons_single_player_image {
-    animation: flipOutXFade 0.15s linear both;
-    opacity: 0;
-    transition: opacity 0.15s linear; /* fast fade out */
-}
-
-/* Staggered delays for each player image */
-.seasons_single:hover .seasons_single_player:nth-child(1) .seasons_single_player_image {
-    animation-delay: 0.2s;
-}
-.seasons_single:hover .seasons_single_player:nth-child(2) .seasons_single_player_image {
-    animation-delay: 0.3s;
-}
-.seasons_single:hover .seasons_single_player:nth-child(3) .seasons_single_player_image {
-    animation-delay: 0.4s;
-}
-.seasons_single:hover .seasons_single_player:nth-child(4) .seasons_single_player_image {
-    animation-delay: 0.5s;
-}
-/* Add more if you have more players */
-
-.seasons_single_player_image img
+.tools_card_logo img
 {
     width: 3rem;
     height: 3rem;
-    border-radius: 25pt;
-    border: 0.3rem solid black;
 }
 
-.first_place img { border-color: var(--gold300); }
-.second_place img { border-color: var(--silver300); }
-.third_place img { border-color: var(--brown300); }
-.fourth_place img { border-color: var(--fourth300); }
-
-@media (max-width:768px) 
+.tools_card_name
 {
-    .title
+    display: flex; 
+    width: 100%;
+    height: 3rem;
+    padding-left: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-lime-moss)
+}
+
+.tools_card_details
+{
+    display: flex; 
+    width: 100%;
+    height: 5rem;
+    padding: 0rem 1.5rem;
+}
+
+@media (max-width:768px)
+{
+    .buttons_grid
     {
-        font-size: 25px;
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 
-    .events_container
+    .button_standard
     {
-        justify-content: space-evenly;
-        width: 250px;
+        padding: 1rem 0rem;
+        gap: .6rem;
+        height: 3.6rem;
+        width: 16rem;
+        font-size: 1.4rem;
     }
 
-    .main
-    {
-        margin-bottom: 50px;
-    }
-
-    .about_section
+    .about_container
     {
         width: 80%;
     }
 
-    .seasons
+    .cards_container
+    {
+        width: 95%;
+    }
+    
+    .event_spacer
     {
         display: none;
     }
