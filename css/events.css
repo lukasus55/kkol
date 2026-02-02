@@ -24,6 +24,7 @@
     width: min(90%, 70rem);
     background-color: var(--color-charcoal-blue);
     padding: 1rem;
+    overflow: hidden;
 }
 
 .card:nth-child(odd)
