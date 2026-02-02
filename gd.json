@@ -11,22 +11,22 @@
                 {                    
                     "name": "KOS",
                     "position": "1",
-                    "score": "0"
+                    "score": "100"
                 },
                 {                    
                     "name": "DAM",
-                    "position": "1",
-                    "score": "0"
+                    "position": "4",
+                    "score": "80"
                 },
                 {                    
                     "name": "HAR",
-                    "position": "1",
-                    "score": "0"
+                    "position": "3",
+                    "score": "100"
                 },
                 {                    
                     "name": "KUŁ",
                     "position": "1",
-                    "score": "0"
+                    "score": "100"
                 }
             ]
         },
@@ -39,23 +39,23 @@
             [
                 {                    
                     "name": "KOS",
-                    "position": "1",
-                    "score": "0"
+                    "position": "2",
+                    "score": "100"
                 },
                 {                    
                     "name": "DAM",
-                    "position": "1",
-                    "score": "0"
+                    "position": "4",
+                    "score": "34"
                 },
                 {                    
                     "name": "HAR",
                     "position": "1",
-                    "score": "0"
+                    "score": "100"
                 },
                 {                    
                     "name": "KUŁ",
-                    "position": "1",
-                    "score": "0"
+                    "position": "3",
+                    "score": "100"
                 }
             ]
         },
