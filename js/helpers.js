@@ -12,8 +12,10 @@ export async function loadHtml(url) {
 
 export async function calculateRanking()
 {
-    const tournaments = await loadData('/tournaments.json');
+    const tournamentsData = await loadData('/tournaments.json');
     const players = await loadData('/players.json');
+
+    const tournaments = Object.values(tournamentsData);
 
     // CALCULATE RANKING
     const leaderboard = {};
@@ -22,19 +24,14 @@ export async function calculateRanking()
 
         const playerId = player.id;
         const playerName = player.displayed_name;
-        const attendedTournamentsId = Object.keys(player.tournaments);
 
-        const attendedTournaments = attendedTournamentsId
-            .map(id => tournaments[id])
-            .filter(item => item !== undefined);
+        tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
 
-        attendedTournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
-
-        const majorTournaments = attendedTournaments
+        const majorTournaments = tournaments
         .filter(t => t.type === 'major' && t.finished)
         .slice(0, 2); // only 2 last major events are counted
 
-        const minorTournaments = attendedTournaments
+        const minorTournaments = tournaments
         .filter(t => t.type === 'minor' && t.finished)
         .slice(0, 3); // only 3 last minor events are counted
 
@@ -61,9 +58,9 @@ export async function calculateRanking()
         leaderboard[playerId] = {
             id: playerId,
             name: playerName,
-            majorRanking: majorRanking,
-            minorRanking: minorRanking,
-            ranking: ranking
+            majorRanking: majorRanking.toFixed(2), // storing every value as string what could possibly go wrong
+            minorRanking: minorRanking.toFixed(2),
+            ranking: ranking.toFixed(2)
         };
         
     });
