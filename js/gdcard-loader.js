@@ -53,7 +53,7 @@ export default async function gdLoader() {
             const positionText = document.querySelector(`#gd_card_${id} ` +`#gd_player_${i+1} ` + `.gd_player_position`);
 
             playerNameText.textContent = player.name;
-            cubeImage.src = `/img/2026/GDCubes/${player.name}.webp`
+            cubeImage.src = `/img/2026/GDCubes/${player.id}.webp`
             progressText.textContent = `${player.score}%`;
             progressFill.style.width = `${player.score}%`;
             positionText.textContent = `#${player.position}`;

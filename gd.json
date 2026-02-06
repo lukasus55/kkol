@@ -5,26 +5,31 @@
         {
             "id": 1, 
             "name": "Stereo Madness", 
-            "difficulty": "Easy", 
+            "difficulty": "Easy",
+            "finished": true, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "100"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "4",
                     "score": "80"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "3",
                     "score": "100"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "100"
                 }
@@ -34,26 +39,31 @@
         {
             "id": 2, 
             "name": "Back On Track", 
-            "difficulty": "Easy", 
+            "difficulty": "Easy",
+            "finished": true, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "2",
                     "score": "100"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "4",
                     "score": "34"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "100"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "3",
                     "score": "100"
                 }
@@ -63,26 +73,31 @@
         {
             "id": 3, 
             "name": "Polargeist", 
-            "difficulty": "Normal", 
+            "difficulty": "Normal",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -92,26 +107,31 @@
         {
             "id": 4, 
             "name": "Dry Out", 
-            "difficulty": "Normal", 
+            "difficulty": "Normal",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -121,26 +141,31 @@
         {
             "id": 5, 
             "name": "Base After Base", 
-            "difficulty": "Hard", 
+            "difficulty": "Hard",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -150,26 +175,31 @@
         {
             "id": 6, 
             "name": "Cant Let Go", 
-            "difficulty": "Hard", 
+            "difficulty": "Hard",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -179,26 +209,31 @@
         {
             "id": 7, 
             "name": "Jumper", 
-            "difficulty": "Harder", 
+            "difficulty": "Harder",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -208,26 +243,31 @@
         {
             "id": 8, 
             "name": "Time Machine", 
-            "difficulty": "Harder", 
+            "difficulty": "Harder",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -237,26 +277,31 @@
         {
             "id": 9, 
             "name": "Cycles", 
-            "difficulty": "Harder", 
+            "difficulty": "Harder",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -266,26 +311,31 @@
         {
             "id": 10, 
             "name": "Blast Processing", 
-            "difficulty": "Harder", 
+            "difficulty": "Harder",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -295,26 +345,31 @@
         {
             "id": 11, 
             "name": "Geometrical Dominator", 
-            "difficulty": "Harder", 
+            "difficulty": "Harder",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -324,26 +379,31 @@
         {
             "id": 12, 
             "name": "xStep", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -353,26 +413,31 @@
         {
             "id": 13, 
             "name": "Theory of Everything", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -382,26 +447,31 @@
         {
             "id": 14, 
             "name": "Electroman Adventures", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -411,26 +481,31 @@
         {
             "id": 15, 
             "name": "Clutterfunk", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -440,26 +515,31 @@
         {
             "id": 16, 
             "name": "Dash", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -469,26 +549,31 @@
         {
             "id": 17, 
             "name": "Fingerdash", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -498,26 +583,31 @@
         {
             "id": 18, 
             "name": "Hexagon Force", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -527,26 +617,31 @@
         {
             "id": 19, 
             "name": "Electrodynamix", 
-            "difficulty": "Insane", 
+            "difficulty": "Insane",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -556,26 +651,31 @@
         {
             "id": 20, 
             "name": "Clubstep", 
-            "difficulty": "EasyDemon", 
+            "difficulty": "EasyDemon",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -585,26 +685,31 @@
         {
             "id": 21, 
             "name": "RobTop Travel XXL", 
-            "difficulty": "Unrated", 
+            "difficulty": "Unrated",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -614,26 +719,31 @@
         {
             "id": 22, 
             "name": "GD Randomiser", 
-            "difficulty": "Unrated", 
+            "difficulty": "Unrated",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }
@@ -643,26 +753,31 @@
         {
             "id": 22, 
             "name": "KO", 
-            "difficulty": "Unrated", 
+            "difficulty": "Unrated",
+            "finished": false, 
             "players":
             [
-                {                    
+                {
                     "name": "KOS",
+                    "id": "KOS",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "DAM",
+                    "id": "DAM",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "HAR",
+                    "id": "HAR",
                     "position": "1",
                     "score": "0"
                 },
-                {                    
+                {
                     "name": "KUŁ",
+                    "id": "KUL",
                     "position": "1",
                     "score": "0"
                 }

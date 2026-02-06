@@ -1,3 +1,5 @@
+import { loadData } from '/js/helpers.js'
+
 // Buttons logic
 // Select both types of buttons
 const selector = '.buttons a .single_button, .buttons a .single_wide_button';
@@ -52,14 +54,14 @@ hiddenElements.forEach((el) => observer.observe(el));
 const listObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {
-            for( i=0; i<entry.target.children.length; i++ )
+            for( let i=0; i<entry.target.children.length; i++ )
             {
                 entry.target.children[i].classList.add('showSingle');
             }
         }
         else 
         {
-            for( i=0; i<entry.target.children.length; i++ )
+            for( let i=0; i<entry.target.children.length; i++ )
             {
                 entry.target.children[i].classList.remove('showSingle');
             }
@@ -129,3 +131,95 @@ document.querySelectorAll('.game_card').forEach(card => {
         }
     });
 });
+
+async function geometryCardLoader() {
+    const gdData = await loadData('/gd.json');
+    const levels = gdData.levels;
+    const playersCount = 4;
+
+    // Hardcoded points map: 1st=4, 2nd=3, 3rd=2, 4th=1
+    const RANK_POINTS = { 1: 4, 2: 3, 3: 2, 4: 1 };
+
+    const playersStats = [
+        { displayedName: "Kostyś", totalPoints: 0, allScores: [] },
+        { displayedName: "DamiDami2", totalPoints: 0, allScores: [] },
+        { displayedName: "Harnoldihno", totalPoints: 0, allScores: [] },
+        { displayedName: "Kukuła", totalPoints: 0, allScores: [] },
+    ];
+
+    levels.forEach(level => {
+        if (!level.finished) return; 
+        if (!level.players || level.players.length !== playersCount) return;
+
+        // Count how many players are in each position
+        const positionCounts = {};
+        level.players.forEach(p => {
+            const pos = p.position;
+            positionCounts[pos] = (positionCounts[pos] || 0) + 1;
+        });
+
+        // Pre-calculate the points awarded for each position found
+        const pointsForPosition = {};
+        
+        for (const [posStr, count] of Object.entries(positionCounts)) {
+            const startRank = parseInt(posStr, 10);
+            
+            // Calculate sum of points for the "disputed" spots
+            // If 2 people are 1st, points for Rank 1 and Rank 2 are summed and splitted (Ex Aequo rule 1.8.1).
+            let sumPoints = 0;
+            for (let i = 0; i < count; i++) {
+                const currentRank = startRank + i;
+                sumPoints += (RANK_POINTS[currentRank] || 0);
+            }
+            pointsForPosition[posStr] = sumPoints / count;
+
+        }
+
+        // Assign the calculated points to the players
+        for (let i = 0; i < playersCount; i++) {
+            const playerInfo = level.players[i];
+            const position = playerInfo.position;
+            const score = parseInt(playerInfo.score);
+
+            // Add the pre-calculated points for this position
+            if (pointsForPosition[position] !== undefined) {
+                playersStats[i].totalPoints += pointsForPosition[position];
+            }
+
+            playersStats[i].allScores.push(score);
+        }
+    });
+
+    const sortedPlayerStats = [...playersStats].sort((a, b) => {
+        // Primary Sort: TotalPoints
+        if (a.totalPoints !== b.totalPoints) {
+            if (a.totalPoints < b.totalPoints) { return 1; }
+            if (a.totalPoints > b.totalPoints) { return -1; }
+            return 0;
+        }
+
+        // Secondary Sort: Name 
+        return a.displayedName.localeCompare(b.displayedName);
+    });
+
+    sortedPlayerStats.forEach(player => {
+        const playerName = player.displayedName;
+        const playerPoints = player.totalPoints;
+        const playerSumScore = player.allScores.reduce((partialSum, a) => partialSum + a, 0);
+        const playerAverageScore = playerSumScore / player.allScores.length;
+
+        const container = document.querySelector('#gdcard_results');
+        const cardHTML = `
+            <tr>
+                <td class="player_name">${playerName}</td>
+                <td class="text-right highlight">${playerPoints.toFixed(1)}</td>
+                <td class="text-right">${playerAverageScore.toFixed(2)}</td>
+            </tr>
+        `;
+
+        container.insertAdjacentHTML('beforeend', cardHTML);
+    });
+
+}
+
+geometryCardLoader();
