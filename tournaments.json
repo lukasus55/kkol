@@ -3,7 +3,6 @@
     {
         "id": "kol2024",
         "displayed_name": "SEZON 2024",
-        "logo_exists": true,
         "page_exists": true,
         "page_url": "2024",
         "type": "major",
@@ -20,15 +19,13 @@
             "timestamp": 1717243200,
             "displayed_date": "2024",
             "players": 4,
-            "tier": "S",
-            "theme_color": "#00B3FF"
+            "tier": "S"
         }
     },
     "kol2025":
     {
         "id": "kol2025",
         "displayed_name": "SEZON 2025",
-        "logo_exists": true,
         "page_exists": true,
         "page_url": "2025",
         "type": "major",
@@ -45,15 +42,13 @@
             "timestamp": 1767178800,
             "displayed_date": "2025",
             "players": 4,
-            "tier": "S",
-            "theme_color": "#BF8328"
+            "tier": "S"
         }
     },
     "kol2026":
     {
         "id": "kol2026",
         "displayed_name": "SEZON 2026",
-        "logo_exists": true,
         "page_exists": true,
         "page_url": "2026",
         "type": "major",
@@ -70,15 +65,13 @@
             "timestamp": 1798714800,
             "displayed_date": "2026 ",
             "players": 4,
-            "tier": "S",
-            "theme_color": "#72B01D"
+            "tier": "S"
         }
     },
     "pokerE1":
     {
         "id": "pokerE1",
         "displayed_name": "POKER EDYCJA I",
-        "logo_exists": false,
         "page_exists": false,
         "page_url": "",
         "type": "minor",
@@ -94,15 +87,13 @@
             "timestamp": 1751540400,
             "displayed_date": "03.07.2025",
             "players": 3,
-            "tier": "B",
-            "theme_color": "#008c1a"
+            "tier": "B"
         }
     },
     "pokerE2":
     {
         "id": "pokerE2",
         "displayed_name": "POKER EDYCJA II",
-        "logo_exists": false,
         "page_exists": false,
         "page_url": "",
         "type": "minor",
@@ -118,15 +109,13 @@
             "timestamp": 1754650800,
             "displayed_date": "08.08.2025",
             "players": 3,
-            "tier": "B",
-            "theme_color": "#008c1a"
+            "tier": "B"
         }
     },
     "monopolyE1":
     {
         "id": "monopolyE1",
         "displayed_name": "MONOPOLY EDYCJA I",
-        "logo_exists": false,
         "page_exists": false,
         "page_url": "",
         "type": "minor",
@@ -142,8 +131,7 @@
             "timestamp": 1754658000,
             "displayed_date": "08.08.2025",
             "players": 3,
-            "tier": "B",
-            "theme_color": "#dbc5c5"
+            "tier": "B"
         }
     }
 }
