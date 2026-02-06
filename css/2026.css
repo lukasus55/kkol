@@ -1022,13 +1022,14 @@ body
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    height: 3rem;
+    min-height: 3rem;
+    align-items: center;
+    gap: 1rem;
 }
 
 .gd_card_header .icon
 {
     display: flex;
-    margin-right: 1rem;
     align-items: center;
     justify-content: center;
     min-height: 100%;
