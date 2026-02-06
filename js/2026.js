@@ -18,8 +18,8 @@ document.querySelectorAll(selector).forEach(button => {
 });
 
 // Header scrolling logic
-const logoDiv = document.querySelector('.navbar_container .logo');
-const seasonDiv = document.querySelector('.navbar_container .season');
+const logoDiv = document.querySelector('.navbar .logo');
+const seasonDiv = document.querySelector('.season_title .season');
 const mainSection = document.querySelector('.main');
 const logoThreshold = 1; // pixel value
 
