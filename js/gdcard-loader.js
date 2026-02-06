@@ -1,8 +1,89 @@
-import { loadData, loadHtml } from "/js/helpers.js";
+import { loadData } from "/js/helpers.js";
 
 export default async function gdLoader() {
     const data = await loadData('/gd.json');
-    const html = await loadHtml(`/gdcard.html`)
+
+    const html =
+    `
+        <div class="gd_card_header">
+            <div class="icon">
+                <img src="/img/2026/GDDifficulties/Easy.webp">
+            </div>
+            <div class="title">
+                -
+            </div>
+        </div>
+        <div class="gd_card_results">
+            <div class="gd_card_player" id="gd_player_1"> 
+                <div class="gd_player_position">
+                    -
+                </div>
+                <div class="gd_player_cube">
+                    <img src="">
+                </div>
+                <div class="gd_player_name">
+                    -
+                </div>
+                <div class="gd_player_bar">
+                    <div class="gd_progress_bar">
+                        <div class="gd_progress_fill" style="width: 0%;"></div>
+                        <span class="gd_progress_text">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gd_card_player" id="gd_player_2"> 
+                <div class="gd_player_position">
+                    -
+                </div>
+                <div class="gd_player_cube">
+                    <img src="">
+                </div>
+                <div class="gd_player_name">
+                    -
+                </div>
+                <div class="gd_player_bar">
+                    <div class="gd_progress_bar">
+                        <div class="gd_progress_fill" style="width: 0%;"></div>
+                        <span class="gd_progress_text">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gd_card_player" id="gd_player_3"> 
+                <div class="gd_player_position">
+                    -
+                </div>
+                <div class="gd_player_cube">
+                    <img src="">
+                </div>
+                <div class="gd_player_name">
+                    -
+                </div>
+                <div class="gd_player_bar">
+                    <div class="gd_progress_bar">
+                        <div class="gd_progress_fill" style="width: 0%;"></div>
+                        <span class="gd_progress_text">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gd_card_player" id="gd_player_4"> 
+                <div class="gd_player_position">
+                    -
+                </div>
+                <div class="gd_player_cube">
+                    <img src="">
+                </div>
+                <div class="gd_player_name">
+                    -
+                </div>
+                <div class="gd_player_bar">
+                    <div class="gd_progress_bar">
+                        <div class="gd_progress_fill" style="width: 0%;"></div>
+                        <span class="gd_progress_text">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
 
     const levelAmount = data.levels.length;
 
@@ -58,10 +139,6 @@ export default async function gdLoader() {
             progressFill.style.width = `${player.score}%`;
             positionText.textContent = `#${player.position}`;
         }
-
-        const htmlProfile = await loadHtml("https://gdbrowser.com/u/harnoldihno");
-        const popup = document.querySelector(`#gd_card_${id} ` + ".popup");
-
     };
 
 }
