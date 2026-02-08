@@ -3,22 +3,22 @@
     "trailingSlash": false,
     "redirects": [
         {
-            "source": "/more/dart",
+            "source": "more/dart",
             "destination": "https://lukasus55.github.io/dartES/",
             "permanent": true
         },
         {
-            "source": "/more/dartes",
+            "source": "more/dartes",
             "destination": "https://lukasus55.github.io/dartES/",
             "permanent": true
         },
         {
-            "source": "/dart",
+            "source": "dart",
             "destination": "https://lukasus55.github.io/dartES/",
             "permanent": true
         },
         {
-            "source": "/dartes",
+            "source": "dartes",
             "destination": "https://lukasus55.github.io/dartES/",
             "permanent": true
         }
