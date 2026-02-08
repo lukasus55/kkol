@@ -1,4 +1,26 @@
 {
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "redirects": [
+        {
+            "source": "/more/dart",
+            "destination": "https://lukasus55.github.io/dartES/",
+            "permanent": true
+        },
+        {
+            "source": "/more/dartes",
+            "destination": "https://lukasus55.github.io/dartES/",
+            "permanent": true
+        },
+        {
+            "source": "/dart",
+            "destination": "https://lukasus55.github.io/dartES/",
+            "permanent": true
+        },
+        {
+            "source": "/dartes",
+            "destination": "https://lukasus55.github.io/dartES/",
+            "permanent": true
+        }
+    ]
 }
