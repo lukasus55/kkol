@@ -133,7 +133,7 @@ document.querySelectorAll('.game_card').forEach(card => {
 });
 
 async function geometryCardLoader() {
-    const gdData = await loadData('/gd.json');
+    const gdData = await loadData('/api/gd');
     const levels = gdData.levels;
     const playersCount = 4;
 
