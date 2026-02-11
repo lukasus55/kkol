@@ -1,4 +1,5 @@
 export async function loadData(url) {
+    // When url starts with /api the /api/[table].js is responsible for the fetch (using Dynamic Routes).
     let response = await fetch(url);
     let data = await response.json();
     return data;
