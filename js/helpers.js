@@ -1,5 +1,5 @@
 export async function loadData(url) {
-    // When url starts with /api the /api/[table].js is responsible for the fetch (using Dynamic Routes).
+    // When url starts with /api and the exact file doesn't exist the /api/[table].js is responsible for the fetch (using Dynamic Routes).
     let response = await fetch(url);
     let data = await response.json();
     return data;
@@ -13,8 +13,8 @@ export async function loadHtml(url) {
 
 export async function calculateRanking()
 {
-    const tournamentsData = await loadData('/tournaments.json');
-    const players = await loadData('/players.json');
+    const tournamentsData = await loadData('/api/tournaments');
+    const players = await loadData('/api/players');
 
     const tournaments = Object.values(tournamentsData);
 

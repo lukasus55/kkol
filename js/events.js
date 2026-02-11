@@ -4,8 +4,8 @@ async function createTournamentsDiv()
 {
     const container = document.querySelector('.container');
 
-    const tournamentsData = await loadData('/tournaments.json');
-    const players = await loadData('/players.json');
+    const tournamentsData = await loadData('/api/tournaments');
+    const players = await loadData('/api/players');
 
     // Sort tournaments by timestamp descending (newest first)
     const tournaments = Object.values(tournamentsData).sort((a, b) => b.details.timestamp - a.details.timestamp);

@@ -5,7 +5,7 @@ let standings = [];
 export default async function tableLoader(tournamentId) {
 
     //defining standings
-    let tournamentsData = await loadData('/tournaments.json');
+    let tournamentsData = await loadData('/api/tournaments');
 
     let tournament = tournamentsData[tournamentId];
 
@@ -15,7 +15,7 @@ export default async function tableLoader(tournamentId) {
     }
 
     //displaying tournaments
-    let playersData = await loadData('/players.json');
+    let playersData = await loadData('/api/players');
 
     for(let i = 0; i < standings.length; i++){
         const player_id = standings[i];
