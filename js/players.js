@@ -55,6 +55,41 @@ function switchDetails(tier)
     }
 }
 
+// Scroller animation helpers (the vertical one on badge details)
+function setupScrollerAnimation(scroller) {
+    if (!scroller) return;
+    const oldInner = scroller.querySelector('.player_details_scroller_inner');
+    if (oldInner) {
+        while (oldInner.firstChild) {
+            scroller.appendChild(oldInner.firstChild);
+        }
+        oldInner.remove();
+    }
+
+    const items = Array.from(scroller.children);
+    let inner = document.createElement('div');
+    inner.className = 'player_details_scroller_inner';
+    items.forEach(item => inner.appendChild(item));
+    scroller.appendChild(inner);
+
+    function updateScroller() {
+        const scrollerWidth = scroller.clientWidth;
+        const innerWidth = inner.scrollWidth;
+        const distance = Math.max(0, innerWidth - scrollerWidth);
+        if (distance > 0) {
+            inner.style.setProperty('--scroll-distance', distance + 'px');
+            inner.style.animationPlayState = 'running';
+        } else {
+            inner.style.animationPlayState = 'paused';
+            inner.style.transform = 'translateX(0)';
+            inner.style.removeProperty('--scroll-distance');
+        }
+    }
+    window.addEventListener('resize', updateScroller);
+    updateScroller();
+}
+
+
 let wonTournamentsByTier = {
     s: [],
     a: [],
