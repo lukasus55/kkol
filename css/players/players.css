@@ -211,6 +211,7 @@
     background-color: var(--color-lime-moss) !important;
     color: var(--color-lavender-mist) !important;
     font-weight: 700;
+    height: min-content;
 }
 
 .card:nth-child(odd)
