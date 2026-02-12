@@ -21,39 +21,38 @@ export async function calculateRanking()
     // CALCULATE RANKING
     const leaderboard = {};
 
+    tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
+
+    const relevantMajors = tournaments
+    .filter(t => t.type === 'major' && t.finished)
+    .slice(0, 2); // only 2 last major events are counted
+
+    const relevantMinors = tournaments
+    .filter(t => t.type === 'minor' && t.finished)
+    .slice(0, 3); // only 3 last minor events are counte
+
+    const MAJOR_SCALE = [15, 10, 5];
+    const MINOR_SCALE = [7, 4, 1];
+
+    relevantMajors.forEach(t => t._pointsMap = calculateTournamentPoints(t.standings, MAJOR_SCALE));
+    relevantMinors.forEach(t => t._pointsMap = calculateTournamentPoints(t.standings, MINOR_SCALE));
+
+    console.log(relevantMajors)
+
     Object.values(players).forEach(player => {
 
         const playerId = player.id;
         const playerName = player.displayed_name;
 
-        tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
-
-        const majorTournaments = tournaments
-        .filter(t => t.type === 'major' && t.finished)
-        .slice(0, 2); // only 2 last major events are counted
-
-        const minorTournaments = tournaments
-        .filter(t => t.type === 'minor' && t.finished)
-        .slice(0, 3); // only 3 last minor events are counted
-
         let majorPoints = 0;
         let minorPoints = 0;
 
-        // TODO: Rn This systems dont work with draws
-        majorTournaments.forEach(tournament => {
-            if (tournament.standings[0].id === playerId) { majorPoints += 15 };
-            if (tournament.standings[1].id === playerId) { majorPoints += 10 };
-            if (tournament.standings[2].id === playerId) { majorPoints += 5 };
-        });
+        // If player isn't in the map (didn't play/score), they get 0
+        relevantMajors.forEach(t => majorPoints += (t._pointsMap[player.id] || 0));
+        relevantMinors.forEach(t => minorPoints += (t._pointsMap[player.id] || 0));
 
-        minorTournaments.forEach(tournament => {
-            if (tournament.standings[0].id === playerId) { minorPoints += 7 };
-            if (tournament.standings[1].id === playerId) { minorPoints += 4 };
-            if (tournament.standings[2].id === playerId) { minorPoints += 1 };
-        });
-
-        const majorRanking = majorPoints/Math.max(majorTournaments.length, 1);
-        const minorRanking = minorPoints/Math.max(minorTournaments.length, 1);
+        const majorRanking = majorPoints/Math.max(relevantMajors.length, 1);
+        const minorRanking = minorPoints/Math.max(relevantMinors.length, 1);
 
         const ranking = (majorRanking + minorRanking)
 
@@ -66,6 +65,43 @@ export async function calculateRanking()
         };
         
     });
+
+    function calculateTournamentPoints(standings, pointScale) {
+        const map = {};
+
+        // Group players by their position
+        const groups = {};
+        standings.forEach(s => {
+            if (!groups[s.position]) groups[s.position] = [];
+            groups[s.position].push(s.id);
+        });
+
+        // Assign points based on available slots
+        let currentRankSlot = 0;
+
+        Object.keys(groups).sort((a, b) => a - b).forEach(position => {
+            const tiedPlayers = groups[position];
+            const count = tiedPlayers.length;
+            
+            // Sum up the points for the slots these players occupy
+            let totalPointsPool = 0;
+            for (let i = 0; i < count; i++) {
+                // If they tie for 2nd, they take Slot 1 (10pts) and Slot 2 (5pt)
+                totalPointsPool += pointScale[currentRankSlot + i] || 0;
+            }
+            
+            // Divide points equally
+            const pointsPerPlayer = totalPointsPool / count;
+            
+            tiedPlayers.forEach(id => {
+                map[id] = pointsPerPlayer;
+            });
+
+            currentRankSlot += count;
+        });
+
+        return map;
+    }
 
     return leaderboard;
 
