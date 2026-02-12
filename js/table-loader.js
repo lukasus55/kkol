@@ -4,55 +4,47 @@ let standings = [];
 
 export default async function tableLoader(tournamentId) {
 
-    //defining standings
-    let tournamentsData = await loadData('/api/tournaments');
+    //defining standing
 
-    let tournament = tournamentsData[tournamentId];
+    const tournamentData = await loadData(`/api/tournaments?id=${tournamentId}`);
+    const tournament = tournamentData[tournamentId];
+    const standings = tournament.standings;
 
-    let players_amount = Object.keys(tournament.standings).length
-    for(let i = 0; i < players_amount; i++){
-        standings.push( tournament.standings[i+1] );
-    }
+    const playersData = await loadData(`/api/players`)
+    
+    const container = document.querySelector(".ranking_table tbody");
 
-    //displaying tournaments
-    let playersData = await loadData('/api/players');
+    standings.forEach(standing => {
 
-    for(let i = 0; i < standings.length; i++){
-        const player_id = standings[i];
-        const player = playersData[player_id];
+        const playerId = standing.id;
+        const player = playersData[playerId];
+        const playerThisTournamentStats = player.tournaments[tournamentId];
 
-        const row = `#ranking_pos_${i+1} `;
-        const td_position = document.querySelector(row + ".ranking_table_position");
-        const td_name = document.querySelector(row + ".ranking_player");
-        const td_games = document.querySelectorAll(row + ".ranking_game_result");
-        const td_points = document.querySelector(row + ".ranking_total");
+        // playerThisTournamentStats.position and standing.positon is the same.
+        const playerPosition = playerThisTournamentStats.position;
+        const playerName = player.displayed_name;
+        const playerTotalPoints = playerThisTournamentStats.total_points
+        // All players should have the same amount of games_points entries. Even unattended game_points value is "-" not null.
+        const gamesPoints = playerThisTournamentStats.games_points;
 
-        let player_position = player.tournaments[tournamentId].position;
-        td_position.textContent = player_position;
-        td_name.textContent = player.displayed_name;
-        td_points.textContent = player.tournaments[tournamentId].total_points;
+        const playerHTML = `
+            <tr class="ranking_table_standard">
+                <td class="ranking_table_position">${playerPosition}</td>
+                <td class="ranking_player">${playerName}</td>
+                ${
+                    gamesPoints.map((gamePoints) => {
+                        return (
+                            `<td class="ranking_game_result">${gamePoints}</td>`
+                        )
+                    }).join('') // removes the comma (because the map return the array)
+                }
+                <td class="ranking_total">${playerTotalPoints}</td>
+            </tr>
+        `;
 
-        for(let game = 0; game < td_games.length; game++){
-            td_games[game].textContent = player.tournaments[tournamentId].games_points[game];
-        }
+        container.insertAdjacentHTML('beforeend', playerHTML);
 
-        if (player_position==1)
-        {
-            td_position.classList.add('ranking_table_first_position');
-        }
-        else if (player_position==2)
-        {
-            td_position.classList.add('ranking_table_second_position');
-        }
-        else if (player_position==3)
-        {
-            td_position.classList.add('ranking_table_third_position');
-        }
-        else if (player_position==4)
-        {
-            td_position.classList.add('ranking_table_fourth_position');
-        }
-            
-    }
+    });
+
     
 };

@@ -3,17 +3,29 @@ import { neon } from '@neondatabase/serverless';
 export default async function handler(request, response) {
     try {
         const sql = neon(process.env.DATABASE_URL);
+        
+        // Check for the optional 'id' parameter
+        const { id } = request.query;
 
-        const [tournaments, results] = await Promise.all([
-            sql`SELECT * FROM tournaments`,
-            sql`SELECT * FROM results`
-        ]);
+        let tournaments, results;
+
+        if (id) {
+            [tournaments, results] = await Promise.all([
+                sql`SELECT * FROM tournaments WHERE id = ${id}`,
+                sql`SELECT * FROM results WHERE tournament_id = ${id}`
+            ]);
+        } else {
+            // Fetch All
+            [tournaments, results] = await Promise.all([
+                sql`SELECT * FROM tournaments`,
+                sql`SELECT * FROM results`
+            ]);
+        }
 
         const dataMap = {};
 
-        // Creates the skeleton for each tournament
+        // Create the skeleton
         tournaments.forEach((t) => {
-            // use the ID as the key ("kol2024")
             dataMap[t.id] = {
                 id: t.id,
                 displayed_name: t.displayed_name,
@@ -21,9 +33,9 @@ export default async function handler(request, response) {
                 page_url: t.page_url,
                 type: t.type,
                 finished: t.finished,
-                standings: {}, 
+                standings: [],
                 details: {
-                    timestamp: t.event_timestamp, // Database column -> JSON key
+                    timestamp: t.event_timestamp,
                     displayed_date: t.displayed_date,
                     players: t.player_count,
                     tier: t.tier
@@ -33,20 +45,30 @@ export default async function handler(request, response) {
 
         // Fill in the standings
         results.forEach((r) => {
-            // Find the tournament this result belongs to
             const tournament = dataMap[r.tournament_id];
 
-            if (tournament) {
-                if (r.position) {
-                    tournament.standings[r.position] = r.player_id;
-                }
+            if (tournament && r.position) {
+                tournament.standings.push({
+                    position: r.position,
+                    id: r.player_id
+                });
             }
+        });
+
+        // Sorting (Primary: Pos Ascending, Secondary: ID Alphabetical)
+        Object.values(dataMap).forEach(tournament => {
+            tournament.standings.sort((a, b) => {
+                if (a.position !== b.position) {
+                    return a.position - b.position;
+                }
+                return a.id.localeCompare(b.id);
+            });
         });
 
         return response.status(200).json(dataMap);
 
     } catch (error) {
-        console.error("Transformer Error:", error);
-        return response.status(500).json({ error: "Failed to load complete tournaments" });
+        console.error("Tournament API Error:", error);
+        return response.status(500).json({ error: "Failed to load tournaments" });
     }
 }

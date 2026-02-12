@@ -20,7 +20,7 @@ async function createTournamentsDiv()
         const tournamentPageExists = tournament.page_exists;
         const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
 
-        const winnerId = tournament.standings[1];
+        const winnerId = tournament.standings[0].id;
         const winnerName = isFinished ? players[winnerId].displayed_name : `TBD`;
 
         const cardHTML = `

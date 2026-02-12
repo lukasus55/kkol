@@ -39,16 +39,17 @@ export async function calculateRanking()
         let majorPoints = 0;
         let minorPoints = 0;
 
+        // TODO: Rn This systems dont work with draws
         majorTournaments.forEach(tournament => {
-            if (tournament.standings[1] === playerId) { majorPoints += 15 };
-            if (tournament.standings[2] === playerId) { majorPoints += 10 };
-            if (tournament.standings[3] === playerId) { majorPoints += 5 };
+            if (tournament.standings[0].id === playerId) { majorPoints += 15 };
+            if (tournament.standings[1].id === playerId) { majorPoints += 10 };
+            if (tournament.standings[2].id === playerId) { majorPoints += 5 };
         });
 
         minorTournaments.forEach(tournament => {
-            if (tournament.standings[1] === playerId) { minorPoints += 7 };
-            if (tournament.standings[2] === playerId) { minorPoints += 4 };
-            if (tournament.standings[3] === playerId) { minorPoints += 1 };
+            if (tournament.standings[0].id === playerId) { minorPoints += 7 };
+            if (tournament.standings[1].id === playerId) { minorPoints += 4 };
+            if (tournament.standings[2].id === playerId) { minorPoints += 1 };
         });
 
         const majorRanking = majorPoints/Math.max(majorTournaments.length, 1);
