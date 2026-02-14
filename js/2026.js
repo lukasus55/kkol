@@ -141,10 +141,10 @@ async function geometryCardLoader() {
     const RANK_POINTS = { 1: 4, 2: 3, 3: 2, 4: 1 };
 
     const playersStats = [
-        { displayedName: "Kostyś", totalPoints: 0, allScores: [] },
-        { displayedName: "DamiDami2", totalPoints: 0, allScores: [] },
-        { displayedName: "Harnoldihno", totalPoints: 0, allScores: [] },
-        { displayedName: "Kukuła", totalPoints: 0, allScores: [] },
+        { id:"kostys", displayedName: "Kostyś", totalPoints: 0, allScores: [] },
+        { id:"damidami2", displayedName: "DamiDami2", totalPoints: 0, allScores: [] },
+        { id:"harnas", displayedName: "Harnoldihno", totalPoints: 0, allScores: [] },
+        { id:"kukula", displayedName: "Kukuła", totalPoints: 0, allScores: [] },
     ];
 
     levels.forEach(level => {
@@ -175,19 +175,28 @@ async function geometryCardLoader() {
 
         }
 
-        // Assign the calculated points to the players
         for (let i = 0; i < playersCount; i++) {
             const playerInfo = level.players[i];
             const position = playerInfo.position;
             const score = parseInt(playerInfo.score);
 
-            // Add the pre-calculated points for this position
-            if (pointsForPosition[position] !== undefined) {
-                playersStats[i].totalPoints += pointsForPosition[position];
-            }
+            // Find the correct player in your stats array by matching the name
+            console.log(playersStats)
+            console.log(playerInfo)
+            const targetPlayer = playersStats.find(p => p.id === playerInfo.id);
 
-            playersStats[i].allScores.push(score);
+            if (targetPlayer) {
+                // Add the pre-calculated points for this position
+                if (pointsForPosition[position] !== undefined) {
+                    targetPlayer.totalPoints += pointsForPosition[position];
+                }
+                
+                targetPlayer.allScores.push(score);
+            } else {
+                console.warn(`Could not find stats object for player: ${playerInfo.name}`);
+            }
         }
+
     });
 
     const sortedPlayerStats = [...playersStats].sort((a, b) => {
