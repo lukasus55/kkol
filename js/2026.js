@@ -181,8 +181,6 @@ async function geometryCardLoader() {
             const score = parseInt(playerInfo.score);
 
             // Find the correct player in your stats array by matching the name
-            console.log(playersStats)
-            console.log(playerInfo)
             const targetPlayer = playersStats.find(p => p.id === playerInfo.id);
 
             if (targetPlayer) {
