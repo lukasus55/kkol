@@ -1,0 +1,153 @@
+/* Layout & Header */
+header 
+{
+    color: var(--color-lavender-mist);
+    padding: 2.5rem 1rem;
+    font-size: 3.125rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.container
+{
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.highlit
+{
+    color: var(--color-lime-moss);
+}
+
+.disclaimer
+{
+    display: flex;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.base_url 
+{
+    background-color: #27282b;
+    color: var(--color-lavender-mist);
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    font-family: monospace;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.endpoint
+{
+    background-color: var(--color-charcoal-blue);
+    border-left: 6px solid var(--color-green);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.endpoint h2
+{
+    color: var(--color-lavender-mist);
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+}
+
+.wip
+{
+    margin-top: .25rem;
+}
+
+.wip_badge
+{
+    color: var(--color-lavender-mist);
+    background-color: var(--color-lime-moss);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 25pt;
+    width: fit-content;
+    margin-top: .5rem;
+}
+
+.description
+{
+    color: var(--color-lime-moss);
+}
+
+.request_line
+{
+    display: flex;
+    align-items: center;
+    background-color: #27282b;
+    padding: 0.85rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 1.05rem;
+    overflow-x: auto;
+    margin-top: 1.25rem;
+}
+
+.method
+{
+    background-color: var(--color-lime-moss);
+    color: var(--color-onyx);
+    font-weight: bold;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    margin-right: 1rem;
+    font-size: 0.9rem;
+}
+
+.path
+{
+    color: var(--color-lavender-mist);
+    font-weight: bold;
+}
+
+.params_table
+{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.params_table th, 
+.params_table td
+{
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.params_table th
+{
+    color: var(--color-lime-moss);
+    font-weight: 600;
+}
+
+.params_table code
+{
+    background-color: var(--color-lavender-mist);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: monospace;
+    color: var(--color-onyx);
+    font-weight: bold;
+}
+
+.badge_optional
+{
+    font-size: 0.75rem;
+    background-color: var(--color-lime-moss);
+    color: var(--color-lavender-mist);
+    padding: 0.2rem 0.5rem;
+    border-radius: 25pt;
+    margin-left: 0.5rem;
+}

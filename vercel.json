@@ -21,6 +21,11 @@
             "source": "/dartes",
             "destination": "https://lukasus55.github.io/dartES/",
             "permanent": true
+        },
+        {
+            "source": "/api",
+            "destination": "/more/api",
+            "permanent": true
         }
     ]
 }

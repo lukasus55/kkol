@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF_8">
+    <meta name="viewport" content="width=device_width, height=device_height, initial_scale=1.0, user_scalable=yes">
+    <meta name="description" content="Dokumentacja API KKOL.">
+    <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x_icon">
+    <title>Olimpiada Karwińska - API</title>
+
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/more/api.css">
+</head>
+
+<body>
+
+    <header>
+        Dokumentacja API
+    </header>
+
+    <div class="container">
+        <div class="disclaimer">
+            <div class="highlit">Uwaga!</div>&nbsp;API KKOL jest w ciąż we wczesnej fazie rozwoju.
+        </div>
+
+        <div class="base_url">
+            <strong>URL:</strong> <span>https://www.kkol.pl/api</span>
+        </div>
+
+        <div class="endpoint">
+            <h2>Players</h2>
+            <div class="description">Zwraca listę graczy i informacji o nich.</div>
+            <div class="request_line">
+                <span class="method">GET</span>
+                <span class="path">/players</span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h2>Tournaments</h2>
+            <div class="description">Zwraca listę turniejów wraz z uproszczonymi wynikami.</div>
+            <div class="request_line">
+                <span class="method">GET</span>
+                <span class="path">/tournaments</span>
+            </div>
+            
+            <table class="params_table">
+                <thead>
+                    <tr>
+                        <th>Parametr</th>
+                        <th></th>
+                        <th>Typ</th>
+                        <th>Opis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td><span class="badge_optional">Opcjonalne</span></td>
+                        <td>String</td>
+                        <td>Unikalne ID Danego turnieju.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="endpoint">
+            <h2>GD</h2>
+            <div class="description">Zwraca listę poziomów Geometry Dash wraz z wynikami.</div>
+            <div class="request_line">
+                <span class="method">GET</span>
+                <span class="path">/gd</span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h2>Results</h2>
+            <div class="description">Zwraca dokładne wyniki wszystkich graczy.</div>
+            <div class="wip"> 
+                <div class="wip_badge">Work In Progress</div> 
+            </div>
+            <div class="request_line">
+                <span class="method">GET</span>
+                <span class="path">/results</span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <footer>
+        <div id="common-footer"></div>
+    </footer>
+
+    <!-- footer.html and footer.js loading script -->
+    <script src="/js/footer-loader.js"></script>
+
+</body>
