@@ -444,10 +444,7 @@ body
 .schedule
 {
     display: flex;
-    width: 100%;
     flex-wrap: wrap;
-    font-size: 3.75rem;
-    font-weight: 900;
     justify-content: center;
     padding: 4rem;
     scroll-snap-type: y mandatory;
@@ -463,20 +460,36 @@ body
 .schedule_event
 {
     display: flex;
+    justify-content: center;
     width: 100%;
+    font-size: 3.75rem;
+    font-weight: 900;
+    gap: 2rem;
 }
 
 .schedule_event .date
 {
     display: flex;
-    width: 15%;
-    color: var(--color-lime-moss)
+    width: 25%;
+    color: var(--color-lime-moss);
+    justify-content: flex-end;
 }
 
 .schedule_event .name
 {
     display: flex;
-    width: 85%;
+    width: 75%;
+}
+
+.schedule_event.minor
+{
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.schedule_event.minor .name
+{
+    color: #afafaf;
 }
 
 .section_title
@@ -1162,7 +1175,28 @@ body
 
     .schedule
     {
-        font-size: 1.75rem;
+        padding: 4rem 1rem;
+    }
+
+    .schedule_event
+    {
+        gap: .2rem;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .schedule_event .date
+    {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .schedule_event .name
+    {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
     }
 
     .section_title
@@ -1178,20 +1212,6 @@ body
     .schedule_table
     {
         width: 90%;
-    }
-
-    .schedule_event .date
-    {
-        display: flex;
-        width: 20%;
-        color: var(--color-lime-moss);
-        margin-right: 1rem;
-    }
-
-    .schedule_event .name
-    {
-        display: flex;
-        width: 80%;
     }
 
     .navbar .logo
