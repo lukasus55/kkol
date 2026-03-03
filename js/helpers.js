@@ -37,8 +37,6 @@ export async function calculateRanking()
     relevantMajors.forEach(t => t._pointsMap = calculateTournamentPoints(t.standings, MAJOR_SCALE));
     relevantMinors.forEach(t => t._pointsMap = calculateTournamentPoints(t.standings, MINOR_SCALE));
 
-    console.log(relevantMajors)
-
     Object.values(players).forEach(player => {
 
         const playerId = player.id;
