@@ -1,11 +1,16 @@
-import { loadData } from "./helpers.js";
+import { loadData, appendLoaderDiv } from "./helpers.js";
 
 async function createTournamentsDiv()
 {
     const container = document.querySelector('.container');
+    const loadingContainer = appendLoaderDiv(container);
 
-    const tournamentsData = await loadData('/api/tournaments');
-    const players = await loadData('/api/players');
+    const [tournamentsData, players] = await Promise.all([
+        loadData('/api/tournaments'),
+        loadData('/api/players')
+    ]);
+
+    container.removeChild(loadingContainer);
 
     // Sort tournaments by timestamp descending (newest first)
     const tournaments = Object.values(tournamentsData).sort((a, b) => b.details.timestamp - a.details.timestamp);

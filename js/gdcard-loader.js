@@ -1,7 +1,13 @@
-import { loadData } from "/js/helpers.js";
+import { loadData, appendLoaderDiv } from "/js/helpers.js";
 
 export default async function gdLoader() {
+
+    const container = document.getElementById(`gd_card_container`);
+    const loadingContainer = appendLoaderDiv(container);
+
     const data = await loadData('/api/gd');
+
+    container.removeChild(loadingContainer);
 
     function getPlayerCustomName(rawId) {
         if (rawId === 'kukula') {
@@ -71,7 +77,6 @@ export default async function gdLoader() {
 
     for (let id = 0; id < levelAmount; id++) {
         const level = data.levels[id];
-        const container = document.getElementById(`gd_card_container`);
         
         // Create Card
         const card = document.createElement('div');

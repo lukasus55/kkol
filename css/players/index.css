@@ -46,7 +46,7 @@ body
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    padding: 1rem 0rem;
+    background-color: #303238;
 }
 
 .player
@@ -55,7 +55,7 @@ body
     justify-content: center;
     align-items: center;
     width: 100%;
-    background-color: var(--color-charcoal-blue);
+    background-color: #303238;
     padding: 1rem;
 }
 

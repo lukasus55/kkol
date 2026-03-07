@@ -1,13 +1,16 @@
-import { calculateRanking } from "./helpers.js";
+import { calculateRanking, appendLoaderDiv } from "./helpers.js";
 
 // Display leaderboard
 async function createLeaderboardDiv()
 {
+    const container = document.querySelector('.leaderboard');
+    const loadingContainer = appendLoaderDiv(container);
+
     const leaderboardData = await calculateRanking();
     const leaderboard = Object.values(leaderboardData);
     leaderboard.sort((a,b) => b.ranking - a.ranking);
 
-    const container = document.querySelector('.leaderboard');
+    container.removeChild(loadingContainer);
 
     leaderboard.forEach(player => {
 

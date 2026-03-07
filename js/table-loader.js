@@ -1,20 +1,28 @@
 import { loadData } from "/js/helpers.js";
 
-let standings = [];
-
 export default async function tableLoader(tournamentId) {
 
     //defining standing
 
-    const tournamentData = await loadData(`/api/tournaments?id=${tournamentId}`);
+    const table = document.querySelector(".ranking_table");
+    const tableHead = document.querySelector(".ranking_table thead");
+    const tableBody = document.querySelector(".ranking_table tbody");
+
+    // Using custom loader instead of appendLoaderDiv() because the container div (.ranking_table) is table insted of regular div
+    table.innerHTML = `<div class='loader loader-default'>`
+
+    const [tournamentData, playersData] = await Promise.all([
+        loadData(`/api/tournaments?id=${tournamentId}`),
+        loadData(`/api/players`)
+    ]);
     const tournament = tournamentData[tournamentId];
     const standings = tournament.standings;
 
-    const playersData = await loadData(`/api/players`)
-    
-    const container = document.querySelector(".ranking_table tbody");
+    table.innerHTML = ``
+    table.append(tableHead);
+    table.append(tableBody)
 
-    standings.forEach(standing => {
+    standings?.forEach(standing => {
 
         const playerId = standing.id;
         const player = playersData[playerId];
@@ -42,7 +50,7 @@ export default async function tableLoader(tournamentId) {
             </tr>
         `;
 
-        container.insertAdjacentHTML('beforeend', playerHTML);
+        tableBody.insertAdjacentHTML('beforeend', playerHTML);
 
     });
 

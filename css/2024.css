@@ -268,6 +268,10 @@
     border-collapse: collapse;
     font-weight: 600;
     color: #ffffff;
+}
+
+.ranking_table td
+{
     background-color: #353f77;
 }
 

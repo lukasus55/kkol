@@ -1,14 +1,30 @@
-export async function loadData(url) {
+export async function loadData(url) 
+{
     // When url starts with /api and the exact file doesn't exist the /api/[table].js is responsible for the fetch (using Dynamic Routes).
     let response = await fetch(url);
     let data = await response.json();
     return data;
 }
 
-export async function loadHtml(url) {
+export async function loadHtml(url) 
+{
     let response = await fetch(url);
     let html = await response.text();
     return html;
+}
+
+
+// Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
+// Use "container.removeChild(loadingContainer);" after fetch
+export function appendLoaderDiv(container, containerId='default') 
+{
+    const loadingContainer = document.createElement('div');
+    loadingContainer.className = `loader loader-${containerId}`;
+    loadingContainer.id = `loader-${containerId}`;
+
+    container.append(loadingContainer);
+
+    return loadingContainer;
 }
 
 export async function calculateRanking()
