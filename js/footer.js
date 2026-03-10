@@ -1,24 +1,17 @@
-let isMobile = window.innerWidth<=768;
+const mediaQuery = window.matchMedia('(max-width: 768px)');
+let isMobile = mediaQuery.matches;
 
-window.onresize = () => {
-    isMobile = window.innerWidth<=768;
-};
-
-// --- CONTACT SECTION ---
+mediaQuery.addEventListener('change', (e) => {
+    isMobile = e.matches;
+});
 
 const showContactButton = document.querySelector('#show_contact_button');
 const contactContainer = document.querySelector('#contact_container');
 
-showContactButton.addEventListener("click", () => {
-    console.log(contactContainer.classList)
-    if(contactContainer.classList.contains("show"))
-    {
-        contactContainer.classList.remove("show");
-        showContactButton.classList.remove("active");
-    }
-    else
-    {
-        contactContainer.classList.add("show");
-        showContactButton.classList.add("active");
-    }
-});
+if (showContactButton && contactContainer) {
+    showContactButton.addEventListener("click", () => {
+        // .toggle() adds the class if it's missing, and removes it if it's there. 
+        contactContainer.classList.toggle("show");
+        showContactButton.classList.toggle("active");
+    });
+}

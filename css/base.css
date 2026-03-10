@@ -140,3 +140,11 @@ a {
     transform: rotate(360deg);
   }
 }
+
+#common-footer {
+  opacity: 0;
+}
+
+#common-footer.footer-ready {
+  opacity: 1;
+}
