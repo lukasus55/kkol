@@ -21,7 +21,10 @@ export function appendLoaderDiv(container, containerId='default')
     const loadingContainer = document.createElement('div');
     loadingContainer.className = `loader loader-${containerId}`;
     loadingContainer.id = `loader-${containerId}`;
+    const loadingSpinner = document.createElement('div');
+    loadingSpinner.className = `loader_spinner`;
 
+    loadingContainer.append(loadingSpinner);
     container.append(loadingContainer);
 
     return loadingContainer;

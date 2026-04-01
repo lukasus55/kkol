@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
-    <meta name="description" content="Karwińska Olimpiada - Kontakt.">
+    <meta name="description" content="Karwińska Olimpiada - Logowanie">
     <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon">
-    <title> Olimpiada Karwińska - Kontakt</title>
+    <title> Olimpiada Karwińska - Logowanie</title>
 
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/login.css">
@@ -19,7 +19,7 @@
         <div class="container">
             <div class="login_card">
                 <h1> Zaloguj się </h1>
-                <form action="/login" method="POST" class="login_form">
+                <form action="/login" method="POST" class="login_form" id="login_form">
                     
                     <div class="input_group">
                         <label for="username">Nazwa użytkownika</label>
@@ -31,9 +31,12 @@
                         <input type="password" id="password" name="password" placeholder="Wprowadź swoje hasło" required>
                     </div>
 
+                    <div class="login_failed hiddenInstant"> Niepoprawna nazwa użytkownika lub hasło </div>
+
                     <button type="submit" class="login_btn">Zaloguj się</button>
                     
                 </form>
+                
             </div>
         </div>
 
@@ -61,6 +64,8 @@
     <footer class="footer" id="footer">
         <div id="common-footer"></div>
     </footer>
+
+    <script type="module" src="/js/login.js"></script>
 
     <!-- footer.html and footer.js loading script -->
     <script src="/js/footer-loader.js"></script>

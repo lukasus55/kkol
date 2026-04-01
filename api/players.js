@@ -5,7 +5,7 @@ export default async function handler(request, response) {
         const sql = neon(process.env.DATABASE_URL);
 
         const [players, results] = await Promise.all([
-            sql`SELECT * FROM players`,
+            sql`SELECT id, displayed_name, profile_picture FROM players`,
             sql`SELECT * FROM results`
         ]);
 
