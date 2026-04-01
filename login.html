@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Karwińska Olimpiada - Kontakt.">
+    <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon">
+    <title> Olimpiada Karwińska - Kontakt</title>
+
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+
+    <main class="main">
+        
+        <div class="container">
+            <div class="login_card">
+                <h1> Zaloguj się </h1>
+                <form action="/login" method="POST" class="login_form">
+                    
+                    <div class="input_group">
+                        <label for="username">Nazwa użytkownika</label>
+                        <input type="text" id="username" name="username" placeholder="Wprowadź nazwę użytkownika" required>
+                    </div>
+
+                    <div class="input_group">
+                        <label for="password">Hasło</label>
+                        <input type="password" id="password" name="password" placeholder="Wprowadź swoje hasło" required>
+                    </div>
+
+                    <button type="submit" class="login_btn">Zaloguj się</button>
+                    
+                </form>
+            </div>
+        </div>
+
+        
+        <div class="disclaimer">
+
+            <div class="problem">
+                <div class="question"> Nie masz konta? </div>
+                <div class="answer">
+                    Konta posiadają jedynie gracze uczestniczący w turniejach KKOL. Organizator powinien przekazać dane do logowania. Nie ma możliwości samodzielnego założenia konta.
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="question"> Zapomniałeś hasła? </div>
+                <div class="answer">
+                    Skontaktuj się z administratorem. ADMINISTRATOR NIGDY NIE POPROSI CIĘ O HASŁO. <a href="/contact">Lista kontaktów</a>.
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer" id="footer">
+        <div id="common-footer"></div>
+    </footer>
+
+    <!-- footer.html and footer.js loading script -->
+    <script src="/js/footer-loader.js"></script>
+
+</body>

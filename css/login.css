@@ -1,0 +1,124 @@
+main
+{
+    padding: 10rem 0rem 0rem 5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.container
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.login_card
+{
+    font-size: 1rem;
+    width: 40rem;
+}
+
+h1
+{
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-lime-moss);
+}
+
+.login_card form
+{
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--color-lime-moss);
+}
+
+
+.input_group
+{
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.input_group *
+{
+    width: 100%;
+}
+
+.input_group label
+{
+    font-weight: 600;
+}
+
+.input_group input {
+    padding: 0.55rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 1rem;
+}
+
+/* Lime Moss glow when the user clicks the input field */
+.input_group input:focus {
+    outline: none;
+    border-color: var(--color-lime-moss);
+    box-shadow: 0 0 0 3px rgba(114, 176, 29, 0.15); 
+}
+
+.input_group input::placeholder {
+    color: #a0a0a0;
+}
+
+.login_btn {
+    background-color: var(--color-lime-moss);
+    color: var(--color-white);
+    padding: 0.45rem 0.85rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 1.5rem;
+}
+
+.login_btn:hover {
+    background-color: #5f9616;
+}
+
+.login_btn:active {
+    transform: scale(0.98);
+}
+
+.disclaimer
+{
+    margin-top: 7rem;
+    width: 40rem;
+    color: #646464;
+    text-align: justify;
+    font-size: .9rem;
+}
+
+.disclaimer .problem
+{
+    margin-bottom: 2rem;
+}
+
+.disclaimer .question
+{
+    color: var(--color-lavender-mist);
+    margin-bottom: .2rem;
+}
+
+.disclaimer a
+{
+    text-decoration: underline;
+}
+
+@media (max-width:768px)
+{
+    .container, .disclaimer
+    {
+        width: 90%;
+    }
+}
