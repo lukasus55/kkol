@@ -30,6 +30,7 @@ export function appendLoaderDiv(container, containerId='default')
     return loadingContainer;
 }
 
+// TODO move logic to backend
 export async function calculateRanking()
 {
     const tournamentsData = await loadData('/api/tournaments');
@@ -124,13 +125,13 @@ export async function calculateRanking()
 
 }
 
-export async function requireAuth() {
+export async function requireAuth(redirect = true) {
     try {
         const response = await fetch('/api/me');
         
         if (!response.ok) {
             console.warn("User not authenticated. Redirecting to login...");
-            window.location.href = '/login';
+            if (redirect) {window.location.href = '/login'};
             return null;
         }
 
@@ -139,7 +140,7 @@ export async function requireAuth() {
         
     } catch (error) {
         console.error("Authentication check failed:", error);
-        window.location.href = '/login';
+        if (redirect) {window.location.href = '/login'};
         return null;
     }
 }

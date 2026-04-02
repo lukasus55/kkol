@@ -163,3 +163,10 @@ a {
 #common-footer.footer-ready {
   opacity: 1;
 }
+
+button
+{
+  outline: inherit;
+  border: none;
+  cursor: pointer;
+}

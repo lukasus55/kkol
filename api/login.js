@@ -44,14 +44,14 @@ export default async function handler(request, response) {
         const token = jwt.sign(
             { id: user.id, role: user.role },
             process.env.JWT_SECRET,
-            { expiresIn: '24h' }
+            { expiresIn: '2h' }
         );
 
         const cookieHeader = serialize('auth_token', token, {
             httpOnly: true, // JavaScript cannot read this, preventing theft
             secure: process.env.NODE_ENV === 'production', // Use HTTPS in production, allow HTTP on localhost
             sameSite: 'strict', // Prevents Cross-Site Request Forgery (CSRF) attacks
-            maxAge: 60 * 60 * 24, // 24 hours
+            maxAge: 60 * 60 * 2, // 2 hours
             path: '/'
         });
 

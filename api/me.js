@@ -14,9 +14,9 @@ export default async function handler(request, response) {
     try {
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET); // If the token is fake or expired, this line throws an error and jumps to the catch block
 
-        // chek if the user wasn't banned since the token was issued.
         const sql = neon(process.env.DATABASE_URL);
-        const users = await sql`SELECT id, role, is_active FROM players WHERE id = ${decodedPayload.id}`;
+        const users = await sql`SELECT id, role, is_active, email, displayed_name FROM players WHERE id = ${decodedPayload.id}`;
+        // const users = await sql`SELECT id, role, is_active, email, displayed_name, last_login, position, tournament_id FROM (players JOIN results ON players.id = results.player_id) WHERE id = ${decodedPayload.id}`;
         const user = users[0];
 
         if (!user || user.is_active === false) {
@@ -26,7 +26,11 @@ export default async function handler(request, response) {
         return response.status(200).json({ 
             user: {
                 id: user.id,
-                role: user.role
+                displayed_name: user.displayed_name,
+                role: user.role,
+                is_active: user.is_active,
+                tournament_id: user.tournament_id,
+                email: user.email
             }
         });
 
