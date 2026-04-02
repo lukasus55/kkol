@@ -16,11 +16,11 @@ export async function loadHtml(url)
 
 // Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
 // Use "container.removeChild(loadingContainer);" after fetch
-export function appendLoaderDiv(container, containerId='default') 
+export function appendLoaderDiv(container, containerMode='default') 
 {
     const loadingContainer = document.createElement('div');
-    loadingContainer.className = `loader loader-${containerId}`;
-    loadingContainer.id = `loader-${containerId}`;
+    loadingContainer.className = `loader loader-${containerMode}`;
+    loadingContainer.id = `loader-${containerMode}`;
     const loadingSpinner = document.createElement('div');
     loadingSpinner.className = `loader_spinner`;
 
@@ -142,5 +142,35 @@ export async function requireAuth(redirect = true) {
         console.error("Authentication check failed:", error);
         if (redirect) {window.location.href = '/login'};
         return null;
+    }
+}
+
+export function createLogoutButton(logoutBtn, container, redirect = true) {
+
+    if (logoutBtn && container) {
+        logoutBtn.addEventListener('click', async () => {
+
+            const loadingContainer = appendLoaderDiv(container, 'global')
+
+            try {
+                
+                // Tell the server to destroy the cookie
+                const response = await fetch('/api/logout', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    // Redirect them to the login page
+                    console.log("Logged out successfully");
+                    if (redirect) {window.location.href = '/login'};
+                } else {
+                    console.error("Failed to log out");
+                }
+            } catch (error) {
+                console.error("Network error during logout:", error);
+            }
+
+            if (!redirect) {container.removeChild(loadingContainer)};
+        });
     }
 }

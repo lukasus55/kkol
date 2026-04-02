@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loginForm.addEventListener('submit', async (event) => {
         
-        const loadingContainer = appendLoaderDiv(container);
+        const loadingContainer = appendLoaderDiv(container, 'global_transparent');
 
         // Stop the browser from instantly refreshing the page
         event.preventDefault(); 

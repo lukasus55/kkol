@@ -1,7 +1,12 @@
-import { loadData, requireAuth } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv } from "./helpers.js";
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     
+    const container = document.querySelector('body');
+    const loadingContainer = document.querySelector('#loader-global')
+    console.log(loadingContainer)
+
     const user = await requireAuth();
     if (!user) return;
 
@@ -40,5 +45,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     roleDiv.textContent = roleName;
     roleDiv.classList.add(`role_badge-${roleId}`);
+
+    const logoutBtn = document.querySelector('#logout_btn');
+    createLogoutButton(logoutBtn, container);
+
+    container.removeChild(loadingContainer);
 
 });

@@ -6,6 +6,11 @@ main
     justify-content: center;
 }
 
+body
+{
+    min-height: 100vh;
+}
+
 .container
 {
     display: flex;
