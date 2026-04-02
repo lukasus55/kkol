@@ -159,6 +159,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .loader-global_transparent {
@@ -170,6 +171,7 @@ a {
   left: 0%;
   background-color: #242424d2;
   margin: auto;
+  z-index: 100;
 }
 
 @keyframes spin {
@@ -195,4 +197,6 @@ button
   outline: inherit;
   border: none;
   cursor: pointer;
+  background-color: inherit;
+  color: inherit;
 }

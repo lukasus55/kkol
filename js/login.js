@@ -30,16 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Redirect the user to the private area!
                 window.location.href = '/dashboard.html'; 
             } else {
+                container.removeChild(loadingContainer);
+                
                 const loginFailedDiv = document.querySelector('.login_failed')
 
                 if (loginFailedDiv.classList.contains('hiddenInstant')) {loginFailedDiv.classList.remove('hiddenInstant')}
             }
             
         } catch (error) {
+            container.removeChild(loadingContainer);
+
             console.error("Network error:", error);
             alert("Something went wrong communicating with the server.");
         }
 
-        container.removeChild(loadingContainer);
+        
     });
 });

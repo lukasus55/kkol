@@ -1,26 +1,14 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth } from "./helpers.js";
 
 
-document.addEventListener('DOMContentLoaded', async () => {
-    
-    const container = document.querySelector('body');
-    const loadingContainer = document.querySelector('#loader-global')
-    console.log(loadingContainer)
-
-    const user = await requireAuth();
-    if (!user) return;
-
-    const userData = await loadData('/api/me');
-
-    const id = userData.user.id;
-    const displayedName = userData.user.displayed_name;
-    const roleId = userData.user.role
+function handleHeader(user) {
+    const id = user.id;
+    const displayedName = user.displayed_name;
+    const roleId = user.role
 
     const profilePicture = document.querySelector('#player_pfp')
     const nameDiv = document.querySelector('#player_name');
     const roleDiv = document.querySelector('#player_role');
-
-    console.log(userData.user);
 
     profilePicture.src = `/img/players/pfp/${id}.webp`;
     nameDiv.innerHTML = `${displayedName}&nbsp;<span class="id">@${id}</span>`;
@@ -45,9 +33,49 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     roleDiv.textContent = roleName;
     roleDiv.classList.add(`role_badge-${roleId}`);
+}
+
+function handleTabs() {
+
+    let currentTab = 'account';
+    const tabs = document.querySelectorAll('.selector ul li');
+
+    function tabChange(tab) {
+        const tabId = tab.id.replace('selector_','');
+        currentTab = tabId
+
+        document.querySelector('.selector ul li.active')?.classList.remove('active');
+        tab.classList.add('active');
+
+        document.querySelector('.content .tab_content.active')?.classList.remove('active');
+        const tabContent = document.querySelector(`#content_${tabId}`);
+        tabContent.classList.add('active');
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', async () => {
+            tabChange(tab);
+        })
+    });
+
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    const container = document.querySelector('body');
+    const loadingContainer = document.querySelector('#loader-global')
+
+    const userAuthenticated = await requireAuth();
+    if (!userAuthenticated) return;
+
+    const userData = await loadData('/api/me');
+    const user = userData.user;
 
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
+
+    handleHeader(user)
+    handleTabs();
 
     container.removeChild(loadingContainer);
 
