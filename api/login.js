@@ -1,5 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { serialize } from 'cookie'
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -39,7 +41,21 @@ export default async function handler(request, response) {
 
         await sql`UPDATE players SET last_login = CURRENT_TIMESTAMP WHERE id = ${user.id}`;
 
-        // TODO: Generate a session cookie or JWT token here so the user stays logged in
+        const token = jwt.sign(
+            { id: user.id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        const cookieHeader = serialize('auth_token', token, {
+            httpOnly: true, // JavaScript cannot read this, preventing theft
+            secure: process.env.NODE_ENV === 'production', // Use HTTPS in production, allow HTTP on localhost
+            sameSite: 'strict', // Prevents Cross-Site Request Forgery (CSRF) attacks
+            maxAge: 60 * 60 * 24, // 24 hours
+            path: '/'
+        });
+
+        response.setHeader('Set-Cookie', cookieHeader);
 
         return response.status(200).json({ 
             message: "Login successful!",

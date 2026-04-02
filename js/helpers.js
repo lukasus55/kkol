@@ -123,3 +123,23 @@ export async function calculateRanking()
     return leaderboard;
 
 }
+
+export async function requireAuth() {
+    try {
+        const response = await fetch('/api/me');
+        
+        if (!response.ok) {
+            console.warn("User not authenticated. Redirecting to login...");
+            window.location.href = '/login';
+            return null;
+        }
+
+        const data = await response.json();
+        return data.user; 
+        
+    } catch (error) {
+        console.error("Authentication check failed:", error);
+        window.location.href = '/login';
+        return null;
+    }
+}
