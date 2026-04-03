@@ -41,11 +41,10 @@ export default async function handler(request, response) {
         results.forEach((r) => {
             const player = dataMap[r.player_id];
             
-            if (player) {
+            if (player && r.attended) {
                 // use the ID as the key ("kostys")
                 player.tournaments[r.tournament_id] = {
                     id: r.tournament_id,
-                    attended: r.attended,
                     finished: r.finished,
                     position: r.position,
                     total_points: r.total_points,

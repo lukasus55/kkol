@@ -47,7 +47,7 @@ export default async function handler(request, response) {
         results.forEach((r) => {
             const tournament = dataMap[r.tournament_id];
 
-            if (tournament && r.position) {
+            if (tournament && r.position && r.attended) {
                 tournament.standings.push({
                     position: r.position,
                     id: r.player_id
