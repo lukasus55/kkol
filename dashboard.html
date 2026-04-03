@@ -89,9 +89,37 @@
         <div class="popup_overlay" id="tournament_popup">
             <div class="popup_container popup_large">
                 
-                <div class="popup_header">
-                    <h2 id="editor_tournament_name">Ładowanie...</h2>
-                    <p id="editor_tournament_tier">Tier: ?</p>
+                <div class="popup_header editor_header">
+                    <div class="header_row">
+                        <label>Nazwa turnieju:</label>
+                        <input type="text" id="edit_tour_name" class="editor_input header_input">
+                    </div>
+                    
+                    <div class="header_row">
+                        <label>Wyświetlana data:</label>
+                        <input type="text" id="edit_display_date" class="editor_input header_input">
+                    </div>
+
+                    <div class="header_row">
+                        <label>Koniec (Timestamp):</label>
+                        <input type="number" id="edit_timestamp" class="editor_input header_input">
+                    </div>
+                    
+                    <div class="header_row">
+                        <label>Zakończony:</label>
+                        <input type="checkbox" id="edit_finished" class="header_checkbox">
+                    </div>
+
+                    <div class="header_row tier_row">
+                        <label>Tier:</label>
+                        <select id="edit_tier" class="editor_input select_input">
+                            <option value="S">S</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                        <button class="btn btn_confirm small_btn" id="edit_tier_btn">Zmień tier</button>
+                    </div>
                 </div>
 
                 <div class="popup_body popup_scrollable">

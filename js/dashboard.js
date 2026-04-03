@@ -112,19 +112,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function showTournamentPopup(tournamentId, tournamentsData) {
         const popup = document.getElementById('tournament_popup');
-        const nameEl = document.getElementById('editor_tournament_name');
-        const tierEl = document.getElementById('editor_tournament_tier');
         const listEl = document.getElementById('editor_players_list');
+        
+        // Header Inputs
+        const nameInput = document.getElementById('edit_tour_name');
+        const dateInput = document.getElementById('edit_display_date');
+        const timestampInput = document.getElementById('edit_timestamp');
+        const finishedInput = document.getElementById('edit_finished');
+        const tierSelect = document.getElementById('edit_tier');
+        const tierBtn = document.getElementById('edit_tier_btn');
         
         const closeBtn = document.getElementById('editor_cancel_btn');
         const saveBtn = document.getElementById('editor_save_btn');
 
-        // Populate Header
+        // 1. Populate Header Data
         const tournament = tournamentsData[tournamentId];
-        nameEl.textContent = tournament.displayed_name;
-        tierEl.textContent = `Tier: ${tournament.details.tier ?? '?'}`;
+        
+        nameInput.value = tournament.displayed_name || '';
+        dateInput.value = tournament.details?.displayed_date || '';
+        timestampInput.value = tournament.details?.timestamp || '';
+        finishedInput.checked = tournament.finished || false;
+        
+        // Set the select dropdown to the current tier
+        const currentTier = tournament.details?.tier || 'C';
+        tierSelect.value = currentTier;
 
-        console.log(tournamentsData)
+        // Placeholder for your future Tier logic
+        tierBtn.onclick = (e) => {
+            e.preventDefault();
+            console.log("Tier change triggered! New selected tier:", tierSelect.value);
+            // We handle this separately later
+        };
 
         // Show loading state & open popup immediately
         listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">Ładowanie graczy...</td></tr>`;
@@ -373,10 +391,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         closeBtn.onclick = closePopup;
         
         saveBtn.onclick = async () => {
-            // Prevent double clicks
             saveBtn.disabled = true;
             saveBtn.textContent = 'Zapisywanie...';
 
+            // Gather Player Results
             const rows = listEl.querySelectorAll('tr[data-player-id]');
             const updatedResults = [];
 
@@ -387,22 +405,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 updatedResults.push({
                     player_id: playerId,
-                    // Convert empty strings to null for the database, otherwise parse them
                     position: posValue === '' ? null : parseInt(posValue, 10),
                     total_points: ptsValue === '' ? null : parseFloat(ptsValue)
                 });
             });
 
-            // Send to backend
+            // Gather Tournament Header Info
+            const tournamentInfo = {
+                displayed_name: nameInput.value.trim(),
+                displayed_date: dateInput.value.trim(),
+                timestamp: parseInt(timestampInput.value, 10) || 0,
+                finished: finishedInput.checked
+            };
+
             try {
                 const response = await fetch('/api/save_tournament_results', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         tournament_id: tournamentId,
-                        results: updatedResults
+                        results: updatedResults,
+                        tournament_info: tournamentInfo // NEW: Sending header data!
                     })
                 });
 
@@ -411,7 +434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     window.location.reload(); 
                 } else {
                     const errorData = await response.json();
-                    closePopup(); // Hide editor
+                    closePopup();
                     showErrorPopup(errorData.error || "Nie udało się zapisać zmian.");
                 }
             } catch (error) {
@@ -419,7 +442,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 closePopup();
                 showErrorPopup("Błąd połączenia z serwerem.");
             } finally {
-                // Reset button state just in case it stays open
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'Zapisz';
             }

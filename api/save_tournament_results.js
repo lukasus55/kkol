@@ -18,9 +18,9 @@ export default async function handler(request, response) {
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decodedPayload.id;
 
-        const { tournament_id, results } = request.body;
+        const { tournament_id, results, tournament_info } = request.body;
 
-        if (!tournament_id || !Array.isArray(results)) {
+        if (!tournament_id || !Array.isArray(results) || !tournament_info) {
             return response.status(400).json({ error: "Invalid payload format" });
         }
 
@@ -36,6 +36,16 @@ export default async function handler(request, response) {
         if (authCheck.length === 0 || (authCheck[0].role !== 'owner' && authCheck[0].role !== 'manager')) {
             return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
         }
+        
+        await sql`
+            UPDATE tournaments 
+            SET 
+                displayed_name = ${tournament_info.displayed_name},
+                finished = ${tournament_info.finished},
+                event_timestamp = ${tournament_info.timestamp}::numeric, 
+                displayed_date = ${tournament_info.displayed_date}
+            WHERE id = ${tournament_id}
+        `;
 
         const updatePromises = results.map(player => {
             return sql`
