@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const closeBtn = document.getElementById('editor_cancel_btn');
         const saveBtn = document.getElementById('editor_save_btn');
 
-        // 1. Populate Header Data
+        // Populate Header Data
         const tournament = tournamentsData[tournamentId];
         
         nameInput.value = tournament.displayed_name || '';
@@ -133,22 +133,48 @@ document.addEventListener('DOMContentLoaded', async () => {
         timestampInput.value = tournament.details?.timestamp || '';
         finishedInput.checked = tournament.finished || false;
         
-        // Set the select dropdown to the current tier
         const currentTier = tournament.details?.tier || 'C';
         tierSelect.value = currentTier;
 
-        // Placeholder for your future Tier logic
-        tierBtn.onclick = (e) => {
+        tierBtn.onclick = async (e) => {
             e.preventDefault();
-            console.log("Tier change triggered! New selected tier:", tierSelect.value);
-            // We handle this separately later
+            
+            const selectedTier = tierSelect.value;
+            
+            // Visual feedback to prevent spam clicking
+            tierBtn.disabled = true;
+            tierBtn.textContent = '...';
+
+            try {
+                const res = await fetch('/api/change_tournament_tier', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tournament_id: tournamentId,
+                        new_tier: selectedTier
+                    })
+                });
+
+                if (res.ok) {
+                    closePopup();
+                    window.location.reload();
+                } else {
+                    const err = await res.json();
+                    closePopup();
+                    showErrorPopup(err.error || "Błąd podczas zmiany tieru.");
+                }
+            } catch (error) {
+                closePopup();
+                showErrorPopup("Błąd połączenia z serwerem.");
+            } finally {
+                tierBtn.disabled = false;
+                tierBtn.textContent = 'Zmień tier';
+            }
         };
 
-        // Show loading state & open popup immediately
         listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">Ładowanie graczy...</td></tr>`;
         popup.classList.add('active');
 
-        // Fetch backend data
         try {
             const response = await fetch(`/api/tournament_editor_details?tournamentId=${tournamentId}`);
             
@@ -159,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const data = await response.json();
             const members = data.members;
-            const currentUserRole = data.current_user_role; // Grab the role!
+            const currentUserRole = data.current_user_role;
 
             let html = '';
             members.forEach(member => {
@@ -225,7 +251,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const row = btn.closest('tr');
                     const targetPlayerId = row.getAttribute('data-player-id');
 
-                    // Visual feedback to prevent spam clicking
                     btn.style.opacity = '0.5';
                     btn.disabled = true;
 
@@ -240,7 +265,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         });
 
                         if (res.ok) {
-                            // Refresh the popup to visually show the updated state
                             showTournamentPopup(tournamentId, tournamentsData); 
                         } else {
                             const err = await res.json();
@@ -302,7 +326,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     e.preventDefault();
 
                     if (!confirm("Czy na pewno chcesz wyrzucić tego gracza z turnieju? Ta akcja jest nieodwracalna i usunie wszystkie jego wyniki.")) {
-                        return; // Cancelled by user
+                        return;
                     }
 
                     const row = btn.closest('tr');
