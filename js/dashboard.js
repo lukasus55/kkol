@@ -124,6 +124,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         nameEl.textContent = tournament.displayed_name;
         tierEl.textContent = `Tier: ${tournament.details.tier ?? '?'}`;
 
+        console.log(tournamentsData)
+
         // Show loading state & open popup immediately
         listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">Ładowanie graczy...</td></tr>`;
         popup.classList.add('active');
@@ -181,6 +183,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </td>
                         <td>
                             <div class="action_buttons">
+                                <button class="action_btn attend_btn" title="Zmień status">
+                                    <img src="/img/dashboard/notepad_icon.webp" alt="Obecność">
+                                </button>
                                 ${roleButtonHTML}
                                 ${(member.organizer_role !== 'owner' && member.id !== user.id) ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
                                     <img src="/img/dashboard/kick_icon.webp" alt="Wyrzuć">
@@ -192,6 +197,44 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             listEl.innerHTML = html;
+
+            // Attach Toggle Attendance Listeners
+            const attendButtons = listEl.querySelectorAll('.attend_btn');
+            attendButtons.forEach(btn => {
+                btn.onclick = async (e) => {
+                    e.preventDefault();
+
+                    const row = btn.closest('tr');
+                    const targetPlayerId = row.getAttribute('data-player-id');
+
+                    // Visual feedback to prevent spam clicking
+                    btn.style.opacity = '0.5';
+                    btn.disabled = true;
+
+                    try {
+                        const res = await fetch('/api/toggle_attendance', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tournament_id: tournamentId,
+                                target_player_id: targetPlayerId
+                            })
+                        });
+
+                        if (res.ok) {
+                            // Refresh the popup to visually show the updated state
+                            showTournamentPopup(tournamentId, tournamentsData); 
+                        } else {
+                            const err = await res.json();
+                            closePopup();
+                            showErrorPopup(err.error || "Błąd podczas zmiany statusu obecności.");
+                        }
+                    } catch (error) {
+                        closePopup();
+                        showErrorPopup("Błąd połączenia z serwerem.");
+                    }
+                };
+            });
 
             // Attach Role Button Listeners
             const roleButtons = listEl.querySelectorAll('.role_btn');
@@ -436,8 +479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         Object.keys(playerTournaments).forEach(tournamentId => {
             const resultData = playerTournaments[tournamentId];
             
-            // Only push if they attended AND the tournament exists in the master list
-            if (resultData.attended && tournamentsData[tournamentId]) {
+            if (tournamentsData[tournamentId]) {
                 tournaments.push(tournamentsData[tournamentId]);
             }
         });
