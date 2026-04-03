@@ -274,6 +274,49 @@ document.addEventListener('DOMContentLoaded', async () => {
                 };
             });
 
+            const addPlayerBtn = document.getElementById('add_player_btn');
+            const addPlayerInput = document.getElementById('add_player_id');
+
+            addPlayerInput.value = '';
+
+            addPlayerBtn.onclick = async () => {
+                const newPlayerId = addPlayerInput.value;
+
+                if (!newPlayerId.trim()) {
+                    showErrorPopup("Proszę wpisać ID gracza.");
+                    return;
+                }
+
+                addPlayerBtn.disabled = true;
+                addPlayerBtn.textContent = '...';
+
+                try {
+                    const res = await fetch('/api/add_player', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tournament_id: tournamentId,
+                            new_player_id: newPlayerId
+                        })
+                    });
+
+                    if (res.ok) {
+                        showTournamentPopup(tournamentId, tournamentsData); 
+                    } else {
+                        const err = await res.json();
+                        closePopup();
+                        showErrorPopup(err.error || "Nie udało się dodać gracza.");
+                    }
+                } catch (error) {
+                    closePopup();
+                    showErrorPopup("Błąd połączenia z serwerem.");
+                } finally {
+                    // Reset button state
+                    addPlayerBtn.disabled = false;
+                    addPlayerBtn.textContent = 'Dodaj';
+                }
+            };
+
         } catch (error) {
             console.error(error);
             listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--color-warning-red); padding: 2rem;">Nie udało się załadować danych.</td></tr>`;
