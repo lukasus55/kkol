@@ -205,6 +205,32 @@ body
     text-decoration: underline;
 }
 
+#content_tournaments .tab_header
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+    border-bottom: var(--color-lime-moss) 1px solid;
+}
+
+#content_tournaments .btn_create_tournament
+{
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    background-color: var(--color-lime-moss);
+}
+
+#tournament_popup .btn_create_tournament:hover
+{
+    background-color: #5f911b;
+}
+
 .tournament_card
 {
     display: flex;
@@ -586,16 +612,18 @@ body
 
 #tournament_popup .text_input
 {
-    flex-grow: 1; /* Makes the input stretch to fill available space */
+    flex-grow: 1;
     width: auto;
     padding: 0.6rem;
 }
 
 #tournament_popup #add_player_btn
 {
-    width: auto; /* Overrides the 100% width on normal buttons */
+    width: auto;
     white-space: nowrap;
 }
+
+
 
 @media (max-width:768px)
 {

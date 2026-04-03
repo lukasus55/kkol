@@ -477,7 +477,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         };
     }
-    
 
     function handleHeader() {
         const id = user.id;
@@ -514,8 +513,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function handleTournamentTab(tabContainer, currentUser) {
-        
+
         const tournamentsData = await loadData('/api/tournaments');
+
+        const userType = user.role
+        const canAdd = userType === 'admin' || userType === 'organizer';
+
+        if (canAdd) {
+            const header = `
+            <div class="tab_header"> 
+                <button class="btn_create_tournament" id="create_tournament"> Create torunament </button>
+            </div>`;
+
+            tabContainer.insertAdjacentHTML('beforeend', header);
+        }
 
         const playerTournaments = currentUser.tournaments ?? {};
         const organizerRoles = currentUser.organizer_roles ?? {}; 
@@ -610,7 +621,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function handleTabs() {
-        let currentTab = 'account'; // Starts on 'account'
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentTab = urlParams.get('tab') || 'account'; 
+
         const tabs = document.querySelectorAll('.selector ul li');
         
         const loadedTabs = {
@@ -618,20 +631,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             tournaments: false 
         };
 
-        async function tabChange(tab) {
-            const tabId = tab.id.replace('selector_', '');
-            
-            if (currentTab === tabId) return;
+        async function tabChange(tabId, updateUrl = true) {
+            if (currentTab === tabId && updateUrl) return;
+
+            const tabElement = document.getElementById(`selector_${tabId}`);
+            if (!tabElement) return;
 
             currentTab = tabId;
 
+            // Update the URL without reloading the page
+            if (updateUrl) {
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('tab', tabId);
+                window.history.pushState({ tab: tabId }, '', newUrl);
+            }
+
             // Handle UI Class swapping
             document.querySelector('.selector ul li.active')?.classList.remove('active');
-            tab.classList.add('active');
+            tabElement.classList.add('active');
 
             document.querySelector('.content .tab_content.active')?.classList.remove('active');
             const tabContent = document.querySelector(`#content_${tabId}`);
-            tabContent.classList.add('active');
+            if (tabContent) tabContent.classList.add('active');
 
             // Only fetch data and show loader if the tab HAS NOT been loaded yet
             if (!loadedTabs[tabId]) {
@@ -640,7 +661,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     switch (tabId) {
                         case 'tournaments':
-                            await handleTournamentTab(tabContent, user);
+                            await handleTournamentTab(tabContent, user); 
                             break;
                     }
                     
@@ -654,11 +675,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        // Attach click listeners to the UI tabs
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                tabChange(tab);
+                const tabId = tab.id.replace('selector_', '');
+                tabChange(tabId);
             });
         });
+
+        if (currentTab !== 'account') {
+            const startingTab = currentTab;
+            currentTab = null;
+            tabChange(startingTab, false); // false = don't push a duplicate state to the URL history
+        }
     }
 
     // Initialize the UI
