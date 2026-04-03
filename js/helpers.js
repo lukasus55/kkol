@@ -44,11 +44,11 @@ export async function calculateRanking()
     tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
 
     const relevantMajors = tournaments
-    .filter(t => t.type === 'major' && t.finished)
+    .filter(t => ( t.details.tier === 'S') && t.finished)
     .slice(0, 2); // only 2 last major events are counted
 
     const relevantMinors = tournaments
-    .filter(t => t.type === 'minor' && t.finished)
+    .filter(t => ( t.details.tier === 'A' || t.details.tier === 'B') && t.finished)
     .slice(0, 3); // only 3 last minor events are counte
 
     const MAJOR_SCALE = [15, 10, 5];

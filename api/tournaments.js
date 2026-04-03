@@ -31,7 +31,6 @@ export default async function handler(request, response) {
                 displayed_name: t.displayed_name,
                 page_exists: t.page_exists,
                 page_url: t.page_url,
-                type: t.type,
                 finished: t.finished,
                 standings: [],
                 details: {
