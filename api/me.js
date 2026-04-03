@@ -1,6 +1,8 @@
 import { neon } from '@neondatabase/serverless';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import fs from 'fs';
+import path from 'path';
 
 export default async function handler(request, response) {
 
@@ -23,6 +25,16 @@ export default async function handler(request, response) {
             return response.status(401).json({ error: "Account disabled or deleted" });
         }
 
+        let pfpPath = `/img/players/pfp/default.webp`;
+                        
+        const browserUrl = `/img/players/pfp/${user.id}.webp`;
+
+        const serverFilePath = path.join(process.cwd(), 'img', 'players', 'pfp', `${user.id}.webp`);
+
+        if (fs.existsSync(serverFilePath)) { 
+            pfpPath = browserUrl; 
+        }
+
         return response.status(200).json({ 
             user: {
                 id: user.id,
@@ -30,7 +42,8 @@ export default async function handler(request, response) {
                 role: user.role,
                 is_active: user.is_active,
                 tournament_id: user.tournament_id,
-                email: user.email
+                email: user.email,
+                pfp_url: pfpPath
             }
         });
 

@@ -28,6 +28,8 @@ async function createTournamentsDiv()
         const winnerId = tournament.standings[0].id;
         const winnerName = isFinished ? players[winnerId].displayed_name : `TBD`;
 
+        const pfpUrl = isFinished ? players[winnerId].pfp_url : ``;
+
         const cardHTML = `
             <div class="card"> 
                 <div class="name"> 
@@ -40,7 +42,7 @@ async function createTournamentsDiv()
                 <div class="date"> ${tournamentDate} </div>
                 <div class="winner"> 
                     ${isFinished ? `
-                        <a href="/players/${winnerId}"> <img src="/img/players/pfp/${winnerId}.webp"> ${winnerName} </a>` 
+                        <a href="/players/${winnerId}"> <img src="${pfpUrl}"> ${winnerName} </a>` 
                         : `TBD` 
                     }
                 </div>

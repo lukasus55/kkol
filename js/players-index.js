@@ -19,12 +19,13 @@ async function createLeaderboardDiv()
         const majorRanking = player.majorRanking;
         const minorRanking = player.minorRanking;
         const kkolRanking = player.ranking;
+        const pfpUrl = player.pfpUrl;
 
         const playerHTML = `
             <div class="player"> 
                 <div class="name"> 
                     <a href="/players/${playerId}"> 
-                        <img src="/img/players/pfp/${playerId}.webp"> ${playerName} 
+                        <img src="${pfpUrl}"> ${playerName} 
                     </a> 
                 </div>
                 <div class="major"> ${majorRanking} </div>

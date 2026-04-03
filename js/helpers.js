@@ -61,6 +61,7 @@ export async function calculateRanking()
 
         const playerId = player.id;
         const playerName = player.displayed_name;
+        const pfpUrl = player.pfp_url;
 
         let majorPoints = 0;
         let minorPoints = 0;
@@ -77,6 +78,7 @@ export async function calculateRanking()
         leaderboard[playerId] = {
             id: playerId,
             name: playerName,
+            pfpUrl: pfpUrl,
             majorRanking: majorRanking.toFixed(2), // storing every value as string what could possibly go wrong
             minorRanking: minorRanking.toFixed(2),
             ranking: ranking.toFixed(2)

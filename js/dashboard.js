@@ -19,12 +19,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const id = user.id;
         const displayedName = user.displayed_name;
         const roleId = user.role;
+        const pfpPath = user.pfp_url;
 
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
         const roleDiv = document.querySelector('#player_role');
 
-        profilePicture.src = `/img/players/pfp/${id}.webp`;
+        profilePicture.src = user.pfp_url;
         nameDiv.innerHTML = `${displayedName}&nbsp;<span class="id">@${id}</span>`;
 
         const roles = {
