@@ -186,9 +186,57 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         closeBtn.onclick = closePopup;
         
-        saveBtn.onclick = () => {
-            console.log("Save button clicked. (Save logic coming soon...)");
-            closePopup();
+        saveBtn.onclick = async () => {
+            // Prevent double clicks
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Zapisywanie...';
+
+            const rows = listEl.querySelectorAll('tr[data-player-id]');
+            const updatedResults = [];
+
+            rows.forEach(row => {
+                const playerId = row.getAttribute('data-player-id');
+                const posValue = row.querySelector('.pos_input').value;
+                const ptsValue = row.querySelector('.pts_input').value;
+
+                updatedResults.push({
+                    player_id: playerId,
+                    // Convert empty strings to null for the database, otherwise parse them
+                    position: posValue === '' ? null : parseInt(posValue, 10),
+                    total_points: ptsValue === '' ? null : parseFloat(ptsValue)
+                });
+            });
+
+            // Send to backend
+            try {
+                const response = await fetch('/api/save_tournament_results', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tournament_id: tournamentId,
+                        results: updatedResults
+                    })
+                });
+
+                if (response.ok) {
+                    closePopup();
+                    window.location.reload(); 
+                } else {
+                    const errorData = await response.json();
+                    closePopup(); // Hide editor
+                    showErrorPopup(errorData.error || "Nie udało się zapisać zmian.");
+                }
+            } catch (error) {
+                console.error(error);
+                closePopup();
+                showErrorPopup("Błąd połączenia z serwerem.");
+            } finally {
+                // Reset button state just in case it stays open
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Zapisz';
+            }
         };
 
         popup.onclick = (event) => {
