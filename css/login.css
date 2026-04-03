@@ -59,7 +59,6 @@ h1
     color: var(--color-lavender-mist);
 }
 
-/* Lime Moss glow when the user clicks the input field */
 .input_group input:focus {
     outline: none;
     border-color: var(--color-lime-moss);

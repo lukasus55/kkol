@@ -521,8 +521,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (canAdd) {
             const header = `
-            <div class="tab_header"> 
-                <button class="btn_create_tournament" id="create_tournament"> Create torunament </button>
+            <div class="tab_header">
+                <div class="create_tournament_title"> Stwórz nowy turniej </div> 
+                <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
+                <button class="btn_create_tournament" id="create_tournament"> Stwórz </button>
             </div>`;
 
             tabContainer.insertAdjacentHTML('beforeend', header);
@@ -599,6 +601,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         tabContainer.insertAdjacentHTML('beforeend', allCardsHTML);
 
         // Attach Event Listeners
+
+        const createBtn = document.getElementById('create_tournament');
+        if (createBtn) {
+            createBtn.addEventListener('click', async () => {
+                const idInput = document.getElementById('new_tournament_id');
+                const newId = idInput.value.trim();
+
+                if (!newId) {
+                    showErrorPopup("Proszę wpisać ID dla nowego turnieju.");
+                    return;
+                }
+
+                createBtn.disabled = true;
+                createBtn.textContent = '...';
+
+                try {
+                    const res = await fetch('/api/create_tournament', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ tournament_id: newId })
+                    });
+
+                    if (res.ok) {
+                        // Inject a placeholder into the local data so the editor popup doesn't crash 
+                        tournamentsData[newId] = {
+                            id: newId,
+                            displayed_name: newId,
+                            finished: false,
+                            details: { tier: 'C', timestamp: Math.floor(Date.now() / 1000) }
+                        };
+
+                        // Empty the input field
+                        idInput.value = '';
+
+                        // Open the editor instantly!
+                        showTournamentPopup(newId, tournamentsData);
+                    } else {
+                        const err = await res.json();
+                        showErrorPopup(err.error || "Błąd podczas tworzenia turnieju.");
+                    }
+                } catch (error) {
+                    showErrorPopup("Błąd połączenia z serwerem.");
+                } finally {
+                    createBtn.disabled = false;
+                    createBtn.textContent = 'Stwórz turniej';
+                }
+            });
+        }
 
         const leaveButtons = tabContainer.querySelectorAll('.leave_tournament_btn');
         leaveButtons.forEach(button => {
