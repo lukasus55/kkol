@@ -15,6 +15,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
 
+    function handlePopup() {
+        const popup = document.getElementById('universal_popup');
+        const cancelBtn = document.getElementById('popup_cancel');
+        const confirmBtn = document.getElementById('popup_confirm');
+
+        function closePopup() {
+            popup.classList.remove('active');
+        }
+
+        cancelBtn.addEventListener('click', closePopup);
+
+        confirmBtn.addEventListener('click', () => {
+            console.log("User confirmed leaving the tournament.");
+            
+            closePopup();
+        });
+
+        popup.addEventListener('click', (event) => {
+            if (event.target === popup) {
+                closePopup();
+            }
+        });
+    }
+
+    function openLeavingPopup(tournament) {
+        const popup = document.getElementById('universal_popup');
+        popup.classList.add('active');
+
+        const popup_message = document.querySelector('#popup_message');
+        popup_message.innerHTML = `<p id="popup_message">Czy na pewno chcesz opuścić turniej <span class="highlight">${tournament.name}</span>?</p>`;
+
+        const leaveBtn = document.getElementById('popup_confirm');
+
+        leaveBtn.onclick = async () => {
+            // Disable the button so they can't double-click it while it loads
+            leaveBtn.disabled = true;
+            leaveBtn.textContent = 'Opuszczanie...';
+
+            try {
+                const response = await fetch('/api/leave_tournament', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ tournamentId: tournament.id })
+                });
+
+                if (response.ok) {
+                    popup.classList.remove('active');
+                    
+                    window.location.reload(); 
+                } else {
+                    console.error("Failed to update database.");
+                    leaveBtn.disabled = false;
+                    leaveBtn.textContent = 'Opuść';
+                }
+            } catch (error) {
+                console.error("Network error:", error);
+                leaveBtn.disabled = false;
+                leaveBtn.textContent = 'Opuść';
+            }
+        };
+    }
+    
+
     function handleHeader() {
         const id = user.id;
         const displayedName = user.displayed_name;
@@ -95,12 +160,45 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     <div class="pos"> ${playerPosition && isTournamentFinished ? `#${playerPosition}` : `-`} </div>
                     <div class="tier"> ${tournamentTier ?? '?'}-Tier </div>
-                    <div class="info"> <button class="tournament_details"> <img src="/img/dashboard/leave_icon.webp"> </button></div>
+                    <div class="action"> 
+                        ${true ? `<button 
+                        class="tournament_btn 
+                        edit_tournament_btn"
+                        data-id="${tournament.id}" 
+                        data-name="${tournamentName}">
+                            <img src="/img/dashboard/edit_icon.webp"> 
+                        </button>` : ''}
+                    </div>
+                    <div class="action"> 
+                        ${tournamentTier !== 'S' ? `<button 
+                        class="tournament_btn 
+                        leave_tournament_btn"
+                        data-id="${tournament.id}" 
+                        data-name="${tournamentName}">
+                            <img src="/img/dashboard/leave_icon.webp"> 
+                        </button>` : ''}
+                    </div>
                 </div>`;
         });
 
         // Inject everything into the DOM at once
         tabContainer.insertAdjacentHTML('beforeend', allCardsHTML);
+
+        const leaveButtons = tabContainer.querySelectorAll('.leave_tournament_btn');
+
+        leaveButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tId = button.getAttribute('data-id');
+                const tName = button.getAttribute('data-name');
+                
+                const clickedTournamentData = {
+                    id: tId,
+                    name: tName
+                };
+                
+                openLeavingPopup(clickedTournamentData);
+            });
+        });
     }
 
     function handleTabs() {
@@ -156,6 +254,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialize the UI
+    handlePopup()
     handleHeader();
     handleTabs();
 

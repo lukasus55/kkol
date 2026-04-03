@@ -51,15 +51,30 @@
             </div>
 
             <div class="content">
-
                 <div class="tab_content tab_content-account active" id="content_account"> Account </div>
-
-                <div class="tab_content tab_content-tournaments" id="content_tournaments"> 
-
-                </div>
+                <div class="tab_content tab_content-tournaments" id="content_tournaments"> </div>
             </div>
 
         </div>
+
+        <div class="popup_overlay" id="universal_popup">
+            <div class="popup_container">
+                
+                <div class="popup_icon">
+                    <img src="/img/dashboard/warning_icon.webp">
+                </div>
+
+                <div class="popup_body">
+                    <p id="popup_message">Are you sure you want to leave the <span class="highlight">{tournamentName}</span> tournament?</p>
+                </div>
+
+                <div class="popup_footer">
+                    <button class="btn btn_cancel" id="popup_cancel">Anuluj</button>
+                    <button class="btn btn_confirm" id="popup_confirm">Opuść</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
 

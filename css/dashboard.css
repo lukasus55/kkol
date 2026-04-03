@@ -222,7 +222,7 @@ body
 {
     justify-content: flex-start;
     color: var(--color-lime-moss);
-    width: 70%;
+    width: 60%;
 }
 
 .tournament_card .name a
@@ -231,13 +231,13 @@ body
     width: 100%;
 }
 
-.tournament_card .info img
+.tournament_btn img
 {
     width: 1.3rem;
     height: 1.3rem;
 }
 
-button.tournament_details
+.tournament_btn
 {
     display: flex;
     justify-content: center;
@@ -249,9 +249,141 @@ button.tournament_details
     opacity: 80%;
 }
 
-button.tournament_details:hover
+.tournament_btn:hover
 {
     opacity: 100%;
+}
+
+.confirmation_popup_container
+{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0%;
+    left: 0%;
+    background-color: #27282c69;
+}
+
+.popup_overlay 
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-overlay);
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.popup_overlay.active
+{
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup_container
+{
+    background-color: var(--color-onyx);
+    width: 90%;
+    max-width: 35rem;
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-border);
+    text-align: center;
+    
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.popup_overlay.active .popup-container
+{
+    transform: translateY(0) scale(1);
+}
+
+.popup_icon
+{
+    color: var(--color-warning-red);
+    margin: 0 auto 1.5rem auto;
+}
+
+.popup_icon img
+{
+    width: 4rem;
+    height: 4rem;
+}
+
+.popup_body
+{
+    margin-bottom: 2rem;
+}
+
+.popup_body p
+{
+    color: var(--color-lavender-mist);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.popup_body .highlight
+{
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.popup_footer
+{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn
+{
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    width: 100%;
+}
+
+.btn:active
+{
+    transform: scale(0.97);
+}
+
+.btn_cancel
+{
+    background-color: transparent;
+    color: var(--color-lavender-mist);
+    border: 1px solid var(--color-border);
+}
+
+.btn_cancel:hover
+{
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.btn_confirm
+{
+    background-color: var(--color-warning-red);
+    color: white;
+}
+
+.btn_confirm:hover
+{
+    background-color: #ff3333;
 }
 
 @media (max-width:768px)
