@@ -168,8 +168,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <td>
                             <strong>${member.displayed_name}</strong> <br>
                             <small style="color: gray;">
-                                ${member.attended ? 'Obecny' : 'Nieobecny'} 
-                                ${member.organizer_role ? ` • <span>${member.organizer_role.toUpperCase()}</span>` : ''}
+                                ${!member.attended ? 'Wycofany' : ''} 
+                                ${!member.attended && member.organizer_role ? ' • ' : ''}
+                                ${member.organizer_role ? `<span>${member.organizer_role.toUpperCase()}</span>` : ''}
                             </small>
                         </td>
                         <td>
@@ -181,7 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <td>
                             <div class="action_buttons">
                                 ${roleButtonHTML}
-                                ${member.organizer_role !== 'owner' ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
+                                ${(member.organizer_role !== 'owner' && member.id !== user.id) ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
                                     <img src="/img/dashboard/kick_icon.webp" alt="Wyrzuć">
                                 </button>` : ``}
                             </div>
@@ -225,6 +226,46 @@ document.addEventListener('DOMContentLoaded', async () => {
                             const err = await res.json();
                             closePopup();
                             showErrorPopup(err.error || "Błąd zmiany uprawnień.");
+                        }
+                    } catch (error) {
+                        closePopup();
+                        showErrorPopup("Błąd połączenia z serwerem.");
+                    }
+                };
+            });
+
+            // Attach Kick Button Listeners
+            const kickButtons = listEl.querySelectorAll('.kick_btn');
+            kickButtons.forEach(btn => {
+                btn.onclick = async (e) => {
+                    e.preventDefault();
+
+                    if (!confirm("Czy na pewno chcesz wyrzucić tego gracza z turnieju? Ta akcja jest nieodwracalna i usunie wszystkie jego wyniki.")) {
+                        return; // Cancelled by user
+                    }
+
+                    const row = btn.closest('tr');
+                    const targetPlayerId = row.getAttribute('data-player-id');
+
+                    btn.style.opacity = '0.5';
+                    btn.disabled = true;
+
+                    try {
+                        const res = await fetch('/api/kick_player', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tournament_id: tournamentId,
+                                target_player_id: targetPlayerId
+                            })
+                        });
+
+                        if (res.ok) {
+                            showTournamentPopup(tournamentId, tournamentsData); 
+                        } else {
+                            const err = await res.json();
+                            closePopup();
+                            showErrorPopup(err.error || "Błąd podczas wyrzucania gracza.");
                         }
                     } catch (error) {
                         closePopup();
