@@ -136,24 +136,40 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error("Brak uprawnień lub błąd serwera");
             }
             
+
             const data = await response.json();
             const members = data.members;
+            const currentUserRole = data.current_user_role; // Grab the role!
 
             let html = '';
             members.forEach(member => {
-                // Apply the faded style if they haven't attended
                 const attendedClass = member.attended ? 'player_attended' : 'player_unattended';
                 const posValue = member.position !== null ? member.position : '';
                 const ptsValue = member.total_points !== null ? member.total_points : '';
+                
+                // Generate the Promote/Demote button if the current user is the owner
+                let roleButtonHTML = '';
+                if (currentUserRole === 'owner' && member.organizer_role !== 'owner') {
+                    if (member.organizer_role === 'manager') {
+                        roleButtonHTML = `
+                            <button class="action_btn role_btn" data-action="demote" title="Zabierz uprawnienia managera">
+                                <img src="/img/dashboard/demote_icon.webp" alt="Demote">
+                            </button>`;
+                    } else {
+                        roleButtonHTML = `
+                            <button class="action_btn role_btn" data-action="promote" title="Awansuj na managera">
+                                <img src="/img/dashboard/promote_icon.webp" alt="Promote">
+                            </button>`;
+                    }
+                }
 
                 html += `
                     <tr class="${attendedClass}" data-player-id="${member.id}">
                         <td>
                             <strong>${member.displayed_name}</strong> <br>
                             <small style="color: gray;">
-                                ${!member.attended ? 'Wycofany' : ''} 
-                                ${!member.attended && member.organizer_role ? ' • ' : ''}
-                                ${member.organizer_role ? `<span>${member.organizer_role.toUpperCase()}</span>` : ''}
+                                ${member.attended ? 'Obecny' : 'Nieobecny'} 
+                                ${member.organizer_role ? ` • <span>${member.organizer_role.toUpperCase()}</span>` : ''}
                             </small>
                         </td>
                         <td>
@@ -163,16 +179,59 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <input type="number" step="0.5" class="editor_input pts_input" value="${ptsValue}" placeholder="-">
                         </td>
                         <td>
-                            <button class="kick_btn" title="Wyrzuć gracza">
-                                <img src="/img/dashboard/kick_icon.png" alt="Wyrzuć">
-                            </button>
+                            <div class="action_buttons">
+                                ${roleButtonHTML}
+                                ${member.organizer_role !== 'owner' ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
+                                    <img src="/img/dashboard/kick_icon.webp" alt="Wyrzuć">
+                                </button>` : ``}
+                            </div>
                         </td>
                     </tr>
                 `;
             });
 
-            // Inject the generated HTML
             listEl.innerHTML = html;
+
+            // Attach Role Button Listeners
+            const roleButtons = listEl.querySelectorAll('.role_btn');
+            roleButtons.forEach(btn => {
+                btn.onclick = async (e) => {
+                    // Prevent the save button from accidentally firing if things bubble up
+                    e.preventDefault(); 
+                    
+                    // Find the closest row to get the player ID
+                    const row = btn.closest('tr');
+                    const targetPlayerId = row.getAttribute('data-player-id');
+                    const action = btn.getAttribute('data-action');
+
+                    btn.style.opacity = '0.5';
+                    btn.disabled = true;
+
+                    try {
+                        const res = await fetch('/api/update_organizer_role', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tournament_id: tournamentId,
+                                target_player_id: targetPlayerId,
+                                action: action
+                            })
+                        });
+
+                        if (res.ok) {
+                            // Refresh the popup to show the new badge and updated button!
+                            showTournamentPopup(tournamentId, tournamentsData); 
+                        } else {
+                            const err = await res.json();
+                            closePopup();
+                            showErrorPopup(err.error || "Błąd zmiany uprawnień.");
+                        }
+                    } catch (error) {
+                        closePopup();
+                        showErrorPopup("Błąd połączenia z serwerem.");
+                    }
+                };
+            });
 
         } catch (error) {
             console.error(error);

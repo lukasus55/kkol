@@ -63,6 +63,7 @@ export default async function handler(request, response) {
         // Send the data back to the frontend popup!
         return response.status(200).json({ 
             tournament_id: tournamentId,
+            current_user_role: authCheck[0].role,
             members: membersData 
         });
 

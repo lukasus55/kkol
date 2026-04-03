@@ -476,7 +476,13 @@ body
     font-style: italic;
 }
 
-#tournament_popup .kick_btn
+#tournament_popup .action_buttons
+{
+    display: flex;
+    gap: 0.5rem;
+}
+
+#tournament_popup .action_btn
 {
     background: transparent;
     border: none;
@@ -492,12 +498,12 @@ body
     height: 2rem;
 }
 
-#tournament_popup .kick_btn:hover
+#tournament_popup .action_btn:hover
 {
     opacity: 100%;
 }
 
-#tournament_popup .kick_btn img
+#tournament_popup .action_btn img
 {
     width: 1.3rem;
     height: 1.3rem;
