@@ -53,9 +53,14 @@ export default async function handler(request, response) {
             return response.status(403).json({ error: "The owner cannot leave the tournament. You must delete it instead." });
         }
 
+        // Note: It's totally fine to run DELETE on organizers even if they aren't a manager; it just won't do anything.
         await sql`
-            UPDATE results 
-            SET attended = false 
+            DELETE FROM tournament_organizers 
+            WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
+        `;
+
+        await sql`
+            DELETE FROM results 
             WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
         `;
 
