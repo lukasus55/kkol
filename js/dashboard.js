@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tierSelect = document.getElementById('edit_tier');
         const tierBtn = document.getElementById('edit_tier_btn');
         
+        const deleteBtn = document.getElementById('editor_delete_btn')
         const closeBtn = document.getElementById('editor_cancel_btn');
         const saveBtn = document.getElementById('editor_save_btn');
 
@@ -186,6 +187,47 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await response.json();
             const members = data.members;
             const currentUserRole = data.current_user_role;
+
+            if (currentUserRole === 'owner') {
+                deleteBtn.style.display = 'block';
+                
+                deleteBtn.onclick = async () => {
+                    // Double confirmation!
+                    if (!confirm("UWAGA! Czy na pewno chcesz CAŁKOWICIE USUNĄĆ ten turniej? \n\nTej akcji NIE MOŻNA COFNĄĆ. Zostaną usunięte wszystkie wyniki, gracze i role organizatorów!")) {
+                        return;
+                    }
+
+                    deleteBtn.disabled = true;
+                    deleteBtn.textContent = 'Usuwanie...';
+
+                    try {
+                        const res = await fetch('/api/delete_tournament', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ tournament_id: tournamentId })
+                        });
+
+                        if (res.ok) {
+                            closePopup();
+                            // Reload the page to remove the deleted tournament from the UI
+                            window.location.reload(); 
+                        } else {
+                            const err = await res.json();
+                            closePopup();
+                            showErrorPopup(err.error || "Błąd podczas usuwania turnieju.");
+                        }
+                    } catch (error) {
+                        closePopup();
+                        showErrorPopup("Błąd połączenia z serwerem.");
+                    } finally {
+                        deleteBtn.disabled = false;
+                        deleteBtn.textContent = 'Usuń turniej';
+                    }
+                };
+            } else {
+                // Hide it if they are just a manager opening the popup
+                deleteBtn.style.display = 'none';
+            }
 
             let html = '';
             members.forEach(member => {
@@ -471,11 +513,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         };
 
-        popup.onclick = (event) => {
-            if (event.target === popup) {
-                closePopup();
-            }
-        };
     }
 
     function handleHeader() {
