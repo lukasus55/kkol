@@ -45,7 +45,6 @@ export default async function handler(request, response) {
                 r.player_id as id,
                 p.displayed_name,
                 r.attended,
-                r.finished,
                 r.position,
                 r.total_points,
                 r.games_positions,

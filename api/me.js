@@ -36,7 +36,6 @@ export default async function handler(request, response) {
                         json_build_object(
                             'id', tournament_id,
                             'attended', attended,
-                            'finished', finished,
                             'position', position,
                             'total_points', total_points,
                             'games_positions', games_positions,
