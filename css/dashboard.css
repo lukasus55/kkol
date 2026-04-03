@@ -386,6 +386,91 @@ body
     background-color: #ff3333;
 }
 
+.popup_overlay
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-overlay);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.popup_overlay.active
+{
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup_container
+{
+    background-color: var(--color-onyx);
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--color-border);
+    text-align: center;
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.popup_overlay.active .popup_container
+{
+    transform: translateY(0) scale(1);
+}
+
+.popup_body
+{
+    margin-bottom: 2rem;
+}
+
+.popup_body p
+{
+    color: var(--color-lavender-mist);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.popup_footer
+{
+    display: flex;
+    justify-content: center;
+}
+
+.btn_cancel
+{
+    background-color: transparent;
+    color: var(--color-lavender-mist);
+    border: 1px solid var(--color-border);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    width: 100%;
+}
+
+.btn_cancel:hover
+{
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.btn_cancel:active
+{
+    transform: scale(0.97);
+}
+
 @media (max-width:768px)
 {
     main

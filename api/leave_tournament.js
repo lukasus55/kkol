@@ -1,4 +1,3 @@
-// /api/leave_tournament.js
 import { neon } from '@neondatabase/serverless';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
@@ -9,6 +8,7 @@ export default async function handler(request, response) {
     }
 
     try {
+        // identify the user
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
@@ -17,26 +17,40 @@ export default async function handler(request, response) {
         }
 
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decodedPayload.id; // verified ID
+        const userId = decodedPayload.id;
 
-        // Grab the tournament ID sent from the popup
         const { tournamentId } = request.body;
 
         if (!tournamentId) {
             return response.status(400).json({ error: "Tournament ID is required" });
         }
+
         const sql = neon(process.env.DATABASE_URL);
-        
-        const tournamentCheck = await sql`
-            SELECT tier FROM tournaments WHERE id = ${tournamentId}
+
+        const checkData = await sql`
+            SELECT t.tier, o.role
+            FROM tournaments t
+            LEFT JOIN tournament_organizers o 
+            ON t.id = o.tournament_id AND o.player_id = ${userId}
+            WHERE t.id = ${tournamentId}
         `;
 
-        if (tournamentCheck.length === 0) {
+        // If the tournament doesn't exist, stop
+        if (checkData.length === 0) {
             return response.status(404).json({ error: "Tournament not found" });
         }
 
-        if (tournamentCheck[0].tier === 'S') {
+        const tournamentTier = checkData[0].tier;
+        const userRole = checkData[0].role;
+
+        // Block 1: S-Tier tournaments
+        if (tournamentTier === 'S') {
             return response.status(403).json({ error: "Players are not allowed to leave S-Tier tournaments." });
+        }
+
+        // Block 2: Tournament Owners
+        if (userRole === 'owner') {
+            return response.status(403).json({ error: "The owner cannot leave the tournament. You must delete it instead." });
         }
 
         await sql`

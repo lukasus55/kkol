@@ -15,7 +15,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
 
-    function handlePopup() {
+    function showErrorPopup(message) {
+        const popup = document.getElementById('error_popup');
+        const messageEl = document.getElementById('error_message');
+        const closeBtn = document.getElementById('error_close_btn');
+
+        messageEl.textContent = message;
+
+        popup.classList.add('active');
+
+        closeBtn.onclick = () => {
+            popup.classList.remove('active');
+        };
+
+        // Close if clicking outside the box
+        popup.onclick = (event) => {
+            if (event.target === popup) {
+                popup.classList.remove('active');
+            }
+        };
+    }
+
+    function handleConfirmationPopup() {
         const popup = document.getElementById('universal_popup');
         const cancelBtn = document.getElementById('popup_cancel');
         const confirmBtn = document.getElementById('popup_confirm');
@@ -64,17 +85,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (response.ok) {
                     popup.classList.remove('active');
-                    
                     window.location.reload(); 
                 } else {
-                    console.error("Failed to update database.");
+                    const errorData = await response.json(); 
+                    
+                    // Hide the leaving confirmation popup first
+                    popup.classList.remove('active');
+                    
+                    // Reset the leave button just in case
                     leaveBtn.disabled = false;
                     leaveBtn.textContent = 'Opuść';
+
+                    showErrorPopup(errorData.error || "Wystąpił nieznany błąd.");
                 }
             } catch (error) {
-                console.error("Network error:", error);
+                popup.classList.remove('active');
                 leaveBtn.disabled = false;
                 leaveBtn.textContent = 'Opuść';
+                
+                showErrorPopup("Błąd połączenia z serwerem.");
             }
         };
     }
@@ -114,21 +143,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         roleDiv.classList.add(`role_badge-${roleId}`);
     }
 
-    async function handleTournamentTab(tabContainer,) {
-        const playerID = user.id;
+    async function handleTournamentTab(tabContainer, currentUser) {
+        
+        const tournamentsData = await loadData('/api/tournaments');
 
-        const [tournamentsData, playerData] = await Promise.all([
-            loadData('/api/tournaments'),
-            loadData('/api/players')
-        ]);
-
-        const player = playerData[playerID] ?? {};
-        const playerTournaments = player.tournaments ?? {};
-        const attendedTournaments = Object.keys(playerTournaments);
+        const playerTournaments = currentUser.tournaments ?? {};
+        const organizerRoles = currentUser.organizer_roles ?? {}; 
+        
         const tournaments = [];
 
-        attendedTournaments.forEach(tournamentId => {
-            if (tournamentsData[tournamentId]) {
+        Object.keys(playerTournaments).forEach(tournamentId => {
+            const resultData = playerTournaments[tournamentId];
+            
+            // Only push if they attended AND the tournament exists in the master list
+            if (resultData.attended && tournamentsData[tournamentId]) {
                 tournaments.push(tournamentsData[tournamentId]);
             }
         });
@@ -141,15 +169,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         tournaments.forEach(tournament => {
             if (!tournament) return;
 
-            const isTournamentFinished = tournament.finished;
-            const playerTournamentData = playerTournaments[tournament.id] ?? {};
+            // Grab the specific player's result data for this iteration
+            const playerTournamentData = playerTournaments[tournament.id];
 
+            const isTournamentFinished = tournament.finished;
             const tournamentName = tournament.displayed_name;
             const tournamentTier = tournament.details.tier;
             const playerPosition = playerTournamentData.position;
 
             const tournamentPageExists = tournament.page_exists;
             const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
+
+            // Check if the user has a role in this specific tournament
+            const userRole = organizerRoles[tournament.id];
+            const canEdit = userRole === 'owner' || userRole === 'manager';
 
             allCardsHTML += `
                 <div class="tournament_card"> 
@@ -160,8 +193,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     <div class="pos"> ${playerPosition && isTournamentFinished ? `#${playerPosition}` : `-`} </div>
                     <div class="tier"> ${tournamentTier ?? '?'}-Tier </div>
+                    
                     <div class="action"> 
-                        ${true ? `<button 
+                        ${canEdit ? `<button 
                         class="tournament_btn 
                         edit_tournament_btn"
                         data-id="${tournament.id}" 
@@ -169,6 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <img src="/img/dashboard/edit_icon.webp"> 
                         </button>` : ''}
                     </div>
+                    
                     <div class="action"> 
                         ${tournamentTier !== 'S' ? `<button 
                         class="tournament_btn 
@@ -184,19 +219,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Inject everything into the DOM at once
         tabContainer.insertAdjacentHTML('beforeend', allCardsHTML);
 
-        const leaveButtons = tabContainer.querySelectorAll('.leave_tournament_btn');
+        // Attach Event Listeners
 
+        const leaveButtons = tabContainer.querySelectorAll('.leave_tournament_btn');
         leaveButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const tId = button.getAttribute('data-id');
-                const tName = button.getAttribute('data-name');
-                
                 const clickedTournamentData = {
-                    id: tId,
-                    name: tName
+                    id: button.getAttribute('data-id'),
+                    name: button.getAttribute('data-name')
                 };
-                
                 openLeavingPopup(clickedTournamentData);
+            });
+        });
+
+        const editButtons = tabContainer.querySelectorAll('.edit_tournament_btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const clickedTournamentData = {
+                    id: button.getAttribute('data-id'),
+                    name: button.getAttribute('data-name')
+                };
+                // openEditPopup(clickedTournamentData);
             });
         });
     }
@@ -254,7 +297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialize the UI
-    handlePopup()
+    handleConfirmationPopup()
     handleHeader();
     handleTabs();
 
