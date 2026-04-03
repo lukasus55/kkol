@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
 
+    // Popup naming rules: showXyzPopup - create its functioanlities and show it, handleXyzPopup - create its deafult functionalities, openXyzPopup - edit its deafult functionalities if needed ans show it
+
     function showErrorPopup(message) {
         const popup = document.getElementById('error_popup');
         const messageEl = document.getElementById('error_message');
@@ -104,6 +106,94 @@ document.addEventListener('DOMContentLoaded', async () => {
                 leaveBtn.textContent = 'Opuść';
                 
                 showErrorPopup("Błąd połączenia z serwerem.");
+            }
+        };
+    }
+
+    async function showTournamentPopup(tournamentId, tournamentsData) {
+        const popup = document.getElementById('tournament_popup');
+        const nameEl = document.getElementById('editor_tournament_name');
+        const tierEl = document.getElementById('editor_tournament_tier');
+        const listEl = document.getElementById('editor_players_list');
+        
+        const closeBtn = document.getElementById('editor_cancel_btn');
+        const saveBtn = document.getElementById('editor_save_btn');
+
+        // Populate Header
+        const tournament = tournamentsData[tournamentId];
+        nameEl.textContent = tournament.displayed_name;
+        tierEl.textContent = `Tier: ${tournament.details.tier ?? '?'}`;
+
+        // Show loading state & open popup immediately
+        listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">Ładowanie graczy...</td></tr>`;
+        popup.classList.add('active');
+
+        // Fetch backend data
+        try {
+            const response = await fetch(`/api/tournament_editor_details?tournamentId=${tournamentId}`);
+            
+            if (!response.ok) {
+                throw new Error("Brak uprawnień lub błąd serwera");
+            }
+            
+            const data = await response.json();
+            const members = data.members;
+
+            let html = '';
+            members.forEach(member => {
+                // Apply the faded style if they haven't attended
+                const attendedClass = member.attended ? 'player_attended' : 'player_unattended';
+                const posValue = member.position !== null ? member.position : '';
+                const ptsValue = member.total_points !== null ? member.total_points : '';
+
+                html += `
+                    <tr class="${attendedClass}" data-player-id="${member.id}">
+                        <td>
+                            <strong>${member.displayed_name}</strong> <br>
+                            <small style="color: gray;">
+                                ${!member.attended ? 'Wycofany' : ''} 
+                                ${!member.attended && member.organizer_role ? ' • ' : ''}
+                                ${member.organizer_role ? `<span>${member.organizer_role.toUpperCase()}</span>` : ''}
+                            </small>
+                        </td>
+                        <td>
+                            <input type="number" class="editor_input pos_input" value="${posValue}" placeholder="-">
+                        </td>
+                        <td>
+                            <input type="number" step="0.5" class="editor_input pts_input" value="${ptsValue}" placeholder="-">
+                        </td>
+                        <td>
+                            <button class="kick_btn" title="Wyrzuć gracza">
+                                <img src="/img/dashboard/kick_icon.png" alt="Wyrzuć">
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Inject the generated HTML
+            listEl.innerHTML = html;
+
+        } catch (error) {
+            console.error(error);
+            listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--color-warning-red); padding: 2rem;">Nie udało się załadować danych.</td></tr>`;
+        }
+
+        // Button Listeners
+        const closePopup = () => {
+            popup.classList.remove('active');
+        };
+
+        closeBtn.onclick = closePopup;
+        
+        saveBtn.onclick = () => {
+            console.log("Save button clicked. (Save logic coming soon...)");
+            closePopup();
+        };
+
+        popup.onclick = (event) => {
+            if (event.target === popup) {
+                closePopup();
             }
         };
     }
@@ -198,8 +288,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${canEdit ? `<button 
                         class="tournament_btn 
                         edit_tournament_btn"
-                        data-id="${tournament.id}" 
-                        data-name="${tournamentName}">
+                        data-id="${tournament.id}">
                             <img src="/img/dashboard/edit_icon.webp"> 
                         </button>` : ''}
                     </div>
@@ -233,13 +322,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         const editButtons = tabContainer.querySelectorAll('.edit_tournament_btn');
-        editButtons.forEach(button => {
+        await editButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const clickedTournamentData = {
-                    id: button.getAttribute('data-id'),
-                    name: button.getAttribute('data-name')
-                };
-                // openEditPopup(clickedTournamentData);
+                const clickedTournamentId = button.getAttribute('data-id');
+                showTournamentPopup(clickedTournamentId, tournamentsData);
             });
         });
     }

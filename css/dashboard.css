@@ -1,3 +1,9 @@
+:root {
+    --color-border: #333333;
+    --color-warning-red: #ff4d4d;
+    --color-overlay: rgba(0, 0, 0, 0.7);
+}
+
 main
 {
     padding: 5rem 20%;
@@ -386,89 +392,125 @@ body
     background-color: #ff3333;
 }
 
-.popup_overlay
+#tournament_popup .popup_large
 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-overlay);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    max-width: 40rem;
 }
 
-.popup_overlay.active
+#tournament_popup .popup_scrollable
 {
-    opacity: 1;
-    visibility: visible;
-}
-
-.popup_container
-{
-    background-color: var(--color-onyx);
-    width: 90%;
-    max-width: 400px;
-    border-radius: 12px;
-    padding: 2.5rem 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--color-border);
-    text-align: center;
-    transform: translateY(20px) scale(0.95);
-    transition: transform 0.3s ease;
-}
-
-.popup_overlay.active .popup_container
-{
-    transform: translateY(0) scale(1);
-}
-
-.popup_body
-{
+    max-height: 60vh;
+    overflow-y: auto;
     margin-bottom: 2rem;
 }
 
-.popup_body p
+#tournament_popup .popup_header
+{
+    margin-bottom: 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+}
+
+#tournament_popup .popup_header h2
 {
     color: var(--color-lavender-mist);
-    font-size: 1.1rem;
-    line-height: 1.5;
-    margin: 0;
+    margin: 0 0 0.5rem 0;
 }
 
-.popup_footer
+#tournament_popup .popup_header p
 {
-    display: flex;
-    justify-content: center;
+    color: var(--color-lime-moss);
+    margin: 0;
+    font-size: 0.9rem;
 }
 
-.btn_cancel
+#tournament_popup .editor_table
+{
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-lavender-mist);
+    text-align: left;
+}
+
+#tournament_popup .editor_table th,
+#tournament_popup .editor_table td
+{
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+#tournament_popup .editor_table th
+{
+    font-weight: 600;
+    color: var(--color-lime-moss);
+}
+
+#tournament_popup .editor_input
 {
     background-color: transparent;
-    color: var(--color-lavender-mist);
     border: 1px solid var(--color-border);
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
+    color: var(--color-lavender-mist);
+    padding: 0.4rem;
+    border-radius: 4px;
+    width: 4rem;
+    font-family: inherit;
+}
+
+#tournament_popup .editor_input:focus
+{
+    outline: none;
+    border-color: var(--color-lavender-mist);
+}
+
+/* Visual difference for players who did not attend */
+#tournament_popup .player_unattended
+{
+    opacity: 0.4;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#tournament_popup .player_unattended td
+{
+    font-style: italic;
+}
+
+#tournament_popup .kick_btn
+{
+    background: transparent;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    width: 100%;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    background-color: #36373a;
+    opacity: 80%;
+    width: 2rem;
+    height: 2rem;
 }
 
-.btn_cancel:hover
+#tournament_popup .kick_btn:hover
 {
-    background-color: rgba(255, 255, 255, 0.05);
+    opacity: 100%;
 }
 
-.btn_cancel:active
+#tournament_popup .kick_btn img
 {
-    transform: scale(0.97);
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+#tournament_popup .btn_confirm
+{
+    background-color: var(--color-lime-moss);
+}
+
+#tournament_popup .btn_confirm:hover
+{
+    background-color: #5f911b;
 }
 
 @media (max-width:768px)
