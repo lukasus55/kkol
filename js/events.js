@@ -42,7 +42,7 @@ async function createTournamentsDiv()
                 <div class="date"> ${tournamentDate} </div>
                 <div class="winner"> 
                     ${isFinished ? `
-                        <img src="${pfpUrl}"><a href="/players/${winnerId}">${winnerName}</a>` 
+                        <img src="${pfpUrl}"><a href="/player?id=${winnerId}">${winnerName}</a>` 
                         : `TBD` 
                     }
                 </div>

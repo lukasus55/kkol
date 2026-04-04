@@ -24,7 +24,7 @@ async function createLeaderboardDiv()
         const playerHTML = `
             <div class="player"> 
                 <div class="name"> 
-                    <a href="/players/${playerId}"> 
+                    <a href="/player?id=${playerId}"> 
                         <img src="${pfpUrl}"> ${playerName} 
                     </a> 
                 </div>
