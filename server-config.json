@@ -39,7 +39,7 @@
         },
         {
             "source": "/players/damidami2",
-            "destination": "/plyaer?id=damidami2",
+            "destination": "/player?id=damidami2",
             "permanent": true
         },
         {
