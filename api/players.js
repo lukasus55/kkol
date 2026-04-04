@@ -1,10 +1,10 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 import fs from 'fs';
 import path from 'path';
 
 export default async function handler(request, response) {
     try {
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = postgres(process.env.DATABASE_URL);
 
         const [players, results] = await Promise.all([
             sql`SELECT id, displayed_name FROM players`,

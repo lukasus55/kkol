@@ -1,8 +1,8 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 
 export default async function handler(request, response) {
     try {
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = postgres(process.env.DATABASE_URL);
         
         // Check for the optional 'id' parameter
         const { id } = request.query;

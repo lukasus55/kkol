@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import fs from 'fs';
@@ -34,7 +34,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brak pliku obrazu." });
         }
 
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = postgres(process.env.DATABASE_URL);
 
         // cooldown check - 12 Hours
         const userCheck = await sql`SELECT last_pfp_change FROM players WHERE id = ${userId}`;

@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
@@ -25,7 +25,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Tournament ID is required" });
         }
 
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = postgres(process.env.DATABASE_URL);
 
         const checkData = await sql`
             SELECT t.tier, o.role

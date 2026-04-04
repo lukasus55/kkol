@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import fs from 'fs';
@@ -15,7 +15,7 @@ export default async function handler(request, response) {
 
     try {
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = postgres(process.env.DATABASE_URL);
         
         const users = await sql`
             SELECT 

@@ -2,8 +2,14 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
 // THIS CODE AND FILE STRUCTURES ARE DUE TO MIGRATION FROM VERCEL
+
+
+
+// Explicitly tell it to look for .env.local instead of the default .env
+dotenv.config({ path: '.env.local' }); 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

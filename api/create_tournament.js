@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
@@ -23,7 +23,7 @@ export default async function handler(request, response) {
         }
 
         const cleanTournamentId = tournament_id.trim();
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = postgres(process.env.DATABASE_URL);
 
         // Only admins and organizers can create tournaments
         const userCheck = await sql`SELECT role FROM players WHERE id = ${requesterId}`;
