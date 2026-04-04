@@ -31,7 +31,6 @@ export default async function handler(request, response) {
                 displayed_name: t.displayed_name,
                 page_exists: t.page_exists,
                 page_url: t.page_url,
-                type: t.type,
                 finished: t.finished,
                 standings: [],
                 details: {
@@ -47,7 +46,7 @@ export default async function handler(request, response) {
         results.forEach((r) => {
             const tournament = dataMap[r.tournament_id];
 
-            if (tournament && r.position) {
+            if (tournament && r.position && r.attended) {
                 tournament.standings.push({
                     position: r.position,
                     id: r.player_id

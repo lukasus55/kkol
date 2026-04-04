@@ -4,8 +4,9 @@ import { neon } from '@neondatabase/serverless';
 export default async (request, response) => {
     const { table } = request.query;
 
-    // SECURITY CHECKS
-    const allowedTables = ['players', 'tournaments', 'results'];
+    // SAFETY CHECKS - allowedTable don't include the ones that got the individual file like /api/players.js
+    // ❗❗❗ DO NOT ADD 'players' TO allowedTables OR YOU WILL LEAK ALL PASSWORDS GENIUS❗❗❗ 
+    const allowedTables = ['results', 'gd_levels', 'gd_scores'];
     if (!allowedTables.includes(table)) {
         return response.status(400).json({ error: "Invalid table" });
     }

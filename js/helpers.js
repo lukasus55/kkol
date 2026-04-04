@@ -16,17 +16,21 @@ export async function loadHtml(url)
 
 // Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
 // Use "container.removeChild(loadingContainer);" after fetch
-export function appendLoaderDiv(container, containerId='default') 
+export function appendLoaderDiv(container, containerMode='default') 
 {
     const loadingContainer = document.createElement('div');
-    loadingContainer.className = `loader loader-${containerId}`;
-    loadingContainer.id = `loader-${containerId}`;
+    loadingContainer.className = `loader loader-${containerMode}`;
+    loadingContainer.id = `loader-${containerMode}`;
+    const loadingSpinner = document.createElement('div');
+    loadingSpinner.className = `loader_spinner`;
 
+    loadingContainer.append(loadingSpinner);
     container.append(loadingContainer);
 
     return loadingContainer;
 }
 
+// TODO move logic to backend
 export async function calculateRanking()
 {
     const tournamentsData = await loadData('/api/tournaments');
@@ -40,11 +44,11 @@ export async function calculateRanking()
     tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
 
     const relevantMajors = tournaments
-    .filter(t => t.type === 'major' && t.finished)
+    .filter(t => ( t.details.tier === 'S') && t.finished)
     .slice(0, 2); // only 2 last major events are counted
 
     const relevantMinors = tournaments
-    .filter(t => t.type === 'minor' && t.finished)
+    .filter(t => ( t.details.tier === 'A' || t.details.tier === 'B') && t.finished)
     .slice(0, 3); // only 3 last minor events are counte
 
     const MAJOR_SCALE = [15, 10, 5];
@@ -57,6 +61,7 @@ export async function calculateRanking()
 
         const playerId = player.id;
         const playerName = player.displayed_name;
+        const pfpUrl = player.pfp_url;
 
         let majorPoints = 0;
         let minorPoints = 0;
@@ -73,6 +78,7 @@ export async function calculateRanking()
         leaderboard[playerId] = {
             id: playerId,
             name: playerName,
+            pfpUrl: pfpUrl,
             majorRanking: majorRanking.toFixed(2), // storing every value as string what could possibly go wrong
             minorRanking: minorRanking.toFixed(2),
             ranking: ranking.toFixed(2)
@@ -119,4 +125,54 @@ export async function calculateRanking()
 
     return leaderboard;
 
+}
+
+export async function requireAuth(redirect = true) {
+    try {
+        const response = await fetch('/api/me');
+        
+        if (!response.ok) {
+            console.warn("User not authenticated. Redirecting to login...");
+            if (redirect) {window.location.href = '/login'};
+            return null;
+        }
+
+        const data = await response.json();
+        return data.user; 
+        
+    } catch (error) {
+        console.error("Authentication check failed:", error);
+        if (redirect) {window.location.href = '/login'};
+        return null;
+    }
+}
+
+export function createLogoutButton(logoutBtn, container, redirect = true) {
+
+    if (logoutBtn && container) {
+        logoutBtn.addEventListener('click', async () => {
+
+            const loadingContainer = appendLoaderDiv(container, 'global')
+
+            try {
+                
+                // Tell the server to destroy the cookie
+                const response = await fetch('/api/logout', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    // Redirect them to the login page
+                    console.log("Logged out successfully");
+                    if (redirect) {window.location.href = '/login'};
+                } else {
+                    console.error("Failed to log out");
+                }
+            } catch (error) {
+                console.error("Network error during logout:", error);
+            }
+
+            if (!redirect) {container.removeChild(loadingContainer)};
+        });
+    }
 }

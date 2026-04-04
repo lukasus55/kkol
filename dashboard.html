@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Karwińska Olimpiada - Dashboard">
+    <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon">
+    <title> Olimpiada Karwińska - Dashboard</title>
+
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+    <div class="loader-global" id="loader-global">
+        <div class="loader_spinner"></div>
+    </div>
+
+    <main class="main">
+        <div class="header">
+
+            <div class="info_card">
+                <div class="picture">
+                    <img src="img/players/pfp/default.webp" id="player_pfp">
+                </div>
+                <div class="details">
+                    <div class="name" id="player_name">
+                        <span class="id"></span>
+                    </div>
+                    <div class="role_container">
+                        <div class="role_badge" id="player_role"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="logout_btn_container">
+                <button class="logout_btn" id="logout_btn"> <img src="/img/logout_icon.webp">Wyloguj się </button>
+            </div>
+            
+        </div>
+
+        <div class="dashboard">
+
+            <div class="selector">
+                <ul>
+                    <li class="active" id="selector_account"> <img src="/img/dashboard/profile_icon.webp"> Moje konto </li>
+                    <li id="selector_tournaments"> <img src="/img/dashboard/trophy_icon.webp"> Turnieje </li>
+                </ul>
+            </div>
+
+            <div class="content">
+                <div class="tab_content tab_content-account" id="content_account"></div>
+                <div class="tab_content tab_content-tournaments" id="content_tournaments"></div>
+            </div>
+
+        </div>
+
+        <div class="popup_overlay" id="universal_popup">
+            <div class="popup_container">
+                
+                <div class="popup_icon">
+                    <img src="/img/dashboard/warning_icon.webp">
+                </div>
+
+                <div class="popup_body">
+                    <p id="popup_message">Are you sure you want to leave the <span class="highlight">{tournamentName}</span> tournament?</p>
+                </div>
+
+                <div class="popup_footer">
+                    <button class="btn btn_cancel" id="popup_cancel">Anuluj</button>
+                    <button class="btn btn_confirm" id="popup_confirm">Opuść</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup_overlay" id="error_popup">
+            <div class="popup_container">
+                <div class="popup_body">
+                    <p id="error_message">Wystąpił błąd.</p>
+                </div>
+                <div class="popup_footer">
+                    <button class="btn btn_cancel" id="error_close_btn">Zamknij</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup_overlay" id="tournament_popup">
+            <div class="popup_container popup_large">
+                
+                <div class="popup_header editor_header">
+                    <div class="header_row">
+                        <label>Nazwa turnieju:</label>
+                        <input type="text" id="edit_tour_name" class="editor_input header_input">
+                    </div>
+                    
+                    <div class="header_row">
+                        <label>Wyświetlana data:</label>
+                        <input type="text" id="edit_display_date" class="editor_input header_input">
+                    </div>
+
+                    <div class="header_row">
+                        <label>Koniec (Timestamp):</label>
+                        <input type="number" id="edit_timestamp" class="editor_input header_input">
+                    </div>
+                    
+                    <div class="header_row">
+                        <label>Zakończony:</label>
+                        <input type="checkbox" id="edit_finished" class="header_checkbox">
+                    </div>
+
+                    <div class="header_row tier_row">
+                        <label>Tier:</label>
+                        <select id="edit_tier" class="editor_input select_input">
+                            <option value="S">S</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                        <button class="btn btn_confirm small_btn" id="edit_tier_btn">Zmień tier</button>
+                    </div>
+                </div>
+
+                <div class="popup_body popup_scrollable">
+
+                    <div class="add_player_form">
+                        <input type="text" id="add_player_id" class="editor_input text_input" placeholder="Wpisz ID gracza...">
+                        <button class="btn btn_confirm" id="add_player_btn">Dodaj</button>
+                    </div>
+
+                    <div class="editor_container">
+                        <table class="editor_table">
+                            <thead>
+                                <tr>
+                                    <th>Gracz</th>
+                                    <th>Pozycja</th>
+                                    <th>Punkty</th>
+                                    <th>Akcja</th>
+                                </tr>
+                            </thead>
+                            <tbody id="editor_players_list">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="popup_footer">
+
+                    <div class="popup_footer_row">
+                        <button class="btn btn_delete" id="editor_delete_btn" style="display: none;">Usuń turniej</button>
+                    </div>
+                    
+                    <div class="popup_footer_row">
+                        <button class="btn btn_cancel" id="editor_cancel_btn">Anuluj</button>
+                        <button class="btn btn_confirm" id="editor_save_btn">Zapisz</button>
+                    </div>
+
+            </div>
+        </div>
+
+    </main>
+
+
+    <footer class="footer" id="footer">
+        <div id="common-footer"></div>
+    </footer>
+
+    <script type="module" src="/js/dashboard.js"></script>
+
+    <!-- footer.html and footer.js loading script -->
+    <script src="/js/footer-loader.js"></script>
+
+
+</body>

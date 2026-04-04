@@ -26,6 +26,31 @@
             "source": "/api",
             "destination": "/more/api",
             "permanent": true
+        },
+        {
+            "source": "/players/kostys",
+            "destination": "/player?id=kostys",
+            "permanent": true
+        },
+        {
+            "source": "/players/kukula",
+            "destination": "/player?id=kukula",
+            "permanent": true
+        },
+        {
+            "source": "/players/damidami2",
+            "destination": "/plyaer?id=damidami2",
+            "permanent": true
+        },
+        {
+            "source": "/players/harnas",
+            "destination": "/player?id=harnas",
+            "permanent": true
+        },
+        {
+            "source": "/players",
+            "destination": "/ranking",
+            "permanent": false
         }
     ]
 }
