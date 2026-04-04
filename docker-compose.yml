@@ -1,28 +1,24 @@
-version: '3.8'
-
 services:
   web:
     build: .
     ports:
-      - "3000:3000"
-    restart: unless-stopped
-    environment:
-      - DATABASE_URL=postgresql://tournament_admin:supersecretpassword@db:5432/tournament_db
-      - JWT_SECRET=${JWT_SECRET}
+      - "3000:3000" 
+    restart: unless-stopped 
     env_file:
-      - ~/tournament-server/.env
+      - .env
     volumes:
       - ~/tournament-server/persistent-data/pfps:/app/public/img/players/pfp
     depends_on:
       - db
+
   db:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: tournament_admin
-      POSTGRES_PASSWORD: supersecretpassword
-      POSTGRES_DB: tournament_db
+      POSTGRES_USER: ${LOCAL_DB_USER}
+      POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD}
+      POSTGRES_DB: ${LOCAL_DB_NAME}
     ports:
-      - "5432:5432"
+      - "5432:5432" 
     volumes:
       - ~/tournament-server/persistent-data/database:/var/lib/postgresql/data
