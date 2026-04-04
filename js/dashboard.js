@@ -792,7 +792,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // PFP logic placeholder
         const pfpInput = document.getElementById('pfp_upload_input');
         const savePfpBtn = document.getElementById('save_pfp_btn');
         const pfpPreview = document.getElementById('account_pfp_preview');
@@ -800,11 +799,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         pfpInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
-                // Temporarily show the image in the browser before saving
+                if (file.size > 5 * 1024 * 1024) {
+                    showErrorPopup("Plik jest za duży! Maksymalny rozmiar to 5MB.");
+                    pfpInput.value = '';
+                    return;
+                }
+
                 pfpPreview.src = URL.createObjectURL(file);
                 savePfpBtn.style.display = 'block'; 
             }
         });
+
+        savePfpBtn.addEventListener('click', async () => {
+            const file = pfpInput.files[0];
+            if (!file) return;
+
+            savePfpBtn.disabled = true;
+            savePfpBtn.textContent = 'Zapisywanie...';
+
+            // Convert the file to a Base64 string
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                const base64String = reader.result;
+
+                try {
+                    const res = await fetch('/api/upload_pfp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image_base64: base64String })
+                    });
+
+                    if (res.ok) {
+                        window.location.reload(true); 
+                    } else {
+                        const err = await res.json();
+                        showErrorPopup(err.error || "Błąd podczas przesyłania zdjęcia.");
+                    }
+                } catch (error) {
+                    showErrorPopup("Błąd połączenia z serwerem.");
+                } finally {
+                    savePfpBtn.disabled = false;
+                    savePfpBtn.textContent = 'Zapisz zdjęcie';
+                }
+            };
+
+            reader.readAsDataURL(file);
+        });
+
     }
 
     function handleTabs() {
