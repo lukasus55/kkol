@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ~/tournament-server/persistent-data/pfps:/app/public/img/players/pfp
+      - ../persistent-data/pfps:/app/public/img/players/pfp
     depends_on:
       - db
 
@@ -21,4 +21,4 @@ services:
     ports:
       - "5432:5432" 
     volumes:
-      - ~/tournament-server/persistent-data/database:/var/lib/postgresql/data
+      - ../persistent-data/database:/var/lib/postgresql/data
