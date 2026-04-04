@@ -549,7 +549,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         roleDiv.classList.add(`role_badge-${roleId}`);
     }
 
-    async function handleTournamentTab(tabContainer, currentUser) {
+    async function handleTournamentTab(tabContainer) {
+
+        const currentUser = user;
 
         const tournamentsData = await loadData('/api/tournaments');
 
@@ -706,19 +708,117 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
     }
+    
+
+    async function handleAccountTab(tabContainer) {
+        
+        const currentUser = user;
+
+        const currentName = currentUser.displayed_name || '';
+        const pfpUrl = currentUser.pfp_url || '/img/players/pfp/default.webp';
+
+        const accountHTML = `
+            <div class="account_wrapper">
+                <h2 class="account_header">Ustawienia Konta</h2>
+
+                <div class="account_card">
+                    <h3 class="card_title">Zdjęcie profilowe</h3>
+                    <div class="pfp_container">
+                        <img src="${pfpUrl}" alt="Avatar" class="pfp_preview" id="account_pfp_preview">
+                        <div class="pfp_actions">
+                            <label for="pfp_upload_input" class="btn_secondary">Wybierz plik</label>
+                            <input type="file" id="pfp_upload_input" class="hidden_input" accept="image/png, image/jpeg, image/webp">
+                            <button class="btn_primary" id="save_pfp_btn" style="display: none;">Zapisz zdjęcie</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="account_card">
+                    <h3 class="card_title">Wyświetlana nazwa</h3>
+                    <div class="name_container">
+                        <input type="text" id="account_display_name" class="account_input" value="${currentName}" placeholder="Wpisz nową nazwę...">
+                        <button class="btn_primary" id="save_name_btn">Zmień</button>
+                    </div>
+                </div>
+
+                <div class="account_card placeholder_card">
+                    <h3 class="card_title">Bezpieczeństwo i Email</h3>
+                    <p class="placeholder_text">Więcej funkcjonalności niebawem...</p>
+                </div>
+            </div>
+        `;
+
+        tabContainer.insertAdjacentHTML('beforeend', accountHTML);
+
+        // EVENT LISTENERS
+
+        const saveNameBtn = document.getElementById('save_name_btn');
+        const nameInput = document.getElementById('account_display_name');
+
+        saveNameBtn.addEventListener('click', async () => {
+            const newName = nameInput.value.trim();
+
+            if (!newName) {
+                showErrorPopup("Nazwa nie może być pusta.");
+                return;
+            }
+
+            if (newName === currentName) {
+                showErrorPopup("To jest już twoja aktualna nazwa.");
+                return;
+            }
+
+            saveNameBtn.disabled = true;
+            saveNameBtn.textContent = '...';
+
+            try {
+                const res = await fetch('/api/change_name', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ new_name: newName })
+                });
+
+                if (res.ok) {
+                    window.location.reload(); 
+                } else {
+                    const err = await res.json();
+                    showErrorPopup(err.error || "Nie udało się zmienić nazwy.");
+                }
+            } catch (error) {
+                showErrorPopup("Błąd połączenia z serwerem.");
+            } finally {
+                saveNameBtn.disabled = false;
+                saveNameBtn.textContent = 'Zmień';
+            }
+        });
+
+        // PFP logic placeholder
+        const pfpInput = document.getElementById('pfp_upload_input');
+        const savePfpBtn = document.getElementById('save_pfp_btn');
+        const pfpPreview = document.getElementById('account_pfp_preview');
+
+        pfpInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Temporarily show the image in the browser before saving
+                pfpPreview.src = URL.createObjectURL(file);
+                savePfpBtn.style.display = 'block'; 
+            }
+        });
+    }
 
     function handleTabs() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let currentTab = urlParams.get('tab') || 'account'; 
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentTab = urlParams.get('tab') || 'account'; 
 
-        const tabs = document.querySelectorAll('.selector ul li');
-        
-        const loadedTabs = {
-            account: true,
-            tournaments: false 
-        };
+    const tabs = document.querySelectorAll('.selector ul li');
+    
+    const loadedTabs = {
+        account: false,
+        tournaments: false 
+    };
 
-        async function tabChange(tabId, updateUrl = true) {
+    async function tabChange(tabId, updateUrl = true) {
             if (currentTab === tabId && updateUrl) return;
 
             const tabElement = document.getElementById(`selector_${tabId}`);
@@ -733,7 +833,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.history.pushState({ tab: tabId }, '', newUrl);
             }
 
-            // Handle UI Class swapping
             document.querySelector('.selector ul li.active')?.classList.remove('active');
             tabElement.classList.add('active');
 
@@ -747,8 +846,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 try {
                     switch (tabId) {
+                        case 'account':
+                            await handleAccountTab(tabContent); 
+                            break;
                         case 'tournaments':
-                            await handleTournamentTab(tabContent, user); 
+                            await handleTournamentTab(tabContent); 
                             break;
                     }
                     
@@ -762,7 +864,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Attach click listeners to the UI tabs
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const tabId = tab.id.replace('selector_', '');
@@ -770,11 +871,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
-        if (currentTab !== 'account') {
-            const startingTab = currentTab;
-            currentTab = null;
-            tabChange(startingTab, false); // false = don't push a duplicate state to the URL history
-        }
+        // Force the tabChange to run immediately for whatever tab is designated in the URL
+        // (or 'account' by default), injecting the HTML.
+        const startingTab = currentTab;
+        currentTab = null; 
+        tabChange(startingTab, false); // false = don't push a duplicate state to the URL history
     }
 
     // Initialize the UI

@@ -14,12 +14,18 @@
   --footer50: #141212;
   --footer100: #242020;
 
+  /* Website background */
   --color-onyx: #0d0a0b;
+
+  /* Cards/widgets backgorund */
   --color-charcoal-blue: #303238;
-  --color-lavender-mist: #f3eff5;
+
   /* Primary */
-  --color-lime-moss: #72b01d;
+  --color-lavender-mist: #f3eff5;
+
   /* Accent */
+  --color-lime-moss: #72b01d;
+  
   --color-green: #3f7d20;
   --color-dark-green: #305120;
 }

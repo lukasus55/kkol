@@ -206,6 +206,152 @@ body
     text-decoration: underline;
 }
 
+#content_account .account_wrapper
+{
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    color: var(--color-lavender-mist);
+}
+
+#content_account .account_header
+{
+    margin: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-charcoal-blue);
+    font-size: 1.8rem;
+}
+
+#content_account .account_card
+{
+    background-color: var(--color-charcoal-blue);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#content_account .card_title
+{
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+    color: var(--color-lavender-mist);
+}
+
+#content_account .pfp_container
+{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+#content_account .pfp_preview
+{
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-lime-moss);
+    background-color: var(--color-onyx);
+}
+
+#content_account .pfp_actions
+{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+#content_account .hidden_input
+{
+    display: none;
+}
+
+#content_account .name_container
+{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+#content_account .account_input
+{
+    flex-grow: 1;
+    background-color: var(--color-onyx);
+    border: 1px solid var(--color-onyx);
+    color: var(--color-lavender-mist);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+#content_account .account_input:focus
+{
+    outline: none;
+    border-color: var(--color-lime-moss);
+}
+
+#content_account .btn_primary
+{
+    background-color: var(--color-lime-moss);
+    color: var(--color-onyx);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+#content_account .btn_primary:hover
+{
+    opacity: 0.9;
+}
+
+#content_account .btn_primary:active
+{
+    transform: scale(0.96);
+}
+
+#content_account .btn_secondary
+{
+    background-color: transparent;
+    color: var(--color-lavender-mist);
+    border: 1px solid var(--color-lavender-mist);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#content_account .btn_secondary:hover
+{
+    background-color: rgba(243, 239, 245, 0.1);
+}
+
+/* Future Features Placeholder */
+#content_account .placeholder_card
+{
+    background-color: transparent;
+    border: 2px dashed var(--color-charcoal-blue);
+    opacity: 0.6;
+}
+
+#content_account .placeholder_text
+{
+    font-style: italic;
+    margin: 0;
+}
+
 #content_tournaments .tab_header
 {
     width: 100%;
@@ -256,12 +402,13 @@ body
     width: 16rem;
     font-family: inherit;
     height: 2.5rem;
+    transition: border-color 0.2s ease;
 }
 
 #content_tournaments input:focus
 {
     outline: none;
-    border-color: var(--color-lavender-mist);
+    border-color: var(--color-lime-moss);
 }
 
 .tournament_card
