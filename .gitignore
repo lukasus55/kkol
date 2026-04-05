@@ -5,3 +5,6 @@ node_modules/
 .env
 
 .vsconfig
+
+# TODO: Refactor the way pfps are saved on server.
+img/players/pfp
