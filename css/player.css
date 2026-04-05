@@ -3,7 +3,7 @@
     --legendary: #FF8000;
     --epic: #A335EE;
     --rare: #0070DD;
-    --uncommon: #1EFF00;
+    --common: #858585;
 }
 
 .player_container
@@ -40,10 +40,11 @@
     filter: brightness(100%)
 }
 
-.player_banner_damidami2 { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/damidami2.webp'); }
-.player_banner_kostys { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/kostys.webp'); }
-.player_banner_harnas { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/harnas.webp'); }
-.player_banner_kukula { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/kukula.webp'); }
+.player_banner 
+{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/default.webp');
+}
+
 
 .player_banner_badges
 {
@@ -94,6 +95,7 @@
 
 .banner_a-tier { background: #7c00cf; background: linear-gradient(90deg, rgba(124, 0, 207, 1) 0%, rgba(163, 53, 238, 1) 100%);}
 .banner_b-tier { background-color: var(--rare); }
+.banner_c-tier { background-color: var(--common); }
 
 .player_details
 {
@@ -135,6 +137,7 @@
 .player_details.s-tier { background-color: var(--legendary); }
 .player_details.a-tier { background-color: var(--epic); }
 .player_details.b-tier { background-color: var(--rare); }
+.player_details.c-tier { background-color: var(--common); }
 
 .player_details_scroller {
     display: flex;
@@ -185,6 +188,7 @@
 .player_tournaments
 {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     width: 100%;
     margin-top: 40px;

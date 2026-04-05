@@ -1,8 +1,8 @@
-import { neon } from '@neondatabase/serverless';
+import postgres from 'postgres';
 
 export default async function handler(request, response) {
     try {
-        const sql = neon(process.env.DATABASE_URL);
+        const sql = postgres(process.env.DATABASE_URL);
         
         // Check for the optional 'id' parameter
         const { id } = request.query;
@@ -31,7 +31,6 @@ export default async function handler(request, response) {
                 displayed_name: t.displayed_name,
                 page_exists: t.page_exists,
                 page_url: t.page_url,
-                type: t.type,
                 finished: t.finished,
                 standings: [],
                 details: {
@@ -47,7 +46,7 @@ export default async function handler(request, response) {
         results.forEach((r) => {
             const tournament = dataMap[r.tournament_id];
 
-            if (tournament && r.position) {
+            if (tournament && r.position && r.attended) {
                 tournament.standings.push({
                     position: r.position,
                     id: r.player_id

@@ -1,0 +1,24 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000" 
+    restart: unless-stopped 
+    env_file:
+      - .env
+    volumes:
+      - ../persistent-data/pfps:/app/public/img/players/pfp
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${LOCAL_DB_USER}
+      POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD}
+      POSTGRES_DB: ${LOCAL_DB_NAME}
+    ports:
+      - "5432:5432" 
+    volumes:
+      - ../persistent-data/database:/var/lib/postgresql/data
