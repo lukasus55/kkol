@@ -65,12 +65,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!player) return;
         const nameEl = document.querySelector('.player_banner_name');
         const bannerEl = document.querySelector('.player_banner');
-        const bannerUrl = player.pfp_url; 
+        const pfpSrc = player.pfp_base64 
+            ? `data:image/webp;base64,${player.pfp_base64}` 
+            : '/img/players/pfp/default.webp';
 
         if(!nameEl || !bannerEl) return;
 
         nameEl.textContent = player.displayed_name
-        bannerEl.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${bannerUrl})`;
+        bannerEl.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${pfpSrc})`;
     }
 
     async function loadStats() {

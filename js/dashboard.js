@@ -519,13 +519,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         const id = user.id;
         const displayedName = user.displayed_name;
         const roleId = user.role;
-        const pfpPath = user.pfp_url;
+        const pfpSrc = user.pfp_base64 
+            ? `data:image/webp;base64,${user.pfp_base64}` 
+            : '/img/players/pfp/default.webp';
 
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
         const roleDiv = document.querySelector('#player_role');
 
-        profilePicture.src = user.pfp_url;
+        profilePicture.src = pfpSrc;
         nameDiv.innerHTML = `${displayedName}&nbsp;<span class="id">@${id}</span>`;
 
         const roles = {
@@ -715,7 +717,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const currentUser = user;
 
         const currentName = currentUser.displayed_name || '';
-        const pfpUrl = currentUser.pfp_url || '/img/players/pfp/default.webp';
+        
+        const pfpSrc = currentUser.pfp_base64 
+            ? `data:image/webp;base64,${currentUser.pfp_base64}` 
+            : '/img/players/pfp/default.webp';
 
         const accountHTML = `
             <div class="account_wrapper">
@@ -724,7 +729,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="account_card">
                     <h3 class="card_title">Zdjęcie profilowe</h3>
                     <div class="pfp_container">
-                        <img src="${pfpUrl}" alt="Avatar" class="pfp_preview" id="account_pfp_preview">
+                        <img src="${pfpSrc}" alt="Avatar" class="pfp_preview" id="account_pfp_preview">
                         <div class="pfp_actions">
                             <label for="pfp_upload_input" class="btn_secondary">Wybierz plik</label>
                             <input type="file" id="pfp_upload_input" class="hidden_input" accept="image/png, image/jpeg, image/webp">

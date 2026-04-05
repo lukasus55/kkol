@@ -7,7 +7,7 @@ export default async function handler(request, response) {
         const sql = postgres(process.env.DATABASE_URL);
 
         const [players, results] = await Promise.all([
-            sql`SELECT id, displayed_name FROM players`,
+            sql`SELECT id, displayed_name, pfp_base64 FROM players`,
             sql`SELECT * FROM results`
         ]);
 
@@ -17,21 +17,12 @@ export default async function handler(request, response) {
 
         // Create the player objects (Keyed by ID)
         players.forEach((p) => {
-            let pfpPath = `/img/players/pfp/default.webp`;
-                
-            const browserUrl = `/img/players/pfp/${p.id}.webp`;
-
-            const serverFilePath = path.join(process.cwd(), 'img', 'players', 'pfp', `${p.id}.webp`);
-
-            if (fs.existsSync(serverFilePath)) { 
-                pfpPath = browserUrl; 
-            }
 
             dataMap[p.id] = {
                 // key = column name (Direct mapping)
                 id: p.id,
                 displayed_name: p.displayed_name,
-                pfp_url: pfpPath,
+                pfp_base64: p.pfp_base64,
                 
                 tournaments: {} 
             };

@@ -24,6 +24,7 @@ export default async function handler(request, response) {
                 p.is_active, 
                 p.email, 
                 p.displayed_name,
+                p.pfp_base64,
                 COALESCE(
                     (SELECT json_object_agg(tournament_id, role) 
                     FROM tournament_organizers 
@@ -56,15 +57,6 @@ export default async function handler(request, response) {
             return response.status(401).json({ error: "Account disabled or deleted" });
         }
 
-        // Profile Picture Logic
-        let pfpPath = `/img/players/pfp/default.webp`;
-        const browserUrl = `/img/players/pfp/${user.id}.webp`;
-        const serverFilePath = path.join(process.cwd(), 'img', 'players', 'pfp', `${user.id}.webp`);
-
-        if (fs.existsSync(serverFilePath)) { 
-            pfpPath = browserUrl; 
-        }
-
         return response.status(200).json({ 
             user: {
                 id: user.id,
@@ -72,9 +64,9 @@ export default async function handler(request, response) {
                 role: user.role,
                 is_active: user.is_active,
                 email: user.email,
-                pfp_url: pfpPath,
                 organizer_roles: user.organizer_roles,
-                tournaments: user.tournaments
+                tournaments: user.tournaments,
+                pfp_base64: user.pfp_base64
             }
         });
 

@@ -1,11 +1,8 @@
 import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
-import fs from 'fs';
-import path from 'path';
 import sharp from 'sharp';
 
-// Disable default body parser limit if images are slightly larger
 export const config = {
     api: {
         bodyParser: {
@@ -36,7 +33,7 @@ export default async function handler(request, response) {
 
         const sql = postgres(process.env.DATABASE_URL);
 
-        // cooldown check - 12 Hours
+        // Cooldown check
         const userCheck = await sql`SELECT last_pfp_change FROM players WHERE id = ${userId}`;
         if (userCheck.length === 0) return response.status(404).json({ error: "Użytkownik nie istnieje." });
 
@@ -57,27 +54,21 @@ export default async function handler(request, response) {
             }
         }
 
-        // Strip the data URL prefix (e.g., "data:image/png;base64,") to get raw base64.
+        // Strip the frontend prefix
         const base64Data = image_base64.replace(/^data:image\/\w+;base64,/, '');
         const imageBuffer = Buffer.from(base64Data, 'base64');
 
-        // Ensure the directory exists just in case
-        const dirPath = path.join(process.cwd(), 'img', 'players', 'pfp');
-        if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
-        }
-
-        const filePath = path.join(dirPath, `${userId}.webp`);
-
-        // Sharp converts ANY supported image (jpg, png, gif) into a compressed webp
-        await sharp(imageBuffer)
-            .resize(256, 256, { fit: 'cover' }) // Force a perfect square!
+        const processedBuffer = await sharp(imageBuffer)
+            .resize(256, 256, { fit: 'cover' })
             .webp({ quality: 80 })
-            .toFile(filePath);
+            .toBuffer();
+
+        // Convert the compressed WebP buffer back to a Base64 string for the database
+        const finalBase64 = processedBuffer.toString('base64');
 
         await sql`
             UPDATE players 
-            SET last_pfp_change = NOW() 
+            SET last_pfp_change = NOW(), pfp_base64 = ${finalBase64} 
             WHERE id = ${userId}
         `;
 

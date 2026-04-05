@@ -61,7 +61,9 @@ export async function calculateRanking()
 
         const playerId = player.id;
         const playerName = player.displayed_name;
-        const pfpUrl = player.pfp_url;
+        const pfpSrc = player.pfp_base64 
+            ? `data:image/webp;base64,${player.pfp_base64}` 
+            : '/img/players/pfp/default.webp';
 
         let majorPoints = 0;
         let minorPoints = 0;
@@ -78,7 +80,7 @@ export async function calculateRanking()
         leaderboard[playerId] = {
             id: playerId,
             name: playerName,
-            pfpUrl: pfpUrl,
+            pfpSrc: pfpSrc,
             majorRanking: majorRanking.toFixed(2), // storing every value as string what could possibly go wrong
             minorRanking: minorRanking.toFixed(2),
             ranking: ranking.toFixed(2)

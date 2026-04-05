@@ -26,9 +26,12 @@ async function createTournamentsDiv()
         const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
 
         const winnerId = tournament.standings[0].id;
-        const winnerName = isFinished ? players[winnerId].displayed_name : `TBD`;
+        const winner = players[winnerId];
+        const winnerName = isFinished ? winner.displayed_name : `TBD`;
 
-        const pfpUrl = isFinished ? players[winnerId].pfp_url : ``;
+        const pfpSrc = isFinished ? (winner.pfp_base64 
+            ? `data:image/webp;base64,${winner.pfp_base64}` 
+            : '/img/players/pfp/default.webp') : ``;
 
         const cardHTML = `
             <div class="card"> 
@@ -42,7 +45,7 @@ async function createTournamentsDiv()
                 <div class="date"> ${tournamentDate} </div>
                 <div class="winner"> 
                     ${isFinished ? `
-                        <img src="${pfpUrl}"><a href="/player?id=${winnerId}">${winnerName}</a>` 
+                        <img src="${pfpSrc}"><a href="/player?id=${winnerId}">${winnerName}</a>` 
                         : `TBD` 
                     }
                 </div>
