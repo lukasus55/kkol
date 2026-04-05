@@ -50,7 +50,7 @@ export default async function handler(request, response) {
         const cookieHeader = serialize('auth_token', token, {
             httpOnly: true, // JavaScript cannot read this, preventing theft
             secure: process.env.NODE_ENV === 'production', // Use HTTPS in production, allow HTTP on localhost
-            sameSite: 'strict', // Prevents Cross-Site Request Forgery (CSRF) attacks
+            sameSite: 'lax', // maintains 99% of the security of strict but allows the cookie to survive the login redirect
             maxAge: 60 * 60 * 2, // 2 hours
             path: '/'
         });

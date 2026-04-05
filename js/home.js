@@ -1,5 +1,3 @@
-console.log('Git auto-deploy test.')
-
 // Scroll animations logic
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
