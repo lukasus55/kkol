@@ -1,6 +1,6 @@
-import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -22,7 +22,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brak ID turnieju." });
         }
 
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         // Is the requester owner of this tournament
         const authCheck = await sql`

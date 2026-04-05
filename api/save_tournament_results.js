@@ -1,6 +1,6 @@
-import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -24,7 +24,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Invalid payload format" });
         }
 
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         // verify organizer role
         const authCheck = await sql`

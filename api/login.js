@@ -1,7 +1,7 @@
-import postgres from 'postgres';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie'
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -9,7 +9,7 @@ export default async function handler(request, response) {
     }
 
     try {
-        const sql = postgres(process.env.DATABASE_URL);
+        
         
         const { username, password } = request.body;
 

@@ -1,8 +1,8 @@
-import postgres from 'postgres';
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     try {
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         const [levels, scores] = await Promise.all([
             sql`SELECT * FROM gd_levels ORDER BY id ASC`,

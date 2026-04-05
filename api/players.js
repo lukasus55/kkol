@@ -1,10 +1,8 @@
-import postgres from 'postgres';
-import fs from 'fs';
-import path from 'path';
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     try {
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         const [players, results] = await Promise.all([
             sql`SELECT id, displayed_name, pfp_base64 FROM players`,

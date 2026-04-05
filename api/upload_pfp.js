@@ -1,7 +1,7 @@
-import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sharp from 'sharp';
+import sql from '../db.js';
 
 export const config = {
     api: {
@@ -31,7 +31,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brak pliku obrazu." });
         }
 
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         // Cooldown check
         const userCheck = await sql`SELECT last_pfp_change FROM players WHERE id = ${userId}`;

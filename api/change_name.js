@@ -1,6 +1,6 @@
-import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -27,7 +27,7 @@ export default async function handler(request, response) {
         }
 
         const cleanName = new_name.trim();
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         const userCheck = await sql`
             SELECT last_name_change FROM players WHERE id = ${userId}

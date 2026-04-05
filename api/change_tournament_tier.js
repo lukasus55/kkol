@@ -1,6 +1,6 @@
-import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -22,7 +22,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Nieprawidłowe dane." });
         }
 
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         const userCheck = await sql`SELECT role FROM players WHERE id = ${requesterId}`;
         if (userCheck.length === 0) return response.status(401).json({ error: "Użytkownik nie istnieje." });

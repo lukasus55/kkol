@@ -1,6 +1,6 @@
-import postgres from 'postgres';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import sql from '../db.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -23,7 +23,7 @@ export default async function handler(request, response) {
         }
 
         const cleanTournamentId = tournament_id.trim();
-        const sql = postgres(process.env.DATABASE_URL);
+        
 
         // Only admins and organizers can create tournaments
         const userCheck = await sql`SELECT role FROM players WHERE id = ${requesterId}`;
