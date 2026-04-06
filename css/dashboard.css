@@ -868,6 +868,18 @@ body
         width: 100%;
     }
 
+    .logout_btn
+    {
+        font-size: 1.4rem;
+        margin-top: 2rem;
+    }
+
+    .logout_btn img
+    {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+
     .selector
     {
         width: 100%;
@@ -877,6 +889,8 @@ body
     .content
     {
         width: 100%;
+        min-height: 30rem;
+        height: auto;
     }
 
     #content_tournaments .tier, .pos

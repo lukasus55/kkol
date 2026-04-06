@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Success:", data.message);
                 
                 // Redirect the user to the private area!
-                window.location.href = '/dashboard.html'; 
+                window.location.href = '/dashboard'; 
             } else {
                 container.removeChild(loadingContainer);
                 
