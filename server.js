@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 // THIS CODE AND FILE STRUCTURES ARE DUE TO MIGRATION FROM VERCEL
 
 
-
 dotenv.config({ path: '.env' }); 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -51,10 +50,6 @@ if (fs.existsSync(serverConfigPath)) {
     cleanUrlsEnabled = serverConfig.cleanUrls === true;
 }
 
-app.use(express.static(__dirname, { 
-    extensions: cleanUrlsEnabled ? ['html'] : [] 
-}));
-
 // API ROUTING (Mimic Vercel serverless functions)
 const apiDir = path.join(__dirname, 'api');
 
@@ -64,7 +59,9 @@ if (fs.existsSync(apiDir)) {
     for (const file of apiFiles) {
         const routeName = `/api/${file.replace('.js', '')}`;
         
-        import(`file://${path.join(apiDir, file)}`).then(module => {
+        try {
+            const module = await import(`file://${path.join(apiDir, file)}`);
+            
             app.all(routeName, async (req, res) => {
                 try {
                     await module.default(req, res);
@@ -76,12 +73,21 @@ if (fs.existsSync(apiDir)) {
                 }
             });
             console.log(`Loaded API Route: ${routeName}`);
-        }).catch(err => console.error(`Failed to load ${file}:`, err));
+        } catch (err) {
+            console.error(`Failed to load ${file}:`, err);
+        }
     }
 }
+app.use(express.static(__dirname, { 
+    extensions: cleanUrlsEnabled ? ['html'] : [],
+}));
+
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, '404.html'));
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server is running locally on http://localhost:${PORT}`);
+    console.log(`Server is running locally on http://localhost:${PORT}`);
 });
