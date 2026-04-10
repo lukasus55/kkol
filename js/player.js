@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const bannerEl = document.querySelector('.player_banner');
         const pfpSrc = player.pfp_base64 
             ? `data:image/webp;base64,${player.pfp_base64}` 
-            : '/img/players/pfp/default.webp';
+            : '/img/default_pfp.webp';
 
         if(!nameEl || !bannerEl) return;
 

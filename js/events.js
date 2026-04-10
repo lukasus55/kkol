@@ -31,7 +31,7 @@ async function createTournamentsDiv()
 
         const pfpSrc = isFinished ? (winner.pfp_base64 
             ? `data:image/webp;base64,${winner.pfp_base64}` 
-            : '/img/players/pfp/default.webp') : ``;
+            : '/img/default_pfp.webp') : ``;
 
         const cardHTML = `
             <div class="card"> 

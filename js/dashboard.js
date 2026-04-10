@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const roleId = user.role;
         const pfpSrc = user.pfp_base64 
             ? `data:image/webp;base64,${user.pfp_base64}` 
-            : '/img/players/pfp/default.webp';
+            : '/img/default_pfp.webp';
 
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
@@ -720,7 +720,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         const pfpSrc = currentUser.pfp_base64 
             ? `data:image/webp;base64,${currentUser.pfp_base64}` 
-            : '/img/players/pfp/default.webp';
+            : '/img/default_pfp.webp';
 
         const accountHTML = `
             <div class="account_wrapper">

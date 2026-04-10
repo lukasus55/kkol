@@ -63,7 +63,7 @@ export async function calculateRanking()
         const playerName = player.displayed_name;
         const pfpSrc = player.pfp_base64 
             ? `data:image/webp;base64,${player.pfp_base64}` 
-            : '/img/players/pfp/default.webp';
+            : '/img/default_pfp.webp';
 
         let majorPoints = 0;
         let minorPoints = 0;

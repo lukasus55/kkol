@@ -1,3 +1,36 @@
+import { loadData } from "./helpers.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const players = await loadData('/api/players?tournament=kol2024')
+
+    const podiumEls = 
+        [
+            document.querySelector('#player_first img'),
+            document.querySelector('#player_second img'),
+            document.querySelector('#player_third img')
+        ]
+    
+    const podiumPfps = 
+        [
+            players.harnas.pfp_base64,
+            players.kostys.pfp_base64,
+            players.kukula.pfp_base64,
+        ]
+
+    for (let i=0; i < podiumEls.length; i++) {
+        const podiumEl = podiumEls[i];
+        const podiumPfp = podiumPfps[i];
+
+        const pfpSrc = podiumPfp
+            ? `data:image/webp;base64,${podiumPfp}` 
+            : '/img/default_pfp.webp';
+
+        podiumEl.src = pfpSrc;
+    };
+    
+})
+
 var deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 
 function animatePodium() {
@@ -83,13 +116,8 @@ const game1 = document.querySelector('.game1');
 const game2 = document.querySelector('.game2');
 const game3 = document.querySelector('.game3');
 const game4 = document.querySelector('.game4');
-const rgame1 = document.querySelector('.ranking_game1_td');//
-const rgame2 = document.querySelector('.ranking_game2_td');//  Icons in ranking table
-const rgame3 = document.querySelector('.ranking_game3_td');//
-const rgame4 = document.querySelector('.ranking_game4_td');//
 
 const resultsContainer = document.querySelector('#games_results');
-const resultsTitle = document.querySelector('#results_title');
 const resultsTitleContent = document.querySelector('#results_title_content');
 
 const resultsGame1 = document.querySelector('.results_game1');
@@ -162,20 +190,3 @@ game3.addEventListener('click', () => {
 game4.addEventListener('click', () => {
     changeGame(game4, "50rem", "Kinect", resultsGame4);
 });
-
-rgame1.addEventListener('click', () => {
-    changeGame(game1, "18.75rem", "Minigolf", resultsGame1);
-});
-
-rgame2.addEventListener('click', () => {
-    changeGame(game2, "31.25rem", "Monopoly", resultsGame2);
-});
-
-rgame3.addEventListener('click', () => {
-    changeGame(game3, "34.375rem", "Bilard", resultsGame3);
-});
-
-rgame4.addEventListener('click', () => {
-    changeGame(game4, "50rem", "Kinect", resultsGame4);
-});
-// document.getElementById("#button").onclick = doFunction;

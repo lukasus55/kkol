@@ -42,7 +42,7 @@
 
 .player_banner 
 {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/players/pfp/default.webp');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/default_pfp.webp');
 }
 
 

@@ -1,177 +1,166 @@
-var deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-var deviceHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+import { loadData } from "./helpers.js";
 
-const resultsPopup = document.querySelector('#results_popup');
-const resultsContainer = document.querySelector('#results_container');
-const resultsGameSection = document.querySelector('#results_game');
-const resultsChooseGame = document.querySelector('#results_choose_game');
-const resultsFooterDisabler = document.querySelector('#results_footer_disabled');
+document.addEventListener('DOMContentLoaded', async () => {
 
-let disabledButtons = [];
+    const players = await loadData('/api/players?id=kostys');
+    const champion = players.kostys;
 
-resultsPopup.style.display = "none";
+    const championPfpEl = document.querySelector('#championPfp');
+    const championPfpSrc = champion.pfp_base64
+        ? `data:image/webp;base64,${champion.pfp_base64}` 
+        : '/img/default_pfp.webp';
+    
+    championPfpEl.src = championPfpSrc;
+    
+    var deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var deviceHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
 
-function closeResultsPopup()
-{
+    const resultsPopup = document.querySelector('#results_popup');
+    const resultsContainer = document.querySelector('#results_container');
+    const resultsGameSection = document.querySelector('#results_game');
+    const resultsChooseGame = document.querySelector('#results_choose_game');
+    
+    let disabledButtons = [];
+
     resultsPopup.style.display = "none";
-}
 
-const resultsTitle = document.querySelector('#results_title');
+    window.closeResultsPopup = () => {
+        resultsPopup.style.display = "none";
+    };
 
-function showResultsPopup(game)
-{
+    window.showResultsPopup = (game) => {
+        resultsGameSection.style.display = "none";
+        resultsPopup.style.display = "flex";
 
-    resultsGameSection.style.display = "none";
-    resultsPopup.style.display = "flex";
+        if (!game) {
+            const gamesIcons = document.querySelectorAll('.results_footer_container_single_game');
+            gamesIcons.forEach(item => {
+                item.classList.remove("results_footer_container_single_game_active");
+            });
 
-    if (!game) 
-    {
+            resultsContainer.style.height = "6.25rem";
+            resultsChooseGame.style.scale = "1";
+            resultsGameSection.style.display = "none";
+            resultsChooseGame.style.display = "flex";
+        } else {
+            showGameResults(game);
+        }
+    };
+
+    // Internal functions can stay local, they don't need window.
+    window.showGameResults = (game) => {
+        if (!game) {
+            console.error('ERROR: ResultsPopup - Game not specified!');
+            return;
+        }
+
+        if(disabledButtons.includes(game)) return;
+
+        resultsContainer.style.height = "min(calc(100% - 150px),25rem)";
+        const isAlreadySelected = document.querySelector(`#results_footer_${game}`).classList.value.includes('results_footer_container_single_game_active');
+        
+        if (isAlreadySelected) {
+            hideGameResults(game);
+            return;
+        }
+
         const gamesIcons = document.querySelectorAll('.results_footer_container_single_game');
         gamesIcons.forEach(item => {
             item.classList.remove("results_footer_container_single_game_active");
         });
 
+        resultsChooseGame.style.scale = "0";
+        resultsGameSection.style.scale = "1";
+
+        const thisGameButton  = document.querySelector(`#results_footer_${game}`);
+        thisGameButton.classList.add("results_footer_container_single_game_active");
+        thisGameButton.style.cursor = "not-allowed";
+
+        disabledButtons.push(game);
+
+        setTimeout(() => {
+            disabledButtons.splice(disabledButtons.indexOf(game), 1);
+            thisGameButton.style.cursor = "pointer";
+            resultsGameSection.style.display = "flex";
+            resultsChooseGame.style.display = "none";
+        }, 1000);
+
+        let title = game.toUpperCase();
+        if (game === 'brain') { title = 'BRAIN SHOW'; }
+        if (game === 'pummel') { title = 'PUMMEL PARTY'; }
+
+        document.querySelector('#results_title').textContent = title;
+
+        const gamesBoxes = document.querySelectorAll('.results_single_game');
+        const finishedGames = ['catan', 'codenames', 'brain'];
+        const isFinished = finishedGames.includes(game);
+        
+        let thisGameBox = document.querySelector(`#results_game_noResults`);
+
+        if (isFinished) {
+            thisGameBox = document.querySelector(`#results_game_${game}`);
+        }
+
+        gamesBoxes.forEach(item => {
+            item.style.display = "none";
+        });
+
+        thisGameBox.style.display = "flex";
+    }
+
+    window.hideGameResults = (game) => {
         resultsContainer.style.height = "6.25rem";
-        resultsChooseGame.style.scale = "1";
-        resultsGameSection.style.display = "none";
         resultsChooseGame.style.display = "flex";
-    }
-    else
-    {
-        showGameResults(game);
-    }
+        resultsChooseGame.style.scale = "1";
+        resultsGameSection.style.scale = "0";
+        resultsGameSection.style.display = "none";
 
-}
+        const thisGameButton = document.querySelector(`#results_footer_${game}`);
+        thisGameButton.classList.remove("results_footer_container_single_game_active");
+        thisGameButton.style.cursor = "not-allowed";
 
-function showGameResults(game)
-{
-    if (!game) 
-    {
-        console.error('ERROR: ResultsPopup - Game not specified!');
-        return;
-    }
+        disabledButtons.push(game);
 
-    if(disabledButtons.includes(game))
-    {
-        return;
+        setTimeout(() => {
+            thisGameButton.style.cursor = "pointer";
+            disabledButtons.splice(disabledButtons.indexOf(game), 1);
+        }, 1000);
     }
 
-    resultsContainer.style.height = "min(calc(100% - 150px),25rem)";
-    const isAlreadySelected = document.querySelector(`#results_footer_${game}`).classList.value.includes('results_footer_container_single_game_active') //Checks if it is already showing this game
-    if (isAlreadySelected)
-    {
-        hideGameResults(game);
-        return;
-    }
-
-    const gamesIcons = document.querySelectorAll('.results_footer_container_single_game');
-    gamesIcons.forEach(item => {
-        item.classList.remove("results_footer_container_single_game_active");
+    // Observers
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+            } else {
+                entry.target.classList.remove('show');
+            }
+        });
     });
 
-    // resultsContainer.style.height = Math.min(deviceHeight-150,400)+"px";
-    resultsChooseGame.style.scale = "0";
-    resultsGameSection.style.scale = "1";
+    const hiddenElements = document.querySelectorAll('.hidden');
+    hiddenElements.forEach((el) => observer.observe(el));
 
-    const thisGameButton  = document.querySelector(`#results_footer_${game}`);
-    thisGameButton.classList.add("results_footer_container_single_game_active");
-    thisGameButton.style.cursor = "not-allowed";
-
-    disabledButtons.push(game);
-
-    setTimeout(() => {
-        disabledButtons.splice(disabledButtons.indexOf(game), 1); // remove button from the disabledButtons
-        thisGameButton.style.cursor = "pointer";
-        resultsGameSection.style.display = "flex";
-        resultsChooseGame.style.display = "none";
-    }, "1000");
-
-    let title = game.toUpperCase();
-    if (game==='brain') { title = 'BRAIN SHOW' }
-    if (game==='pummel') { title = 'PUMMEL PARTY' }
-
-    resultsTitle.textContent = title;
-
-    const gamesBoxes = document.querySelectorAll('.results_single_game');
-
-    const finishedGames = ['catan', 'codenames', 'brain']
-    const isFinished = finishedGames.includes(game);
-    let thisGameBox = document.querySelector(`#results_game_noResults`);
-
-    if (isFinished) 
-    {
-        thisGameBox = document.querySelector(`#results_game_${game}`);
-    }
-
-    gamesBoxes.forEach(item => {
-        item.style.display = "none";
+    const listObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                for(let i=0; i<entry.target.children.length; i++) {
+                    entry.target.children[i].classList.add('showSingle');
+                }
+            } else {
+                for(let i=0; i<entry.target.children.length; i++) {
+                    entry.target.children[i].classList.remove('showSingle');
+                }
+            }
+        });
     });
 
-    thisGameBox.style.display = "flex";
-}
+    const hiddenListofElements = document.querySelectorAll('.hiddenList');
+    hiddenListofElements.forEach((el) => listObserver.observe(el));
 
-function hideGameResults(game)
-{
-    resultsContainer.style.height = "6.25rem"; // Reset height to default
-    resultsChooseGame.style.display = "flex";
-    resultsChooseGame.style.scale = "1";
-    resultsGameSection.style.scale = "0";
-    resultsGameSection.style.display = "none";
-
-    const thisGameButton = document.querySelector(`#results_footer_${game}`);
-    thisGameButton.classList.remove("results_footer_container_single_game_active");
-    thisGameButton.style.cursor = "not-allowed";
-
-    disabledButtons.push(game);
-
-    setTimeout(() => {
-        thisGameButton.style.cursor = "pointer";
-        disabledButtons.splice(disabledButtons.indexOf(game), 1); // remove button from the disabledButtons
-    }, "1000");
-}
-
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('show');
-        } else {
-            entry.target.classList.remove('show');
-        }
-    })
-})
-
-const hiddenElements = document.querySelectorAll('.hidden')
-hiddenElements.forEach((el) => observer.observe(el));
-
-const listObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            for( i=0; i<entry.target.children.length; i++ )
-            {
-                entry.target.children[i].classList.add('showSingle');
-            }
-        }
-        else 
-        {
-            for( i=0; i<entry.target.children.length; i++ )
-            {
-                entry.target.children[i].classList.remove('showSingle');
-            }
-        }
-    })
-
-
-})
-
-const hiddenListofElements = document.querySelectorAll('.hiddenList')
-hiddenListofElements.forEach((el) => listObserver.observe(el));
-
-
-/* champion animation */
-document.addEventListener('DOMContentLoaded', () => {
+    // Champion Animation
     const section = document.getElementById('championSection');
-    const colors = ['#FFD700', '#C0C0C0', '#ffffff', '#B8860B']; // Gold, Silver, White
+    const colors = ['#FFD700', '#C0C0C0', '#ffffff', '#B8860B']; 
 
     function createConfetti() {
         for (let i = 0; i < 50; i++) {
@@ -180,24 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
             
             confetti.style.left = Math.random() * 100 + '%';
             confetti.style.top = -10 + 'px';
-            
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             confetti.style.width = Math.random() * 10 + 5 + 'px';
             confetti.style.height = Math.random() * 10 + 5 + 'px';
-            
             confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
             confetti.style.animationDelay = Math.random() * 2 + 's';
 
             section.appendChild(confetti);
 
-            // remove after animation to clean DOM
             setTimeout(() => {
                 confetti.remove();
             }, 5000);
         }
     }
 
-    const observer = new IntersectionObserver((entries) => {
+    const confettiObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 createConfetti();
@@ -205,5 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    observer.observe(section);
+    if (section) {
+        confettiObserver.observe(section);
+    }
 });

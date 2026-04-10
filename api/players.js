@@ -2,15 +2,37 @@ import sql from '../db.js';
 
 export default async function handler(request, response) {
     try {
-        
 
-        const [players, results] = await Promise.all([
-            sql`SELECT id, displayed_name, pfp_base64 FROM players`,
-            sql`SELECT * FROM results`
-        ]);
+        // Check for the optional parameters
+        const { id, tournament } = request.query;
 
+        let players, results;
 
-
+        if (id) {
+            [players, results] = await Promise.all([
+                sql`SELECT id, displayed_name, pfp_base64 FROM players WHERE id = ${id}`,
+                sql`SELECT * FROM results  WHERE player_id = ${id}`
+            ]);
+        } 
+        else if (tournament)
+        {
+            [players, results] = await Promise.all([
+                sql`SELECT id, displayed_name, pfp_base64 
+                    FROM players 
+                    WHERE id IN (
+                        SELECT player_id 
+                        FROM results 
+                        WHERE tournament_id = ${tournament}
+                    )`,
+                sql`SELECT * FROM results WHERE tournament_id = ${tournament}`
+            ]);
+        }
+        else {
+            [players, results] = await Promise.all([
+                sql`SELECT id, displayed_name, pfp_base64 FROM players`,
+                sql`SELECT * FROM results`
+            ]);
+        }
         const dataMap = {};
 
         // Create the player objects (Keyed by ID)
