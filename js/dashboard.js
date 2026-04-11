@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
 
-    // Popup naming rules: showXyzPopup - create its functioanlities and show it, handleXyzPopup - create its deafult functionalities, openXyzPopup - edit its deafult functionalities if needed ans show it
+    // Popup naming rules: showXyzPopup - create its functioanlities and show it, handleXyzPopup - create its deafult functionalities, openXyzPopup - edit its deafult functionalities if needed ans show it, renderXyz = for tabs
 
     function showErrorPopup(message) {
         const popup = document.getElementById('error_popup');
@@ -902,7 +902,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Populate View Text
             document.getElementById('view_event_name').textContent = eventData.title;
             document.getElementById('view_event_tournament').textContent = eventData.extendedProps.tournament_id;
-            document.getElementById('view_event_type').textContent = eventData.extendedProps.is_major ? 'Major' : 'Minor';
+            document.getElementById('view_event_type').textContent = eventData.extendedProps.is_major ? 'Duże wydarzenie' : 'Małe wydarzenie';
             document.getElementById('view_event_start').textContent = eventData.start ? eventData.start.toLocaleString('pl-PL') : 'Brak';
             document.getElementById('view_event_end').textContent = eventData.end ? eventData.end.toLocaleString('pl-PL') : 'Brak';
         } 
