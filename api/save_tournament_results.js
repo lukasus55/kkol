@@ -24,6 +24,22 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Invalid payload format" });
         }
 
+        if (!tournament_info.displayed_name || tournament_info.displayed_name.trim().length < 3) {
+            return response.status(400).json({ error: "Nazwa turnieju musi mieć co najmniej 3 znaki." });
+        }
+        
+        if (tournament_info.displayed_name.trim().length > 30) {
+            return response.status(400).json({ error: "Nazwa turnieju może mieć maksymalnie 30 znaków." });
+        }
+        
+        if (tournament_info.displayed_date && tournament_info.displayed_date.length > 30) {
+            return response.status(400).json({ error: "Wyświetlana data turnieju może mieć maksymalnie 30 znaków." });
+        }
+
+        if (tournament_info.timestamp && tournament_info.timestamp > 2524647600) {
+            return response.status(400).json({ error: "Timestamp nie może odpowiadać dacie starszej niż 01/01/2050" });
+        }
+
         
 
         // verify organizer role

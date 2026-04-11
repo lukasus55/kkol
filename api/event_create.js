@@ -22,6 +22,14 @@ export default async function handler(request, response) {
         if (!tournament_id || !name || !start_date) {
             return response.status(400).json({ error: "Brakujące dane (Turniej, Nazwa lub Data)." });
         }
+        
+        if (name.trim().length < 3) {
+            return response.status(400).json({ error: "Nazwa wydarzenia musi mieć co najmniej 3 znaki." });
+        }
+        
+        if (name.trim().length > 70) {
+            return response.status(400).json({ error: "Nazwa wydarzenia może mieć maksymalnie 70 znaków." });
+        }
 
         // TOURNAMENT VALIDATION
         const tournamentCheck = await sql`

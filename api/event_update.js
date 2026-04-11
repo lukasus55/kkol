@@ -23,6 +23,14 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brakujące dane do edycji." });
         }
 
+        if (name.trim().length < 3) {
+            return response.status(400).json({ error: "Nazwa wydarzenia musi mieć co najmniej 3 znaki." });
+        }
+        
+        if (name.trim().length > 70) {
+            return response.status(400).json({ error: "Nazwa wydarzenia może mieć maksymalnie 70 znaków." });
+        }
+
         // -FETCH THE EVENT TO GET TOURNAMENT ID
         const eventCheck = await sql`SELECT tournament_id FROM events WHERE id = ${id}`;
 

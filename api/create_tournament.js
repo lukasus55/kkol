@@ -23,6 +23,14 @@ export default async function handler(request, response) {
         }
 
         const cleanTournamentId = tournament_id.trim().replaceAll(' ', '_');
+
+        if (!cleanTournamentId || cleanTournamentId.length < 3) {
+            return response.status(400).json({ error: "Id turnieju musi mieć co najmniej 3 znaki." });
+        }
+        
+        if (cleanTournamentId.length > 30) {
+            return response.status(400).json({ error: "Id turnieju może mieć maksymalnie 30 znaków." });
+        }
         
 
         // Only admins and organizers can create tournaments
