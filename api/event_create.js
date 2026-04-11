@@ -23,13 +23,17 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brakujące dane (Turniej, Nazwa lub Data)." });
         }
 
-        // TOURNAMENT EXISTENCE CHECK
-        const tournamentExistingCheck = await sql`
-            SELECT 1 FROM tournaments WHERE id = ${tournament_id}
+        // TOURNAMENT VALIDATION
+        const tournamentCheck = await sql`
+            SELECT finished FROM tournaments WHERE id = ${tournament_id}
         `;
 
-        if (tournamentExistingCheck.length === 0) {
+        if (tournamentCheck.length === 0) {
             return response.status(400).json({ error: "Nie możesz dodać wydarzenia do turnieju, który nie istnieje." });
+        }
+
+        if (tournamentCheck[0].finished === true) {
+            return response.status(400).json({ error: "Nie możesz dodać wydarzenia do zakończonego turnieju." });
         }
 
         // PERMISSION CHECK

@@ -910,17 +910,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             btnSave.textContent = mode === 'edit' ? "Zapisz Zmiany" : "Utwórz";
 
+            const tournamentSelect = document.getElementById('edit_event_tournament');
+
             if (mode === 'edit') {
                 btnDelete.style.display = 'inline-block';
-
-                document.getElementById('edit_event_tournament').disabled = true;
                 
                 // Populate Inputs with existing data
                 document.getElementById('edit_event_name').value = eventData.title;
-                document.getElementById('edit_event_tournament').value = eventData.extendedProps.tournament_id;
                 document.getElementById('edit_event_major').value = eventData.extendedProps.is_major ? "true" : "false";
                 document.getElementById('edit_event_start').value = formatForDateTimeInput(eventData.start);
                 document.getElementById('edit_event_end').value = formatForDateTimeInput(eventData.end);
+
+                // Disable it and just put the current tournament ID in ther
+                tournamentSelect.innerHTML = `<option value="${eventData.extendedProps.tournament_id}" selected>${eventData.extendedProps.tournament_id}</option>`;
+                tournamentSelect.disabled = true;
                 
                 btnSave.onclick = () => console.log('UPDATE API CALL dla ID:', eventData.id);
                 btnDelete.onclick = () => console.log('DELETE API CALL dla ID:', eventData.id);
@@ -929,8 +932,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // mode === 'create'
                 // Clear inputs, but pre-fill the clicked date
 
-                document.getElementById('edit_event_tournament').disabled = false;
-
                 document.getElementById('edit_event_name').value = '';
                 document.getElementById('edit_event_tournament').value = '';
                 document.getElementById('edit_event_major').value = 'false';
@@ -938,6 +939,37 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const defaultStart = eventData ? `${eventData}T12:00` : ''; 
                 document.getElementById('edit_event_start').value = defaultStart;
                 document.getElementById('edit_event_end').value = '';
+
+                tournamentSelect.disabled = false;
+                tournamentSelect.innerHTML = '<option value="">Ładowanie turniejów...</option>'; // Temporary loading text
+                
+                // Fetch the active tournaments for this user
+                fetch('/api/tournaments_active')
+                    .then(res => res.json())
+                    .then(tournaments => {
+                        tournamentSelect.innerHTML = '';
+                        
+                        if (tournaments.error) throw new Error(tournaments.error);
+                        
+                        if (tournaments.length === 0) {
+                            tournamentSelect.innerHTML = '<option value="" disabled selected>Brak aktywnych turniejów</option>';
+                            btnSave.disabled = true;
+                            return;
+                        }
+
+                        btnSave.disabled = false; 
+
+                        tournaments.forEach(t => {
+                            const option = document.createElement('option');
+                            option.value = t.id;
+                            option.textContent = t.displayed_name || t.id; // Fallback to ID if name is missing
+                            tournamentSelect.appendChild(option);
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        tournamentSelect.innerHTML = '<option value="" disabled selected>Błąd ładowania</option>';
+                    });
 
                 btnSave.onclick = () => console.log('CREATE API CALL uruchomiony');
             }

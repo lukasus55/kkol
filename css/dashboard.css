@@ -945,8 +945,13 @@ body
 
 #universal_event_popup .popup_input:disabled
 {
-    color: rgba(145, 145, 145, 0.8);
-    border-color: rgba(102, 102, 102, 0.8);
+    color: var(--color-lavender-mist);
+    border: none;
+    background: none;
+    -webkit-appearance: none;    
+    -moz-appearance: none;
+    opacity: 100%;
+    padding: 0;
 }
 
 
