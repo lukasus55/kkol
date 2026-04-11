@@ -34,11 +34,49 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Nazwa wydarzenia może mieć maksymalnie 70 znaków." });
         }
 
-        // -FETCH THE EVENT TO GET TOURNAMENT ID
-        const eventCheck = await sql`SELECT tournament_id FROM events WHERE id = ${id}`;
+        // DATE VALIDATION
+        const parsedStart = new Date(start_date);
+        const minDate = new Date('2024-01-01T00:00:00');
+        
+        // Calculate max date: exactly 500 days from this exact moment
+        const maxDate = new Date();
+        maxDate.setDate(maxDate.getDate() + 500);
+
+        if (isNaN(parsedStart.getTime())) {
+            return response.status(400).json({ error: "Nieprawidłowy format daty początkowej." });
+        }
+
+        if (parsedStart < minDate || parsedStart > maxDate) {
+            return response.status(400).json({ error: "Data wydarzenia musi zawierać się między 2024 rokiem a okresem 500 dni w przód." });
+        }
+
+        if (end_date) {
+            const parsedEnd = new Date(end_date);
+            
+            if (isNaN(parsedEnd.getTime())) {
+                return response.status(400).json({ error: "Nieprawidłowy format daty końcowej." });
+            }
+            if (parsedEnd < minDate || parsedEnd > maxDate) {
+                return response.status(400).json({ error: "Data końcowa musi zawierać się między 2024 rokiem a okresem 500 dni w przód." });
+            }
+            if (parsedEnd < parsedStart) {
+                return response.status(400).json({ error: "Data końcowa nie może być wcześniejsza niż data początkowa." });
+            }
+        }
+
+        const eventCheck = await sql`
+            SELECT e.tournament_id, t.finished 
+            FROM events e
+            JOIN tournaments t ON e.tournament_id = t.id
+            WHERE e.id = ${id}
+        `;
 
         if (eventCheck.length === 0) {
             return response.status(404).json({ error: "Wydarzenie nie istnieje." });
+        }
+
+        if (eventCheck[0].finished === true) {
+            return response.status(400).json({ error: "Nie możesz edytować wydarzeń w zakończonym turnieju." });
         }
 
         const eventTournamentId = eventCheck[0].tournament_id;
