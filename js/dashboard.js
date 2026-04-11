@@ -862,8 +862,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return localISOTime;
     }
 
-    function handleEventPopup(mode, eventData = null) {
-        console.log('tff')
+    function handleEventPopup(mode, eventData = null, onSuccessCallback) {
         const popupEl = document.getElementById('universal_event_popup');
         const headerEl = document.getElementById('popup_header');
         
@@ -874,7 +873,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const btnSave = document.getElementById('btn_popup_save');
         const btnDelete = document.getElementById('btn_popup_delete');
 
-        // Reset button display
         btnSave.style.display = 'none';
         btnDelete.style.display = 'none';
 
@@ -900,6 +898,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (mode === 'edit') {
                 btnDelete.style.display = 'inline-block';
+
+                document.getElementById('edit_event_tournament').disabled = true;
                 
                 // Populate Inputs with existing data
                 document.getElementById('edit_event_name').value = eventData.title;
@@ -914,6 +914,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             else {
                 // mode === 'create'
                 // Clear inputs, but pre-fill the clicked date
+
+                document.getElementById('edit_event_tournament').disabled = false;
+
                 document.getElementById('edit_event_name').value = '';
                 document.getElementById('edit_event_tournament').value = '';
                 document.getElementById('edit_event_major').value = 'false';
@@ -931,17 +934,83 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnCancel.onclick = () => {
             popupEl.classList.remove('active');
         };
+
+        btnSave.onclick = async () => {
+            // Gather all data from the inputs
+            const name = document.getElementById('edit_event_name').value.trim();
+            const tournamentId = document.getElementById('edit_event_tournament').value.trim();
+            const isMajor = document.getElementById('edit_event_major').value === 'true';
+            const startDate = document.getElementById('edit_event_start').value;
+            const endDate = document.getElementById('edit_event_end').value;
+
+            if (!name || !tournamentId || !startDate) {
+                popupEl.classList.remove('active');
+                showErrorPopup("Wypełnij wszystkie wymagane pola (Nazwa, Turniej, Początek).");
+                return;
+            }
+
+            // Prepare the payload
+            const payload = {
+                name: name,
+                is_major: isMajor,
+                tournament_id: tournamentId,
+                start_date: startDate,
+                end_date: endDate || null
+            };
+
+            try {
+                let response;
+                
+                // API Calls based on mode
+                if (mode === 'create') {
+                    payload.creator_id = user.id;
+                    
+                    response = await fetch('/api/event_create', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                } else if (mode === 'edit') {
+                    payload.id = eventData.id;
+                    
+                    response = await fetch('/api/event_update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                const result = await response.json();
+
+                if (!response.ok || result.error) {
+                    throw new Error(result.error || "Nie udało się zapisać wydarzenia.");
+                }
+
+                popupEl.classList.remove('active');
+                if (onSuccessCallback) onSuccessCallback();
+
+            } catch (error) {
+                popupEl.classList.remove('active');
+                showErrorPopup(error.message);
+            }
+        };
+
+        btnCancel.onclick = () => {
+            popupEl.classList.remove('active');
+        };
+
+        popupEl.classList.add('active');
     }
 
 
     async function renderCalendarTab(tabContainer) {
-        if (!tabContainer) return;
+        if (!tabContainer || !user?.id) return;
 
         const calendarEl = tabContainer.querySelector('.calendar');
         calendarEl.innerHTML = ''; 
 
         try {
-            const calendarEvents = await loadData('/api/events');
+            const calendarEvents = await loadData(`/api/events?player=${user.id}`);
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -975,9 +1044,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const event = info.event;
                     const creatorId = event.extendedProps.creator_id;
                     
-                    // Permission Check for Existing Events
                     if (user.id === creatorId || user.role === 'admin') {
-                        handleEventPopup('edit', event);
+                        handleEventPopup('edit', event, () => renderCalendarTab(tabContainer));
                     } else {
                         handleEventPopup('view', event);
                     }
@@ -985,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 dateClick: function(info) {
                     if (user.role === 'admin' || user.role === 'organizer') {
-                        handleEventPopup('create', info.dateStr);
+                        handleEventPopup('create', info.dateStr, () => renderCalendarTab(tabContainer));
                     } else {
                         console.log('Brak uprawnień do tworzenia wydarzeń.');
                     }
