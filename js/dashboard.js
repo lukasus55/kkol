@@ -897,6 +897,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (mode === 'view') {
+            btnCancel.textContent = "Zamknij"; // Linjjka kodu z dedykacją dla DamiDami2
             headerEl.textContent = "Szczegóły Wydarzenia";
             viewSection.style.display = 'block';
             editSection.style.display = 'none';
@@ -913,6 +914,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             viewSection.style.display = 'none';
             editSection.style.display = 'block';
             btnSave.style.display = 'inline-block';
+            btnCancel.textContent = "Anuluj";
             
             btnSave.textContent = mode === 'edit' ? "Zapisz Zmiany" : "Utwórz";
 
