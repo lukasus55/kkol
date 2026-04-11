@@ -995,6 +995,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         };
 
+        btnDelete.onclick = async () => {
+                // TODO: Custom confirmation popup
+                const isConfirmed = window.confirm("Czy na pewno chcesz usunąć to wydarzenie? Tej operacji nie można cofnąć.");
+                if (!isConfirmed) return;
+
+                try {
+                    const response = await fetch('/api/event_delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: eventData.id })
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok || result.error) {
+                        throw new Error(result.error || "Nie udało się usunąć wydarzenia.");
+                    }
+
+                    popupEl.classList.remove('active');
+                    if (onSuccessCallback) onSuccessCallback();
+
+                } catch (error) {
+                    popupEl.classList.remove('active');
+                    showErrorPopup(error.message);
+                }
+            };
+
         btnCancel.onclick = () => {
             popupEl.classList.remove('active');
         };
