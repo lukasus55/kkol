@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (createBtn) {
             createBtn.addEventListener('click', async () => {
                 const idInput = document.getElementById('new_tournament_id');
-                const newId = idInput.value.trim();
+                const newId = idInput.value.trim().replaceAll(' ', '_');;
 
                 if (!newId) {
                     showErrorPopup("Proszę wpisać ID dla nowego turnieju.");

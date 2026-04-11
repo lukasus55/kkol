@@ -22,7 +22,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "ID turnieju jest wymagane." });
         }
 
-        const cleanTournamentId = tournament_id.trim();
+        const cleanTournamentId = tournament_id.trim().replaceAll(' ', '_');
         
 
         // Only admins and organizers can create tournaments
