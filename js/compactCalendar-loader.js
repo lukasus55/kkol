@@ -20,12 +20,12 @@ export default async function compactCalendar(tournamentId) {
 
         const dateObj = new Date(e.start);
 
-        // Extract the short month in English (STY, LUT, MAJ...)
+        // Extract the short month in Polish (STY, LUT, MAJ...)
         const month = dateObj.toLocaleString('pl-PL', { month: 'short' }).toUpperCase();
         
-        const day = dateObj.getDate();
+        const day = ('0'+dateObj.getDate()).slice(-2)
 
-        const formattedDate = `${month} ${day}`;
+        const formattedDate = `${day} ${month}`;
 
         eventHtml += `
             <div class="schedule_event ${e.extendedProps.is_major ? '' : 'minor'}">

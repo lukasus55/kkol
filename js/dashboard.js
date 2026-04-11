@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const container = document.querySelector('body');
     const loadingContainer = document.querySelector('#loader-global');
 
+    let savedCalendarDate = null;
+
     // Authenticate & Fetch User
     const userAuthenticated = await requireAuth();
     if (!userAuthenticated) return;
@@ -1089,10 +1091,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             const calendarEvents = await loadData(`/api/events?player=${user.id}`);
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
+
                 initialView: 'dayGridMonth',
+
+                initialDate: savedCalendarDate || new Date(),
                 locale: 'pl',
                 firstDay: 1, 
                 height: 'auto',
+                
+                datesSet: function(info) {
+                    savedCalendarDate = info.view.currentStart;
+                },
                 
                 eventTimeFormat: {
                     hour: 'numeric',
