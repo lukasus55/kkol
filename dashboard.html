@@ -161,7 +161,51 @@
                         <button class="btn btn_cancel" id="editor_cancel_btn">Anuluj</button>
                         <button class="btn btn_confirm" id="editor_save_btn">Zapisz</button>
                     </div>
+                
+                </div>
 
+            </div>
+        </div>
+
+        <div id="universal_event_popup" class="universal_event_popup">
+            <div class="popup_content">
+                <div id="popup_header" class="popup_title">Szczegóły Wydarzenia</div>
+                
+                <div class="popup_body">
+                    <div id="event_view_mode">
+                        <h3 id="view_event_name"></h3>
+                        <p><strong>Turniej:</strong> <span id="view_event_tournament"></span></p>
+                        <p><strong>Typ:</strong> <span id="view_event_type"></span></p>
+                        <p><strong>Początek:</strong> <span id="view_event_start"></span></p>
+                        <p><strong>Koniec:</strong> <span id="view_event_end"></span></p>
+                    </div>
+
+                    <div id="event_edit_mode" style="display: none;">
+                        <label>Nazwa Wydarzenia:</label>
+                        <input type="text" id="edit_event_name" class="popup_input">
+                        
+                        <label>Turniej ID:</label>
+                        <input type="text" id="edit_event_tournament" class="popup_input">
+                        
+                        <label>Ważność:</label>
+                        <select id="edit_event_major" class="popup_input">
+                            <option value="false">Zwykłe (Minor)</option>
+                            <option value="true">Ważne (Major)</option>
+                        </select>
+
+                        <label>Początek:</label>
+                        <input type="datetime-local" id="edit_event_start" class="popup_input">
+                        
+                        <label>Koniec:</label>
+                        <input type="datetime-local" id="edit_event_end" class="popup_input">
+                    </div>
+                </div>
+
+                <div class="popup_footer">
+                    <button id="btn_popup_cancel" class="btn_cancel">Anuluj</button>
+                    <button id="btn_popup_delete" class="btn_delete" style="display: none;">Usuń</button>
+                    <button id="btn_popup_save" class="btn_save" style="display: none;">Zapisz</button>
+                </div>
             </div>
         </div>
 

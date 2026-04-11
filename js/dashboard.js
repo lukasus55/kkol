@@ -853,61 +853,151 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
-    async function renderCalendarTab(tabContainer) {
-
-    if (!tabContainer) return;
-    const calendarEl = tabContainer.querySelector('.calendar');
-    
-    // Clear it out in case it's being re-rendered
-    calendarEl.innerHTML = ''; 
-
-    try {
-        const calendarEvents = await loadData('/api/events')
-
-        console.log(calendarEvents)
-
-const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'pl',
-            firstDay: 1, // Start on monday instead of sunday
-            height: 'auto',
-            
-            eventTimeFormat: {
-                hour: 'numeric',
-                minute: '2-digit',
-                omitZeroMinute: false, // This forces the :00 to always show
-                hour12: false // Ensures standard 24-hour time
-            },
-
-            headerToolbar: {
-                left: 'today',
-                center: 'prev,title,next', // Groups arrows around the title
-                right: 'dayGridMonth,timeGridWeek'
-            },
-
-            buttonText: {
-                today: 'Dzisiaj',
-                day: 'Dzień',
-                week:'Tydzień',
-                month:'Miesiąc'
-            },
-
-            events: calendarEvents,
-            
-            eventClick: function(info) {
-                console.log('Kliknięto wydarzenie:', info.event.title);
-            },
-            dateClick: function(info) {
-                console.log('Kliknięto pustą datę:', info.dateStr);
-            }
-        });
-
-        calendar.render();
-
-    } catch (error) {
-        console.error("Nie udało się załadować kalendarza:", error);
+    // format dates for HTML inputs (YYYY-MM-DDTHH:MM)
+    function formatForDateTimeInput(dateObj) {
+        if (!dateObj) return '';
+        // Adjusts for local timezone offset before slicing
+        const tzOffset = dateObj.getTimezoneOffset() * 60000; 
+        const localISOTime = (new Date(dateObj - tzOffset)).toISOString().slice(0, 16);
+        return localISOTime;
     }
-}
+
+    function handleEventPopup(mode, eventData = null) {
+        console.log('tff')
+        const popupEl = document.getElementById('universal_event_popup');
+        const headerEl = document.getElementById('popup_header');
+        
+        const viewSection = document.getElementById('event_view_mode');
+        const editSection = document.getElementById('event_edit_mode');
+        
+        const btnCancel = document.getElementById('btn_popup_cancel');
+        const btnSave = document.getElementById('btn_popup_save');
+        const btnDelete = document.getElementById('btn_popup_delete');
+
+        // Reset button display
+        btnSave.style.display = 'none';
+        btnDelete.style.display = 'none';
+
+        if (mode === 'view') {
+            headerEl.textContent = "Szczegóły Wydarzenia";
+            viewSection.style.display = 'block';
+            editSection.style.display = 'none';
+
+            // Populate View Text
+            document.getElementById('view_event_name').textContent = eventData.title;
+            document.getElementById('view_event_tournament').textContent = eventData.extendedProps.tournament_id;
+            document.getElementById('view_event_type').textContent = eventData.extendedProps.is_major ? 'Major' : 'Minor';
+            document.getElementById('view_event_start').textContent = eventData.start ? eventData.start.toLocaleString('pl-PL') : 'Brak';
+            document.getElementById('view_event_end').textContent = eventData.end ? eventData.end.toLocaleString('pl-PL') : 'Brak';
+        } 
+        else if (mode === 'edit' || mode === 'create') {
+            headerEl.textContent = mode === 'edit' ? "Edytuj Wydarzenie" : "Utwórz Nowe Wydarzenie";
+            viewSection.style.display = 'none';
+            editSection.style.display = 'block';
+            btnSave.style.display = 'inline-block';
+            
+            btnSave.textContent = mode === 'edit' ? "Zapisz Zmiany" : "Utwórz";
+
+            if (mode === 'edit') {
+                btnDelete.style.display = 'inline-block';
+                
+                // Populate Inputs with existing data
+                document.getElementById('edit_event_name').value = eventData.title;
+                document.getElementById('edit_event_tournament').value = eventData.extendedProps.tournament_id;
+                document.getElementById('edit_event_major').value = eventData.extendedProps.is_major ? "true" : "false";
+                document.getElementById('edit_event_start').value = formatForDateTimeInput(eventData.start);
+                document.getElementById('edit_event_end').value = formatForDateTimeInput(eventData.end);
+                
+                btnSave.onclick = () => console.log('UPDATE API CALL dla ID:', eventData.id);
+                btnDelete.onclick = () => console.log('DELETE API CALL dla ID:', eventData.id);
+            } 
+            else {
+                // mode === 'create'
+                // Clear inputs, but pre-fill the clicked date
+                document.getElementById('edit_event_name').value = '';
+                document.getElementById('edit_event_tournament').value = '';
+                document.getElementById('edit_event_major').value = 'false';
+                
+                const defaultStart = eventData ? `${eventData}T12:00` : ''; 
+                document.getElementById('edit_event_start').value = defaultStart;
+                document.getElementById('edit_event_end').value = '';
+
+                btnSave.onclick = () => console.log('CREATE API CALL uruchomiony');
+            }
+        }
+
+        popupEl.classList.add('active');
+
+        btnCancel.onclick = () => {
+            popupEl.classList.remove('active');
+        };
+    }
+
+
+    async function renderCalendarTab(tabContainer) {
+        if (!tabContainer) return;
+
+        const calendarEl = tabContainer.querySelector('.calendar');
+        calendarEl.innerHTML = ''; 
+
+        try {
+            const calendarEvents = await loadData('/api/events');
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pl',
+                firstDay: 1, 
+                height: 'auto',
+                
+                eventTimeFormat: {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    omitZeroMinute: false, 
+                    hour12: false 
+                },
+
+                headerToolbar: {
+                    left: 'today',
+                    center: 'prev,title,next', 
+                    right: 'dayGridMonth,timeGridWeek'
+                },
+
+                buttonText: {
+                    today: 'Dzisiaj',
+                    day: 'Dzień',
+                    week:'Tydzień',
+                    month:'Miesiąc'
+                },
+
+                events: calendarEvents,
+                
+                eventClick: function(info) {
+                    const event = info.event;
+                    const creatorId = event.extendedProps.creator_id;
+                    
+                    // Permission Check for Existing Events
+                    if (user.id === creatorId || user.role === 'admin') {
+                        handleEventPopup('edit', event);
+                    } else {
+                        handleEventPopup('view', event);
+                    }
+                },
+                
+                dateClick: function(info) {
+                    if (user.role === 'admin' || user.role === 'organizer') {
+                        handleEventPopup('create', info.dateStr);
+                    } else {
+                        console.log('Brak uprawnień do tworzenia wydarzeń.');
+                    }
+                }
+            });
+
+            calendar.render();
+
+        } catch (error) {
+            console.error("Nie udało się załadować kalendarza:", error);
+        }
+    }
 
     function handleTabs() {
     const urlParams = new URLSearchParams(window.location.search);

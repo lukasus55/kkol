@@ -11,7 +11,7 @@ export default async function handler(request, response) {
 
         if (tournament) {
             dbEvents = await sql`
-                SELECT id, tournament_id, event_date, end_date, name, is_major 
+                SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                 FROM events 
                 WHERE tournament_id = ${tournament}
                 ORDER BY event_date ASC
@@ -19,7 +19,7 @@ export default async function handler(request, response) {
         } 
         else if (player) {
             dbEvents = await sql`
-                SELECT id, tournament_id, event_date, end_date, name, is_major 
+                SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                 FROM events 
                 WHERE tournament_id IN (
                     SELECT tournament_id FROM results WHERE player_id = ${player}
@@ -29,7 +29,7 @@ export default async function handler(request, response) {
         } 
         else {
             dbEvents = await sql`
-                SELECT id, tournament_id, event_date, end_date, name, is_major 
+                SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                 FROM events 
                 ORDER BY event_date ASC
             `;
@@ -48,6 +48,7 @@ export default async function handler(request, response) {
             
             extendedProps: {
                 tournament_id: event.tournament_id,
+                creator_id: event.creator_id,
                 is_major: event.is_major
             }
         }));
