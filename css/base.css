@@ -296,6 +296,11 @@ button
   border: none;
 }
 
+.fc-toolbar-title
+{
+  width: 12rem;
+}
+
 
 @media (max-width:768px)
 {
