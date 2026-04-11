@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return localISOTime;
     }
 
-    function handleEventPopup(mode, eventData = null, onSuccessCallback) {
+    function handleEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
         const popupEl = document.getElementById('universal_event_popup');
         const headerEl = document.getElementById('popup_header');
         
@@ -875,6 +875,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         btnSave.style.display = 'none';
         btnDelete.style.display = 'none';
+
+        let mode;
+
+        if (intention === 'create') { mode = 'create'}
+        else {
+            const tournament_id = eventData.extendedProps.tournament_id;
+            const accessedTournamentsId = Object.keys(user.organizer_roles || {});
+
+            if (user.role === 'admin' || accessedTournamentsId.includes(tournament_id)) {
+                mode = 'edit';
+            } else {
+                mode = 'view';
+            }
+        }
 
         if (mode === 'view') {
             headerEl.textContent = "Szczegóły Wydarzenia";
@@ -1029,7 +1043,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         popupEl.classList.add('active');
     }
 
-
     async function renderCalendarTab(tabContainer) {
         if (!tabContainer || !user?.id) return;
 
@@ -1069,21 +1082,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 eventClick: function(info) {
                     const event = info.event;
-                    const creatorId = event.extendedProps.creator_id;
-                    
-                    if (user.id === creatorId || user.role === 'admin') {
-                        handleEventPopup('edit', event, () => renderCalendarTab(tabContainer));
-                    } else {
-                        handleEventPopup('view', event);
-                    }
+                    handleEventPopup('uknown', event, () => renderCalendarTab(tabContainer));
                 },
                 
                 dateClick: function(info) {
-                    if (user.role === 'admin' || user.role === 'organizer') {
-                        handleEventPopup('create', info.dateStr, () => renderCalendarTab(tabContainer));
-                    } else {
-                        console.log('Brak uprawnień do tworzenia wydarzeń.');
-                    }
+                    handleEventPopup('create', info.dateStr, () => renderCalendarTab(tabContainer));
                 }
             });
 

@@ -8,6 +8,7 @@ export default async function handler(request, response) {
     }
 
     try {
+        // AUTHENTICATION
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
@@ -16,29 +17,45 @@ export default async function handler(request, response) {
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
         const requesterId = decodedPayload.id;
 
-        const { id, tournament_id, name, is_major, start_date, end_date } = request.body;
+        const { id, name, is_major, start_date, end_date } = request.body;
 
-        if (!id || !tournament_id || !name || !start_date) {
+        if (!id || !name || !start_date) {
             return response.status(400).json({ error: "Brakujące dane do edycji." });
         }
 
-        const [userCheck, eventCheck] = await Promise.all([
-            sql`SELECT role FROM players WHERE id = ${requesterId}`,
-            sql`SELECT creator_id FROM events WHERE id = ${id}`
-        ]);
+        // -FETCH THE EVENT TO GET TOURNAMENT ID
+        const eventCheck = await sql`SELECT tournament_id FROM events WHERE id = ${id}`;
 
         if (eventCheck.length === 0) {
             return response.status(404).json({ error: "Wydarzenie nie istnieje." });
         }
 
-        const userRole = userCheck.length > 0 ? userCheck[0].role : 'user';
-        const eventCreatorId = eventCheck[0].creator_id;
+        const eventTournamentId = eventCheck[0].tournament_id;
 
-        // Only allow if they are an admin, OR if they are the original creator
-        if (userRole !== 'admin' && requesterId !== eventCreatorId) {
-            return response.status(403).json({ error: "Możesz edytować tylko własne wydarzenia." });
+        // PERMISSION CHECK
+        const [globalRoleCheck, tournamentRoleCheck] = await Promise.all([
+            sql`SELECT role FROM players WHERE id = ${requesterId}`,
+            sql`SELECT role FROM tournament_organizers WHERE tournament_id = ${eventTournamentId} AND player_id = ${requesterId}`
+        ]);
+
+        const globalRole = globalRoleCheck.length > 0 ? globalRoleCheck[0].role : 'user';
+
+        let hasPermission = false;
+
+        if (globalRole === 'admin') {
+            hasPermission = true;
+        } else if (tournamentRoleCheck.length > 0) {
+            const tournamentRole = tournamentRoleCheck[0].role;
+            if (['owner', 'manager'].includes(tournamentRole)) {
+                hasPermission = true;
+            }
         }
 
+        if (!hasPermission) {
+            return response.status(403).json({ error: "Brak uprawnień. Musisz być administratorem lub zarządcą tego turnieju." });
+        }
+
+        // EXECUTE
         await sql`
             UPDATE events 
             SET name = ${name}, 
@@ -52,6 +69,9 @@ export default async function handler(request, response) {
 
     } catch (error) {
         console.error("Update Event Error:", error);
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
+        }
         return response.status(500).json({ error: "Wystąpił błąd podczas edycji wydarzenia." });
     }
 }
