@@ -114,7 +114,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const popup = document.getElementById('tournament_popup');
         const listEl = document.getElementById('editor_players_list');
         
-        // Header Inputs
+        // Header
+        const tourIdEl = document.getElementById('show_tour_id');
+
         const nameInput = document.getElementById('edit_tour_name');
         const dateInput = document.getElementById('edit_display_date');
         const timestampInput = document.getElementById('edit_timestamp');
@@ -129,6 +131,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Populate Header Data
         const tournament = tournamentsData[tournamentId];
         
+        tourIdEl.textContent = tournament.id || '';
+
         nameInput.value = tournament.displayed_name || '';
         dateInput.value = tournament.details?.displayed_date || '';
         timestampInput.value = tournament.details?.timestamp || '';
