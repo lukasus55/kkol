@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let allCardsHTML = '';
 
         if (!tournaments || tournaments.length === 0) {
-            allCardsHTML = 'Brak przypisanych turniejów';
+            allCardsHTML = '<span class="no_tournaments_found"> Brak przypisanych turniejów </span>';
         }
 
         tournaments.forEach(tournament => {
