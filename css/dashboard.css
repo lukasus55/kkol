@@ -6,7 +6,7 @@
 
 main
 {
-    padding: 5rem 20%;
+    padding: 5rem 10%;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -134,7 +134,7 @@ body
     background-color: #27282c;
     border-radius: 12px 0px 0px 12px;
     padding: 2rem;
-    width: 25%;
+    width: 20%;
 }
 
 .selector ul
@@ -179,8 +179,8 @@ body
 
 .content
 {
-    width: 75%;
-    height: 30rem;
+    width: 80%;
+    height: 40rem;
 }
 
 .tab_content
@@ -206,7 +206,7 @@ body
     text-decoration: underline;
 }
 
-#content_account .account_wrapper
+#content-account .account_wrapper
 {
     display: flex;
     justify-content: flex-start;
@@ -218,7 +218,7 @@ body
     color: var(--color-lavender-mist);
 }
 
-#content_account .account_header
+#content-account .account_header
 {
     margin: 0;
     padding-bottom: 0.5rem;
@@ -226,7 +226,7 @@ body
     font-size: 1.8rem;
 }
 
-#content_account .account_card
+#content-account .account_card
 {
     background-color: var(--color-charcoal-blue);
     border-radius: 12px;
@@ -234,7 +234,7 @@ body
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-#content_account .card_title
+#content-account .card_title
 {
     margin-top: 0;
     margin-bottom: 1.2rem;
@@ -242,14 +242,14 @@ body
     color: var(--color-lavender-mist);
 }
 
-#content_account .pfp_container
+#content-account .pfp_container
 {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
-#content_account .pfp_preview
+#content-account .pfp_preview
 {
     width: 90px;
     height: 90px;
@@ -259,7 +259,7 @@ body
     background-color: var(--color-onyx);
 }
 
-#content_account .pfp_actions
+#content-account .pfp_actions
 {
     display: flex;
     flex-direction: column;
@@ -267,19 +267,19 @@ body
     align-items: flex-start;
 }
 
-#content_account .hidden_input
+#content-account .hidden_input
 {
     display: none;
 }
 
-#content_account .name_container
+#content-account .name_container
 {
     display: flex;
     gap: 1rem;
     align-items: center;
 }
 
-#content_account .account_input
+#content-account .account_input
 {
     flex-grow: 1;
     background-color: var(--color-onyx);
@@ -292,13 +292,13 @@ body
     transition: border-color 0.2s ease;
 }
 
-#content_account .account_input:focus
+#content-account .account_input:focus
 {
     outline: none;
     border-color: var(--color-lime-moss);
 }
 
-#content_account .btn_primary
+#content-account .btn_primary
 {
     background-color: var(--color-lime-moss);
     color: var(--color-onyx);
@@ -311,17 +311,17 @@ body
     transition: opacity 0.2s ease, transform 0.1s ease;
 }
 
-#content_account .btn_primary:hover
+#content-account .btn_primary:hover
 {
     opacity: 0.9;
 }
 
-#content_account .btn_primary:active
+#content-account .btn_primary:active
 {
     transform: scale(0.96);
 }
 
-#content_account .btn_secondary
+#content-account .btn_secondary
 {
     background-color: transparent;
     color: var(--color-lavender-mist);
@@ -333,26 +333,26 @@ body
     transition: background-color 0.2s ease;
 }
 
-#content_account .btn_secondary:hover
+#content-account .btn_secondary:hover
 {
     background-color: rgba(243, 239, 245, 0.1);
 }
 
 /* Future Features Placeholder */
-#content_account .placeholder_card
+#content-account .placeholder_card
 {
     background-color: transparent;
     border: 2px dashed var(--color-charcoal-blue);
     opacity: 0.6;
 }
 
-#content_account .placeholder_text
+#content-account .placeholder_text
 {
     font-style: italic;
     margin: 0;
 }
 
-#content_tournaments .tab_header
+#content-tournaments .tab_header
 {
     width: 100%;
     display: flex;
@@ -364,7 +364,7 @@ body
     gap: 1rem;
 }
 
-#content_tournaments .create_tournament_title
+#content-tournaments .create_tournament_title
 {
     display: flex;
     width: 100%;
@@ -374,7 +374,7 @@ body
     margin-bottom: 1rem;
 }
 
-#content_tournaments .btn_create_tournament
+#content-tournaments .btn_create_tournament
 {
     padding: 0rem 1rem;
     border-radius: 8px;
@@ -387,12 +387,12 @@ body
     height: 2rem;
 }
 
-#content_tournaments .btn_create_tournament:hover
+#content-tournaments .btn_create_tournament:hover
 {
     background-color: #5f911b;
 }
 
-#content_tournaments input
+#content-tournaments input
 {
     background-color: #0d0a0b;
     border: 1px solid var(--color-border);
@@ -405,7 +405,7 @@ body
     transition: border-color 0.2s ease;
 }
 
-#content_tournaments input:focus
+#content-tournaments input:focus
 {
     outline: none;
     border-color: var(--color-lime-moss);
@@ -855,6 +855,12 @@ body
     transform: scale(0.97);
 }
 
+#content-calendar .calendar
+{
+    width: 100%;
+    height: 100%;
+}
+
 
 @media (max-width:768px)
 {
@@ -889,21 +895,21 @@ body
     .content
     {
         width: 100%;
-        min-height: 30rem;
+        min-height: 40rem;
         height: auto;
     }
 
-    #content_tournaments .tier, .pos
+    #content-tournaments .tier, .pos
     {
         display: none;
     }
 
-    #content_tournaments .name
+    #content-tournaments .name
     {
         width: 80%;
     }
 
-    #content_tournaments .action
+    #content-tournaments .action
     {
         width: 20%;
     }

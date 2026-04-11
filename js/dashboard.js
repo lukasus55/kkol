@@ -551,7 +551,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         roleDiv.classList.add(`role_badge-${roleId}`);
     }
 
-    async function handleTournamentTab(tabContainer) {
+    async function renderTournamentTab(tabContainer) {
 
         const currentUser = user;
 
@@ -712,7 +712,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
 
-    async function handleAccountTab(tabContainer) {
+    async function renderAccountTab(tabContainer) {
         
         const currentUser = user;
 
@@ -853,6 +853,62 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
+    async function renderCalendarTab(tabContainer) {
+
+    if (!tabContainer) return;
+    const calendarEl = tabContainer.querySelector('.calendar');
+    
+    // Clear it out in case it's being re-rendered
+    calendarEl.innerHTML = ''; 
+
+    try {
+        const calendarEvents = await loadData('/api/events')
+
+        console.log(calendarEvents)
+
+const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pl',
+            firstDay: 1, // Start on monday instead of sunday
+            height: 'auto',
+            
+            eventTimeFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+                omitZeroMinute: false, // This forces the :00 to always show
+                hour12: false // Ensures standard 24-hour time
+            },
+
+            headerToolbar: {
+                left: 'today',
+                center: 'prev,title,next', // Groups arrows around the title
+                right: 'dayGridMonth,timeGridWeek'
+            },
+
+            buttonText: {
+                today: 'Dzisiaj',
+                day: 'Dzień',
+                week:'Tydzień',
+                month:'Miesiąc'
+            },
+
+            events: calendarEvents,
+            
+            eventClick: function(info) {
+                console.log('Kliknięto wydarzenie:', info.event.title);
+            },
+            dateClick: function(info) {
+                console.log('Kliknięto pustą datę:', info.dateStr);
+            }
+        });
+
+        calendar.render();
+
+    } catch (error) {
+        console.error("Nie udało się załadować kalendarza:", error);
+    }
+}
+
     function handleTabs() {
     const urlParams = new URLSearchParams(window.location.search);
     let currentTab = urlParams.get('tab') || 'account'; 
@@ -867,7 +923,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function tabChange(tabId, updateUrl = true) {
             if (currentTab === tabId && updateUrl) return;
 
-            const tabElement = document.getElementById(`selector_${tabId}`);
+            const tabElement = document.getElementById(`selector-${tabId}`);
             if (!tabElement) return;
 
             currentTab = tabId;
@@ -883,7 +939,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             tabElement.classList.add('active');
 
             document.querySelector('.content .tab_content.active')?.classList.remove('active');
-            const tabContent = document.querySelector(`#content_${tabId}`);
+            const tabContent = document.querySelector(`#content-${tabId}`);
             if (tabContent) tabContent.classList.add('active');
 
             // Only fetch data and show loader if the tab HAS NOT been loaded yet
@@ -893,10 +949,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     switch (tabId) {
                         case 'account':
-                            await handleAccountTab(tabContent); 
+                            await renderAccountTab(tabContent); 
                             break;
                         case 'tournaments':
-                            await handleTournamentTab(tabContent); 
+                            await renderTournamentTab(tabContent); 
+                            break;
+                        case 'calendar':
+                            await renderCalendarTab(tabContent);
                             break;
                     }
                     
@@ -912,7 +971,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                const tabId = tab.id.replace('selector_', '');
+                const tabId = tab.id.replace('selector-', '');
                 tabChange(tabId);
             });
         });

@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js'></script>
 </head>
 
 <body>
@@ -45,14 +47,18 @@
 
             <div class="selector">
                 <ul>
-                    <li class="active" id="selector_account"> <img src="/img/dashboard/profile_icon.webp"> Moje konto </li>
-                    <li id="selector_tournaments"> <img src="/img/dashboard/trophy_icon.webp"> Turnieje </li>
+                    <li class="active" id="selector-account"> <img src="/img/dashboard/profile_icon.webp"> Moje konto </li>
+                    <li id="selector-tournaments"> <img src="/img/dashboard/trophy_icon.webp"> Turnieje </li>
+                    <li id="selector-calendar"> <img src="/img/dashboard/calendar_icon.webp"> Kalendarz </li>
                 </ul>
             </div>
 
             <div class="content">
-                <div class="tab_content tab_content-account" id="content_account"></div>
-                <div class="tab_content tab_content-tournaments" id="content_tournaments"></div>
+                <div class="tab_content tab_content-account" id="content-account"></div>
+                <div class="tab_content tab_content-tournaments" id="content-tournaments"></div>
+                <div class="tab_content tab_content-calendar" id="content-calendar">
+                    <div class="calendar"></div>
+                </div>
             </div>
 
         </div>
