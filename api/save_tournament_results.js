@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../db.js';
+import { escapeHTML } from '../js/helpers.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -21,18 +22,17 @@ export default async function handler(request, response) {
         const { tournament_id, results, tournament_info } = request.body;
 
         if (!tournament_id || !Array.isArray(results) || !tournament_info) {
-            return response.status(400).json({ error: "Invalid payload format" });
+            return response.status(400).json({ error: "Brakujące dane do edycji." });
         }
 
-        if (!tournament_info.displayed_name || tournament_info.displayed_name.trim().length < 3) {
-            return response.status(400).json({ error: "Nazwa turnieju musi mieć co najmniej 3 znaki." });
-        }
+        const clean_displayed_name = escapeHTML(tournament_info.displayed_name.trim()) || ''
+        const clean_displayed_date = escapeHTML(tournament_info.displayed_date.trim()) || ''
         
-        if (tournament_info.displayed_name.trim().length > 30) {
+        if (clean_displayed_name && clean_displayed_name.length > 30) {
             return response.status(400).json({ error: "Nazwa turnieju może mieć maksymalnie 30 znaków." });
         }
         
-        if (tournament_info.displayed_date && tournament_info.displayed_date.length > 30) {
+        if (clean_displayed_date && clean_displayed_date.length > 30) {
             return response.status(400).json({ error: "Wyświetlana data turnieju może mieć maksymalnie 30 znaków." });
         }
 
@@ -56,10 +56,10 @@ export default async function handler(request, response) {
         await sql`
             UPDATE tournaments 
             SET 
-                displayed_name = ${tournament_info.displayed_name},
+                displayed_name = ${clean_displayed_name},
                 finished = ${tournament_info.finished},
                 event_timestamp = ${tournament_info.timestamp}::numeric, 
-                displayed_date = ${tournament_info.displayed_date}
+                displayed_date = ${clean_displayed_date}
             WHERE id = ${tournament_id}
         `;
 

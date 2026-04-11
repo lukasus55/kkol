@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../db.js';
+import { escapeHTML } from '../js/helpers.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -17,16 +18,17 @@ export default async function handler(request, response) {
         const userId = decodedPayload.id;
 
         const { new_name } = request.body;
+        const clean_new_name = escapeHTML(new_name);
 
-        if (!new_name || new_name.trim().length < 3) {
+        if (!clean_new_name || clean_new_name.trim().length < 3) {
             return response.status(400).json({ error: "Nazwa musi mieć co najmniej 3 znaki." });
         }
         
-        if (new_name.trim().length > 30) {
+        if (clean_new_name.trim().length > 30) {
             return response.status(400).json({ error: "Nazwa może mieć maksymalnie 30 znaków." });
         }
 
-        const cleanName = new_name.trim();
+        const cleanName = clean_new_name.trim();
         
 
         const userCheck = await sql`

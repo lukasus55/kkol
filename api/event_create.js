@@ -1,6 +1,7 @@
 import sql from '../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import { escapeHTML } from '../js/helpers.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -22,16 +23,18 @@ export default async function handler(request, response) {
         if (!tournament_id || !name || !start_date) {
             return response.status(400).json({ error: "Brakujące dane (Turniej, Nazwa lub Data)." });
         }
+
+        const clean_name = escapeHTML(name);
         
-        if (name.trim().length < 3) {
+        if (clean_name.trim().length < 3) {
             return response.status(400).json({ error: "Nazwa wydarzenia musi mieć co najmniej 3 znaki." });
         }
         
-        if (name.trim().length > 70) {
+        if (clean_name.trim().length > 70) {
             return response.status(400).json({ error: "Nazwa wydarzenia może mieć maksymalnie 70 znaków." });
         }
 
-        // TOURNAMENT VALIDATION
+        // tournament VALIDATION
         const tournamentCheck = await sql`
             SELECT finished FROM tournaments WHERE id = ${tournament_id}
         `;
@@ -70,7 +73,7 @@ export default async function handler(request, response) {
         // EXECUTE
         const result = await sql`
             INSERT INTO events (tournament_id, creator_id, event_date, end_date, name, is_major)
-            VALUES (${tournament_id}, ${requesterId}, ${start_date}, ${end_date || null}, ${name}, ${is_major})
+            VALUES (${tournament_id}, ${requesterId}, ${start_date}, ${end_date || null}, ${clean_name}, ${is_major})
             RETURNING id
         `;
 

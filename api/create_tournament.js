@@ -22,7 +22,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "ID turnieju jest wymagane." });
         }
 
-        const cleanTournamentId = tournament_id.trim().replaceAll(' ', '_');
+        const cleanTournamentId = tournament_id.trim(); 
 
         if (!cleanTournamentId || cleanTournamentId.length < 3) {
             return response.status(400).json({ error: "Id turnieju musi mieć co najmniej 3 znaki." });
@@ -30,6 +30,16 @@ export default async function handler(request, response) {
         
         if (cleanTournamentId.length > 30) {
             return response.status(400).json({ error: "Id turnieju może mieć maksymalnie 30 znaków." });
+        }
+
+        const idRegex = /^[a-z0-9_]{3,30}$/;
+
+        const inputId = request.body.tournament_id.trim();
+
+        if (!idRegex.test(inputId)) {
+            return response.status(400).json({ 
+                error: "ID może zawierać tylko małe litery, cyfry i podkreślniki (bez spacji)." 
+            });
         }
         
 

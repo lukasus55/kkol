@@ -1,6 +1,7 @@
 import sql from '../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import { escapeHTML } from '../js/helpers.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -23,11 +24,13 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brakujące dane do edycji." });
         }
 
-        if (name.trim().length < 3) {
+        const clean_name = escapeHTML(name);
+
+        if (clean_name.trim().length < 3) {
             return response.status(400).json({ error: "Nazwa wydarzenia musi mieć co najmniej 3 znaki." });
         }
         
-        if (name.trim().length > 70) {
+        if (clean_name.trim().length > 70) {
             return response.status(400).json({ error: "Nazwa wydarzenia może mieć maksymalnie 70 znaków." });
         }
 
@@ -66,7 +69,7 @@ export default async function handler(request, response) {
         // EXECUTE
         await sql`
             UPDATE events 
-            SET name = ${name}, 
+            SET name = ${clean_name}, 
                 is_major = ${is_major}, 
                 event_date = ${start_date}, 
                 end_date = ${end_date || null}

@@ -13,7 +13,6 @@ export async function loadHtml(url)
     return html;
 }
 
-
 // Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
 // Use "container.removeChild(loadingContainer);" after fetch
 export function appendLoaderDiv(container, containerMode='default') 
@@ -177,4 +176,13 @@ export function createLogoutButton(logoutBtn, container, redirect = true) {
             if (!redirect) {container.removeChild(loadingContainer)};
         });
     }
+}
+export function escapeHTML(str) {
+    if (!str) return '';
+    return str.toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
