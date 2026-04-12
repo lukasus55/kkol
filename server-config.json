@@ -24,7 +24,12 @@
         },
         {
             "source": "/api",
-            "destination": "/more/api",
+            "destination": "https://github.com/lukasus55/kkol/blob/main/API.md/",
+            "permanent": true
+        },
+        {
+            "source": "/more/api",
+            "destination": "https://github.com/lukasus55/kkol/blob/main/API.md/",
             "permanent": true
         },
         {
