@@ -22,7 +22,7 @@ Creates a new event and assigns it to an active, unfinished tournament.
 ```json
 {
   "tournament_id": "kol2024",
-  "name": "Turniej Wiosenny",
+  "name": "GD - Runda 1",
   "is_major": true,
   "start_date": "2024-05-15T12:00:00",
   "end_date": "2024-05-15T18:00:00"

@@ -37,7 +37,7 @@ GET /api/events?player=123
 [
   {
     "id": 142,
-    "title": "Turniej Wiosenny",
+    "title": "GD - Runda 3",
     "start": "2024-05-15T12:00:00",
     "end": "2024-05-15T18:00:00",
     "backgroundColor": "var(--color-lime-moss)",

@@ -22,7 +22,7 @@ Edits an existing event's details.
 ```json
 {
   "id": 142,
-  "name": "Turniej Letni",
+  "name": "GD - Runda 3",
   "is_major": false,
   "start_date": "2024-06-20T10:00:00",
   "end_date": "2024-06-20T16:00:00"
