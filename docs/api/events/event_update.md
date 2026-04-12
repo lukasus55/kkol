@@ -3,7 +3,7 @@ Edits an existing event's details.
 
 * **URL:** `/api/event_update`
 * **Method:** `POST`
-* **Required Roles:** `admin`, `owner`, or `manager`
+* **Required Roles:** `admin` (global), `owner` (tournament-specific), or `manager` (tournament-specific)
 
 ---
 

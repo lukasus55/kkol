@@ -3,7 +3,7 @@ Creates a new tournament and assigns the requester as its owner.
 
 * **URL:** `/api/create_tournament`
 * **Method:** `POST`
-* **Required Roles:** `admin` or `organizer`
+* **Required Roles:** `admin` (global) or `organizer` (global)
 
 ---
 
@@ -17,7 +17,7 @@ Creates a new tournament and assigns the requester as its owner.
 
 ```json
 {
-  "tournament_id": "kol2026_spring"
+  "tournament_id": "kolTestowy"
 }
 ```
 

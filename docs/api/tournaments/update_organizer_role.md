@@ -3,7 +3,7 @@ Promotes or demotes a tournament manager for the authenticated owner.
 
 * **URL:** `/api/update_organizer_role`
 * **Method:** `POST`
-* **Required Roles:** `owner`
+* **Required Roles:** `owner` (tournament-specific)
 
 ---
 
@@ -19,7 +19,7 @@ Promotes or demotes a tournament manager for the authenticated owner.
 
 ```json
 {
-  "tournament_id": "kol2026_spring",
+  "tournament_id": "kol2026",
   "target_player_id": "kukula",
   "action": "promote"
 }

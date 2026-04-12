@@ -20,7 +20,7 @@ GET /api/tournaments
 ```
 
 ```http
-GET /api/tournaments?id=kol2026_spring
+GET /api/tournaments?id=kol2026
 ```
 
 ---
@@ -30,25 +30,37 @@ GET /api/tournaments?id=kol2026_spring
 
 ```json
 {
-  "kol2026_spring": {
-    "id": "kol2026_spring",
-    "displayed_name": "KOL 2026 Spring",
-    "page_exists": true,
-    "page_url": "/tournaments/kol2026_spring",
-    "finished": false,
-    "standings": [
-      {
-        "position": 1,
-        "id": "damidami2"
-      }
-    ],
-    "details": {
-      "timestamp": 1710000000,
-      "displayed_date": "15 May 2026",
-      "players": 32,
-      "tier": "A"
+    "kol2026": {
+        "id": "kol2026",
+        "displayed_name": "SEZON 2026",
+        "page_exists": true,
+        "page_url": "2026",
+        "finished": false,
+        "standings": [
+            {
+                "position": 1,
+                "id": "damidami2"
+            },
+            {
+                "position": 1,
+                "id": "harnas"
+            },
+            {
+                "position": 1,
+                "id": "kostys"
+            },
+            {
+                "position": 1,
+                "id": "kukula"
+            }
+        ],
+        "details": {
+            "timestamp": "1798714800",
+            "displayed_date": "2026 ",
+            "players": 4,
+            "tier": "S"
+        }
     }
-  }
 }
 ```
 

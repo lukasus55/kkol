@@ -24,10 +24,10 @@ GET /api/tournaments_active
 
 ```json
 [
-  {
-    "id": "kol2026_spring",
-    "displayed_name": "KOL 2026 Spring"
-  }
+	{
+		"id": "kol2026",
+		"displayed_name": "SEZON 2026"
+	}
 ]
 ```
 

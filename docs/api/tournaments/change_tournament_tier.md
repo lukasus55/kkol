@@ -3,7 +3,7 @@ Updates the tier of an existing tournament.
 
 * **URL:** `/api/change_tournament_tier`
 * **Method:** `POST`
-* **Required Roles:** `admin` or `organizer`
+* **Required Roles:** `admin` (global) or `organizer` (tournament-specific)
 
 ---
 
@@ -18,7 +18,7 @@ Updates the tier of an existing tournament.
 
 ```json
 {
-  "tournament_id": "kol2026_spring",
+  "tournament_id": "kol2026",
   "new_tier": "A"
 }
 ```

@@ -25,7 +25,7 @@ GET /api/players?id=damidami2
 ```
 
 ```http
-GET /api/players?tournament=kol2026_spring
+GET /api/players?tournament=kol2026
 ```
 
 ---
@@ -37,19 +37,19 @@ GET /api/players?tournament=kol2026_spring
 {
   "damidami2": {
     "id": "damidami2",
-    "displayed_name": "Dami",
+    "displayed_name": "DamiDami2",
     "pfp_base64": "...",
     "tournaments": {
-      "kol2026_spring": {
-        "id": "kol2026_spring",
-        "finished": false,
-        "position": 1,
-        "total_points": 42,
-        "games_positions": [1,2],
-        "games_points": [21,21]
+			"kol2024": {
+				"id": "kol2024",
+				"finished": true,
+				"position": 4,
+				"total_points": 12,
+				"games_positions": [2,4,1,3],
+				"games_points": [3,4,1,4]
+            }
       }
     }
-  }
 }
 ```
 

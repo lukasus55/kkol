@@ -17,7 +17,7 @@ Allows the logged-in player to leave a tournament.
 
 ```json
 {
-  "tournamentId": "kol2026_spring"
+  "tournamentId": "kol2026"
 }
 ```
 

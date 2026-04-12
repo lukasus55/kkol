@@ -3,7 +3,7 @@ Deletes a tournament, its results, and its organizer assignments.
 
 * **URL:** `/api/delete_tournament`
 * **Method:** `POST`
-* **Required Roles:** `owner`
+* **Required Roles:** `owner` (tournament-specific)
 
 ---
 
@@ -17,7 +17,7 @@ Deletes a tournament, its results, and its organizer assignments.
 
 ```json
 {
-  "tournament_id": "kol2026_spring"
+  "tournament_id": "kol2026"
 }
 ```
 

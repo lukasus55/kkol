@@ -35,7 +35,7 @@ Authenticates a player and sets a session cookie.
   "message": "Login successful!",
   "user": {
     "id": "damidami2",
-    "role": "admin"
+    "role": "user"
   }
 }
 ```

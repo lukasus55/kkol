@@ -24,27 +24,36 @@ GET /api/me
 
 ```json
 {
-  "user": {
-    "id": "damidami2",
-    "displayed_name": "Dami",
-    "role": "organizer",
-    "is_active": true,
-    "email": "dam@example.com",
-    "organizer_roles": {
-      "kol2026_spring": "owner"
-    },
-    "tournaments": {
-      "kol2026_spring": {
-        "id": "kol2026_spring",
-        "attended": true,
-        "position": 1,
-        "total_points": 42,
-        "games_positions": [1,2],
-        "games_points": [21,21]
-      }
-    },
-    "pfp_base64": "..."
-  }
+	"user": {
+		"id": "kostys",
+		"displayed_name": "Kostyś",
+		"role": "admin",
+		"is_active": true,
+		"email": "exampleEmail@example.com",
+		"organizer_roles": {
+			"kol2024": "owner",
+			"monopolyE1": "manager",
+		},
+		"tournaments": {
+			"kol2024": {
+				"id": "kol2024",
+				"attended": true,
+				"position": 2,
+				"total_points": 16,
+				"games_positions": [3,1,3,1],
+				"games_points": [2,4,2,8]
+			},
+			"monopolyE1": {
+				"id": "monopolyE1",
+				"attended": true,
+				"position": 2,
+				"total_points": null,
+				"games_positions": null,
+				"games_points": null
+			}
+		},
+		"pfp_base64": "..."
+	}
 }
 ```
 

@@ -3,7 +3,7 @@ Removes a player from a tournament.
 
 * **URL:** `/api/kick_player`
 * **Method:** `POST`
-* **Required Roles:** `owner` or `manager`
+* **Required Roles:** `owner` (tournament-specific) or `manager` (tournament-specific)
 
 ---
 
@@ -18,7 +18,7 @@ Removes a player from a tournament.
 
 ```json
 {
-  "tournament_id": "kol2026_spring",
+  "tournament_id": "kol2026",
   "target_player_id": "kukula"
 }
 ```

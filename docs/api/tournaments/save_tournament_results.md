@@ -3,7 +3,7 @@ Saves tournament metadata and player results for a tournament editor.
 
 * **URL:** `/api/save_tournament_results`
 * **Method:** `POST`
-* **Required Roles:** `owner` or `manager`
+* **Required Roles:** `owner` (tournament-specific) or `manager` (tournament-specific)
 
 ---
 
@@ -21,7 +21,7 @@ Saves tournament metadata and player results for a tournament editor.
 {
   "player_id": "damidami2",
   "position": 1,
-  "total_points": 42
+  "total_points": 12
 }
 ```
 
@@ -29,7 +29,7 @@ Saves tournament metadata and player results for a tournament editor.
 
 ```json
 {
-  "displayed_name": "KOL 2026 Spring",
+  "displayed_name": "SEZON 2026",
   "displayed_date": "15 May 2026",
   "finished": false,
   "timestamp": 1710000000

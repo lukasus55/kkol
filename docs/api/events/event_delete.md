@@ -3,7 +3,7 @@ Deletes an existing event by ID.
 
 * **URL:** `/api/event_delete`
 * **Method:** `POST`
-* **Required Roles:** `admin`, `owner`, or `manager`
+* **Required Roles:** `admin` (global), `owner` (tournament-specific), or `manager` (tournament-specific)
 
 ---
 

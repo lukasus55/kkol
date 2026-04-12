@@ -3,7 +3,7 @@ Creates a new event and assigns it to an active, unfinished tournament.
 
 * **URL:** `/api/event_create`
 * **Method:** `POST`
-* **Required Roles:** `admin`, `owner`, or `manager`
+* **Required Roles:** `admin` (global), `owner` (tournament-specific), or `manager` (tournament-specific)
 
 ---
 
@@ -29,7 +29,7 @@ Creates a new event and assigns it to an active, unfinished tournament.
 }
 ```
 
----
+---(tournament-specific)
 
 ## Responses
 
