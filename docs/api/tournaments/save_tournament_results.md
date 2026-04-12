@@ -40,7 +40,7 @@ Saves tournament metadata and player results for a tournament editor.
 
 ```json
 {
-  "tournament_id": "kol2026_spring",
+  "tournament_id": "kol2026",
   "results": [
     {
       "player_id": "damidami2",
