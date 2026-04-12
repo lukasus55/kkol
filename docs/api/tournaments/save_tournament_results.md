@@ -13,7 +13,7 @@ Saves tournament metadata and player results for a tournament editor.
 | :--- | :--- | :---: | :--- |
 | `tournament_id` | String | Yes | Exact ID of the tournament. |
 | `results` | Array | Yes | Array of player result objects. |
-| `tournament_info` | Object | Yes | Tournament display settings and finished state. |
+| `tournament_info` | Object | Yes | Tournament display settings, finished state, and event timestamp. |
 
 ### Result Item Example
 
@@ -35,6 +35,34 @@ Saves tournament metadata and player results for a tournament editor.
   "timestamp": 1710000000
 }
 ```
+
+### Full Request Example
+
+```json
+{
+  "tournament_id": "kol2026_spring",
+  "results": [
+    {
+      "player_id": "damidami2",
+      "position": 1,
+      "total_points": 12
+    },
+    {
+      "player_id": "kukula",
+      "position": 2,
+      "total_points": 10
+    }
+  ],
+  "tournament_info": {
+    "displayed_name": "SEZON 2026",
+    "displayed_date": "15 May 2026",
+    "finished": false,
+    "timestamp": 1710000000
+  }
+}
+```
+
+> Note: `timestamp` is currently passed as a Unix timestamp integer. This payload will be refactored in the future to use the event time format consistently with events (`TIMESTAMPTZ`) instead of this current integer-based format.
 
 ---
 
