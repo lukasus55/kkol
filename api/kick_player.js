@@ -31,7 +31,9 @@ export default async function handler(request, response) {
             WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
         `;
 
-        if (authCheck.length === 0 || !['owner', 'manager'].includes(authCheck[0].role)) {
+        const userRole = authCheck[0]?.role || '';
+
+        if (authCheck.length === 0 || !['owner', 'manager'].includes(userRole)) {
             return response.status(403).json({ error: "Brak uprawnień do wyrzucania graczy." });
         }
 
@@ -46,7 +48,10 @@ export default async function handler(request, response) {
             return response.status(403).json({ error: "Nie można wyrzucić właściciela turnieju." });
         }
 
-        // Note: It's totally fine to run DELETE on organizers even if they aren't a manager; it just won't do anything.
+        if (targetCheck.length > 0 && targetCheck[0].role === 'manager' && userRole === 'manager') {
+            return response.status(403).json({ error: "Nie możesz wyrzucić innego managera turnieju jako manager." });
+        }
+
         await sql`
             DELETE FROM tournament_organizers 
             WHERE tournament_id = ${tournament_id} AND player_id = ${target_player_id}

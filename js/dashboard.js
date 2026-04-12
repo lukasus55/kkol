@@ -290,7 +290,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <img src="/img/dashboard/notepad_icon.webp" alt="Obecność">
                                 </button>
                                 ${roleButtonHTML}
-                                ${(member.organizer_role !== 'owner' && member.id !== user.id) ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
+                                ${
+                                    (member.organizer_role !== 'owner' && !(currentUserRole === 'manager' && member.organizer_role === 'manager') && member.id !== user.id)
+                                    ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
                                     <img src="/img/dashboard/kick_icon.webp" alt="Wyrzuć">
                                 </button>` : ``}
                             </div>
