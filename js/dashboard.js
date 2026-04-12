@@ -16,6 +16,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
+    
+    const universalEventPopupEl = document.getElementById('universal_event_popup');
+    universalEventPopupEl.dataset.mode = 'view';
+    // Popup in edit or create mode shouldn't be closed when clicking outside of the popup to prevent loss of typed data by accidental missclicks.
+    universalEventPopupEl.addEventListener('click', (event) => {
+        const currentMode = universalEventPopupEl.dataset.mode;
+        
+        if (event.target === universalEventPopupEl && currentMode === 'view') {
+            universalEventPopupEl.classList.remove('active');
+        }
+    });
 
     // Popup naming rules: showXyzPopup - create its functioanlities and show it, handleXyzPopup - create its deafult functionalities, openXyzPopup - edit its deafult functionalities if needed ans show it, renderXyz = for tabs
 
@@ -869,7 +880,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function handleEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
-        const popupEl = document.getElementById('universal_event_popup');
+
+        const popupEl = universalEventPopupEl;
         const headerEl = document.getElementById('popup_header');
         
         const viewSection = document.getElementById('event_view_mode');
@@ -895,6 +907,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 mode = 'view';
             }
         }
+
+        popupEl.dataset.mode = mode;
 
         if (mode === 'view') {
             btnCancel.textContent = "Zamknij"; // Linjjka kodu z dedykacją dla DamiDami2
