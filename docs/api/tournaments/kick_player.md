@@ -47,6 +47,7 @@ Removes a player from a tournament.
 **Code:** `403 Forbidden`
 * `{"error": "Brak uprawnień do wyrzucania graczy."}`
 * `{"error": "Nie można wyrzucić właściciela turnieju."}`
+* `{"error": "Nie możesz wyrzucić innego managera turnieju jako manager."}`
 
 **Code:** `500 Internal Server Error`
 * `{"error": "Wystąpił błąd podczas wyrzucania gracza."}`
