@@ -25,7 +25,7 @@ Welcome to the backend API documentation.
 * [**Fetch Tournaments** (`GET /api/tournaments`)](./docs/api/tournaments/tournaments.md)
 * [**Get Active Tournaments** (`GET /api/tournaments_active`)](./docs/api/tournaments/tournaments_active.md)
 * [**Tournament Editor Details** (`GET /api/tournament_editor_details`)](./docs/api/tournaments/tournament_editor_details.md)
-* [**Save Tournament Results** (`POST /api/save_tournament_results`)](./docs/api/tournaments/save_tournament_results.md)
+* [**Save Tournament Results and Details** (`POST /api/save_tournament_results`)](./docs/api/tournaments/save_tournament_results.md)
 * [**Toggle Attendance** (`POST /api/toggle_attendance`)](./docs/api/tournaments/toggle_attendance.md)
 * [**Update Organizer Role** (`POST /api/update_organizer_role`)](./docs/api/tournaments/update_organizer_role.md)
 * [**Create Tournament** (`POST /api/create_tournament`)](./docs/api/tournaments/create_tournament.md)
@@ -43,3 +43,9 @@ Welcome to the backend API documentation.
 
 ### GD
 * [**GD Data** (`GET /api/gd`)](./docs/api/gd/gd.md)
+
+---
+
+## 📑 Database Diagram
+
+![Test](./docs/api/db-diagram.png)

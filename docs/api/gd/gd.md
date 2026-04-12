@@ -27,14 +27,14 @@ GET /api/gd
   "levels": [
     {
       "id": 1,
-      "name": "Level 1",
+      "name": "Stereo Madness",
       "difficulty": "Easy",
       "finished": false,
       "players": [
         {
           "id": "damidami2",
           "position": 1,
-          "score": 120
+          "score": 100
         }
       ]
     }
