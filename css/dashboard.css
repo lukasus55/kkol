@@ -466,17 +466,7 @@ body
     opacity: 100%;
 }
 
-.confirmation_popup_container
-{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    top: 0%;
-    left: 0%;
-    background-color: #27282c69;
-}
-
-.popup_overlay 
+.popup_overlay, .confirmation_popup
 {
     position: fixed;
     top: 0;
@@ -494,7 +484,12 @@ body
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.popup_overlay.active
+.confirmation_popup
+{
+    z-index: 1000 !important;
+}
+
+.popup_overlay.active, .confirmation_popup.active
 {
     opacity: 1;
     visibility: visible;
@@ -515,7 +510,7 @@ body
     transition: transform 0.3s ease;
 }
 
-.popup_overlay.active .popup-container
+.popup_overlay.active, .confirmation_popup.active .popup-container
 {
     transform: translateY(0) scale(1);
 }
@@ -575,14 +570,14 @@ body
     transform: scale(0.97);
 }
 
-.btn_cancel
+.btn_cancel, .btn_cancel_only_this
 {
     background-color: transparent;
     color: var(--color-lavender-mist);
     border: 1px solid var(--color-border);
 }
 
-.btn_cancel:hover
+.btn_cancel:hover, .btn_cancel_only_this:hover
 {
     background-color: rgba(255, 255, 255, 0.05);
 }
@@ -870,7 +865,7 @@ body
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
+    z-index: 20;
     justify-content: center;
     align-items: center;
 }

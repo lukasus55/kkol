@@ -19,59 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Popup naming rules: showXyzPopup - create its functioanlities and show it, handleXyzPopup - create its deafult functionalities, openXyzPopup - edit its deafult functionalities if needed ans show it, renderXyz = for tabs
 
-    function showErrorPopup(message) {
-        document.getElementById('error_message').textContent = message;
-        document.getElementById('error_popup').classList.add('active');
-    }
-
-    function openLeavingPopup(tournament) {
-        const popup = document.getElementById('universal_popup');
-        popup.classList.add('active');
-
-        const popup_message = document.querySelector('#popup_message');
-        popup_message.innerHTML = `<p id="popup_message">Czy na pewno chcesz opuścić turniej <span class="highlight">${tournament.name}</span>?</p>`;
-
-        const leaveBtn = document.getElementById('popup_confirm');
-
-        leaveBtn.onclick = async () => {
-            // Disable the button so they can't double-click it while it loads
-            leaveBtn.disabled = true;
-            leaveBtn.textContent = 'Opuszczanie...';
-
-            try {
-                const response = await fetch('/api/leave_tournament', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ tournamentId: tournament.id })
-                });
-
-                if (response.ok) {
-                    popup.classList.remove('active');
-                    window.location.reload(); 
-                } else {
-                    const errorData = await response.json(); 
-                    
-                    // Hide the leaving confirmation popup first
-                    popup.classList.remove('active');
-                    
-                    // Reset the leave button just in case
-                    leaveBtn.disabled = false;
-                    leaveBtn.textContent = 'Opuść';
-
-                    showErrorPopup(errorData.error || "Wystąpił nieznany błąd.");
-                }
-            } catch (error) {
-                popup.classList.remove('active');
-                leaveBtn.disabled = false;
-                leaveBtn.textContent = 'Opuść';
-                
-                showErrorPopup("Błąd połączenia z serwerem.");
-            }
-        };
-    }
-
     async function showTournamentPopup(tournamentId, tournamentsData) {
         const popup = document.getElementById('tournament_popup');
         const listEl = document.getElementById('editor_players_list');
@@ -87,7 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tierBtn = document.getElementById('edit_tier_btn');
         
         const deleteBtn = document.getElementById('editor_delete_btn')
-        const closeBtn = document.getElementById('editor_cancel_btn');
         const saveBtn = document.getElementById('editor_save_btn');
 
         // Populate Header Data
@@ -158,37 +104,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 deleteBtn.style.display = 'block';
                 
                 deleteBtn.onclick = async () => {
-                    // Double confirmation!
-                    if (!confirm("UWAGA! Czy na pewno chcesz CAŁKOWICIE USUNĄĆ ten turniej? \n\nTej akcji NIE MOŻNA COFNĄĆ. Zostaną usunięte wszystkie wyniki, gracze i role organizatorów!")) {
-                        return;
-                    }
-
-                    deleteBtn.disabled = true;
-                    deleteBtn.textContent = 'Usuwanie...';
-
-                    try {
-                        const res = await fetch('/api/delete_tournament', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ tournament_id: tournamentId })
-                        });
-
-                        if (res.ok) {
-                            closeAllPopups();
-                            // Reload the page to remove the deleted tournament from the UI
-                            window.location.reload(); 
-                        } else {
-                            const err = await res.json();
-                            closeAllPopups();
-                            showErrorPopup(err.error || "Błąd podczas usuwania turnieju.");
-                        }
-                    } catch (error) {
-                        closeAllPopups();
-                        showErrorPopup("Błąd połączenia z serwerem.");
-                    } finally {
-                        deleteBtn.disabled = false;
-                        deleteBtn.textContent = 'Usuń turniej';
-                    }
+                    showConfirmationPopup(
+                        () => {deleteTournament(tournamentId)},
+                        `UWAGA! Czy na pewno chcesz CAŁKOWICIE USUNĄĆ turniej <span class='highlight'>${tournamentId}</span>? Tej akcji NIE MOŻNA COFNĄĆ. Zostaną usunięte wszystkie wyniki, gracze i role organizatorów!`,
+                        `Usuń`
+                    )
                 };
             } else {
                 // Hide it if they are just a manager opening the popup
@@ -335,37 +255,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 btn.onclick = async (e) => {
                     e.preventDefault();
 
-                    if (!confirm("Czy na pewno chcesz wyrzucić tego gracza z turnieju? Ta akcja jest nieodwracalna i usunie wszystkie jego wyniki.")) {
-                        return;
-                    }
-
                     const row = btn.closest('tr');
                     const targetPlayerId = row.getAttribute('data-player-id');
-
-                    btn.style.opacity = '0.5';
-                    btn.disabled = true;
-
-                    try {
-                        const res = await fetch('/api/kick_player', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                tournament_id: tournamentId,
-                                target_player_id: targetPlayerId
-                            })
-                        });
-
-                        if (res.ok) {
-                            showTournamentPopup(tournamentId, tournamentsData); 
-                        } else {
-                            const err = await res.json();
-                            closeAllPopups();
-                            showErrorPopup(err.error || "Błąd podczas wyrzucania gracza.");
-                        }
-                    } catch (error) {
-                        closeAllPopups();
-                        showErrorPopup("Błąd połączenia z serwerem.");
-                    }
+                    
+                    showConfirmationPopup(
+                        () => {kickPlayer(tournamentId, targetPlayerId, tournamentsData)},
+                        `Czy na pewno chcesz wyrzucić gracza <span class="highlight">${targetPlayerId}</span> z turnieju <span class="highlight">${tournamentId}</span>? Ta akcja jest nieodwracalna i usunie wszystkie jego wyniki.`,
+                        `Wyrzuć`
+                    )
+                    
                 };
             });
 
@@ -477,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
-    function handleHeader() {
+    function renderHeader() {
         const id = user.id;
         const displayedName = user.displayed_name;
         const roleId = user.role;
@@ -656,11 +554,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const leaveButtons = tabContainer.querySelectorAll('.leave_tournament_btn');
         leaveButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const clickedTournamentData = {
+                const tournament = {
                     id: button.getAttribute('data-id'),
                     name: button.getAttribute('data-name')
                 };
-                openLeavingPopup(clickedTournamentData);
+                
+                showConfirmationPopup(
+                    () => {leaveTournament(tournament)},
+                    `Czy na pewno chcesz opuścić turniej <span class="highlight">${tournament.id}</span>`,
+                    `Opuść`
+                )
             });
         });
 
@@ -813,15 +716,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             reader.readAsDataURL(file);
         });
 
-    }
-
-    // format dates for HTML inputs (YYYY-MM-DDTHH:MM)
-    function formatForDateTimeInput(dateObj) {
-        if (!dateObj) return '';
-        // Adjusts for local timezone offset before slicing
-        const tzOffset = dateObj.getTimezoneOffset() * 60000; 
-        const localISOTime = (new Date(dateObj - tzOffset)).toISOString().slice(0, 16);
-        return localISOTime;
     }
 
     function handleEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
@@ -1003,31 +897,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         btnDelete.onclick = async () => {
-                // TODO: Custom confirmation popup
-                const isConfirmed = window.confirm("Czy na pewno chcesz usunąć to wydarzenie? Tej operacji nie można cofnąć.");
-                if (!isConfirmed) return;
-
-                try {
-                    const response = await fetch('/api/event_delete', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: eventData.id })
-                    });
-
-                    const result = await response.json();
-
-                    if (!response.ok || result.error) {
-                        throw new Error(result.error || "Nie udało się usunąć wydarzenia.");
-                    }
-
-                    closeAllPopups();
-                    if (onSuccessCallback) onSuccessCallback();
-
-                } catch (error) {
-                    closeAllPopups();
-                    showErrorPopup(error.message);
-                }
-            };
+            showConfirmationPopup (
+                () => {deleteEvent(eventData.id, onSuccessCallback)},
+                `Czy na pewno chcesz usunąć wydarzenie <span class='highlight'>${eventData.title || ''}</span>? Tej operacji nie można cofnąć.`,
+                `Usuń`
+            ) 
+        };
 
         popupEl.classList.add('active');
     }
@@ -1167,6 +1042,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         tabChange(startingTab, false); // false = don't push a duplicate state to the URL history
     }
 
+    // ===== HELPER FUNCTIONS =====
+
     function closeAllPopups() {
         const activePopups = document.querySelectorAll('.popup_overlay.active');
         
@@ -1195,8 +1072,149 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Initialize the UI
-    handleHeader();
+    function showConfirmationPopup(actionCallback, message='Czy na pewno chcesz to zrobić?', confirmText='Potwierdź', cancelText='Anuluj') {
+        const popup = document.getElementById('universal_popup');
+        const closeBtn = document.querySelector('.btn_cancel_only_this');
+        popup.classList.add('active');
+
+        document.querySelector('#popup_message').innerHTML = message;
+        document.querySelector('#popup_confirm').innerHTML = confirmText;
+        document.querySelector('#popup_cancel').innerHTML = cancelText;
+
+        const confirmBtn = document.getElementById('popup_confirm');
+        confirmBtn.disabled = false;
+
+        confirmBtn.onclick = async () => {
+            confirmBtn.disabled = true; 
+            await actionCallback(); 
+            popup.classList.remove('active');
+        };
+
+        closeBtn.onclick = () => {
+            popup.classList.remove('active');
+        };
+
+        popup.onclick = (event) => {
+            if (event.target === popup) {
+                popup.classList.remove('active');
+            }
+        };
+    }
+
+    function showErrorPopup(message) {
+        document.getElementById('error_message').textContent = message;
+        document.getElementById('error_popup').classList.add('active');
+    }
+
+    // format dates for HTML inputs (YYYY-MM-DDTHH:MM)
+    function formatForDateTimeInput(dateObj) {
+        if (!dateObj) return '';
+        // Adjusts for local timezone offset before slicing
+        const tzOffset = dateObj.getTimezoneOffset() * 60000; 
+        const localISOTime = (new Date(dateObj - tzOffset)).toISOString().slice(0, 16);
+        return localISOTime;
+    }
+
+
+    // ===== ACTION FUNCTIONS =====
+    async function leaveTournament(tournament) {
+        try {
+            const response = await fetch('/api/leave_tournament', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tournamentId: tournament.id })
+            });
+
+            if (response.ok) {
+                closeAllPopups();
+                window.location.reload(); 
+            } else {
+                const errorData = await response.json(); 
+                closeAllPopups();
+                showErrorPopup(errorData.error || "Wystąpił nieznany błąd.");
+            }
+        } catch (error) {
+            closeAllPopups();
+            showErrorPopup("Błąd połączenia z serwerem.");
+        }
+    };
+
+    async function kickPlayer(tournamentId, targetPlayerId, tournamentsData) {
+        try {
+            const res = await fetch('/api/kick_player', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tournament_id: tournamentId,
+                    target_player_id: targetPlayerId
+                })
+            });
+
+            if (res.ok) {
+                showTournamentPopup(tournamentId, tournamentsData); 
+            } else {
+                const err = await res.json();
+                closeAllPopups();
+                showErrorPopup(err.error || "Błąd podczas wyrzucania gracza.");
+            }
+        } catch (error) {
+            console.error(error);
+            closeAllPopups();
+            showErrorPopup("Błąd połączenia z serwerem.");
+        }
+    }
+
+    async function deleteTournament(tournamentId) {
+        try {
+            const res = await fetch('/api/delete_tournament', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tournament_id: tournamentId })
+            });
+
+            if (res.ok) {
+                closeAllPopups();
+                // Reload the page to remove the deleted tournament from the UI
+                window.location.reload(); 
+            } else {
+                const err = await res.json();
+                closeAllPopups();
+                showErrorPopup(err.error || "Błąd podczas usuwania turnieju.");
+            }
+        } catch (error) {
+            console.error(error);
+            closeAllPopups();
+            showErrorPopup("Błąd połączenia z serwerem.");
+        }
+    }
+
+    async function deleteEvent(eventId, onSuccessCallback) {
+        try {
+            const response = await fetch('/api/event_delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: eventId })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || result.error) {
+                throw new Error(result.error || "Nie udało się usunąć wydarzenia.");
+            }
+
+            closeAllPopups();
+            if (onSuccessCallback) onSuccessCallback();
+
+        } catch (error) {
+            closeAllPopups();
+            showErrorPopup(error.message);
+        }
+    }
+
+    // ===== Initialize the UI ======
+    renderHeader();
     handleTabs();
 
     if (loadingContainer) {
