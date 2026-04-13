@@ -16,63 +16,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
-    
-    const universalEventPopupEl = document.getElementById('universal_event_popup');
-    universalEventPopupEl.dataset.mode = 'view';
-    // Popup in edit or create mode shouldn't be closed when clicking outside of the popup to prevent loss of typed data by accidental missclicks.
-    universalEventPopupEl.addEventListener('click', (event) => {
-        const currentMode = universalEventPopupEl.dataset.mode;
-        
-        if (event.target === universalEventPopupEl && currentMode === 'view') {
-            universalEventPopupEl.classList.remove('active');
-        }
-    });
 
     // Popup naming rules: showXyzPopup - create its functioanlities and show it, handleXyzPopup - create its deafult functionalities, openXyzPopup - edit its deafult functionalities if needed ans show it, renderXyz = for tabs
 
     function showErrorPopup(message) {
-        const popup = document.getElementById('error_popup');
-        const messageEl = document.getElementById('error_message');
-        const closeBtn = document.getElementById('error_close_btn');
-
-        messageEl.textContent = message;
-
-        popup.classList.add('active');
-
-        closeBtn.onclick = () => {
-            popup.classList.remove('active');
-        };
-
-        // Close if clicking outside the box
-        popup.onclick = (event) => {
-            if (event.target === popup) {
-                popup.classList.remove('active');
-            }
-        };
-    }
-
-    function handleConfirmationPopup() {
-        const popup = document.getElementById('universal_popup');
-        const cancelBtn = document.getElementById('popup_cancel');
-        const confirmBtn = document.getElementById('popup_confirm');
-
-        function closePopup() {
-            popup.classList.remove('active');
-        }
-
-        cancelBtn.addEventListener('click', closePopup);
-
-        confirmBtn.addEventListener('click', () => {
-            console.log("User confirmed leaving the tournament.");
-            
-            closePopup();
-        });
-
-        popup.addEventListener('click', (event) => {
-            if (event.target === popup) {
-                closePopup();
-            }
-        });
+        document.getElementById('error_message').textContent = message;
+        document.getElementById('error_popup').classList.add('active');
     }
 
     function openLeavingPopup(tournament) {
@@ -174,15 +123,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 if (res.ok) {
-                    closePopup();
+                    closeAllPopups();
                     window.location.reload();
                 } else {
                     const err = await res.json();
-                    closePopup();
+                    closeAllPopups();
                     showErrorPopup(err.error || "Błąd podczas zmiany tieru.");
                 }
             } catch (error) {
-                closePopup();
+                closeAllPopups();
                 showErrorPopup("Błąd połączenia z serwerem.");
             } finally {
                 tierBtn.disabled = false;
@@ -225,16 +174,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                         });
 
                         if (res.ok) {
-                            closePopup();
+                            closeAllPopups();
                             // Reload the page to remove the deleted tournament from the UI
                             window.location.reload(); 
                         } else {
                             const err = await res.json();
-                            closePopup();
+                            closeAllPopups();
                             showErrorPopup(err.error || "Błąd podczas usuwania turnieju.");
                         }
                     } catch (error) {
-                        closePopup();
+                        closeAllPopups();
                         showErrorPopup("Błąd połączenia z serwerem.");
                     } finally {
                         deleteBtn.disabled = false;
@@ -329,11 +278,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             showTournamentPopup(tournamentId, tournamentsData); 
                         } else {
                             const err = await res.json();
-                            closePopup();
+                            closeAllPopups();
                             showErrorPopup(err.error || "Błąd podczas zmiany statusu obecności.");
                         }
                     } catch (error) {
-                        closePopup();
+                        closeAllPopups();
                         showErrorPopup("Błąd połączenia z serwerem.");
                     }
                 };
@@ -370,11 +319,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             showTournamentPopup(tournamentId, tournamentsData); 
                         } else {
                             const err = await res.json();
-                            closePopup();
+                            closeAllPopups();
                             showErrorPopup(err.error || "Błąd zmiany uprawnień.");
                         }
                     } catch (error) {
-                        closePopup();
+                        closeAllPopups();
                         showErrorPopup("Błąd połączenia z serwerem.");
                     }
                 };
@@ -410,11 +359,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             showTournamentPopup(tournamentId, tournamentsData); 
                         } else {
                             const err = await res.json();
-                            closePopup();
+                            closeAllPopups();
                             showErrorPopup(err.error || "Błąd podczas wyrzucania gracza.");
                         }
                     } catch (error) {
-                        closePopup();
+                        closeAllPopups();
                         showErrorPopup("Błąd połączenia z serwerem.");
                     }
                 };
@@ -450,11 +399,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         showTournamentPopup(tournamentId, tournamentsData); 
                     } else {
                         const err = await res.json();
-                        closePopup();
+                        closeAllPopups();
                         showErrorPopup(err.error || "Nie udało się dodać gracza.");
                     }
                 } catch (error) {
-                    closePopup();
+                    closeAllPopups();
                     showErrorPopup("Błąd połączenia z serwerem.");
                 } finally {
                     // Reset button state
@@ -467,14 +416,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error(error);
             listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--color-warning-red); padding: 2rem;">Nie udało się załadować danych.</td></tr>`;
         }
-
-        // Button Listeners
-        const closePopup = () => {
-            popup.classList.remove('active');
-        };
-
-        closeBtn.onclick = closePopup;
         
+        // Button Listeners
         saveBtn.onclick = async () => {
             saveBtn.disabled = true;
             saveBtn.textContent = 'Zapisywanie...';
@@ -515,16 +458,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 if (response.ok) {
-                    closePopup();
+                    closeAllPopups();
                     window.location.reload(); 
                 } else {
                     const errorData = await response.json();
-                    closePopup();
+                    closeAllPopups();
                     showErrorPopup(errorData.error || "Nie udało się zapisać zmian.");
                 }
             } catch (error) {
                 console.error(error);
-                closePopup();
+                closeAllPopups();
                 showErrorPopup("Błąd połączenia z serwerem.");
             } finally {
                 saveBtn.disabled = false;
@@ -883,7 +826,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function handleEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
 
-        const popupEl = universalEventPopupEl;
+        const popupEl = document.getElementById('universal_event_popup');
         const headerEl = document.getElementById('popup_header');
         
         const viewSection = document.getElementById('event_view_mode');
@@ -909,8 +852,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 mode = 'view';
             }
         }
-
-        popupEl.dataset.mode = mode;
 
         if (mode === 'view') {
             btnCancel.textContent = "Zamknij"; // Linjjka kodu z dedykacją dla DamiDami2
@@ -1001,10 +942,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         popupEl.classList.add('active');
 
-        btnCancel.onclick = () => {
-            popupEl.classList.remove('active');
-        };
-
         btnSave.onclick = async () => {
             // Gather all data from the inputs
             const name = document.getElementById('edit_event_name').value.trim();
@@ -1014,7 +951,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const endDate = document.getElementById('edit_event_end').value;
 
             if (!name || !tournamentId || !startDate) {
-                popupEl.classList.remove('active');
+                closeAllPopups();
                 showErrorPopup("Wypełnij wszystkie wymagane pola (Nazwa, Turniej, Początek).");
                 return;
             }
@@ -1056,11 +993,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     throw new Error(result.error || "Nie udało się zapisać wydarzenia.");
                 }
 
-                popupEl.classList.remove('active');
+                closeAllPopups();
                 if (onSuccessCallback) onSuccessCallback();
 
             } catch (error) {
-                popupEl.classList.remove('active');
+                closeAllPopups();
                 showErrorPopup(error.message);
             }
         };
@@ -1083,18 +1020,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         throw new Error(result.error || "Nie udało się usunąć wydarzenia.");
                     }
 
-                    popupEl.classList.remove('active');
+                    closeAllPopups();
                     if (onSuccessCallback) onSuccessCallback();
 
                 } catch (error) {
-                    popupEl.classList.remove('active');
+                    closeAllPopups();
                     showErrorPopup(error.message);
                 }
             };
-
-        btnCancel.onclick = () => {
-            popupEl.classList.remove('active');
-        };
 
         popupEl.classList.add('active');
     }
@@ -1234,8 +1167,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         tabChange(startingTab, false); // false = don't push a duplicate state to the URL history
     }
 
+    function closeAllPopups() {
+        const activePopups = document.querySelectorAll('.popup_overlay.active');
+        
+        activePopups.forEach(popup => {
+            popup.classList.remove('active');
+            popup.outerHTML = popup.outerHTML; // Ensures even worst browsers will move unused .onClick events to garbage.
+        });
+    }
+
+    // Handle outside click & cancel buttons)
+    document.addEventListener('click', (event) => {
+        const clickedOutside = event.target.classList.contains('popup_overlay');
+        
+        // using .closest() in case of an icon inside the button
+        const clickedCancelBtn = event.target.closest('.btn_cancel');
+
+        if (clickedOutside || clickedCancelBtn) {
+            closeAllPopups();
+        }
+    });
+
+    // Handle the Escape Key
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeAllPopups();
+        }
+    });
+
     // Initialize the UI
-    handleConfirmationPopup()
     handleHeader();
     handleTabs();
 
