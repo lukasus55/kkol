@@ -1,11 +1,11 @@
 :root {
-    --color-border: #333333;
+    --dashboard-stroke: #333333;
     --color-warning-red: #ff4d4d;
     --color-overlay: rgba(0, 0, 0, 0.7);
 
     --dashboard-background: oklch(0.04 0 129);
     --dashboard-background-s2: oklch(0.12 0 129);
-    --dashboard-background-s3: oklch(0.20 0 129);
+    --dashboard-background-s3: oklch(0.18 0 129);
     --dashboard-background-s4: oklch(0.28 0 129);
 
     --dashboard-stroke: oklch(0.30 0 129);
@@ -76,6 +76,67 @@ body
     width: 100%;
     color: var(--dashboard-text);
     flex-wrap: wrap;
+}
+
+.btn_primary
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dashboard-text);
+    color: var(--dashboard-background);
+    border: none;
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+    height: min-content;
+}
+
+.btn_primary img
+{
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.btn_primary:hover
+{
+    opacity: 0.9;
+}
+
+.btn_primary:active
+{
+    transform: scale(0.96);
+}
+
+.btn_tertiary
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dashboard-background-s2);
+    color: var(--dashboard-text);
+    border: 1px solid var(--dashboard-stroke);
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    height: min-content;
+}
+
+.btn_tertiary img
+{
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.btn_tertiary:hover
+{
+    background-color: var(--dashboard-background-s3);
 }
 
 .dashboard
@@ -355,8 +416,8 @@ body
 #content-account .account_input
 {
     flex-grow: 1;
-    background-color: var(--color-onyx);
-    border: 1px solid var(--color-onyx);
+    background-color: var(--dashboard-background-s2);
+    border: 1px solid var(--dashboard-stroke);
     color: var(--dashboard-text);
     padding: 0.8rem 1rem;
     border-radius: 8px;
@@ -369,47 +430,6 @@ body
 {
     outline: none;
     border-color: var(--color-lime-moss);
-}
-
-.btn_primary
-{
-    background-color: var(--dashboard-text);
-    color: var(--dashboard-background);
-    border: none;
-    padding: 0.6rem;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.1s ease;
-}
-
-.btn_primary:hover
-{
-    opacity: 0.9;
-}
-
-.btn_primary:active
-{
-    transform: scale(0.96);
-}
-
-.btn_secondary
-{
-    background-color: var(--dashboard-background-s2);
-    color: var(--dashboard-text);
-    border: 1px solid var(--dashboard-stroke);
-    padding: 0.6rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.btn_secondary:hover
-{
-    background-color: var(--dashboard-background-s4);
 }
 
 /* Future Features Placeholder */
@@ -434,7 +454,7 @@ body
     align-items: center;
     flex-wrap: wrap;
     padding-bottom: 2rem;
-    border-bottom: var(--color-lime-moss) 1px solid;
+    border-bottom: var(--dashboard-stroke) 1px solid;
     gap: 1rem;
 }
 
@@ -448,28 +468,10 @@ body
     margin-bottom: 1rem;
 }
 
-#content-tournaments .btn_create_tournament
-{
-    padding: 0rem 1rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    background-color: var(--color-lime-moss);
-    height: 2rem;
-}
-
-#content-tournaments .btn_create_tournament:hover
-{
-    background-color: #5f911b;
-}
-
 #content-tournaments input
 {
-    background-color: #0d0a0b;
-    border: 1px solid var(--color-border);
+    background-color: var(--dashboard-background-s2);
+    border: 1px solid var(--dashboard-stroke);
     color: var(--dashboard-text);
     padding: 0.4rem;
     border-radius: 4px;
@@ -485,59 +487,65 @@ body
     border-color: var(--color-lime-moss);
 }
 
-.tournament_card
+#content-tournaments .tournament_card:first-child
 {
-    display: flex;
-    width: 100%;
-    background-color: #27282c;
-    height: 3rem;
-    border-radius: 12px;
-    padding: 0rem 1rem;
+    border-radius: 6px 6px 0px 0px;
 }
 
-.tournament_card *
+#content-tournaments .tournament_card:last-child
+{
+    border-radius: 0px 0px 6px 6px;
+}
+
+#content-tournaments .tournament_card
+{
+    display: grid;
+    grid-template-columns: 15rem 3rem 6rem;
+    grid-template-rows: 1fr;
+    gap: 4rem;
+    background-color: var(--dashboard-background-s3);
+    padding: 0rem 2rem;
+    border: 1px solid var(--dashboard-stroke);
+    height: 4rem;
+    min-width: 300px;
+}
+
+#content-tournaments .tournament_card * 
 {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 10%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#content-tournaments .tournament_card .info_container
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
     height: 100%;
 }
 
-.tournament_card .name
+#content-tournaments .tournament_card .info
 {
-    justify-content: flex-start;
-    color: var(--color-lime-moss);
-    width: 60%;
-}
-
-.tournament_card .name a
-{
-    justify-content: flex-start;
+    display: block;
     width: 100%;
 }
 
-.tournament_btn img
+#content-tournaments .tournament_card .info *
 {
-    width: 1.3rem;
-    height: 1.3rem;
+    width: 100%;
+}
+
+#content-tournaments .tournament_card .buttons
+{
+    display: flex;
+    gap: 1rem;
 }
 
 .tournament_btn
 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 2rem;
-    height: 2rem;
     border-radius: 100%;
-    background-color: #36373a;
-    opacity: 80%;
-}
-
-.tournament_btn:hover
-{
-    opacity: 100%;
 }
 
 .popup_overlay, .confirmation_popup
@@ -577,7 +585,7 @@ body
     border-radius: 12px;
     padding: 2.5rem 2rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--dashboard-stroke);
     text-align: center;
     
     transform: translateY(-20px) scale(0.95);
@@ -648,7 +656,7 @@ body
 {
     background-color: transparent;
     color: var(--dashboard-text);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--dashboard-stroke);
 }
 
 .btn_cancel:hover, .btn_cancel_only_this:hover
@@ -695,7 +703,7 @@ body
     gap: 0.75rem;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--dashboard-stroke);
     text-align: left;
 }
 
@@ -732,14 +740,14 @@ body
 {
     margin-top: 0.5rem;
     padding-top: 1rem;
-    border-top: 1px dashed var(--color-border);
+    border-top: 1px dashed var(--dashboard-stroke);
 }
 
 #tournament_popup .select_input
 {
-    background-color: var(--color-onyx);
+    background-color: var(--dashboard-background-s2);
     color: var(--dashboard-text);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--dashboard-stroke);
     cursor: pointer;
     width: 10rem;
     padding: .5rem;
@@ -747,7 +755,7 @@ body
 
 #tournament_popup .select_input option
 {
-    background-color: var(--color-onyx);
+    background-color: var(--dashboard-background-s2);
     color: var(--dashboard-text);
     padding: 0.5rem;
 }
@@ -784,7 +792,7 @@ body
 #tournament_popup .editor_table td
 {
     padding: 0.75rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--dashboard-stroke);
     vertical-align: middle;
 }
 
@@ -797,7 +805,7 @@ body
 #tournament_popup .editor_input
 {
     background-color: transparent;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--dashboard-stroke);
     color: var(--dashboard-text);
     padding: 0.4rem;
     border-radius: 4px;
@@ -872,7 +880,7 @@ body
     gap: 0.5rem;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px dashed var(--color-border);
+    border-bottom: 1px dashed var(--dashboard-stroke);
 }
 
 #tournament_popup .text_input
@@ -999,7 +1007,7 @@ body
 #universal_event_popup .popup_input
 {
     width: 100%;
-    background: var(--color-onyx);
+    background: var(--dashboard-background-s2);
     color: var(--dashboard-text);
     border: 1px solid var(--color-dark-green);
     padding: 0.75rem;
@@ -1142,19 +1150,9 @@ body
         height: auto;
     }
 
-    #content-tournaments .tier, .pos
+    #content-tournaments .tournament_card
     {
-        display: none;
-    }
-
-    #content-tournaments .name
-    {
-        width: 80%;
-    }
-
-    #content-tournaments .action
-    {
-        width: 20%;
+        grid-template-columns: minmax(0, 1fr) 3rem 6rem;
     }
 
 }

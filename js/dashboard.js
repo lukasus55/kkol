@@ -1,4 +1,4 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter } from "./helpers.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -73,8 +73,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="tab_header">
                 <div class="create_tournament_title"> Stwórz nowy turniej </div> 
                 <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
-                <button class="btn_create_tournament" id="create_tournament"> Stwórz </button>
-            </div>`;
+                <button class="btn_tertiary" id="create_tournament"> Stwórz </button>
+            </div>
+            <div class="tournaments_container" id="tournaments_container"> </div>
+            `;
 
             tabContainer.insertAdjacentHTML('beforeend', header);
         }
@@ -115,39 +117,58 @@ document.addEventListener('DOMContentLoaded', async () => {
             const userRole = organizerRoles[tournament.id];
             const canEdit = userRole === 'owner' || userRole === 'manager';
 
+            const userRoleName = (userRole === 'owner' || userRole === 'manager' ? userRole : 'gracz')
+
             allCardsHTML += `
                 <div class="tournament_card"> 
-                    <div class="name">                     
-                        ${tournamentPageExists ? `
-                            <a href="/${tournamentPageUrl}"> ${tournamentName} </a>` : `${tournamentName}`
-                } 
+                    <div class="info_container">
+                        <div class="info">
+                            <div class="name">
+                                    ${tournamentPageExists ? `
+                                        <a href="/${tournamentPageUrl}"> ${tournamentName} </a>` : `${tournamentName}`
+                                    } 
+                            </div>
+                            <div class="tier"> 
+                                <h5>
+                                    ${tournamentTier ?? '?'}-Tier 
+                                </h5>
+                            </div>
+                        </div>
                     </div>
-                    <div class="pos"> ${playerPosition && isTournamentFinished ? `#${playerPosition}` : `-`} </div>
-                    <div class="tier"> ${tournamentTier ?? '?'}-Tier </div>
+                    <div class="role">
+                        <h5>
+                            ${capitalizeFirstLetter(userRoleName)} 
+                        </h5>
+                    </div>
                     
-                    <div class="action"> 
-                        ${canEdit ? `<button 
-                        class="tournament_btn 
-                        edit_tournament_btn"
-                        data-id="${tournament.id}">
-                            <img src="/img/dashboard/edit_icon.webp"> 
-                        </button>` : ''}
+                    <div class="buttons">
+                        <div class="action"> 
+                            ${canEdit ? `<button 
+                            class="tournament_btn btn_tertiary 
+                            edit_tournament_btn"
+                            data-id="${tournament.id}">
+                                <img src="/img/dashboard/edit_icon.webp"> 
+                            </button>` : ''}
+                        </div>
+                        
+                        <div class="action"> 
+                            ${tournamentTier !== 'S' ? `<button 
+                            class="tournament_btn btn_tertiary 
+                            leave_tournament_btn"
+                            data-id="${tournament.id}" 
+                            data-name="${tournamentName}">
+                                <img src="/img/dashboard/leave_icon.webp"> 
+                            </button>` : ''}
+                        </div>
                     </div>
-                    
-                    <div class="action"> 
-                        ${tournamentTier !== 'S' ? `<button 
-                        class="tournament_btn 
-                        leave_tournament_btn"
-                        data-id="${tournament.id}" 
-                        data-name="${tournamentName}">
-                            <img src="/img/dashboard/leave_icon.webp"> 
-                        </button>` : ''}
-                    </div>
+
                 </div>`;
         });
 
+        const tournamentsContainer = document.querySelector('#tournaments_container');
+
         // Inject everything into the DOM at once
-        tabContainer.insertAdjacentHTML('beforeend', allCardsHTML);
+        tournamentsContainer.insertAdjacentHTML('beforeend', allCardsHTML);
 
         // Attach Event Listeners
 
@@ -210,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="pfp_container">
                         <img src="${pfpSrc}" alt="Avatar" class="pfp_preview" id="account_pfp_preview">
                         <div class="pfp_actions">
-                            <label for="pfp_upload_input" class="btn_secondary">Wybierz plik</label>
+                            <label for="pfp_upload_input" class="btn_tertiary">Wybierz plik</label>
                             <input type="file" id="pfp_upload_input" class="hidden_input" accept="image/png, image/jpeg, image/webp">
                             <button class="btn_primary" id="save_pfp_btn" style="display: none;">Zapisz zdjęcie</button>
                         </div>
