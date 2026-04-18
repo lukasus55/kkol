@@ -188,6 +188,7 @@ body
     display: flex;
     align-items: center;
     position: relative;
+    height: 100%;
 }
 
 .user_card .more_icon .more_button
@@ -1095,13 +1096,43 @@ body
 {
     .dashboard
     {
+        grid-template-rows: auto 1fr;
+        grid-template-columns: 1fr;
+    }
 
+    .dashboard_navbar
+    {
+        grid-template-rows: auto auto;
+        height: min-content;
+    }
+
+    .user_card .role_container
+    {
+        display: none;
     }
 
     .selector
     {
-        width: 100%;
-        border-radius: 12px 12px 0px 0px;
+        grid-row: 2;
+    }
+
+    .selector li
+    {
+        width: auto;
+    }
+
+    .user_actions
+    {
+        top: 80%;
+        left: auto;
+        right: 0;
+        bottom: auto;
+        margin-bottom: 0;
+    }
+
+    .user_card .more_icon
+    {
+        position: relative;
     }
 
     .content
