@@ -186,3 +186,7 @@ export function escapeHTML(str) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 }
+export function capitalizeFirstLetter(val) {
+    if (!val) return;
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}

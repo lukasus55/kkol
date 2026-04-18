@@ -1,4 +1,4 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter } from "./helpers.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ===== RENDER TABS =====
 
-    function renderHeader() {
+    function renderInfoCard() {
         const id = user.id;
         const displayedName = user.displayed_name;
         const roleId = user.role;
@@ -32,21 +32,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
         const roleDiv = document.querySelector('#player_role');
+        const profileLink = document.querySelector('#player_link')
 
         profilePicture.src = pfpSrc;
-        nameDiv.innerHTML = `${displayedName}&nbsp;<span class="id">@${id}</span>`;
+        nameDiv.innerHTML = displayedName;
+        profileLink.href = `/player?id=${user.id}`;
 
         const roles = {
             'player': {
-                name: 'Konto gracza',
+                name: 'Gracza',
                 description: 'Masz dostęp do edytowania twojego profilu. Możesz akceptować zaproszenia do turniejów.',
             },
             'organizer': {
-                name: 'Konto organizatora',
+                name: 'Organizator',
                 description: 'Możesz tworzyć turnieje i zapraszać do nich graczy. Masz wszystkie możliwości konta gracza.',
             },
             'admin': {
-                name: 'Konto administratora',
+                name: 'Administrator',
                 description: 'Masz dostęp do panelu administratora. Masz wszystkie możliwości konta organizatora',
             },
         };
@@ -71,8 +73,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="tab_header">
                 <div class="create_tournament_title"> Stwórz nowy turniej </div> 
                 <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
-                <button class="btn_create_tournament" id="create_tournament"> Stwórz </button>
-            </div>`;
+                <button class="btn_secondary" id="create_tournament"> Stwórz </button>
+            </div>
+            <div class="tournaments_container" id="tournaments_container"> </div>
+            `;
 
             tabContainer.insertAdjacentHTML('beforeend', header);
         }
@@ -113,39 +117,58 @@ document.addEventListener('DOMContentLoaded', async () => {
             const userRole = organizerRoles[tournament.id];
             const canEdit = userRole === 'owner' || userRole === 'manager';
 
+            const userRoleName = (userRole === 'owner' || userRole === 'manager' ? userRole : 'gracz')
+
             allCardsHTML += `
                 <div class="tournament_card"> 
-                    <div class="name">                     
-                        ${tournamentPageExists ? `
-                            <a href="/${tournamentPageUrl}"> ${tournamentName} </a>` : `${tournamentName}`
-                } 
+                    <div class="info_container">
+                        <div class="info">
+                            <div class="name">
+                                    ${tournamentPageExists ? `
+                                        <a href="/${tournamentPageUrl}"> ${tournamentName} </a>` : `${tournamentName}`
+                                    } 
+                            </div>
+                            <div class="tier"> 
+                                <h5>
+                                    ${tournamentTier ?? '?'}-Tier 
+                                </h5>
+                            </div>
+                        </div>
                     </div>
-                    <div class="pos"> ${playerPosition && isTournamentFinished ? `#${playerPosition}` : `-`} </div>
-                    <div class="tier"> ${tournamentTier ?? '?'}-Tier </div>
+                    <div class="role">
+                        <h5>
+                            ${capitalizeFirstLetter(userRoleName)} 
+                        </h5>
+                    </div>
                     
-                    <div class="action"> 
-                        ${canEdit ? `<button 
-                        class="tournament_btn 
-                        edit_tournament_btn"
-                        data-id="${tournament.id}">
-                            <img src="/img/dashboard/edit_icon.webp"> 
-                        </button>` : ''}
+                    <div class="buttons">
+                        <div class="action"> 
+                            ${canEdit ? `<button 
+                            class="tournament_btn btn_tertiary 
+                            edit_tournament_btn"
+                            data-id="${tournament.id}">
+                                <img src="/img/dashboard/edit_icon.webp"> 
+                            </button>` : ''}
+                        </div>
+                        
+                        <div class="action"> 
+                            ${tournamentTier !== 'S' ? `<button 
+                            class="tournament_btn btn_tertiary 
+                            leave_tournament_btn"
+                            data-id="${tournament.id}" 
+                            data-name="${tournamentName}">
+                                <img src="/img/dashboard/leave_icon.webp"> 
+                            </button>` : ''}
+                        </div>
                     </div>
-                    
-                    <div class="action"> 
-                        ${tournamentTier !== 'S' ? `<button 
-                        class="tournament_btn 
-                        leave_tournament_btn"
-                        data-id="${tournament.id}" 
-                        data-name="${tournamentName}">
-                            <img src="/img/dashboard/leave_icon.webp"> 
-                        </button>` : ''}
-                    </div>
+
                 </div>`;
         });
 
+        const tournamentsContainer = document.querySelector('#tournaments_container');
+
         // Inject everything into the DOM at once
-        tabContainer.insertAdjacentHTML('beforeend', allCardsHTML);
+        tournamentsContainer.insertAdjacentHTML('beforeend', allCardsHTML);
 
         // Attach Event Listeners
 
@@ -208,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="pfp_container">
                         <img src="${pfpSrc}" alt="Avatar" class="pfp_preview" id="account_pfp_preview">
                         <div class="pfp_actions">
-                            <label for="pfp_upload_input" class="btn_secondary">Wybierz plik</label>
+                            <label for="pfp_upload_input" class="btn_tertiary">Wybierz plik</label>
                             <input type="file" id="pfp_upload_input" class="hidden_input" accept="image/png, image/jpeg, image/webp">
                             <button class="btn_primary" id="save_pfp_btn" style="display: none;">Zapisz zdjęcie</button>
                         </div>
@@ -346,7 +369,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 initialDate: savedCalendarDate || new Date(),
                 locale: 'pl',
                 firstDay: 1,
-                height: 'auto',
 
                 datesSet: function (info) {
                     savedCalendarDate = info.view.currentStart;
@@ -371,6 +393,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     week: 'Tydzień',
                     month: 'Miesiąc'
                 },
+
+                allDayText: 'Cały dzień',
 
                 events: calendarEvents,
 
@@ -471,12 +495,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (currentUserRole === 'owner' && member.organizer_role !== 'owner') {
                     if (member.organizer_role === 'manager') {
                         roleButtonHTML = `
-                            <button class="action_btn role_btn" data-action="demote" title="Zabierz uprawnienia managera">
+                            <button class="action_btn btn_tertiary role_btn" data-action="demote" title="Zabierz uprawnienia managera">
                                 <img src="/img/dashboard/demote_icon.webp" alt="Demote">
                             </button>`;
                     } else {
                         roleButtonHTML = `
-                            <button class="action_btn role_btn" data-action="promote" title="Awansuj na managera">
+                            <button class="action_btn btn_tertiary role_btn" data-action="promote" title="Awansuj na managera">
                                 <img src="/img/dashboard/promote_icon.webp" alt="Promote">
                             </button>`;
                     }
@@ -500,12 +524,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </td>
                         <td>
                             <div class="action_buttons">
-                                <button class="action_btn attend_btn" title="Zmień status">
+                                <button class="action_btn btn_tertiary attend_btn" title="Zmień status">
                                     <img src="/img/dashboard/notepad_icon.webp" alt="Obecność">
                                 </button>
                                 ${roleButtonHTML}
                                 ${(member.organizer_role !== 'owner' && !(currentUserRole === 'manager' && member.organizer_role === 'manager') && member.id !== user.id)
-                        ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
+                        ? `<button class="action_btn btn_tertiary kick_btn" title="Wyrzuć gracza">
                                     <img src="/img/dashboard/kick_icon.webp" alt="Wyrzuć">
                                 </button>` : ``}
                             </div>
@@ -620,7 +644,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             editSection.style.display = 'none';
 
             // Populate View Text
-            document.getElementById('view_event_name').textContent = eventData.title;
+            document.getElementById('popup_header').textContent = eventData.title;
             document.getElementById('view_event_tournament').textContent = eventData.extendedProps.tournament_id;
             document.getElementById('view_event_type').textContent = eventData.extendedProps.is_major ? 'Duże wydarzenie' : 'Małe wydarzenie';
             document.getElementById('view_event_start').textContent = eventData.start ? eventData.start.toLocaleString('pl-PL') : 'Brak';
@@ -715,15 +739,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
+    // ===== MINOR POPUPS / CARDS =====
+    window.toggleUserActionsCard = () =>
+    {
+        const actionCard = document.querySelector('#user_actions')
+        actionCard.classList.toggle('active')
+    }
+
 
     // ===== HELPER FUNCTIONS =====
 
     function closeAllPopups() {
         const activePopups = document.querySelectorAll('.popup_overlay.active');
+        const activeMenus = document.querySelectorAll('.action_menu.active');
 
         activePopups.forEach(popup => {
             popup.classList.remove('active');
             popup.outerHTML = popup.outerHTML; // Ensures even worst browsers will move unused .onClick events to garbage.
+        });
+
+        activeMenus.forEach(popup => {
+            popup.classList.remove('active');
         });
     }
 
@@ -1195,13 +1231,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Handle outside click & cancel buttons)
     document.addEventListener('click', (event) => {
-        const clickedOutside = event.target.classList.contains('popup_overlay');
-
-        // using .closest() in case of an icon inside the button
+        // Normal Popups/Modals
+        const clickedOutsideOverlay = event.target.classList.contains('popup_overlay');
         const clickedCancelBtn = event.target.closest('.btn_cancel');
 
-        if (clickedOutside || clickedCancelBtn) {
+        if (clickedOutsideOverlay || clickedCancelBtn) {
             closeAllPopups();
+        }
+
+        // Action Menus
+        const isInsideActionMenu = event.target.closest('.action_menu');
+        const isInsideTriggerBtn = event.target.closest('.more_icon');
+
+        if (!isInsideActionMenu && !isInsideTriggerBtn) {
+            const openMenus = document.querySelectorAll('.action_menu.active');
+            openMenus.forEach(menu => {
+                menu.classList.remove('active');
+            });
         }
     });
 
@@ -1212,7 +1258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    renderHeader();
+    renderInfoCard();
     handleTabs();
 
     if (loadingContainer) {

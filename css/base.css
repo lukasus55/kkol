@@ -15,7 +15,7 @@
   --footer100: #242020;
 
   /* Website background */
-  --color-onyx: #0d0a0b;
+  --color-onyx: oklch(0.04 0 360);
 
   /* Cards/widgets backgorund */
   --color-charcoal-blue: #303238;
@@ -180,6 +180,11 @@ a {
   z-index: 100;
 }
 
+ul
+{
+  list-style: none;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -205,124 +210,4 @@ button
   cursor: pointer;
   background-color: inherit;
   color: inherit;
-}
-
-
-/* Calendar styling */
-:root {
-  --fc-page-bg-color: transparent;
-  --fc-neutral-bg-color: rgba(243, 239, 245, 0.03);
-  --fc-neutral-text-color: var(--color-lavender-mist);
-  --fc-border-color: rgba(243, 239, 245, 0.1);
-
-  --fc-button-text-color: var(--color-lavender-mist);
-  --fc-button-bg-color: var(--color-dark-green);
-  --fc-button-border-color: var(--color-dark-green);
-  --fc-button-hover-bg-color: var(--color-green);
-  --fc-button-hover-border-color: var(--color-green);
-  --fc-button-active-bg-color: var(--color-lime-moss);
-  --fc-button-active-border-color: var(--color-lime-moss);
-
-  --fc-event-bg-color: var(--color-green);
-  --fc-event-border-color: var(--color-lime-moss);
-  --fc-event-text-color: var(--color-lavender-mist);
-
-  --fc-today-bg-color: rgba(114, 176, 29, 0.15);
-  --fc-highlight-color: rgba(243, 239, 245, 0.05);
-  --fc-now-indicator-color: var(--color-lime-moss);
-}
-
-/* FullCalendar forces default link colors on the day numbers and day names. This small override forces them to use lavender-mist text color instead of ugly default blue.*/
-.fc-col-header-cell-cushion, 
-.fc-daygrid-day-number {
-  color: var(--color-lavender-mist) !important;
-  text-decoration: none;
-}
-
-.fc .fc-header-toolbar
-{
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: space-between;
-  text-transform: capitalize;
-}
-
-.fc-header-toolbar, .fc .fc-button {
-  font-size: .8rem !important;
-}
-
-.fc td, .fc th {
-  padding: .2rem;
-}
-
-.fc a.fc-event
-{
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.fc .fc-toolbar-chunk *
-{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
-  flex-wrap: wrap;
-  gap: .2rem;
-}
-
-.fc .fc-next-button, .fc .fc-prev-button
-{
-  background-color: transparent;
-  border: none;
-  padding: .2rem .3rem;
-  font-size: .8rem;
-}
-
-.fc .fc-next-button:hover, .fc .fc-prev-button:hover
-{
-  background-color: #0d0a0b25;
-}
-
-.fc .fc-button:focus
-{
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.fc .fc-next-button:active, .fc .fc-prev-button:active
-{
-  background-color: #0d0a0b3a !important; 
-  border: none;
-}
-
-.fc-toolbar-title
-{
-  width: 12rem;
-}
-
-
-@media (max-width:768px)
-{
-  .fc-event-time
-  {
-    display: none;
-  }
-
-  .fc .fc-toolbar-chunk:nth-child(1)
-  {
-    display: none;
-  }
-
-  .fc .fc-toolbar-chunk:nth-child(2)
-  {
-    width: 100%;
-  }
-
-  .fc .fc-header-toolbar
-  {
-    justify-content: center;
-  }
-
-
 }
