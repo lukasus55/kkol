@@ -15,7 +15,7 @@
   --footer100: #242020;
 
   /* Website background */
-  --color-onyx: #0d0a0b;
+  --color-onyx: oklch(0.04 0 360);
 
   /* Cards/widgets backgorund */
   --color-charcoal-blue: #303238;

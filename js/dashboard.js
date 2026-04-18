@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const roleDiv = document.querySelector('#player_role');
 
         profilePicture.src = pfpSrc;
-        nameDiv.innerHTML = `${displayedName}&nbsp;<span class="id">@${id}</span>`;
+        nameDiv.innerHTML = displayedName;
 
         const roles = {
             'player': {
