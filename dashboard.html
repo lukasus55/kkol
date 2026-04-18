@@ -86,7 +86,9 @@
                 <div class="tab_content tab_content-account" id="content-account"></div>
                 <div class="tab_content tab_content-tournaments" id="content-tournaments"></div>
                 <div class="tab_content tab_content-calendar" id="content-calendar">
-                    <div class="calendar"></div>
+                    <div class="calendar_container">
+                        <div class="calendar"></div>
+                    </div>
                 </div>
             </div>
 
@@ -207,11 +209,10 @@
                 
                 <div class="popup_body">
                     <div id="event_view_mode">
-                        <h3 id="view_event_name"></h3>
-                        <p><strong>Turniej:</strong> <span id="view_event_tournament"></span></p>
-                        <p><strong>Typ:</strong> <span id="view_event_type"></span></p>
-                        <p><strong>Początek:</strong> <span id="view_event_start"></span></p>
-                        <p><strong>Koniec:</strong> <span id="view_event_end"></span></p>
+                        <p><span class="p_title">Turniej:</span> <span id="view_event_tournament"></span></p>
+                        <p><span class="p_title">Typ:</span> <span id="view_event_type"></span></p>
+                        <p><span class="p_title">Początek:</span> <span id="view_event_start"></span></p>
+                        <p><span class="p_title">Koniec:</span> <span id="view_event_end"></span></p>
                     </div>
 
                     <form autocomplete="off" id="event_edit_mode" style="display: none;">
@@ -236,9 +237,9 @@
                 </div>
 
                 <div class="popup_footer">
-                    <button id="btn_popup_cancel" class="btn_cancel">Anuluj</button>
+                    <button id="btn_popup_cancel" class="btn_cancel btn_tertiary">Anuluj</button>
                     <button id="btn_popup_delete" class="btn_delete" style="display: none;">Usuń</button>
-                    <button id="btn_popup_save" class="btn_save" style="display: none;">Zapisz</button>
+                    <button id="btn_popup_save" class="btn_primary" style="display: none;">Zapisz</button>
                 </div>
             </div>
         </div>

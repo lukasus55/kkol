@@ -369,7 +369,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 initialDate: savedCalendarDate || new Date(),
                 locale: 'pl',
                 firstDay: 1,
-                height: 'auto',
 
                 datesSet: function (info) {
                     savedCalendarDate = info.view.currentStart;
@@ -394,6 +393,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     week: 'Tydzień',
                     month: 'Miesiąc'
                 },
+
+                allDayText: 'Cały dzień',
 
                 events: calendarEvents,
 
@@ -643,7 +644,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             editSection.style.display = 'none';
 
             // Populate View Text
-            document.getElementById('view_event_name').textContent = eventData.title;
+            document.getElementById('popup_header').textContent = eventData.title;
             document.getElementById('view_event_tournament').textContent = eventData.extendedProps.tournament_id;
             document.getElementById('view_event_type').textContent = eventData.extendedProps.is_major ? 'Duże wydarzenie' : 'Małe wydarzenie';
             document.getElementById('view_event_start').textContent = eventData.start ? eventData.start.toLocaleString('pl-PL') : 'Brak';

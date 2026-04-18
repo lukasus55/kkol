@@ -1,5 +1,4 @@
 :root {
-    --dashboard-stroke: #333333;
     --color-warning-red: #ff3333;
     --color-overlay: rgba(0, 0, 0, 0.7);
 
@@ -15,6 +14,27 @@
     --dashboard-text: oklch(0.90 0 129);
     --dashboard-text-s2: oklch(0.60 0 129);
     --dashboard-text-s3: oklch(0.40 0 129);
+
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: rgba(243, 239, 245, 0.03);
+    --fc-neutral-text-color: var(--dashboard-text);
+    --fc-border-color: rgba(243, 239, 245, 0.1);
+
+    --fc-button-text-color: var(--dashboard-text);
+    --fc-button-bg-color: var(--dashboard-background-s4);
+    --fc-button-border-color: var(--dashboard-stroke);
+    --fc-button-hover-bg-color: var(--dashboard-background-s6);
+    --fc-button-hover-border-color: var(--dashboard-stroke);
+    --fc-button-active-bg-color: var(--dashboard-background-s6);
+    --fc-button-active-border-color: var(--dashboard-background-s6);
+
+    --fc-event-bg-color: var(--color-green);
+    --fc-event-border-color: var(--color-lime-moss);
+    --fc-event-text-color: var(--dashboard-text);
+
+    --fc-today-bg-color: rgba(114, 176, 29, 0.15);
+    --fc-highlight-color: var(--dashboard-background-s2);
+    --fc-now-indicator-color: var(--dashboard-text);
 }
 
 h1 {
@@ -922,6 +942,13 @@ body
     transform: scale(0.97);
 }
 
+#content-calendar .calendar_container
+{
+    width: 100%;
+    height: 45rem;
+    overflow: auto;
+}
+
 #content-calendar .calendar
 {
     width: 100%;
@@ -962,7 +989,7 @@ body
 /* Header */
 #universal_event_popup .popup_title
 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
@@ -970,20 +997,16 @@ body
     text-align: center;
 }
 
-/* View Mode Typography */
 #universal_event_popup #event_view_mode p
 {
     margin: 0.8rem 0;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    color: var(--dashboard-text)
 }
 
-#universal_event_popup #view_event_name
+#universal_event_popup #event_view_mode .p_title
 {
-    color: var(--color-lime-moss);
-    margin-top: 0;
-    margin-bottom: 1.2rem;
-    font-size: 1.4rem;
-    text-align: center;
+    color: var(--dashboard-text-s2);
 }
 
 #universal_event_popup #event_edit_mode label
@@ -991,15 +1014,16 @@ body
     display: block;
     margin-bottom: 0.4rem;
     font-size: 0.9rem;
-    color: rgba(243, 239, 245, 0.8);
+    color: var(--dashboard-text);
+    font-weight: 600;
 }
 
 #universal_event_popup .popup_input
 {
     width: 100%;
     background: var(--dashboard-background-s2);
-    color: var(--dashboard-text-s2);
-    border: 1px solid var(--color-dark-green);
+    color: var(--dashboard-text);
+    border: 1px solid var(--dashboard-stroke);
     padding: 0.75rem;
     border-radius: 6px;
     margin-bottom: 1.2rem;
@@ -1012,7 +1036,7 @@ body
 
 #universal_event_popup .popup_input:disabled
 {
-    color: var(--dashboard-text-s3);
+    color: var(--dashboard-text-s2);
     border: none;
     background: none;
     -webkit-appearance: none;    
@@ -1025,7 +1049,7 @@ body
 #universal_event_popup .popup_input:focus
 {
     outline: none;
-    border-color: var(--color-lime-moss);
+    border-color: var(--dashboard-text);
     box-shadow: 0 0 0 2px rgba(114, 176, 29, 0.2);
 }
 
@@ -1051,31 +1075,6 @@ body
     font-family: inherit;
 }
 
-#universal_event_popup .btn_save
-{
-    background: var(--color-lime-moss);
-    color: var(--color-onyx);
-    border: none;
-}
-
-#universal_event_popup .btn_save:hover
-{
-    background: #83c623;
-    transform: translateY(-1px);
-}
-
-#universal_event_popup .btn_cancel
-{
-    background: transparent;
-    color: var(--dashboard-text);
-    border: 1px solid rgba(243, 239, 245, 0.3);
-}
-
-#universal_event_popup .btn_cancel:hover
-{
-    background: rgba(243, 239, 245, 0.1);
-}
-
 #universal_event_popup .btn_delete
 {
     background: transparent;
@@ -1088,6 +1087,84 @@ body
 {
     background: var(--color-warning-red);
     color: var(--dashboard-text);
+}
+
+/* FullCalendar forces default link colors on the day numbers and day names. This small override forces them to use lavender-mist text color instead of ugly default blue.*/
+.fc-col-header-cell-cushion, 
+.fc-daygrid-day-number {
+    color: var(--dashboard-text) !important;
+    text-decoration: none;
+}
+
+.fc .fc-header-toolbar
+{
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    text-transform: capitalize;
+}
+
+.fc-header-toolbar, .fc .fc-button {
+    font-size: .8rem !important;
+}
+
+.fc td, .fc th {
+    padding: .2rem;
+}
+
+.fc a.fc-event
+{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.fc .fc-toolbar-chunk *
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    flex-wrap: wrap;
+    gap: .2rem;
+}
+
+.fc .fc-next-button, .fc .fc-prev-button
+{
+    background-color: transparent;
+    border: none;
+    padding: .2rem .3rem;
+    font-size: .8rem;
+}
+
+.fc .fc-next-button:hover, .fc .fc-prev-button:hover
+{
+    background-color: var(--dashboard-background-s3);
+}
+
+.fc .fc-button:focus
+{
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.fc .fc-next-button:active, .fc .fc-prev-button:active
+{
+    background-color: var(--dashboard-background-s4) !important; 
+    border: none;
+}
+
+.fc-toolbar-title
+{
+    width: 15rem;
+}
+
+.fc-day:hover{
+    background-color: var(--dashboard-background-s2);
+}
+
+.fc-event:hover
+{
+    background-color: var(--dashboard-background-s4);
 }
 
 @media (max-width:768px)
@@ -1135,14 +1212,32 @@ body
 
     .content
     {
-        width: 100%;
-        min-height: 40rem;
-        height: auto;
+        height: calc(100vh - 60px - 132px); /* 60px = footer size, 132px = header size */
     }
 
     #content-tournaments .tournament_card
     {
         grid-template-columns: minmax(0, 1fr) 3rem 6rem;
+    }
+
+    .fc-event-time
+    {
+        display: none;
+    }
+
+    .fc .fc-toolbar-chunk:nth-child(1)
+    {
+        display: none;
+    }
+
+    .fc .fc-toolbar-chunk:nth-child(2)
+    {
+        width: 100%;
+    }
+
+    .fc .fc-header-toolbar
+    {
+        justify-content: center;
     }
 
 }
