@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         profilePicture.src = pfpSrc;
         nameDiv.innerHTML = displayedName;
-        console.log(profileLink)
         profileLink.href = `/player?id=${user.id}`;
 
         const roles = {
