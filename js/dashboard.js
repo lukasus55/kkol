@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ===== RENDER TABS =====
 
-    function renderHeader() {
+    function renderInfoCard() {
         const id = user.id;
         const displayedName = user.displayed_name;
         const roleId = user.role;
@@ -38,15 +38,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const roles = {
             'player': {
-                name: 'Konto gracza',
+                name: 'Gracza',
                 description: 'Masz dostęp do edytowania twojego profilu. Możesz akceptować zaproszenia do turniejów.',
             },
             'organizer': {
-                name: 'Konto organizatora',
+                name: 'Organizator',
                 description: 'Możesz tworzyć turnieje i zapraszać do nich graczy. Masz wszystkie możliwości konta gracza.',
             },
             'admin': {
-                name: 'Konto administratora',
+                name: 'Administrator',
                 description: 'Masz dostęp do panelu administratora. Masz wszystkie możliwości konta organizatora',
             },
         };
@@ -1212,7 +1212,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    renderHeader();
+    renderInfoCard();
     handleTabs();
 
     if (loadingContainer) {

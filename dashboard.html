@@ -21,37 +21,36 @@
     </div>
 
     <main class="main">
-        <div class="header">
-
-            <div class="info_card">
-                <div class="picture">
-                    <img src="img/default_pfp.webp" id="player_pfp">
-                </div>
-                <div class="details">
-                    <div class="name" id="player_name">
-                        <span class="id"></span>
-                    </div>
-                    <div class="role_container">
-                        <div class="role_badge" id="player_role"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="logout_btn_container">
-                <button class="logout_btn" id="logout_btn"> <img src="/img/logout_icon.webp">Wyloguj się </button>
-            </div>
-            
-        </div>
-
+        
         <div class="dashboard">
 
-            <div class="selector">
-                <ul>
-                    <li class="active" id="selector-account"> <img src="/img/dashboard/profile_icon.webp"> Moje konto </li>
-                    <li id="selector-tournaments"> <img src="/img/dashboard/trophy_icon.webp"> Turnieje </li>
-                    <li id="selector-calendar"> <img src="/img/dashboard/calendar_icon.webp"> Kalendarz </li>
-                </ul>
-            </div>
+            <nav class="dashboard_navbar">
+
+                <div class="selector">
+                    <ul>
+                        <li class="active" id="selector-account"> <img src="/img/dashboard/profile_icon.webp"> Moje konto </li>
+                        <li id="selector-tournaments"> <img src="/img/dashboard/trophy_icon.webp"> Turnieje </li>
+                        <li id="selector-calendar"> <img src="/img/dashboard/calendar_icon.webp"> Kalendarz </li>
+                    </ul>
+                </div>
+
+                <div clas="info_card_container">
+                    <div class="info_card">
+                        <div class="picture">
+                            <img src="img/default_pfp.webp" id="player_pfp">
+                        </div>
+                        <div class="details">
+                            <div class="name" id="player_name">
+                                <span class="id"></span>
+                            </div>
+                            <div class="role_container">
+                                <div class="role_badge" id="player_role"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
 
             <div class="content">
                 <div class="tab_content tab_content-account" id="content-account"></div>
