@@ -6,7 +6,9 @@
     --dashboard-background: oklch(0.04 0 129);
     --dashboard-background-s2: oklch(0.12 0 129);
     --dashboard-background-s3: oklch(0.18 0 129);
-    --dashboard-background-s4: oklch(0.28 0 129);
+    --dashboard-background-s4: oklch(0.24 0 129);
+    --dashboard-background-s5: oklch(0.30 0 129);
+    --dashboard-background-s6: oklch(0.36 0 129);
 
     --dashboard-stroke: oklch(0.30 0 129);
 
@@ -78,13 +80,11 @@ body
     flex-wrap: wrap;
 }
 
-.btn_primary
+.btn_primary, .btn_secondary, .btn_tertiary
 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--dashboard-text);
-    color: var(--dashboard-background);
     border: none;
     padding: 0.6rem;
     border-radius: 8px;
@@ -95,10 +95,22 @@ body
     height: min-content;
 }
 
-.btn_primary img
+.btn_primary img, .btn_secondary img, .btn_tertiary img
 {
     width: 0.9rem;
     height: 0.9rem;
+}
+
+
+.btn_primary:active, .btn_secondary:active, .btn_tertiary:active
+{
+    transform: scale(0.96);
+}
+
+.btn_primary
+{
+    background-color: var(--dashboard-text);
+    color: var(--dashboard-background);
 }
 
 .btn_primary:hover
@@ -106,37 +118,28 @@ body
     opacity: 0.9;
 }
 
-.btn_primary:active
+.btn_secondary
 {
-    transform: scale(0.96);
+    background-color: var(--dashboard-background-s4);
+    color: var(--dashboard-text-s);
+    border: 1px solid var(--dashboard-stroke);
+}
+
+.btn_secondary:hover
+{
+    background-color: var(--dashboard-background-s6);
 }
 
 .btn_tertiary
 {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     background-color: var(--dashboard-background-s2);
     color: var(--dashboard-text);
     border: 1px solid var(--dashboard-stroke);
-    padding: 0.6rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    height: min-content;
-}
-
-.btn_tertiary img
-{
-    width: 0.9rem;
-    height: 0.9rem;
 }
 
 .btn_tertiary:hover
 {
-    background-color: var(--dashboard-background-s3);
+    background-color: var(--dashboard-background-s4);
 }
 
 .dashboard

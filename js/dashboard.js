@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="tab_header">
                 <div class="create_tournament_title"> Stwórz nowy turniej </div> 
                 <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
-                <button class="btn_tertiary" id="create_tournament"> Stwórz </button>
+                <button class="btn_secondary" id="create_tournament"> Stwórz </button>
             </div>
             <div class="tournaments_container" id="tournaments_container"> </div>
             `;
