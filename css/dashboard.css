@@ -1,6 +1,6 @@
 :root {
     --dashboard-stroke: #333333;
-    --color-warning-red: #ff4d4d;
+    --color-warning-red: #ff3333;
     --color-overlay: rgba(0, 0, 0, 0.7);
 
     --dashboard-background: oklch(0.04 0 129);
@@ -121,7 +121,7 @@ body
 .btn_secondary
 {
     background-color: var(--dashboard-background-s4);
-    color: var(--dashboard-text-s);
+    color: var(--dashboard-text);
     border: 1px solid var(--dashboard-stroke);
 }
 
@@ -432,7 +432,7 @@ body
 #content-account .account_input:focus
 {
     outline: none;
-    border-color: var(--color-lime-moss);
+    border-color: var(--dashboard-text);
 }
 
 /* Future Features Placeholder */
@@ -475,7 +475,7 @@ body
 {
     background-color: var(--dashboard-background-s2);
     border: 1px solid var(--dashboard-stroke);
-    color: var(--dashboard-text);
+    color: var(--dashboard-text-s2);
     padding: 0.4rem;
     border-radius: 4px;
     width: 16rem;
@@ -487,7 +487,7 @@ body
 #content-tournaments input:focus
 {
     outline: none;
-    border-color: var(--color-lime-moss);
+    border-color: var(--color-text);
 }
 
 #content-tournaments .tournament_card:first-child
@@ -582,7 +582,8 @@ body
 
 .popup_container
 {
-    background-color: var(--color-onyx);
+    background-color: var(--dashboard-background);
+    color: var(--dashboard-text);
     width: 90%;
     max-width: 35rem;
     border-radius: 12px;
@@ -675,7 +676,7 @@ body
 
 .btn_confirm:hover
 {
-    background-color: #ff3333;
+    background-color: #ff4242;
 }
 
 #tournament_popup .popup_container
@@ -706,8 +707,14 @@ body
     gap: 0.75rem;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--dashboard-stroke);
+    border-bottom: 1px solid var(--dashboard-text);
     text-align: left;
+    font-weight: 600;
+}
+
+#tournament_popup .show_tour_id
+{
+    font-weight: normal;
 }
 
 #tournament_popup .header_row
@@ -719,7 +726,7 @@ body
 
 #tournament_popup .header_row label
 {
-    color: var(--color-lime-moss);
+    color: var(--dashboard-text);
     font-size: 0.9rem;
     width: 10rem;
     flex-shrink: 0;
@@ -727,6 +734,7 @@ body
 
 #tournament_popup .header_input
 {
+    color: var(--dashboard-text-s2);
     flex-grow: 1;
     padding: 0.5rem;
     width: auto;
@@ -749,7 +757,7 @@ body
 #tournament_popup .select_input
 {
     background-color: var(--dashboard-background-s2);
-    color: var(--dashboard-text);
+    color: var(--dashboard-text-s2);
     border: 1px solid var(--dashboard-stroke);
     cursor: pointer;
     width: 10rem;
@@ -759,7 +767,7 @@ body
 #tournament_popup .select_input option
 {
     background-color: var(--dashboard-background-s2);
-    color: var(--dashboard-text);
+    color: var(--dashboard-text-s2);
     padding: 0.5rem;
 }
 
@@ -802,14 +810,14 @@ body
 #tournament_popup .editor_table th
 {
     font-weight: 600;
-    color: var(--color-lime-moss);
+    color: var(--dashboard-text);
 }
 
 #tournament_popup .editor_input
 {
     background-color: transparent;
     border: 1px solid var(--dashboard-stroke);
-    color: var(--dashboard-text);
+    color: var(--dashboard-text-s2);
     padding: 0.4rem;
     border-radius: 4px;
     width: 4rem;
@@ -842,18 +850,7 @@ body
 
 #tournament_popup .action_btn
 {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 100%;
-    background-color: #36373a;
-    opacity: 80%;
-    width: 2rem;
-    height: 2rem;
 }
 
 #tournament_popup .action_btn:hover
@@ -865,16 +862,6 @@ body
 {
     width: 1rem;
     height: 1rem;
-}
-
-#tournament_popup .btn_confirm
-{
-    background-color: var(--color-lime-moss);
-}
-
-#tournament_popup .btn_confirm:hover
-{
-    background-color: #5f911b;
 }
 
 #tournament_popup .add_player_form
@@ -915,8 +902,8 @@ body
 #tournament_popup .btn_delete
 {
     background-color: transparent;
-    color: var(--color-warning-red, #ff4c4c);
-    border: 1px solid var(--color-warning-red, #ff4c4c);
+    color: var(--color-warning-red);
+    border: 1px solid var(--color-warning-red);
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     font-size: 1rem;
@@ -1011,7 +998,7 @@ body
 {
     width: 100%;
     background: var(--dashboard-background-s2);
-    color: var(--dashboard-text);
+    color: var(--dashboard-text-s2);
     border: 1px solid var(--color-dark-green);
     padding: 0.75rem;
     border-radius: 6px;
@@ -1025,7 +1012,7 @@ body
 
 #universal_event_popup .popup_input:disabled
 {
-    color: var(--dashboard-text);
+    color: var(--dashboard-text-s3);
     border: none;
     background: none;
     -webkit-appearance: none;    

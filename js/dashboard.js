@@ -494,12 +494,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (currentUserRole === 'owner' && member.organizer_role !== 'owner') {
                     if (member.organizer_role === 'manager') {
                         roleButtonHTML = `
-                            <button class="action_btn role_btn" data-action="demote" title="Zabierz uprawnienia managera">
+                            <button class="action_btn btn_tertiary role_btn" data-action="demote" title="Zabierz uprawnienia managera">
                                 <img src="/img/dashboard/demote_icon.webp" alt="Demote">
                             </button>`;
                     } else {
                         roleButtonHTML = `
-                            <button class="action_btn role_btn" data-action="promote" title="Awansuj na managera">
+                            <button class="action_btn btn_tertiary role_btn" data-action="promote" title="Awansuj na managera">
                                 <img src="/img/dashboard/promote_icon.webp" alt="Promote">
                             </button>`;
                     }
@@ -523,12 +523,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </td>
                         <td>
                             <div class="action_buttons">
-                                <button class="action_btn attend_btn" title="Zmień status">
+                                <button class="action_btn btn_tertiary attend_btn" title="Zmień status">
                                     <img src="/img/dashboard/notepad_icon.webp" alt="Obecność">
                                 </button>
                                 ${roleButtonHTML}
                                 ${(member.organizer_role !== 'owner' && !(currentUserRole === 'manager' && member.organizer_role === 'manager') && member.id !== user.id)
-                        ? `<button class="action_btn kick_btn" title="Wyrzuć gracza">
+                        ? `<button class="action_btn btn_tertiary kick_btn" title="Wyrzuć gracza">
                                     <img src="/img/dashboard/kick_icon.webp" alt="Wyrzuć">
                                 </button>` : ``}
                             </div>
