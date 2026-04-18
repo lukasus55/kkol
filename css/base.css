@@ -180,6 +180,11 @@ a {
   z-index: 100;
 }
 
+ul
+{
+  list-style: none;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

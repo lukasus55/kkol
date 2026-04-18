@@ -32,9 +32,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
         const roleDiv = document.querySelector('#player_role');
+        const profileLink = document.querySelector('#player_link')
 
         profilePicture.src = pfpSrc;
         nameDiv.innerHTML = displayedName;
+        console.log(profileLink)
+        profileLink.href = `/player?id=${user.id}`;
 
         const roles = {
             'player': {
@@ -715,15 +718,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
+    // ===== MINOR POPUPS / CARDS =====
+    window.toggleUserActionsCard = () =>
+    {
+        const actionCard = document.querySelector('#user_actions')
+        actionCard.classList.toggle('active')
+    }
+
 
     // ===== HELPER FUNCTIONS =====
 
     function closeAllPopups() {
         const activePopups = document.querySelectorAll('.popup_overlay.active');
+        const activeMenus = document.querySelectorAll('.action_menu.active');
 
         activePopups.forEach(popup => {
             popup.classList.remove('active');
             popup.outerHTML = popup.outerHTML; // Ensures even worst browsers will move unused .onClick events to garbage.
+        });
+
+        activeMenus.forEach(popup => {
+            popup.classList.remove('active');
         });
     }
 
@@ -1195,13 +1210,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Handle outside click & cancel buttons)
     document.addEventListener('click', (event) => {
-        const clickedOutside = event.target.classList.contains('popup_overlay');
-
-        // using .closest() in case of an icon inside the button
+        // Normal Popups/Modals
+        const clickedOutsideOverlay = event.target.classList.contains('popup_overlay');
         const clickedCancelBtn = event.target.closest('.btn_cancel');
 
-        if (clickedOutside || clickedCancelBtn) {
+        if (clickedOutsideOverlay || clickedCancelBtn) {
             closeAllPopups();
+        }
+
+        // Action Menus
+        const isInsideActionMenu = event.target.closest('.action_menu');
+        const isInsideTriggerBtn = event.target.closest('.more_icon');
+
+        if (!isInsideActionMenu && !isInsideTriggerBtn) {
+            const openMenus = document.querySelectorAll('.action_menu.active');
+            openMenus.forEach(menu => {
+                menu.classList.remove('active');
+            });
         }
     });
 
