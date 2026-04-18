@@ -74,7 +74,7 @@ body
     display: flex;
     align-items: center;
     width: 100%;
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     flex-wrap: wrap;
 }
 
@@ -287,20 +287,20 @@ body
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
 }
 
 #content-account .account_header
 {
     margin: 0;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--color-charcoal-blue);
+    border-bottom: 2px solid var(--dashboard-stroke);
     font-size: 1.8rem;
 }
 
 #content-account .account_card
 {
-    background-color: var(--color-charcoal-blue);
+    background-color: var(--dashboard-background-s3);
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -311,7 +311,7 @@ body
     margin-top: 0;
     margin-bottom: 1.2rem;
     font-size: 1.2rem;
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
 }
 
 #content-account .pfp_container
@@ -327,7 +327,6 @@ body
     height: 90px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--color-lime-moss);
     background-color: var(--color-onyx);
 }
 
@@ -356,7 +355,7 @@ body
     flex-grow: 1;
     background-color: var(--color-onyx);
     border: 1px solid var(--color-onyx);
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     padding: 0.8rem 1rem;
     border-radius: 8px;
     font-family: inherit;
@@ -372,10 +371,10 @@ body
 
 #content-account .btn_primary
 {
-    background-color: var(--color-lime-moss);
-    color: var(--color-onyx);
+    background-color: var(--dashboard-text);
+    color: var(--dashboard-background);
     border: none;
-    padding: 0.8rem 1.5rem;
+    padding: 0.6rem;
     border-radius: 8px;
     font-weight: 700;
     font-size: 1rem;
@@ -395,19 +394,20 @@ body
 
 #content-account .btn_secondary
 {
-    background-color: transparent;
-    color: var(--color-lavender-mist);
-    border: 1px solid var(--color-lavender-mist);
-    padding: 0.6rem 1.2rem;
+    background-color: var(--dashboard-background-s2);
+    color: var(--dashboard-text);
+    border: 1px solid var(--dashboard-stroke);
+    padding: 0.6rem;
     border-radius: 8px;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
 #content-account .btn_secondary:hover
 {
-    background-color: rgba(243, 239, 245, 0.1);
+    background-color: var(--dashboard-background-s4);
 }
 
 /* Future Features Placeholder */
@@ -468,7 +468,7 @@ body
 {
     background-color: #0d0a0b;
     border: 1px solid var(--color-border);
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     padding: 0.4rem;
     border-radius: 4px;
     width: 16rem;
@@ -606,7 +606,7 @@ body
 
 .popup_body p
 {
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     font-size: 1.1rem;
     line-height: 1.5;
     margin: 0;
@@ -645,7 +645,7 @@ body
 .btn_cancel, .btn_cancel_only_this
 {
     background-color: transparent;
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     border: 1px solid var(--color-border);
 }
 
@@ -736,7 +736,7 @@ body
 #tournament_popup .select_input
 {
     background-color: var(--color-onyx);
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     border: 1px solid var(--color-border);
     cursor: pointer;
     width: 10rem;
@@ -746,14 +746,14 @@ body
 #tournament_popup .select_input option
 {
     background-color: var(--color-onyx);
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     padding: 0.5rem;
 }
 
 #tournament_popup .select_input:focus
 {
     outline: none;
-    border-color: var(--color-lavender-mist);
+    border-color: var(--dashboard-text);
 }
 
 #tournament_popup .small_btn
@@ -773,7 +773,7 @@ body
 {
     width: 100%;
     border-collapse: collapse;
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     text-align: left;
 
 }
@@ -796,7 +796,7 @@ body
 {
     background-color: transparent;
     border: 1px solid var(--color-border);
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     padding: 0.4rem;
     border-radius: 4px;
     width: 4rem;
@@ -806,7 +806,7 @@ body
 #tournament_popup .editor_input:focus
 {
     outline: none;
-    border-color: var(--color-lavender-mist);
+    border-color: var(--dashboard-text);
 }
 
 /* Visual difference for players who did not attend */
@@ -952,7 +952,7 @@ body
     background: var(--color-onyx);
     padding: 2rem;
     border-radius: 12px;
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     width: 90%;
     max-width: 450px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -998,7 +998,7 @@ body
 {
     width: 100%;
     background: var(--color-onyx);
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     border: 1px solid var(--color-dark-green);
     padding: 0.75rem;
     border-radius: 6px;
@@ -1012,7 +1012,7 @@ body
 
 #universal_event_popup .popup_input:disabled
 {
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     border: none;
     background: none;
     -webkit-appearance: none;    
@@ -1067,7 +1067,7 @@ body
 #universal_event_popup .btn_cancel
 {
     background: transparent;
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
     border: 1px solid rgba(243, 239, 245, 0.3);
 }
 
@@ -1087,7 +1087,7 @@ body
 #universal_event_popup .btn_delete:hover
 {
     background: var(--color-warning-red);
-    color: var(--color-lavender-mist);
+    color: var(--dashboard-text);
 }
 
 @media (max-width:768px)
