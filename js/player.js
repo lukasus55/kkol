@@ -1,4 +1,4 @@
-import { calculateRanking, loadData, appendLoaderDiv } from "./helpers.js";
+import { loadData, appendLoaderDiv } from "./helpers.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -81,10 +81,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const loader = appendLoaderDiv(container, 'stats');
 
-        const leaderboard = await calculateRanking();
+        const leaderboard = await loadData(`api/ranking?id=${playerID}`);
         container.removeChild(loader);
 
-        const playerRanking = leaderboard[playerID] || { majorRanking: 0, minorRanking: 0, ranking: 0 };
+        const playerRanking = leaderboard[0] || { majorRanking: 0, minorRanking: 0, ranking: 0 };
 
         const cardHTML = `
             <div class="stats_single_stat">
