@@ -1,9 +1,9 @@
 :root {
-    --color-warning-red: #ff3333;
+    --color-warning-red: #b42525;
     --color-overlay: rgba(0, 0, 0, 0.7);
 
     --dashboard-background: oklch(0.04 0 129);
-    --dashboard-background-s2: oklch(0.12 0 129);
+    --dashboard-background-s2: oklch(0.14 0 129);
     --dashboard-background-s3: oklch(0.18 0 129);
     --dashboard-background-s4: oklch(0.24 0 129);
     --dashboard-background-s5: oklch(0.30 0 129);
@@ -267,7 +267,7 @@ body
     align-items: center;
 }
 
-.user_card .more_icon
+.more_icon
 {
     display: flex;
     align-items: center;
@@ -275,19 +275,19 @@ body
     height: 100%;
 }
 
-.user_card .more_icon .more_button
+.more_icon .more_button
 {
     color: var(--dashboard-text-s2);
     cursor: pointer;
     transition: color .1s ease-in;
 }
 
-.user_card .more_icon button:hover
+.more_icon button:hover
 {
     color: var(--dashboard-text);
 }
 
-.user_actions
+.action_menu
 {
     display: none;
     position: absolute;
@@ -298,20 +298,20 @@ body
     white-space: nowrap;
 }
 
-.user_actions.active
+.action_menu.active
 {
     display: flex;
 }
 
-.user_actions ul
+.action_menu ul
 {
-    padding: 1rem;
     background-color: var(--dashboard-background-s2);
     border: 1px solid var(--dashboard-stroke);
     border-radius: 6px;
+    padding: .5rem .5rem;
 }
 
-.user_actions li
+.action_menu li
 {
     display: flex;
     align-items: center;
@@ -319,20 +319,27 @@ body
     height: 1.3rem;
     gap: .7rem;
     border-radius: 6px;
-    padding: 1rem .5rem;
     cursor: pointer;
+    margin: .7rem 0;
+    padding: .5rem;
 }
 
-.user_actions li:hover
+.action_menu li:hover
 {
-    background-color: var(--dashboard-background-s3);
+    background-color: var(--dashboard-background-s4);
     opacity: 100%;
 }
 
-.user_actions li.active
+.action_menu li.active
 {
-    background-color: var(--dashboard-background-s3);
+    background-color: var(--dashboard-background-s4);
     opacity: 100%;
+}
+
+.action_menu li img
+{
+    width: .8rem;
+    height: .8rem;
 }
 
 .content
@@ -533,7 +540,7 @@ body
     min-width: 300px;
 }
 
-#content-tournaments .tournament_card * 
+#content-tournaments.info_container, #content-tournaments .role
 {
     display: flex;
     align-items: center;
@@ -564,6 +571,17 @@ body
 {
     display: flex;
     gap: 1rem;
+}
+
+#content-tournaments .action_menu
+{
+    bottom: 70%;
+    margin-left: 2rem;
+}
+
+#content-tournaments .action_menu .tournament_leave_btn h4
+{
+    color: var(--color-warning-red);
 }
 
 .tournament_btn
@@ -696,7 +714,7 @@ body
 
 .btn_confirm:hover
 {
-    background-color: #ff4242;
+    background-color: #690000;
 }
 
 #tournament_popup .popup_container

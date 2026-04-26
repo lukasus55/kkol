@@ -142,24 +142,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     
                     <div class="buttons">
-                        <div class="action"> 
-                            ${canEdit ? `<button 
-                            class="tournament_btn btn_tertiary 
-                            edit_tournament_btn"
-                            data-id="${tournament.id}">
-                                <img src="/img/dashboard/edit_icon.webp"> 
-                            </button>` : ''}
-                        </div>
-                        
-                        <div class="action"> 
-                            ${tournamentTier !== 'S' ? `<button 
-                            class="tournament_btn btn_tertiary 
-                            tournament_leave_btn"
-                            data-id="${tournament.id}" 
-                            data-name="${tournamentName}">
-                                <img src="/img/dashboard/leave_icon.webp"> 
-                            </button>` : ''}
-                        </div>
+
+                    <div class="more_icon">
+                        <button 
+                        class="more_button tournament_more_btn"
+                        data-id="${tournament.id}">
+                            <svg fill="currentColor" width="2rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="17.5" cy="12" r="1.5"/>
+                                <circle cx="12" cy="12" r="1.5"/>
+                                <circle cx="6.5" cy="12" r="1.5"/>
+                            </svg>
+                        </button>
+
+                        <div class="action_menu tournament_actions" id="tournament_actions-${tournament.id}"> ${{/* toggleTournamentActionsCard() inserts here*/}} </div>
+                    </div>
+
                     </div>
 
                 </div>`;
@@ -171,6 +168,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         tournamentsContainer.insertAdjacentHTML('beforeend', allCardsHTML);
 
         // Attach Event Listeners
+
+        const moreButtons = tabContainer.querySelectorAll('.tournament_more_btn');
+        await moreButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const clickedTournamentId = button.getAttribute('data-id');
+                const clickedTournament = tournamentsData[clickedTournamentId];
+                toggleTournamentActionsCard(clickedTournament);
+            });
+        });
 
         const createBtn = document.getElementById('tournament_create');
         if (createBtn) {
@@ -186,30 +192,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 createTournament(newId);
             });
         }
-
-        const leaveButtons = tabContainer.querySelectorAll('.tournament_leave_btn');
-        leaveButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const tournament = {
-                    id: button.getAttribute('data-id'),
-                    name: button.getAttribute('data-name')
-                };
-
-                showConfirmationPopup(
-                    () => { leaveTournament(tournament) },
-                    `Czy na pewno chcesz opuścić turniej <span class="highlight">${tournament.id}</span>`,
-                    `Opuść`
-                )
-            });
-        });
-
-        const editButtons = tabContainer.querySelectorAll('.edit_tournament_btn');
-        await editButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const clickedTournamentId = button.getAttribute('data-id');
-                showTournamentPopup(clickedTournamentId, tournamentsData);
-            });
-        });
     }
 
     async function renderAccountTab(tabContainer) {
@@ -437,9 +419,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ===== MAJOR POPUPS =====
 
-    async function showTournamentPopup(tournamentId, tournamentsData) {
+    async function showTournamentPopup(tournament) {
+
+        const tournamentId = tournament.id;
+
         const popup = document.getElementById('tournament_popup');
         const listEl = document.getElementById('editor_players_list');
+
 
         // Header
         const tourIdEl = document.getElementById('show_tour_id');
@@ -454,9 +440,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const deleteBtn = document.getElementById('editor_delete_btn')
         const saveBtn = document.getElementById('editor_save_btn');
 
-        // Populate Header Data
-        const tournament = tournamentsData[tournamentId];
 
+        // Populate Header Data
         tourIdEl.textContent = tournament.id || '';
 
         nameInput.value = tournament.displayed_name || '';
@@ -474,6 +459,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         listEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">Ładowanie graczy...</td></tr>`;
         popup.classList.add('active');
+
 
         try {
             const response = await fetch(`/api/tournament_editor_details?tournamentId=${tournamentId}`);
@@ -565,7 +551,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const row = btn.closest('tr');
                     const targetPlayerId = row.getAttribute('data-player-id');
 
-                    toggleAttendance(tournamentId, targetPlayerId, tournamentsData);
+                    toggleAttendance(tournament, targetPlayerId);
                 };
             });
 
@@ -577,7 +563,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const targetPlayerId = row.getAttribute('data-player-id');
                     const action = btn.getAttribute('data-action');
 
-                    changeRole(tournamentId, targetPlayerId, tournamentsData, action);
+                    changeRole(tournament, targetPlayerId, action);
                 };
             });
 
@@ -590,8 +576,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const targetPlayerId = row.getAttribute('data-player-id');
 
                     showConfirmationPopup(
-                        () => { kickPlayer(tournamentId, targetPlayerId, tournamentsData) },
-                        `Czy na pewno chcesz wyrzucić gracza <span class="highlight">${targetPlayerId}</span> z turnieju <span class="highlight">${tournamentId}</span>? Ta akcja jest nieodwracalna i usunie wszystkie jego wyniki.`,
+                        () => { kickPlayer(tournament, targetPlayerId) },
+                        `Czy na pewno chcesz wyrzucić gracza <span class="highlight">${targetPlayerId}</span> z turnieju <span class="highlight">${tournament.displayed_name}</span>? Ta akcja jest nieodwracalna i usunie wszystkie jego wyniki.`,
                         `Wyrzuć`
                     )
 
@@ -611,7 +597,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                addPlayer(newPlayerId, tournamentId, tournamentsData)
+                addPlayer(newPlayerId, tournament)
             };
 
         } catch (error) {
@@ -757,27 +743,103 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    // ===== MINOR POPUPS / CARDS =====
+    // ===== ACTION CARDS =====
+
     window.toggleUserActionsCard = () =>
     {
         const actionCard = document.querySelector('#user_actions')
+        closeAllPopups(actionCard)
         actionCard.classList.toggle('active')
+    }
+
+    function toggleTournamentActionsCard(tournament) {
+
+        const actionCard = document.querySelector(`#tournament_actions-${tournament.id}`);
+
+        closeAllPopups(actionCard);
+
+        const organizerRoles = user.organizer_roles ?? {};
+        const userRole = organizerRoles[tournament.id];
+
+        const canEdit = userRole === 'owner' || userRole === 'manager';
+
+        const cardHtml = `
+            <ul>
+
+                ${canEdit ? `<li>
+                    <button class="tournament_edit_btn">
+                        <h4>
+                            <img src="/img/dashboard/edit_icon.webp"> Edytuj turniej
+                        </h4>
+                    </button>
+                </li>` : ``}
+
+                ${userRole !== 'owner' ? `<li>
+                    <button class="tournament_leave_btn">
+                        <h4>
+                            <img src="/img/dashboard/leave_icon.webp"> Opuść turniej
+                        </h4>
+                    </button>
+                </li>` : ``}
+
+            </ul>`
+
+        actionCard.innerHTML = cardHtml
+
+        const leaveButton = actionCard.querySelector('.tournament_leave_btn');
+        if (leaveButton) {
+            leaveButton.addEventListener('click', () => {
+                showConfirmationPopup(
+                    () => { leaveTournament(tournament.id) },
+                    `Czy na pewno chcesz opuścić turniej <span class="highlight">${tournament.displayed_name}</span>`,
+                    `Opuść`
+                )
+            });
+        }
+
+        const editButton = actionCard.querySelector('.tournament_edit_btn');
+        if (editButton) {
+            editButton.addEventListener('click', () => {
+                showTournamentPopup(tournament);
+        });
+        }
+
+        actionCard.classList.toggle('active');
+
+        // showTournamentPopup(clickedTournamentId, tournamentsData);
     }
 
 
     // ===== HELPER FUNCTIONS =====
 
-    function closeAllPopups() {
+    function closeAllPopups(exception = null) {
         const activePopups = document.querySelectorAll('.popup_overlay.active');
         const activeMenus = document.querySelectorAll('.action_menu.active');
 
+        const isException = (element) => {
+            if (!exception) return false;
+            
+            // Handle if exception is an array or NodeList
+            if (Array.isArray(exception) || exception instanceof NodeList) {
+                return Array.from(exception).includes(element);
+            }
+            
+            // Handle if exception is a single DOM node
+            return element === exception;
+        };
+
         activePopups.forEach(popup => {
-            popup.classList.remove('active');
-            popup.outerHTML = popup.outerHTML; // Ensures even worst browsers will move unused .onClick events to garbage.
+            if (!isException(popup)) {
+                popup.classList.remove('active');
+                // Ensures even worst browsers will move unused .onClick events to garbage.
+                popup.outerHTML = popup.outerHTML; 
+            }
         });
 
-        activeMenus.forEach(popup => {
-            popup.classList.remove('active');
+        activeMenus.forEach(menu => {
+            if (!isException(menu)) {
+                menu.classList.remove('active');
+            }
         });
     }
 
@@ -827,14 +889,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // ===== ACTION FUNCTIONS =====
-    async function leaveTournament(tournament) {
+    async function leaveTournament(tournamentId) {
         try {
             const response = await fetch('/api/tournament_leave', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ tournamentId: tournament.id })
+                body: JSON.stringify({ tournamentId: tournamentId })
             });
 
             if (response.ok) {
@@ -851,19 +913,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    async function kickPlayer(tournamentId, targetPlayerId, tournamentsData) {
+    async function kickPlayer(tournament, targetPlayerId) {
         try {
             const res = await fetch('/api/tournament_kick_player', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    tournament_id: tournamentId,
+                    tournament_id: tournament.id,
                     target_player_id: targetPlayerId
                 })
             });
 
             if (res.ok) {
-                showTournamentPopup(tournamentId, tournamentsData);
+                showTournamentPopup(tournament);
             } else {
                 const err = await res.json();
                 closeAllPopups();
@@ -876,19 +938,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    async function toggleAttendance(tournamentId, targetPlayerId, tournamentsData) {
+    async function toggleAttendance(tournament, targetPlayerId) {
         try {
             const res = await fetch('/api/tournament_toggle_attendance', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    tournament_id: tournamentId,
+                    tournament_id: tournament.id,
                     target_player_id: targetPlayerId
                 })
             });
 
             if (res.ok) {
-                showTournamentPopup(tournamentId, tournamentsData);
+                showTournamentPopup(tournament);
             } else {
                 const err = await res.json();
                 closeAllPopups();
@@ -900,13 +962,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    async function changeRole(tournamentId, targetPlayerId, tournamentsData, action) {
+    async function changeRole(tournament, targetPlayerId, action) {
         try {
             const res = await fetch('/api/tournament_update_organizer_role', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    tournament_id: tournamentId,
+                    tournament_id: tournament.id,
                     target_player_id: targetPlayerId,
                     action: action
                 })
@@ -914,7 +976,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (res.ok) {
                 // Refresh the popup to show the new badge and updated button!
-                showTournamentPopup(tournamentId, tournamentsData);
+                showTournamentPopup(tournament);
             } else {
                 const err = await res.json();
                 closeAllPopups();
@@ -926,19 +988,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    async function addPlayer(newPlayerId, tournamentId, tournamentsData) {
+    async function addPlayer(newPlayerId, tournament) {
+        console.log(tournament)
         try {
             const res = await fetch('/api/tournament_add_player', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    tournament_id: tournamentId,
+                    tournament_id: tournament.id,
                     new_player_id: newPlayerId
                 })
             });
 
             if (res.ok) {
-                showTournamentPopup(tournamentId, tournamentsData);
+                showTournamentPopup(tournament);
             } else {
                 const err = await res.json();
                 closeAllPopups();
@@ -1042,18 +1105,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (res.ok) {
-                // Inject a placeholder into the local data             
-                tournamentsData[newId] = {
-                    id: newId,
-                    displayed_name: newId,
-                    finished: false,
-                    details: { tier: 'C', timestamp: Math.floor(Date.now() / 1000) }
-                };
-
-                idInput.value = '';
-
-                // Open the editor instantly
-                showTournamentPopup(newId, tournamentsData);
+                // TODO: Open this tournament popup instantly (maybe with new param ?tab=tournaments&t=${newId})
+                window.location.reload()
             } else {
                 const err = await res.json();
                 showErrorPopup(err.error || "Błąd podczas tworzenia turnieju.");
