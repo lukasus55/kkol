@@ -359,6 +359,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         const calendarEl = tabContainer.querySelector('.calendar');
         calendarEl.innerHTML = '';
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const monthParam = urlParams.get('m');
+        const yearParam = urlParams.get('y');
+
+        console.log(monthParam, + ' ' + yearParam)
+
+        let calendarStartDate = savedCalendarDate || new Date();
+
+        if (monthParam && yearParam) {
+            const year = parseInt(yearParam, 10);
+            const month = parseInt(monthParam, 10);
+
+            if (!isNaN(year) && !isNaN(month) && month >= 1 && month <= 12) {
+                // JS Date months are 0-indexed (0 = Jan, 11 = Dec)
+                calendarStartDate = new Date(year, month - 1, 1);
+            }
+        }
+
         try {
             const calendarEvents = await loadData(`/api/events?player=${user.id}`);
 
@@ -366,7 +384,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 initialView: 'dayGridMonth',
 
-                initialDate: savedCalendarDate || new Date(),
+                initialDate: calendarStartDate,
                 locale: 'pl',
                 firstDay: 1,
 
