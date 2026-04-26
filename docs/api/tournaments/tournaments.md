@@ -12,6 +12,7 @@ Returns tournament metadata and standings.
 | Parameter | Type | Required | Description |
 | :--- | :--- | :---: | :--- |
 | `id` | String | No | Filter by a single tournament ID. |
+| `player` | String | No | Filter by a single player ID. Returns only tournaments attended by a specific player.|
 
 ### Example Requests
 
@@ -23,9 +24,15 @@ GET /api/tournaments
 GET /api/tournaments?id=kol2026
 ```
 
+```http
+GET /api/tournaments?player=harnas
+```
+
 ---
 
-## Success Response
+## Responses
+
+### Success Response
 **Code:** `200 OK`
 
 ```json
@@ -63,8 +70,6 @@ GET /api/tournaments?id=kol2026
     }
 }
 ```
-
-## Responses
 
 ### Error Responses
 

@@ -5,7 +5,7 @@ export default async function handler(request, response) {
         
         
         // Check for the optional 'id' parameter
-        const { id } = request.query;
+        const { id, player } = request.query;
 
         let tournaments, results;
 
@@ -14,7 +14,16 @@ export default async function handler(request, response) {
                 sql`SELECT * FROM tournaments WHERE id = ${id}`,
                 sql`SELECT * FROM results WHERE tournament_id = ${id}`
             ]);
-        } else {
+        } 
+        else if (player) {
+            [tournaments, results] = await Promise.all([
+                sql`SELECT t.id, t.displayed_name, t.page_exists, t.page_url, t.finished, t.event_timestamp, t.displayed_date, t.tier, r.player_id FROM tournaments t 
+                    inner join results r on r.tournament_id = t.id  
+                    where r.player_id = ${player}`,
+                sql`SELECT * FROM results WHERE player_id = ${player};`
+            ]);
+        }
+        else {
             // Fetch All
             [tournaments, results] = await Promise.all([
                 sql`SELECT * FROM tournaments`,
