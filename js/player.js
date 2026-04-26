@@ -5,18 +5,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     let playerID = urlParams.get('id'); 
 
-    let wonTournamentsByTier = { s: [], a: [], b: [], c: [] };
-
     loadProfiles();
     loadStats();
+
+    let wonTournamentsByTier = { s: [], a: [], b: [], c: [] };
 
     async function loadProfiles() {
         const container = document.querySelector('#player_tournaments');
         const loader = appendLoaderDiv(container, 'tournaments');
 
         const [tournamentsData, playerData] = await Promise.all([
-            loadData('/api/tournaments'),
-            loadData('/api/players')
+            loadData(`/api/tournaments?player=${playerID}`),
+            loadData(`/api/players?id=${playerID}`)
         ]);
 
         if(!playerData[playerID]) {
@@ -25,40 +25,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const player = playerData[playerID] ?? {};
+        const tournaments = Object.keys(tournamentsData).map((key) => tournamentsData[key]);
 
         loadHeader(player)
-
-        const playerTournaments = player.tournaments ?? {};
-        let attendedTournaments = Object.keys(playerTournaments);
-        let tournaments = [];
-
-        attendedTournaments.forEach(tournamentId => {
-            if (tournamentsData[tournamentId]) {
-                tournaments.push(tournamentsData[tournamentId]);
-            }
-        });
 
         // Sort tournaments descending
         tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
 
         // Populate won tournaments for the badges
-        attendedTournaments.forEach(tournamentId => {
-            const t = tournamentsData[tournamentId];
-            const pData = playerTournaments[tournamentId] ?? {};
+        tournaments.forEach(t => {
+            const standings = t.standings;
+            const tier = (t.details.tier || '').toLowerCase();
 
-            if (pData.position === 1 && t.finished === true && t) {
-                const tier = (t.details.tier || '').toLowerCase();
-                if (wonTournamentsByTier[tier]) {
+            standings.forEach(standing => {
+                if (standing.position === 1 && standing.id === playerID && t.finished) {
                     wonTournamentsByTier[tier].push(t.displayed_name);
                 }
-            }
+            });
         });
 
         container.removeChild(loader);
 
         // Render UI
         renderBadges();
-        renderTournaments(tournaments, playerTournaments, container);
+        renderTournaments(tournaments, container);
     }
 
     async function loadHeader(player) {
@@ -103,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.insertAdjacentHTML('beforeend', cardHTML);
     }
 
-    function renderTournaments(tournaments, playerTournaments, container) {
+    function renderTournaments(tournaments, container) {
         if (!container) return;
 
         // Build all the HTML as a single string first (much better for performance)
@@ -117,12 +107,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!tournament) return;
 
             const isTournamentFinished = tournament.finished;
-            const playerTournamentData = playerTournaments[tournament.id] ?? {};
 
             const tournamentName = tournament.displayed_name;
             const tournamentDate = tournament.details.displayed_date;
             const tournamentTier = tournament.details.tier;
-            const playerPosition = playerTournamentData.position;
+
+            const standings = tournament.standings;
+
+            let playerPosition;
+
+            standings.forEach(standing => {
+                if (standing.id === playerID) {
+                    playerPosition = standing.position;
+                }
+            });
 
             const tournamentPageExists = tournament.page_exists;
             const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';

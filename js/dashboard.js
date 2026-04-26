@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const currentUser = user;
 
-        const tournamentsData = await loadData('/api/tournaments');
+        const tournamentsData = await loadData(`/api/tournaments?player=${user.id}`);
 
         const userType = user.role;
         const canAdd = userType === 'admin' || userType === 'organizer';
