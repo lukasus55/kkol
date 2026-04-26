@@ -1,7 +1,7 @@
 # Update Organizer Role
 Promotes or demotes a tournament manager for the authenticated owner.
 
-* **URL:** `/api/update_organizer_role`
+* **URL:** `/api/tournament_update_organizer_role`
 * **Method:** `POST`
 * **Required Roles:** `owner` (tournament-specific)
 

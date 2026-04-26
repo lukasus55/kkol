@@ -71,9 +71,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (canAdd) {
             const header = `
             <div class="tab_header">
-                <div class="create_tournament_title"> Stwórz nowy turniej </div> 
+                <div class="tournament_create_title"> Stwórz nowy turniej </div> 
                 <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
-                <button class="btn_secondary" id="create_tournament"> Stwórz </button>
+                <button class="btn_secondary" id="tournament_create"> Stwórz </button>
             </div>
             <div class="tournaments_container" id="tournaments_container"> </div>
             `;
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="action"> 
                             ${tournamentTier !== 'S' ? `<button 
                             class="tournament_btn btn_tertiary 
-                            leave_tournament_btn"
+                            tournament_leave_btn"
                             data-id="${tournament.id}" 
                             data-name="${tournamentName}">
                                 <img src="/img/dashboard/leave_icon.webp"> 
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Attach Event Listeners
 
-        const createBtn = document.getElementById('create_tournament');
+        const createBtn = document.getElementById('tournament_create');
         if (createBtn) {
             createBtn.addEventListener('click', async () => {
                 const idInput = document.getElementById('new_tournament_id');
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        const leaveButtons = tabContainer.querySelectorAll('.leave_tournament_btn');
+        const leaveButtons = tabContainer.querySelectorAll('.tournament_leave_btn');
         leaveButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const tournament = {
@@ -811,7 +811,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ===== ACTION FUNCTIONS =====
     async function leaveTournament(tournament) {
         try {
-            const response = await fetch('/api/leave_tournament', {
+            const response = await fetch('/api/tournament_leave', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -835,7 +835,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function kickPlayer(tournamentId, targetPlayerId, tournamentsData) {
         try {
-            const res = await fetch('/api/kick_player', {
+            const res = await fetch('/api/tournament_kick_player', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -860,7 +860,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function toggleAttendance(tournamentId, targetPlayerId, tournamentsData) {
         try {
-            const res = await fetch('/api/toggle_attendance', {
+            const res = await fetch('/api/tournament_toggle_attendance', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -884,7 +884,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function changeRole(tournamentId, targetPlayerId, tournamentsData, action) {
         try {
-            const res = await fetch('/api/update_organizer_role', {
+            const res = await fetch('/api/tournament_update_organizer_role', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -910,7 +910,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function addPlayer(newPlayerId, tournamentId, tournamentsData) {
         try {
-            const res = await fetch('/api/add_player', {
+            const res = await fetch('/api/tournament_add_player', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -934,7 +934,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function changeTournamentTier(selectedTier, tournamentId) {
         try {
-            const res = await fetch('/api/change_tournament_tier', {
+            const res = await fetch('/api/tournament_change_tier', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -989,7 +989,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         try {
-            const response = await fetch('/api/save_tournament_results', {
+            const response = await fetch('/api/tournament_save_results', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1017,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function createTournament(newId, tournamentsData = {}) {
         const idInput = document.getElementById('new_tournament_id');
         try {
-            const res = await fetch('/api/create_tournament', {
+            const res = await fetch('/api/tournament_create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tournament_id: newId })
@@ -1048,7 +1048,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function deleteTournament(tournamentId) {
         try {
-            const res = await fetch('/api/delete_tournament', {
+            const res = await fetch('/api/tournament_delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tournament_id: tournamentId })

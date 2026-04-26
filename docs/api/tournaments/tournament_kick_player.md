@@ -1,7 +1,7 @@
 # Kick Player
 Removes a player from a tournament.
 
-* **URL:** `/api/kick_player`
+* **URL:** `/api/tournament_kick_player`
 * **Method:** `POST`
 * **Required Roles:** `owner` (tournament-specific) or `manager` (tournament-specific)
 

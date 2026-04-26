@@ -481,7 +481,7 @@ body
     gap: 1rem;
 }
 
-#content-tournaments .create_tournament_title
+#content-tournaments .tournament_create_title
 {
     display: flex;
     width: 100%;

@@ -1,7 +1,7 @@
 # Toggle Attendance
 Toggles a player's attendance status in a tournament.
 
-* **URL:** `/api/toggle_attendance`
+* **URL:** `/api/tournament_toggle_attendance`
 * **Method:** `POST`
 * **Required Roles:** `owner` (tournament-specific) or `manager` (tournament-specific)
 
