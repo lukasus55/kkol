@@ -707,8 +707,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
 
-        const popupEl = document.getElementById('universal_event_popup');
+        const popupEl = document.getElementById('event_popup');
+        const popupTitleEl = document.getElementById('popup_title');
         const headerEl = document.getElementById('popup_header');
+
 
         const viewSection = document.getElementById('event_view_mode');
         const editSection = document.getElementById('event_edit_mode');
@@ -720,7 +722,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnSave.style.display = 'none';
         btnDelete.style.display = 'none';
 
-        let mode;
+        const editButtons = headerEl.querySelectorAll('#event_popup .popup_tab_switch_btn');
+        editButtons.forEach (editButton => {
+            editButton.addEventListener('click', () => {
+                changeEventTab(editButton);
+            });
+        });
+
+        let mode = 'view';
 
         if (intention === 'create') { mode = 'create' }
         else {
@@ -736,7 +745,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (mode === 'view') {
             btnCancel.textContent = "Zamknij"; // Linjjka kodu z dedykacją dla DamiDami2
-            headerEl.textContent = "Szczegóły Wydarzenia";
+            popupTitleEl.textContent = "Szczegóły Wydarzenia";
             viewSection.style.display = 'block';
             editSection.style.display = 'none';
 
@@ -748,7 +757,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('view_event_end').textContent = eventData.end ? eventData.end.toLocaleString('pl-PL') : 'Brak';
         }
         else if (mode === 'edit' || mode === 'create') {
-            headerEl.textContent = mode === 'edit' ? "Edytuj Wydarzenie" : "Utwórz Nowe Wydarzenie";
+            popupTitleEl.textContent = mode === 'edit' ? "Edytuj Wydarzenie" : "Utwórz Nowe Wydarzenie";
             viewSection.style.display = 'none';
             editSection.style.display = 'block';
             btnSave.style.display = 'inline-block';
@@ -867,13 +876,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </button>
                 </li>` : ``}
 
-                ${canEdit ? `<li>
+                <li>
                     <button class="tournament_events_btn">
                         <h4>
                             <img src="/img/dashboard/calendar_icon.webp"> Wydarzenia
                         </h4>
                     </button>
-                </li>` : ``}
+                </li>
 
                 ${userRole !== 'owner' ? `<li>
                     <button class="tournament_leave_btn">
@@ -1330,6 +1339,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             closeAllPopups();
             showErrorPopup(error.message);
+        }
+    }
+
+    function changeEventTab(clickedButton) {
+        const allButtons = document.querySelectorAll('#event_popup .popup_tab_switch_btn');
+        allButtons.forEach(btn => btn.classList.remove('active'));
+        clickedButton.classList.add('active');
+
+        const tabName = clickedButton.getAttribute('data-tab');
+
+        const allTabs = document.querySelectorAll('#event_popup .event_tab');
+        allTabs.forEach(tab => tab.classList.remove('active'));
+
+        const targetTab = document.querySelector(`#event_${tabName}_tab`);
+        if (targetTab) {
+            targetTab.classList.add('active');
         }
     }
 
