@@ -848,8 +848,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             });
 
-            if (mode === 'edit' && eventData?.id) {
+            if (mode === 'edit' || mode === 'create') {
                 await updateEvent(mode, onSuccessCallback, eventData);
+            }
+
+            if (mode === 'edit' && eventData?.id) {
                 await updateEventResults(eventData.id, parsedResults, onSuccessCallback);
             }
         };
