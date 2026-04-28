@@ -18,9 +18,11 @@ Welcome to the backend API documentation.
 
 ### Events
 * [**Fetch Event** (`POST /api/events`)](./docs/api/events/events.md)
+* [**Fetch Event Results** (`POST /api/event_results`)](./docs/api/events/event_results.md)
 * [**Create Event** (`POST /api/event_create`)](./docs/api/events/event_create.md)
 * [**Update Event** (`POST /api/event_update`)](./docs/api/events/event_update.md)
 * [**Delete Event** (`POST /api/event_delete`)](./docs/api/events/event_delete.md)
+* [**Update Event Results** (`POST /api/event_update_results`)](./docs/api/events/event_update_results.md)
 
 ### Tournaments
 * [**Fetch Tournaments** (`GET /api/tournaments`)](./docs/api/tournaments/tournaments.md)
