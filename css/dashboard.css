@@ -975,6 +975,17 @@ body
     transform: scale(0.97);
 }
 
+#tournament_events_popup .popup_header
+{
+    border-bottom: 1px solid var(--dashboard-stroke);
+    padding-bottom: 1rem;
+}
+
+#tournament_events_popup .events_list
+{
+    
+}
+
 #content-calendar .calendar_container
 {
     width: 100%;

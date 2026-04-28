@@ -17,6 +17,7 @@ Welcome to the backend API documentation.
 * [**Logout** (`POST /api/logout`)](./docs/api/auth/logout.md)
 
 ### Events
+* [**Fetch Event** (`POST /api/events`)](./docs/api/events/events.md)
 * [**Create Event** (`POST /api/event_create`)](./docs/api/events/event_create.md)
 * [**Update Event** (`POST /api/event_update`)](./docs/api/events/event_update.md)
 * [**Delete Event** (`POST /api/event_delete`)](./docs/api/events/event_delete.md)

@@ -619,6 +619,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     }
 
+    async function showTournamentEventsPopup(tournament) {
+        const popupEl = document.querySelector('#tournament_events_popup');
+        const listEl = document.querySelector('#tournament_events_popup .events_list')
+
+        popupEl.classList.add('active');
+
+        listEl.innerHTML = '';
+        const loadingContainer = appendLoaderDiv(listEl);
+
+        const tournamentEvents = await loadData('/api/events?tournament=kol2026&format=list');
+        console.log(tournamentEvents);
+
+
+        listEl.removeChild(loadingContainer);
+        
+    }
+
     function showEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
 
         const popupEl = document.getElementById('universal_event_popup');
@@ -781,6 +798,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </button>
                 </li>` : ``}
 
+                ${canEdit ? `<li>
+                    <button class="tournament_events_btn">
+                        <h4>
+                            <img src="/img/dashboard/calendar_icon.webp"> Wydarzenia
+                        </h4>
+                    </button>
+                </li>` : ``}
+
                 ${userRole !== 'owner' ? `<li>
                     <button class="tournament_leave_btn">
                         <h4>
@@ -793,6 +818,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         actionCard.innerHTML = cardHtml
 
+        
+        const editButton = actionCard.querySelector('.tournament_edit_btn');
+        if (editButton) {
+            editButton.addEventListener('click', () => {
+                showTournamentPopup(tournament);
+        });
+        }
+        
+        const tournamentEventsBtn = actionCard.querySelector('.tournament_events_btn');
+        if (tournamentEventsBtn) {
+            tournamentEventsBtn.addEventListener('click', () => {
+                showTournamentEventsPopup(tournament);
+        });
+        }
+
         const leaveButton = actionCard.querySelector('.tournament_leave_btn');
         if (leaveButton) {
             leaveButton.addEventListener('click', () => {
@@ -802,13 +842,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     `Opuść`
                 )
             });
-        }
-
-        const editButton = actionCard.querySelector('.tournament_edit_btn');
-        if (editButton) {
-            editButton.addEventListener('click', () => {
-                showTournamentPopup(tournament);
-        });
         }
 
         actionCard.classList.toggle('active');
