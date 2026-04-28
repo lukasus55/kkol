@@ -705,9 +705,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         listEl.insertAdjacentHTML('beforeend', allCardsHTML);
     }
 
-    function showEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
+    async function showEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
 
         const popupEl = document.getElementById('event_popup');
+
         const popupTitleEl = document.getElementById('popup_title');
         const headerEl = document.getElementById('popup_header');
 
@@ -722,10 +723,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnSave.style.display = 'none';
         btnDelete.style.display = 'none';
 
-        const editButtons = headerEl.querySelectorAll('#event_popup .popup_tab_switch_btn');
-        editButtons.forEach (editButton => {
-            editButton.addEventListener('click', () => {
-                changeEventTab(editButton);
+        const tabSwitchButtons = headerEl.querySelectorAll('#event_popup .popup_tab_switch_btn');
+        tabSwitchButtons.forEach (tabSwitchButton => {
+            tabSwitchButton.addEventListener('click', () => {
+                changeEventTab(tabSwitchButton);
             });
         });
 
@@ -750,7 +751,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             editSection.style.display = 'none';
 
             // Populate View Text
-            document.getElementById('popup_header').textContent = eventData.title;
+            document.getElementById('popup_title').textContent = eventData.title;
             document.getElementById('view_event_tournament').textContent = eventData.extendedProps.tournament_id;
             document.getElementById('view_event_type').textContent = eventData.extendedProps.is_major ? 'Duże wydarzenie' : 'Małe wydarzenie';
             document.getElementById('view_event_start').textContent = eventData.start ? eventData.start.toLocaleString('pl-PL') : 'Brak';
@@ -842,6 +843,99 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         popupEl.classList.add('active');
+
+        const eventResultsTabEl = document.getElementById('event_results_tab');
+        eventResultsTabEl.innerHTML = ``
+
+        const loadingContainer = appendLoaderDiv(eventResultsTabEl);
+
+        eventResultsTabEl.innerHTML = await populateEventResults(eventData.id, mode);
+    }
+
+    // ===== TABS INSIDE POPUPS =====
+
+    async function populateEventResults(eventId, mode) {
+
+        if (mode === 'create') {
+            return `
+                <div class="event_results_container">
+                    <div class="event_results_empty">
+                        Stwórz wydarzenie by móc edytować wyniki
+                    </div>
+                </div>
+            `;
+        }
+
+        const eventResults = await loadData(`/api/event_results?id=${eventId}`);
+
+        let tabHtml = `
+            <div class="event_results_container">
+                <table class="event_results_table">
+                    <thead>
+                        <tr>
+                            <th>Gracz</th>
+                            <th>Pozycja</th>
+                            <th>Punkty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        if (!eventResults || eventResults.length === 0) {
+            tabHtml += `
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 2rem;">
+                                Brak wyników dla tego wydarzenia.
+                            </td>
+                        </tr>
+            `;
+        } else {
+            eventResults.forEach(result => {
+                const posValue = result.position !== null ? result.position : '';
+                const ptsValue = result.points !== null ? result.points : '';
+
+                if (mode === 'view') {
+                    tabHtml += `
+                        <tr class="event_result_row" data-player-id="${result.player_id}">
+                            <td>
+                                <strong>${result.displayed_name}</strong>
+                            </td>
+                            <td>
+                                <span class="event_result_text">${posValue || '-'}</span>
+                            </td>
+                            <td>
+                                <span class="event_result_text">${ptsValue || '-'}</span>
+                            </td>
+                        </tr>
+                    `;
+                } 
+                else {
+                    tabHtml += `
+                        <tr class="event_result_row" data-player-id="${result.player_id}">
+                            <td>
+                                <strong>${result.displayed_name}</strong>
+                            </td>
+                            <td>
+                                <input type="number" class="event_result_input pos_input" value="${posValue}" placeholder="-">
+                            </td>
+                            <td>
+                                <input type="number" step="0.5" class="event_result_input pts_input" value="${ptsValue}" placeholder="-">
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+        }
+
+        tabHtml += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        console.log(eventResults);
+
+        return tabHtml;
     }
 
 

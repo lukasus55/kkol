@@ -14,10 +14,12 @@ export default async function handler(request, response) {
         }
 
         const results = await sql`
-            SELECT r.player_id, er.position, er.points, e.id AS event_id 
+            SELECT r.player_id, p.displayed_name, er.position, er.points, e.id AS event_id 
             FROM events e 
             INNER JOIN results r 
                 ON r.tournament_id = e.tournament_id 
+            INNER JOIN players p
+                ON p.id = r.player_id
             LEFT JOIN event_results er 
                 ON er.event_id = e.id AND er.player_id = r.player_id 
             WHERE e.id = ${id};`;

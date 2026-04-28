@@ -30,12 +30,14 @@ GET /api/event_results?id=42
 [
 	{
 		"player_id": "kukula",
+		"displayed_name": "Kukuła",
 		"position": null,
 		"points": null,
 		"event_id": 42
 	},
 	{
 		"player_id": "kostys",
+		"displayed_name": "Kostyś",
 		"position": 1,
 		"points": "78.00",
 		"event_id": 42

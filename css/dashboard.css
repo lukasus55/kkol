@@ -1258,6 +1258,68 @@ body
     background-color: var(--dashboard-background-s6);
 }
 
+/* Event Results Tab */
+#event_popup .event_results_container {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+#event_popup .event_results_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#event_popup .event_results_table th,
+#event_popup .event_results_table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--dashboard-background-s3);
+}
+
+#event_popup .event_results_table th {
+    font-weight: 600;
+    color: var(--dashboard-text-s2);
+    background-color: var(--dashboard-background-s2);
+}
+
+#event_popup .event_results_table tr:hover {
+    background-color: var(--dashboard-background-s3);
+}
+
+#event_popup .event_result_input {
+    width: 5rem;
+    padding: 0.4rem 0rem;
+    border: 1px solid var(--dashboard-background-s4);
+    border-radius: 4px;
+    background-color: var(--dashboard-background-s1);
+    color: var(--dashboard-text);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+#event_popup .event_result_input:focus {
+    outline: none;
+    border-color: var(--dashboard-text);
+}
+
+/* View mode - text instead of inputs */
+#event_popup .event_result_text {
+    display: inline-block;
+    min-width: 3rem;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+    color: var(--dashboard-text);
+    font-size: 0.9rem;
+}
+
+#event_popup .event_results_empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--dashboard-text-s2);
+    font-style: italic;
+}
+
 
 /* FullCalendar forces default link colors on the day numbers and day names. This small override forces them to use lavender-mist text color instead of ugly default blue.*/
 .fc-col-header-cell-cushion, 
