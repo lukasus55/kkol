@@ -831,7 +831,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         popupEl.classList.add('active');
 
         btnSave.onclick = async () => {
-            updateEvent(mode, onSuccessCallback, eventData);
+            // EXTRACT RESULTS FROM DOM IMMEDIATELY (Before anything else happens)
+            const activePopup = document.querySelector('#event_popup.active') || document;
+            const rows = activePopup.querySelectorAll('.event_result_row');
+            const parsedResults = [];
+
+            rows.forEach(row => {
+                const posInput = row.querySelector('.pos_input');
+                const ptsInput = row.querySelector('.pts_input');
+                if (!posInput || !ptsInput) return;
+
+                parsedResults.push({
+                    player_id: row.getAttribute('data-player-id'),
+                    position: posInput.value === '' ? null : parseInt(posInput.value, 10),
+                    points: ptsInput.value === '' ? null : parseFloat(ptsInput.value)
+                });
+            });
+
+            if (mode === 'edit' && eventData?.id) {
+                await updateEvent(mode, onSuccessCallback, eventData);
+                await updateEventResults(eventData.id, parsedResults, onSuccessCallback);
+            }
         };
 
         btnDelete.onclick = async () => {
@@ -932,8 +952,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </table>
             </div>
         `;
-
-        console.log(eventResults);
 
         return tabHtml;
     }
@@ -1408,6 +1426,36 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (onSuccessCallback) onSuccessCallback();
 
         } catch (error) {
+            closeAllPopups();
+            showErrorPopup(error.message);
+        }
+    }
+
+    async function updateEventResults(eventId, results, onSuccessCallback) {
+        // We already extracted 'results' in the click handler, so we just send them!
+        if (!results || results.length === 0) return;
+
+        try {
+            const response = await fetch('/api/event_update_results', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_id: eventId,
+                    results: results
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || result.error) {
+                throw new Error(result.error || "Nie udało się zapisać wyników.");
+            }
+
+            closeAllPopups();
+            if (onSuccessCallback) onSuccessCallback();
+
+        } catch (error) {
+            console.error(error);
             closeAllPopups();
             showErrorPopup(error.message);
         }
