@@ -121,6 +121,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             allCardsHTML += `
                 <div class="tournament_card"> 
+                    <div class="status" title="${isTournamentFinished ? 'Zakończony' : 'W trakcie'}">
+                        <div 
+                        class="status_dot" 
+                        style="background-color: ${isTournamentFinished ? 'var(--color-dark-green)' : 'var(--color-lime-moss)'};" 
+                        "> 
+                        </div>
+                    </div>
                     <div class="info_container">
                         <div class="info">
                             <div class="name">

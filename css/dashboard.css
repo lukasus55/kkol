@@ -530,11 +530,11 @@ body
 #content-tournaments .tournament_card
 {
     display: grid;
-    grid-template-columns: 15rem 3rem 6rem;
+    grid-template-columns: 1rem 22rem 6rem 2rem;
     grid-template-rows: 1fr;
-    gap: 4rem;
+    gap: 1rem;
     background-color: var(--dashboard-background-s3);
-    padding: 0rem 2rem;
+    padding: 0rem 1rem;
     border: 1px solid var(--dashboard-stroke);
     height: 4rem;
     min-width: 300px;
@@ -546,6 +546,21 @@ body
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
+}
+
+#content-tournaments .tournament_card .status
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#content-tournaments .tournament_card .status_dot
+{
+    width: .5rem;
+    height: .5rem;
+    border-radius: 100%;
+    background-color: var(--color-lime-moss);
 }
 
 #content-tournaments .tournament_card .info_container
@@ -1235,7 +1250,7 @@ body
 
     #content-tournaments .tournament_card
     {
-        grid-template-columns: minmax(0, 1fr) 3rem 6rem;
+        grid-template-columns: 1rem minmax(0, 1fr) 6rem 2rem;
     }
 
     .fc-event-time
