@@ -1452,6 +1452,13 @@ body
         grid-template-columns: 1rem minmax(0, 1fr) 6rem 2rem;
     }
 
+    #content-tournaments .action_menu {
+        top: 100%;
+        right: 100%;
+        left: auto;
+        bottom: auto;
+    }
+
     .fc-event-time
     {
         display: none;
