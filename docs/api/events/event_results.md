@@ -11,12 +11,29 @@ Return results of event.
 
 | Parameter | Type | Required | Description |
 | :--- | :--- | :---: | :--- |
-| `id` | Number | Yes | Filter events by event ID. |
+| `id` | Number | Partially* | Filter events by event ID. |
+| `tournament` | String | Partially* | Filter events by tournament ID. |
+| `player` | String | Partially* | Filter events by player ID. |
+| `major` | Boolean | No | Filter events by is_major_event. |
+
+> Note: Either id, tournament or player parameter is required.
 
 ### Example Requests
 
 ```http
 GET /api/event_results?id=42
+```
+
+```http
+GET /api/event_results?tournament=kol2026
+```
+
+```http
+GET /api/event_results?player=kostys
+```
+
+```http
+GET /api/event_results?tournament=kol2026&major=true
 ```
 
 ---
@@ -29,18 +46,24 @@ GET /api/event_results?id=42
 ```json
 [
 	{
-		"player_id": "kukula",
-		"displayed_name": "Kukuła",
-		"position": null,
-		"points": null,
-		"event_id": 42
-	},
-	{
-		"player_id": "kostys",
-		"displayed_name": "Kostyś",
-		"position": 1,
-		"points": "78.00",
-		"event_id": 42
+		"event_id": 42,
+		"event_name": "GD - Deadlocked, Randomiser, Theory of Everything 2",
+		"is_major_event": false,
+		"tournament_id": "kol2026",
+		"results": [
+			{
+				"player_id": "kostys",
+				"displayed_name": "Kostyś",
+				"position": 1,
+				"points": "78.00"
+			},
+			{
+				"player_id": "kukula",
+				"displayed_name": "Kukuła",
+				"position": null,
+				"points": null
+			}
+		]
 	}
 ]
 ```
@@ -51,7 +74,7 @@ GET /api/event_results?id=42
 * `{"error": "Method not allowed."}`
 
 **Code:** `422 Unprocessable Entity`
-* `{"error": "ID paramater is mandatory."}`
+* `{"error": "ID, tournament or player parameter is mandatory."}`
 
 **Code:** `500 Internal Server Error`
 * `{"error": "Failed to load Event Results."}`

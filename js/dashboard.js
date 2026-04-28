@@ -875,6 +875,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         eventResultsTabEl.innerHTML = await populateEventResults(eventData.id, mode);
     }
 
+
+
+
     // ===== TABS INSIDE POPUPS =====
 
     async function populateEventResults(eventId, mode) {
@@ -889,7 +892,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
         }
 
-        const eventResults = await loadData(`/api/event_results?id=${eventId}`);
+        const eventResultsData = await loadData(`/api/event_results?id=${eventId}`);
+        const eventResults = eventResultsData[0].results
 
         let tabHtml = `
             <div class="event_results_container">
@@ -958,6 +962,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         return tabHtml;
     }
+
+
 
 
     // ===== ACTION CARDS =====
@@ -1041,6 +1047,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // showTournamentPopup(clickedTournamentId, tournamentsData);
     }
+
+
 
 
     // ===== HELPER FUNCTIONS =====
@@ -1502,6 +1510,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             targetTab.classList.add('active');
         }
     }
+
+
+
 
     // ===== Initialize the UI ======
 
