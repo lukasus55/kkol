@@ -983,8 +983,88 @@ body
 
 #tournament_events_popup .events_list
 {
-    
+    padding: 1rem 0rem;
 }
+
+#tournament_events_popup .events_list
+{
+    padding-top: 1rem;
+    max-height: 60vh;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#tournament_events_popup .events_list *
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    height: 100%;
+    white-space:nowrap;
+}
+
+#tournament_events_popup .events_list_event:first-child
+{
+    border-radius: .2rem .2rem 0rem 0rem;
+}
+
+#tournament_events_popup .events_list_event:last-child
+{
+    border-radius: 0rem 0rem .2rem .2rem;
+}
+
+#tournament_events_popup .events_list_empty
+{
+    display: flex;
+    width: 100%;
+    height: 5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+#tournament_events_popup .events_list_event
+{
+    display: grid;
+    grid-template-columns: 3rem 1rem 1fr;
+    gap: 1rem;
+    width: 100%;
+    padding: 0 2rem;
+    background-color: var(--dashboard-background-s3);
+    border: 1px solid var(--dashboard-background-s5);
+    height: 2.5rem;
+}
+
+#tournament_events_popup .events_list_event:hover
+{
+    background-color: var(--dashboard-background-s4);
+}
+
+#tournament_events_popup .events_list .events_list_event_highlited
+{
+    background-color: #051608;
+}
+
+#tournament_events_popup .events_list .events_list_event_highlited:hover
+{
+    background-color: #07200c;
+}
+
+
+#tournament_events_popup .events_list .events_list_event_date
+{
+    color: var(--dashboard-text-s2);
+}
+
+#tournament_events_popup .events_list .events_list_event_dot
+{
+    width: .5rem;
+    height: .5rem;
+    border-radius: 100%;
+    background-color: var(--dashboard-text);
+}
+
 
 #content-calendar .calendar_container
 {

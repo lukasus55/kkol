@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
 
+    const url = new URL(window.location);
+
 
 
     // ===== RENDER TABS =====
@@ -124,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="status" title="${isTournamentFinished ? 'Zakończony' : 'W trakcie'}">
                         <div 
                         class="status_dot" 
-                        style="background-color: ${isTournamentFinished ? 'var(--color-dark-green)' : 'var(--color-lime-moss)'};" 
+                        style="background-color: ${isTournamentFinished ? 'transparent' : 'var(--dashboard-text)'};" 
                         "> 
                         </div>
                     </div>
@@ -351,8 +353,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const monthParam = urlParams.get('m');
         const yearParam = urlParams.get('y');
-
-        console.log(monthParam, + ' ' + yearParam)
+        const idParam = urlParams.get('id');
 
         let calendarStartDate = savedCalendarDate || new Date();
 
@@ -364,6 +365,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // JS Date months are 0-indexed (0 = Jan, 11 = Dec)
                 calendarStartDate = new Date(year, month - 1, 1);
             }
+
+            url.searchParams.delete('m');
+            url.searchParams.delete('y');
+            window.history.replaceState({}, document.title, url);
         }
 
         try {
@@ -406,8 +411,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 events: calendarEvents,
 
                 eventClick: function (info) {
-                    const event = info.event;
-                    showEventPopup('uknown', event, () => renderCalendarTab(tabContainer));
+                    showEventPopup('uknown', info.event, () => renderCalendarTab(tabContainer));
                 },
 
                 dateClick: function (info) {
@@ -416,6 +420,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             calendar.render();
+
+            if (idParam) {
+                const targetEvent = calendar.getEventById(idParam);
+                
+                if (targetEvent) {
+
+                    showEventPopup('unknown', targetEvent, () => renderCalendarTab(tabContainer));
+
+                    url.searchParams.delete('id');
+                    window.history.replaceState({}, document.title, url);
+
+                } else {
+                    console.warn(`Calendar event with ID ${idParam} not found.`);
+                }
+            }
 
         } catch (error) {
             console.error("Nie udało się załadować kalendarza:", error);
@@ -621,19 +640,69 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function showTournamentEventsPopup(tournament) {
         const popupEl = document.querySelector('#tournament_events_popup');
-        const listEl = document.querySelector('#tournament_events_popup .events_list')
+        const listEl = document.querySelector('#tournament_events_popup .events_list');
 
         popupEl.classList.add('active');
 
-        listEl.innerHTML = '';
+        listEl.innerHTML = ``;
         const loadingContainer = appendLoaderDiv(listEl);
 
-        const tournamentEvents = await loadData('/api/events?tournament=kol2026&format=list');
+        const tournamentEvents = await loadData(`/api/events?tournament=${tournament.id}&format=list`);
         console.log(tournamentEvents);
 
-
         listEl.removeChild(loadingContainer);
-        
+
+        if (!tournamentEvents || tournamentEvents.length === 0) {
+            listEl.innerHTML = `<div class="events_list_empty">Brak wydarzeń dla tego turnieju.</div>`;
+            return;
+        }
+
+        tournamentEvents.sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
+
+        const now = new Date();
+        let nextEventId = null;
+        let smallestDiff = Infinity;
+
+        tournamentEvents.forEach(event => {
+            const diff = new Date(event.event_date) - now;
+            if (diff > 0 && diff < smallestDiff) {
+                smallestDiff = diff;
+                nextEventId = event.id;
+            }
+        });
+
+        let allCardsHTML = '';
+        tournamentEvents.forEach(event => {
+            const event_date = event.event_date;
+
+            const year = event_date.substring(0, 4);
+            const month = event_date.substring(5, 7);
+            const day = event_date.substring(8, 10);
+            const eventUrl = `/dashboard?tab=calendar&y=${year}&m=${month}&id=${event.id}`;
+
+            const isNextEvent = event.id === nextEventId;
+            const isMajorEvent = event.is_major;
+
+            const itemClasses = isNextEvent
+                ? 'events_list_event events_list_event_highlited' 
+                : 'events_list_event';
+
+            allCardsHTML += `
+                <a href="${eventUrl}" class="${itemClasses}">
+                    <div class="events_list_event_date"> ${day}.${month} </div>
+                    <div> 
+                        <div 
+                        class="events_list_event_dot"
+                        style="background-color: ${isMajorEvent ? 'var(--color-lime-moss)' : 'var(--color-dark-green)'};"
+                        >
+                        </div> 
+                    </div>
+                    <div class="events_list_event_name"> ${event.name} </div>
+                </a>
+            `;
+        });
+
+        listEl.insertAdjacentHTML('beforeend', allCardsHTML);
     }
 
     function showEventPopup(intention = 'uknown', eventData = null, onSuccessCallback) {
