@@ -1,7 +1,7 @@
 # Add Player
 Adds a player to a tournament.
 
-* **URL:** `/api/add_player`
+* **URL:** `/api/tournament_add_player`
 * **Method:** `POST`
 * **Required Roles:** `owner` (tournament-specific) or `manager` (tournament-specific)
 

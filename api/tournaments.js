@@ -5,20 +5,37 @@ export default async function handler(request, response) {
         
         
         // Check for the optional 'id' parameter
-        const { id } = request.query;
+        const { id, player } = request.query;
 
         let tournaments, results;
 
         if (id) {
             [tournaments, results] = await Promise.all([
                 sql`SELECT * FROM tournaments WHERE id = ${id}`,
-                sql`SELECT * FROM results WHERE tournament_id = ${id}`
+
+                sql`SELECT r.tournament_id, r.player_id, r.attended, r.finished, r."position", r.total_points, p.displayed_name AS player_name FROM results r
+                    INNER JOIN players p ON r.player_id = p.id 
+                    WHERE tournament_id = ${id}`
             ]);
-        } else {
+        } 
+        else if (player) {
+            [tournaments, results] = await Promise.all([
+                sql`SELECT t.id, t.displayed_name, t.page_exists, t.page_url, t.finished, t.event_timestamp, t.displayed_date, t.tier, r.player_id FROM tournaments t 
+                    inner join results r on r.tournament_id = t.id  
+                    where r.player_id = ${player}`,
+
+                sql`SELECT r.tournament_id, r.player_id, r.attended, r.finished, r."position", r.total_points, p.displayed_name AS player_name FROM results r
+                    INNER JOIN players p ON r.player_id = p.id
+                    WHERE player_id = ${player};`
+            ]);
+        }
+        else {
             // Fetch All
             [tournaments, results] = await Promise.all([
                 sql`SELECT * FROM tournaments`,
-                sql`SELECT * FROM results`
+
+                sql`SELECT r.tournament_id, r.player_id, r.attended, r.finished, r."position", r.total_points, p.displayed_name AS player_name FROM results r
+                    INNER JOIN players p ON r.player_id = p.id`
             ]);
         }
 
@@ -48,8 +65,10 @@ export default async function handler(request, response) {
 
             if (tournament && r.position && r.attended) {
                 tournament.standings.push({
+                    id: r.player_id,
+                    displayed_name: r.player_name,
                     position: r.position,
-                    id: r.player_id
+                    total_points: r.total_points
                 });
             }
         });

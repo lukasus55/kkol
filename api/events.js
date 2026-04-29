@@ -6,7 +6,9 @@ export default async function handler(request, response) {
     }
 
     try {
-        const { tournament, player } = request.query;
+        const { tournament, player, format } = request.query;
+        const outputFormat = format || 'calendar';
+        
         let dbEvents;
 
         if (tournament) {
@@ -35,7 +37,23 @@ export default async function handler(request, response) {
             `;
         }
 
-        // Format it into FullCalendar's exact structure
+        // Format output based on format parameter
+        if (outputFormat === 'list') {
+            // List format - similar to other API endpoints
+            const listEvents = dbEvents.map(event => ({
+                id: event.id,
+                tournament_id: event.tournament_id,
+                creator_id: event.creator_id,
+                event_date: event.event_date,
+                end_date: event.end_date,
+                name: event.name,
+                is_major: event.is_major
+            }));
+
+            return response.status(200).json(listEvents);
+        }
+
+        // Default: Calendar format for FullCalendar
         const calendarEvents = dbEvents.map(event => ({
             id: event.id,
             title: event.name,

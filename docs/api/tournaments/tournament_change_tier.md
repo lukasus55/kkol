@@ -1,7 +1,7 @@
 # Change Tournament Tier
 Updates the tier of an existing tournament.
 
-* **URL:** `/api/change_tournament_tier`
+* **URL:** `/api/tournament_change_tier`
 * **Method:** `POST`
 * **Required Roles:** `admin` (global) or `organizer` (tournament-specific)
 

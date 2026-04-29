@@ -18,7 +18,7 @@ export default async function handler(request, response) {
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
         const requesterId = decodedPayload.id;
 
-        const { id, name, is_major, start_date, end_date } = request.body;
+        const { id, name, is_major, start_date, end_date } = request.body || {};
 
         if (!id || !name || !start_date) {
             return response.status(400).json({ error: "Brakujące dane do edycji." });

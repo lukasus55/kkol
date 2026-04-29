@@ -123,6 +123,24 @@
             </div>
         </div>
 
+        <div class="popup_overlay" id="tournament_events_popup">
+            <div class="popup_container popup_large">
+
+                <div class="popup_header">
+                    <h2> Wydarzenia </h2>
+                </div>
+
+                <div class="events_list">
+                    <!-- showTournamentEventsPopup() inserts here -->
+                </div>
+                
+                <div class="popup_footer_row">
+                    <button class="btn btn_cancel btn_tertiary" id="editor_cancel_btn">Zamknij</button>
+                </div>
+
+            </div>
+        </div>
+
         <div class="popup_overlay" id="tournament_popup">
             <div class="popup_container popup_large">
                 
@@ -203,37 +221,51 @@
             </div>
         </div>
 
-        <div class="popup_overlay universal_event_popup" id="universal_event_popup" >
+        <div class="popup_overlay event_popup" id="event_popup" >
             <div class="popup_content">
-                <div id="popup_header" class="popup_title">Szczegóły Wydarzenia</div>
+                <div class="popup_header" id="popup_header">
+                    <div class="popup_tab_switch_section">
+                        <button class="popup_tab_switch_btn active" data-tab="details">Szczegóły</button>
+                        <button class="popup_tab_switch_btn" data-tab="results">Wyniki</button>
+                    </div>
+                </div>
                 
                 <div class="popup_body">
-                    <div id="event_view_mode">
-                        <p><span class="p_title">Turniej:</span> <span id="view_event_tournament"></span></p>
-                        <p><span class="p_title">Typ:</span> <span id="view_event_type"></span></p>
-                        <p><span class="p_title">Początek:</span> <span id="view_event_start"></span></p>
-                        <p><span class="p_title">Koniec:</span> <span id="view_event_end"></span></p>
+
+                    <div class="event_tab active" id="event_details_tab">
+                        <div class="popup_title" id="popup_title">Szczegóły Wydarzenia</div>
+
+                        <div id="event_view_mode">
+                            <p><span class="p_title">Turniej:</span> <span id="view_event_tournament"></span></p>
+                            <p><span class="p_title">Typ:</span> <span id="view_event_type"></span></p>
+                            <p><span class="p_title">Początek:</span> <span id="view_event_start"></span></p>
+                            <p><span class="p_title">Koniec:</span> <span id="view_event_end"></span></p>
+                        </div>
+
+                        <form autocomplete="off" id="event_edit_mode" style="display: none;">
+                            <label>Nazwa Wydarzenia:</label>
+                            <input type="text" id="edit_event_name" class="popup_input">
+                            
+                            <label>ID Turnieju:</label>
+                            <select id="edit_event_tournament" class="popup_input"></select>
+                            
+                            <label>Ważność:</label>
+                            <select id="edit_event_major" class="popup_input">
+                                <option value="false">Małe wydarzenie</option>
+                                <option value="true">Duże wydarzenie</option>
+                            </select>
+
+                            <label>Początek:</label>
+                            <input type="datetime-local" id="edit_event_start" class="popup_input">
+                            
+                            <label>Koniec:</label>
+                            <input type="datetime-local" id="edit_event_end" class="popup_input">
+                        </form>
                     </div>
 
-                    <form autocomplete="off" id="event_edit_mode" style="display: none;">
-                        <label>Nazwa Wydarzenia:</label>
-                        <input type="text" id="edit_event_name" class="popup_input">
-                        
-                        <label>ID Turnieju:</label>
-                        <select id="edit_event_tournament" class="popup_input"></select>
-                        
-                        <label>Ważność:</label>
-                        <select id="edit_event_major" class="popup_input">
-                            <option value="false">Małe wydarzenie</option>
-                            <option value="true">Duże wydarzenie</option>
-                        </select>
-
-                        <label>Początek:</label>
-                        <input type="datetime-local" id="edit_event_start" class="popup_input">
-                        
-                        <label>Koniec:</label>
-                        <input type="datetime-local" id="edit_event_end" class="popup_input">
-                    </form>
+                    <div class="event_tab" id="event_results_tab">
+                        <!-- populateEventResults() inserts here -->
+                    </div>
                 </div>
 
                 <div class="popup_footer">

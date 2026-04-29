@@ -1,7 +1,7 @@
 # Create Tournament
 Creates a new tournament and assigns the requester as its owner.
 
-* **URL:** `/api/create_tournament`
+* **URL:** `/api/tournament_create`
 * **Method:** `POST`
 * **Required Roles:** `admin` (global) or `organizer` (global)
 

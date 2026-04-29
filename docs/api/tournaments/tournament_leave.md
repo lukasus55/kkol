@@ -1,7 +1,7 @@
 # Leave Tournament
 Allows the logged-in player to leave a tournament.
 
-* **URL:** `/api/leave_tournament`
+* **URL:** `/api/tournament_leave`
 * **Method:** `POST`
 * **Required Roles:** authenticated user
 

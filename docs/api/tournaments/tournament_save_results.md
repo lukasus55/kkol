@@ -1,7 +1,7 @@
 # Save Tournament Results
 Saves tournament metadata and player results for a tournament editor.
 
-* **URL:** `/api/save_tournament_results`
+* **URL:** `/api/tournament_save_results`
 * **Method:** `POST`
 * **Required Roles:** `owner` (tournament-specific) or `manager` (tournament-specific)
 

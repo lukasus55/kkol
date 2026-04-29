@@ -1,9 +1,9 @@
 :root {
-    --color-warning-red: #ff3333;
+    --color-warning-red: #b42525;
     --color-overlay: rgba(0, 0, 0, 0.7);
 
     --dashboard-background: oklch(0.04 0 129);
-    --dashboard-background-s2: oklch(0.12 0 129);
+    --dashboard-background-s2: oklch(0.14 0 129);
     --dashboard-background-s3: oklch(0.18 0 129);
     --dashboard-background-s4: oklch(0.24 0 129);
     --dashboard-background-s5: oklch(0.30 0 129);
@@ -267,7 +267,7 @@ body
     align-items: center;
 }
 
-.user_card .more_icon
+.more_icon
 {
     display: flex;
     align-items: center;
@@ -275,19 +275,19 @@ body
     height: 100%;
 }
 
-.user_card .more_icon .more_button
+.more_icon .more_button
 {
     color: var(--dashboard-text-s2);
     cursor: pointer;
     transition: color .1s ease-in;
 }
 
-.user_card .more_icon button:hover
+.more_icon button:hover
 {
     color: var(--dashboard-text);
 }
 
-.user_actions
+.action_menu
 {
     display: none;
     position: absolute;
@@ -298,20 +298,20 @@ body
     white-space: nowrap;
 }
 
-.user_actions.active
+.action_menu.active
 {
     display: flex;
 }
 
-.user_actions ul
+.action_menu ul
 {
-    padding: 1rem;
     background-color: var(--dashboard-background-s2);
     border: 1px solid var(--dashboard-stroke);
     border-radius: 6px;
+    padding: .5rem .5rem;
 }
 
-.user_actions li
+.action_menu li
 {
     display: flex;
     align-items: center;
@@ -319,20 +319,27 @@ body
     height: 1.3rem;
     gap: .7rem;
     border-radius: 6px;
-    padding: 1rem .5rem;
     cursor: pointer;
+    margin: .7rem 0;
+    padding: .5rem;
 }
 
-.user_actions li:hover
+.action_menu li:hover
 {
-    background-color: var(--dashboard-background-s3);
+    background-color: var(--dashboard-background-s4);
     opacity: 100%;
 }
 
-.user_actions li.active
+.action_menu li.active
 {
-    background-color: var(--dashboard-background-s3);
+    background-color: var(--dashboard-background-s4);
     opacity: 100%;
+}
+
+.action_menu li img
+{
+    width: .8rem;
+    height: .8rem;
 }
 
 .content
@@ -481,7 +488,7 @@ body
     gap: 1rem;
 }
 
-#content-tournaments .create_tournament_title
+#content-tournaments .tournament_create_title
 {
     display: flex;
     width: 100%;
@@ -523,22 +530,37 @@ body
 #content-tournaments .tournament_card
 {
     display: grid;
-    grid-template-columns: 15rem 3rem 6rem;
+    grid-template-columns: 1rem 22rem 6rem 2rem;
     grid-template-rows: 1fr;
-    gap: 4rem;
+    gap: 1rem;
     background-color: var(--dashboard-background-s3);
-    padding: 0rem 2rem;
+    padding: 0rem 1rem;
     border: 1px solid var(--dashboard-stroke);
     height: 4rem;
     min-width: 300px;
 }
 
-#content-tournaments .tournament_card * 
+#content-tournaments.info_container, #content-tournaments .role
 {
     display: flex;
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
+}
+
+#content-tournaments .tournament_card .status
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#content-tournaments .tournament_card .status_dot
+{
+    width: .5rem;
+    height: .5rem;
+    border-radius: 100%;
+    background-color: var(--color-lime-moss);
 }
 
 #content-tournaments .tournament_card .info_container
@@ -564,6 +586,17 @@ body
 {
     display: flex;
     gap: 1rem;
+}
+
+#content-tournaments .action_menu
+{
+    bottom: 70%;
+    margin-left: 2rem;
+}
+
+#content-tournaments .action_menu .tournament_leave_btn h4
+{
+    color: var(--color-warning-red);
 }
 
 .tournament_btn
@@ -696,7 +729,7 @@ body
 
 .btn_confirm:hover
 {
-    background-color: #ff4242;
+    background-color: #690000;
 }
 
 #tournament_popup .popup_container
@@ -942,6 +975,97 @@ body
     transform: scale(0.97);
 }
 
+#tournament_events_popup .popup_header
+{
+    border-bottom: 1px solid var(--dashboard-stroke);
+    padding-bottom: 1rem;
+}
+
+#tournament_events_popup .events_list
+{
+    padding: 1rem 0rem;
+}
+
+#tournament_events_popup .events_list
+{
+    padding-top: 1rem;
+    max-height: 60vh;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#tournament_events_popup .events_list *
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    height: 100%;
+    white-space:nowrap;
+}
+
+#tournament_events_popup .events_list_event:first-child
+{
+    border-radius: .2rem .2rem 0rem 0rem;
+}
+
+#tournament_events_popup .events_list_event:last-child
+{
+    border-radius: 0rem 0rem .2rem .2rem;
+}
+
+#tournament_events_popup .events_list_empty
+{
+    display: flex;
+    width: 100%;
+    height: 5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+#tournament_events_popup .events_list_event
+{
+    display: grid;
+    grid-template-columns: 3rem 1rem 1fr;
+    gap: 1rem;
+    width: 100%;
+    padding: 0 2rem;
+    background-color: var(--dashboard-background-s3);
+    border: 1px solid var(--dashboard-background-s5);
+    height: 2.5rem;
+}
+
+#tournament_events_popup .events_list_event:hover
+{
+    background-color: var(--dashboard-background-s4);
+}
+
+#tournament_events_popup .events_list .events_list_event_highlited
+{
+    background-color: #051608;
+}
+
+#tournament_events_popup .events_list .events_list_event_highlited:hover
+{
+    background-color: #07200c;
+}
+
+
+#tournament_events_popup .events_list .events_list_event_date
+{
+    color: var(--dashboard-text-s2);
+}
+
+#tournament_events_popup .events_list .events_list_event_dot
+{
+    width: .5rem;
+    height: .5rem;
+    border-radius: 100%;
+    background-color: var(--dashboard-text);
+}
+
+
 #content-calendar .calendar_container
 {
     width: 100%;
@@ -955,7 +1079,7 @@ body
     height: 100%;
 }
 
-.universal_event_popup
+.event_popup
 {
     display: none;
     position: fixed;
@@ -969,12 +1093,12 @@ body
     align-items: center;
 }
 
-.universal_event_popup.active
+.event_popup.active
 {
     display: flex;
 }
 
-#universal_event_popup .popup_content
+#event_popup .popup_content
 {
     background: var(--color-onyx);
     padding: 2rem;
@@ -983,33 +1107,42 @@ body
     width: 90%;
     max-width: 450px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(243, 239, 245, 0.1);
+    border: 1px solid var(--dashboard-stroke);
+}
+
+#event_popup .event_tab
+{
+    display: none;
+}
+
+#event_popup .event_tab.active
+{
+    display: block;
 }
 
 /* Header */
-#universal_event_popup .popup_title
+#event_popup .popup_title
 {
     font-size: 1.25rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(243, 239, 245, 0.1);
     text-align: center;
 }
 
-#universal_event_popup #event_view_mode p
+#event_popup #event_view_mode p
 {
     margin: 0.8rem 0;
     font-size: 1rem;
     color: var(--dashboard-text)
 }
 
-#universal_event_popup #event_view_mode .p_title
+#event_popup #event_view_mode .p_title
 {
     color: var(--dashboard-text-s2);
 }
 
-#universal_event_popup #event_edit_mode label
+#event_popup #event_edit_mode label
 {
     display: block;
     margin-bottom: 0.4rem;
@@ -1018,7 +1151,7 @@ body
     font-weight: 600;
 }
 
-#universal_event_popup .popup_input
+#event_popup .popup_input
 {
     width: 100%;
     background: var(--dashboard-background-s2);
@@ -1034,7 +1167,7 @@ body
     color-scheme: dark;
 }
 
-#universal_event_popup .popup_input:disabled
+#event_popup .popup_input:disabled
 {
     color: var(--dashboard-text-s2);
     border: none;
@@ -1046,14 +1179,14 @@ body
 }
 
 
-#universal_event_popup .popup_input:focus
+#event_popup .popup_input:focus
 {
     outline: none;
     border-color: var(--dashboard-text);
     box-shadow: 0 0 0 2px rgba(114, 176, 29, 0.2);
 }
 
-#universal_event_popup .popup_footer
+#event_popup .popup_footer
 {
     display: flex;
     justify-content: flex-end;
@@ -1064,7 +1197,7 @@ body
     border-top: 1px solid rgba(243, 239, 245, 0.1);
 }
 
-#universal_event_popup .popup_footer button
+#event_popup .popup_footer button
 {
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
@@ -1075,7 +1208,7 @@ body
     font-family: inherit;
 }
 
-#universal_event_popup .btn_delete
+#event_popup .btn_delete
 {
     background: transparent;
     color: var(--color-warning-red);
@@ -1083,11 +1216,110 @@ body
     margin-right: auto; /* Pushes the button far left */
 }
 
-#universal_event_popup .btn_delete:hover
+#event_popup .btn_delete:hover
 {
     background: var(--color-warning-red);
     color: var(--dashboard-text);
 }
+
+#event_popup .popup_tab_switch_section
+{
+    gap: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--dashboard-stroke);
+}
+
+#event_popup .popup_tab_switch_btn
+{
+    background-color: var(--dashboard-background-s4);
+    border: 1px solid var(--dashboard-stroke);
+    padding: 0.5rem 0.5rem;
+    min-width: 5rem;
+}
+
+#event_popup .popup_tab_switch_btn:first-child
+{
+    border-radius: 3px 0px 0px 3px;
+}
+
+#event_popup .popup_tab_switch_btn:last-child
+{
+    border-radius: 0px 3px 3px 0px;
+}
+
+#event_popup .popup_tab_switch_btn.active
+{
+    background-color: var(--dashboard-background-s6);
+}
+
+#event_popup .popup_tab_switch_btn:hover
+{
+    background-color: var(--dashboard-background-s6);
+}
+
+/* Event Results Tab */
+#event_popup .event_results_container {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+#event_popup .event_results_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#event_popup .event_results_table th,
+#event_popup .event_results_table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--dashboard-background-s3);
+}
+
+#event_popup .event_results_table th {
+    font-weight: 600;
+    color: var(--dashboard-text-s2);
+    background-color: var(--dashboard-background-s2);
+}
+
+#event_popup .event_results_table tr:hover {
+    background-color: var(--dashboard-background-s3);
+}
+
+#event_popup .event_result_input {
+    width: 5rem;
+    padding: 0.4rem 0rem;
+    border: 1px solid var(--dashboard-background-s4);
+    border-radius: 4px;
+    background-color: var(--dashboard-background-s1);
+    color: var(--dashboard-text);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+#event_popup .event_result_input:focus {
+    outline: none;
+    border-color: var(--dashboard-text);
+}
+
+/* View mode - text instead of inputs */
+#event_popup .event_result_text {
+    display: inline-block;
+    min-width: 3rem;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+    color: var(--dashboard-text);
+    font-size: 0.9rem;
+}
+
+#event_popup .event_results_empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--dashboard-text-s2);
+    font-style: italic;
+}
+
 
 /* FullCalendar forces default link colors on the day numbers and day names. This small override forces them to use lavender-mist text color instead of ugly default blue.*/
 .fc-col-header-cell-cushion, 
@@ -1217,7 +1449,14 @@ body
 
     #content-tournaments .tournament_card
     {
-        grid-template-columns: minmax(0, 1fr) 3rem 6rem;
+        grid-template-columns: 1rem minmax(0, 1fr) 6rem 2rem;
+    }
+
+    #content-tournaments .action_menu {
+        top: 100%;
+        right: 100%;
+        left: auto;
+        bottom: auto;
     }
 
     .fc-event-time

@@ -1,7 +1,7 @@
 # Delete Tournament
 Deletes a tournament, its results, and its organizer assignments.
 
-* **URL:** `/api/delete_tournament`
+* **URL:** `/api/tournament_delete`
 * **Method:** `POST`
 * **Required Roles:** `owner` (tournament-specific)
 

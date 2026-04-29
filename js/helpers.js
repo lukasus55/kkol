@@ -15,6 +15,7 @@ export async function loadHtml(url)
 
 // Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
 // Use "container.removeChild(loadingContainer);" after fetch
+// Container Modes: deafult, global
 export function appendLoaderDiv(container, containerMode='default') 
 {
     const loadingContainer = document.createElement('div');
