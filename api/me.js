@@ -37,9 +37,7 @@ export default async function handler(request, response) {
                             'id', tournament_id,
                             'attended', attended,
                             'position', position,
-                            'total_points', total_points,
-                            'games_positions', games_positions,
-                            'games_points', games_points
+                            'total_points', total_points
                         )
                     ) 
                     FROM results 
