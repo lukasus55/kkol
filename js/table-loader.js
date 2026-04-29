@@ -11,38 +11,40 @@ export default async function tableLoader(tournamentId) {
     // Using custom loader instead of appendLoaderDiv() because the container div (.ranking_table) is table insted of regular div
     table.innerHTML = `<div class='loader loader-default'>`
 
-    const [tournamentData, playersData] = await Promise.all([
+    const [tournamentData, events] = await Promise.all([
         loadData(`/api/tournaments?id=${tournamentId}`),
-        loadData(`/api/players`)
+        loadData(`/api/event_results?tournament=${tournamentId}&major=true`) // Only major events results should be displayed
     ]);
+
     const tournament = tournamentData[tournamentId];
-    const standings = tournament.standings;
+    const tStandings = tournament.standings;
+
+    console.log(tournament)
+    console.log(tStandings)
 
     table.innerHTML = ``
     table.append(tableHead);
     table.append(tableBody)
 
-    standings?.forEach(standing => {
+    tStandings?.map(player => {
 
-        const playerId = standing.id;
-        const player = playersData[playerId];
-        const playerThisTournamentStats = player.tournaments[tournamentId];
-
-        // playerThisTournamentStats.position and standing.positon is the same.
-        const playerPosition = playerThisTournamentStats.position;
+        const playerId = player.id;
+        const playerPosition = player.position;
         const playerName = player.displayed_name;
-        const playerTotalPoints = playerThisTournamentStats.total_points
-        // All players should have the same amount of games_points entries. Even unattended game_points value is "-" not null.
-        const gamesPoints = playerThisTournamentStats.games_points;
+        const playerTotalPoints = player.total_points;
 
         const playerHTML = `
             <tr class="ranking_table_standard">
                 <td class="ranking_table_position">${playerPosition}</td>
                 <td class="ranking_player">${playerName}</td>
                 ${
-                    gamesPoints.map((gamePoints) => {
+                    events.map((event) => {
+                        const map = new Map(event.results.map(p => [p.player_id, p]));
+                        const playerThisEvent = map.get(playerId);
+
+                        const playerThisEventScore = playerThisEvent.points === null ? '-' : Number.parseFloat(playerThisEvent.points).toFixed(0);
                         return (
-                            `<td class="ranking_game_result">${gamePoints}</td>`
+                            `<td class="ranking_game_result">${playerThisEventScore}</td>`
                         )
                     }).join('') // removes the comma (because the map return the array)
                 }

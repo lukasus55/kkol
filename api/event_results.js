@@ -25,7 +25,8 @@ export default async function handler(request, response) {
                     ON p.id = r.player_id
                 LEFT JOIN event_results er 
                     ON er.event_id = e.id AND er.player_id = r.player_id 
-                WHERE e.id = ${id};`;
+                WHERE e.id = ${id}
+                ORDER BY e.event_date;`;
         }
         else if (tournament) {
             flatResults = await sql`
@@ -37,7 +38,8 @@ export default async function handler(request, response) {
                     ON p.id = r.player_id
                 LEFT JOIN event_results er 
                     ON er.event_id = e.id AND er.player_id = r.player_id 
-                WHERE e.tournament_id = ${tournament};`;
+                WHERE e.tournament_id = ${tournament}
+                ORDER BY e.event_date;`;
         }
         else if (player) {
             flatResults = await sql`
@@ -49,7 +51,8 @@ export default async function handler(request, response) {
                     ON p.id = r.player_id
                 LEFT JOIN event_results er 
                     ON er.event_id = e.id AND er.player_id = r.player_id 
-                WHERE r.player_id = ${player};`;
+                WHERE r.player_id = ${player}
+                ORDER BY e.event_date;`;
         }
 
         // OPTIONAL FILTERING
@@ -60,28 +63,29 @@ export default async function handler(request, response) {
             flatResults = flatResults.filter(row => row.is_major_event === false);
         }
 
-        const groupedData = flatResults.reduce((acc, row) => {
-            if (!acc[row.event_id]) {
-                acc[row.event_id] = {
+        const groupedMap = new Map();
+
+        flatResults.forEach(row => {
+            if (!groupedMap.has(row.event_id)) {
+                groupedMap.set(row.event_id, {
                     event_id: row.event_id,
                     event_name: row.event_name,
                     is_major_event: row.is_major_event,
                     tournament_id: row.tournament_id,
                     results: [] 
-                };
+                });
             }
 
-            acc[row.event_id].results.push({
+            groupedMap.get(row.event_id).results.push({
                 player_id: row.player_id,
                 displayed_name: row.displayed_name,
                 position: row.position,
                 points: row.points
             });
+        });
 
-            return acc;
-        }, {});
-
-        const finalPayload = Object.values(groupedData);
+        // Sorted by event_date (ORDER BY e.event_date sql query)
+        const finalPayload = Array.from(groupedMap.values());
 
         return response.status(200).json(finalPayload);
         

@@ -1,5 +1,5 @@
 # Fetch Events
-Return results of event.
+Return results of event. Sorted based on event_date (start date).
 
 * **URL:** `/api/event_results`
 * **Method:** `GET`
