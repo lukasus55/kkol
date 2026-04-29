@@ -47,8 +47,6 @@ export default async function handler(request, response) {
                 r.attended,
                 r.position,
                 r.total_points,
-                r.games_positions,
-                r.games_points,
                 o.role as organizer_role
             FROM results r
             LEFT JOIN players p 
