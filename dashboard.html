@@ -144,65 +144,85 @@
         <div class="popup_overlay" id="tournament_popup">
             <div class="popup_container popup_large">
                 
-                <div class="popup_header editor_header">
-                    <div class="header_row">
-                        <label>ID turnieju:</label>
-                        <span id="show_tour_id" class="show_tour_id"></span>
-                    </div>
-
-                    <div class="header_row">
-                        <label>Nazwa turnieju:</label>
-                        <input type="text" id="edit_tour_name" class="editor_input header_input">
-                    </div>
-                    
-                    <div class="header_row">
-                        <label>Wyświetlana data:</label>
-                        <input type="text" id="edit_display_date" class="editor_input header_input">
-                    </div>
-
-                    <div class="header_row">
-                        <label>Koniec (Timestamp):</label>
-                        <input type="number" id="edit_timestamp" class="editor_input header_input">
-                    </div>
-                    
-                    <div class="header_row">
-                        <label>Zakończony:</label>
-                        <input type="checkbox" id="edit_finished" class="header_checkbox">
-                    </div>
-
-                    <div class="header_row tier_row">
-                        <label>Tier:</label>
-                        <select id="edit_tier" class="editor_input select_input">
-                            <option value="S">S</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                        </select>
-                        <button class="btn btn_secondary small_btn" id="edit_tier_btn">Zmień tier</button>
+                <div class="popup_header">
+                    <div class="popup_tab_switch_section">
+                        <button class="popup_tab_switch_btn active" data-tab="details">Szczegóły</button>
+                        <button class="popup_tab_switch_btn" data-tab="results">Wyniki</button>
                     </div>
                 </div>
 
-                <div class="popup_body popup_scrollable">
+                <div class="popup_body">
 
-                    <div class="add_player_form">
-                        <input type="text" id="add_player_id" class="editor_input text_input" placeholder="Wpisz ID gracza...">
-                        <button class="btn btn_secondary" id="add_player_btn">Dodaj</button>
+                    <div class="popup_tab active" id="tournament_tab-details">
+
+                        <div class="details_list">
+
+                            <div class="details_row one_line">
+                                <label>ID turnieju:</label>
+                                <span id="show_tour_id" class="show_tour_id"></span>
+                            </div>
+
+                            <div class="details_row one_line">
+                                <label>Zakończony:</label>
+                                <input type="checkbox" id="edit_finished" class="header_checkbox">
+                            </div>
+
+                            <div class="details_row one_line">
+                                <label>Tier:</label>
+                                <div class="tier_container">
+                                    <select id="edit_tier" class="editor_input select_input">
+                                        <option value="S">S</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                    </select>
+                                    <button class="btn btn_secondary small_btn" id="edit_tier_btn">Zmień tier</button>
+                                </div>
+                            </div>
+
+                            <div class="details_row">
+                                <label>Nazwa turnieju:</label>
+                                <input type="text" id="edit_tour_name" class="editor_input header_input">
+                            </div>
+                            
+                            <div class="details_row">
+                                <label>Wyświetlana data:</label>
+                                <input type="text" id="edit_display_date" class="editor_input header_input">
+                            </div>
+
+                            <div class="details_row">
+                                <label>Koniec (Timestamp):</label>
+                                <input type="number" id="edit_timestamp" class="editor_input header_input">
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div class="editor_container">
-                        <table class="editor_table">
-                            <thead>
-                                <tr>
-                                    <th>Gracz</th>
-                                    <th>Pozycja</th>
-                                    <th>Punkty</th>
-                                    <th>Akcja</th>
-                                </tr>
-                            </thead>
-                            <tbody id="editor_players_list">
-                            </tbody>
-                        </table>
+                    <div class="popup_tab" id="tournament_tab-results">
+
+                        <div class="add_player_form">
+                            <input type="text" id="add_player_id" class="editor_input text_input" placeholder="Wpisz ID gracza...">
+                            <button class="btn btn_secondary" id="add_player_btn">Dodaj</button>
+                        </div>
+
+                        <div class="editor_container">
+                            <table class="editor_table">
+                                <thead>
+                                    <tr>
+                                        <th>Gracz</th>
+                                        <th>Pozycja</th>
+                                        <th>Punkty</th>
+                                        <th>Akcja</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editor_players_list">
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
+
                 </div>
 
                 <div class="popup_footer">
@@ -223,7 +243,7 @@
 
         <div class="popup_overlay event_popup" id="event_popup" >
             <div class="popup_content">
-                <div class="popup_header" id="popup_header">
+                <div class="popup_header">
                     <div class="popup_tab_switch_section">
                         <button class="popup_tab_switch_btn active" data-tab="details">Szczegóły</button>
                         <button class="popup_tab_switch_btn" data-tab="results">Wyniki</button>
@@ -232,7 +252,7 @@
                 
                 <div class="popup_body">
 
-                    <div class="event_tab active" id="event_details_tab">
+                    <div class="popup_tab active" id="event_tab-details">
                         <div class="popup_title" id="popup_title">Szczegóły Wydarzenia</div>
 
                         <div id="event_view_mode">
@@ -263,7 +283,7 @@
                         </form>
                     </div>
 
-                    <div class="event_tab" id="event_results_tab">
+                    <div class="popup_tab" id="event_tab-results">
                         <!-- populateEventResults() inserts here -->
                     </div>
                 </div>

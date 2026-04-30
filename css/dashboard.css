@@ -353,7 +353,7 @@ body
 {
     display: none;
     width: 100%;
-    padding: 2rem;
+    padding: 2rem 2rem 10rem 2rem;
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -644,31 +644,30 @@ body
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     border: 1px solid var(--dashboard-stroke);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    overflow: hidden; 
+    gap: 1rem;
     
     transform: translateY(-20px) scale(0.95);
     transition: transform 0.3s ease;
 }
 
-.popup_overlay.active, .confirmation_popup.active .popup-container
+.popup_header
 {
-    transform: translateY(0) scale(1);
-}
-
-.popup_icon
-{
-    color: var(--color-warning-red);
-    margin: 0 auto 1.5rem auto;
-}
-
-.popup_icon img
-{
-    width: 4rem;
-    height: 4rem;
+    display: flex;
+    width: 100%;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--dashboard-stroke);
+    flex-shrink: 0; /* Never shrink */
 }
 
 .popup_body
 {
-    margin-bottom: 2rem;
+    flex: 1; /* Take all remaining space */
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .popup_body p
@@ -688,8 +687,73 @@ body
 .popup_footer
 {
     display: flex;
+    width: 100%;
+    padding-top: 1rem;
+    border-top: 1px solid var(--dashboard-stroke);
     gap: 1rem;
     justify-content: center;
+    align-self: flex-end;
+    flex-shrink: 0; /* Never shrink */
+}
+
+.popup_tab
+{
+    display: none;
+}
+
+.popup_tab.active
+{
+    display: block;
+}
+
+.popup_overlay.active, .confirmation_popup.active .popup-container
+{
+    transform: translateY(0) scale(1);
+}
+
+.popup_icon
+{
+    color: var(--color-warning-red);
+    margin: 0 auto 1.5rem auto;
+}
+
+.popup_icon img
+{
+    width: 4rem;
+    height: 4rem;
+}
+
+.popup_tab_switch_section
+{
+    gap: 0;
+}
+
+.popup_tab_switch_btn
+{
+    background-color: var(--dashboard-background-s4);
+    border: 1px solid var(--dashboard-stroke);
+    padding: 0.5rem 0.5rem;
+    min-width: 5rem;
+}
+
+.popup_tab_switch_btn:first-child
+{
+    border-radius: 3px 0px 0px 3px;
+}
+
+.popup_tab_switch_btn:last-child
+{
+    border-radius: 0px 3px 3px 0px;
+}
+
+.popup_tab_switch_btn.active
+{
+    background-color: var(--dashboard-background-s6);
+}
+
+.popup_tab_switch_btn:hover
+{
+    background-color: var(--dashboard-background-s6);
 }
 
 .btn
@@ -702,6 +766,7 @@ body
     border: none;
     transition: background-color 0.2s ease, transform 0.1s ease;
     width: 100%;
+    white-space: nowrap;
 }
 
 .btn:active
@@ -734,8 +799,7 @@ body
 
 #tournament_popup .popup_container
 {
-    max-height: 80vh;
-    overflow-y: auto;
+    height: 80vh;
 }
 
 #tournament_popup .popup_body
@@ -746,11 +810,6 @@ body
 #tournament_popup .popup_large
 {
     max-width: 45rem;
-}
-
-#tournament_popup .popup_scrollable
-{
-    margin-bottom: 2rem;
 }
 
 #tournament_popup .editor_header
@@ -768,29 +827,60 @@ body
 #tournament_popup .show_tour_id
 {
     font-weight: normal;
+    color: var(--dashboard-text-s2);
 }
 
-#tournament_popup .header_row
+
+#tournament_popup .details_list
 {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+}
+
+#tournament_popup .details_row
+{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    width: 100%;
+    gap: .2rem;
+}
+
+#tournament_popup .details_row.one_line
+{
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto;
     gap: 1rem;
 }
 
-#tournament_popup .header_row label
+#tournament_popup .details_row *
 {
-    color: var(--dashboard-text);
-    font-size: 0.9rem;
-    width: 10rem;
-    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
-#tournament_popup .header_input
+#tournament_popup .details_row label
 {
-    color: var(--dashboard-text-s2);
-    flex-grow: 1;
-    padding: 0.5rem;
-    width: auto;
+    color: var(--dashboard-text);
+}
+
+#tournament_popup .tier_container
+{
+    display: flex;
+    gap: 1rem;
+}
+
+#tournament_popup .tier_container select
+{
+    width: min-content;
+    padding: 0.4rem;
+}
+
+#tournament_popup .tier_container .btn
+{
+    height: 100%;
 }
 
 #tournament_popup .header_checkbox
@@ -798,13 +888,6 @@ body
     width: 1rem;
     height: 1rem;
     cursor: pointer;
-}
-
-#tournament_popup .tier_row
-{
-    margin-top: 0.5rem;
-    padding-top: 1rem;
-    border-top: 1px dashed var(--dashboard-stroke);
 }
 
 #tournament_popup .select_input
@@ -856,7 +939,6 @@ body
 #tournament_popup .editor_table td
 {
     padding: 0.75rem;
-    border-bottom: 1px solid var(--dashboard-stroke);
     vertical-align: middle;
 }
 
@@ -871,10 +953,11 @@ body
     background-color: transparent;
     border: 1px solid var(--dashboard-stroke);
     color: var(--dashboard-text-s2);
-    padding: 0.4rem;
+    padding: 0.75rem;
     border-radius: 4px;
-    width: 4rem;
+    width: 100%;
     font-family: inherit;
+    font-size: 1rem;
 }
 
 #tournament_popup .editor_input:focus
@@ -1108,16 +1191,9 @@ body
     max-width: 450px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     border: 1px solid var(--dashboard-stroke);
-}
-
-#event_popup .event_tab
-{
-    display: none;
-}
-
-#event_popup .event_tab.active
-{
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 /* Header */
@@ -1220,42 +1296,6 @@ body
 {
     background: var(--color-warning-red);
     color: var(--dashboard-text);
-}
-
-#event_popup .popup_tab_switch_section
-{
-    gap: 0;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--dashboard-stroke);
-}
-
-#event_popup .popup_tab_switch_btn
-{
-    background-color: var(--dashboard-background-s4);
-    border: 1px solid var(--dashboard-stroke);
-    padding: 0.5rem 0.5rem;
-    min-width: 5rem;
-}
-
-#event_popup .popup_tab_switch_btn:first-child
-{
-    border-radius: 3px 0px 0px 3px;
-}
-
-#event_popup .popup_tab_switch_btn:last-child
-{
-    border-radius: 0px 3px 3px 0px;
-}
-
-#event_popup .popup_tab_switch_btn.active
-{
-    background-color: var(--dashboard-background-s6);
-}
-
-#event_popup .popup_tab_switch_btn:hover
-{
-    background-color: var(--dashboard-background-s6);
 }
 
 /* Event Results Tab */
