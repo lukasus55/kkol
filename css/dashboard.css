@@ -483,38 +483,50 @@ body
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    padding-bottom: 2rem;
-    border-bottom: var(--dashboard-stroke) 1px solid;
-    gap: 1rem;
+    padding-top: 2rem;
 }
 
-#content-tournaments .tournament_create_title
+#content-tournaments
+{
+    padding: 0rem 1rem
+}
+
+#content-tournaments .creator_container
 {
     display: flex;
-    width: 100%;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+    gap: 1rem;
+    width: min(100%, 46rem);
+}
+
+#content-tournaments .creator_container .btn
+{
+    height: 100%;
 }
 
 #content-tournaments input
 {
+    flex: 1;
+    min-width: 0;
     background-color: var(--dashboard-background-s2);
     border: 1px solid var(--dashboard-stroke);
     color: var(--dashboard-text-s2);
-    padding: 0.4rem;
+    padding: 0.75rem;
     border-radius: 4px;
-    width: 16rem;
     font-family: inherit;
     height: 2.5rem;
     transition: border-color 0.2s ease;
+    font-size: 1rem;
 }
 
 #content-tournaments input:focus
 {
     outline: none;
     border-color: var(--color-text);
+}
+
+#content-tournaments .tournaments_container
+{
+    width: min(100%, 46rem);
 }
 
 #content-tournaments .tournament_card:first-child
@@ -529,23 +541,19 @@ body
 
 #content-tournaments .tournament_card
 {
-    display: grid;
-    grid-template-columns: 1rem 22rem 6rem 2rem;
-    grid-template-rows: 1fr;
+    display: flex;
     gap: 1rem;
     background-color: var(--dashboard-background-s3);
     padding: 0rem 1rem;
     border: 1px solid var(--dashboard-stroke);
     height: 4rem;
-    min-width: 300px;
+    width: 100%
 }
 
-#content-tournaments.info_container, #content-tournaments .role
+#content-tournaments .role
 {
     display: flex;
     align-items: center;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 #content-tournaments .tournament_card .status
@@ -553,14 +561,49 @@ body
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 }
 
-#content-tournaments .tournament_card .status_dot
+.status_dot
 {
-    width: .5rem;
-    height: .5rem;
-    border-radius: 100%;
-    background-color: var(--color-lime-moss);
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    font-size: 1rem; 
+    border-radius: 50%;
+    background-color: transparent;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.status_dot::after
+{
+    content: "";
+    position: absolute;
+    left: 0.2em;
+    top: 0.425em;
+    width: 0.6em;
+    height: 1em;
+    border: solid var(--dashboard-text);
+    border-width: 0.2em 0em 0em 0em;
+}
+
+.status_dot.checked
+{
+    background-color: var(--color-green);
+}
+
+.status_dot.checked::after
+{
+    content: "";
+    position: absolute;
+    left: 0.32em;
+    top: 0.15em;
+    width: 0.25em;
+    height: 0.5em;
+    border: solid #E0E0E2;
+    border-width: 0 0.15em 0.15em 0;
+    transform: rotate(45deg);
 }
 
 #content-tournaments .tournament_card .info_container
@@ -569,6 +612,9 @@ body
     align-items: center;
     width: 100%;
     height: 100%;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 #content-tournaments .tournament_card .info
@@ -586,6 +632,7 @@ body
 {
     display: flex;
     gap: 1rem;
+    flex-shrink: 0;
 }
 
 #content-tournaments .action_menu
@@ -734,6 +781,7 @@ body
     border: 1px solid var(--dashboard-stroke);
     padding: 0.5rem 0.5rem;
     min-width: 5rem;
+    font-size: 1rem;
 }
 
 .popup_tab_switch_btn:first-child
@@ -799,7 +847,7 @@ body
 
 #tournament_popup .popup_container
 {
-    height: 80vh;
+    height: min(60rem,80vh);
 }
 
 #tournament_popup .popup_body
@@ -810,6 +858,11 @@ body
 #tournament_popup .popup_large
 {
     max-width: 45rem;
+}
+
+#tournament_popup #tournament_tab-results
+{
+    padding: 0rem .5rem;
 }
 
 #tournament_popup .editor_header
@@ -890,6 +943,80 @@ body
     cursor: pointer;
 }
 
+/* Hide the default checkbox */
+#tournament_popup .details_checkbox_container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+#tournament_popup .details_checkbox_container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-size: .8rem;
+    user-select: none;
+}
+
+#tournament_popup .checkmark {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 1rem;
+    width: 1rem;
+    background-color: #ccc;
+    border-radius: 50%;
+    transition: 300ms;
+}
+
+#tournament_popup .details_checkbox_container input:checked ~ .checkmark {
+    background-color: var(--color-green);
+    border-radius: .5rem;
+    animation: pulse 500ms ease-in-out;
+}
+
+#tournament_popup .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+#tournament_popup .details_checkbox_container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+#tournament_popup .details_checkbox_container .checkmark:after {
+    left: 0.45em;
+    top: 0.25em;
+    width: 0.25em;
+    height: 0.5em;
+    border: solid #E0E0E2;
+    border-width: 0 0.15em 0.15em 0;
+    transform: rotate(45deg);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 #0B6E4F90;
+        rotate: 20deg;
+    }
+
+    50% {
+        rotate: -20deg;
+    }
+
+    75% {
+        box-shadow: 0 0 0 10px #0B6E4F60;
+    }
+
+    100% {
+        box-shadow: 0 0 0 13px #0B6E4F30;
+        rotate: 0;
+    }
+}
+
 #tournament_popup .select_input
 {
     background-color: var(--dashboard-background-s2);
@@ -932,7 +1059,6 @@ body
     border-collapse: collapse;
     color: var(--dashboard-text);
     text-align: left;
-
 }
 
 #tournament_popup .editor_table th,
@@ -946,6 +1072,12 @@ body
 {
     font-weight: 600;
     color: var(--dashboard-text);
+    background-color: var(--dashboard-background-s2);
+}
+
+#tournament_popup .editor_table tbody tr:hover
+{
+    background-color: var(--dashboard-background-s3);
 }
 
 #tournament_popup .editor_input
@@ -1493,10 +1625,10 @@ body
     }
 
     #content-tournaments .action_menu {
-        top: 100%;
+        bottom: 100%;
         right: 100%;
         left: auto;
-        bottom: auto;
+        top: auto;
     }
 
     .fc-event-time

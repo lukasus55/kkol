@@ -75,9 +75,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (canAdd) {
             const header = `
             <div class="tab_header">
-                <div class="tournament_create_title"> Stwórz nowy turniej </div> 
-                <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
-                <button class="btn_primary" id="tournament_create"> Stwórz </button>
+                <div class="creator_container">
+                    <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
+                    <button class="btn_primary" id="tournament_create">Stwórz turniej</button>
+                </div>
             </div>
             <div class="tournaments_container" id="tournaments_container"> </div>
             `;
@@ -126,11 +127,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             allCardsHTML += `
                 <div class="tournament_card"> 
                     <div class="status" title="${isTournamentFinished ? 'Zakończony' : 'W trakcie'}">
-                        <div 
-                        class="status_dot" 
-                        style="background-color: ${isTournamentFinished ? 'transparent' : 'var(--dashboard-text)'};" 
-                        "> 
-                        </div>
+                        <div class="status_dot ${isTournamentFinished ? 'checked' : ''}"></div>
                     </div>
                     <div class="info_container">
                         <div class="info">
@@ -523,7 +520,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             const data = await loadData(`/api/tournament_editor_details?tournamentId=${tournamentId}`);
-            
+
             const members = data.members;
             const currentUserRole = data.current_user_role;
 
