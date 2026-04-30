@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userData = await loadData('/api/me');
     const user = userData.user;
 
+    const isAdmin = user.role === 'admin';
+
     const logoutBtn = document.querySelector('#logout_btn');
     createLogoutButton(logoutBtn, container);
 
@@ -372,11 +374,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const calendarEvents = await loadData(`/api/events?player=${user.id}`);
+            const rawCalendarEvents = await loadData(`/api/events?player=${user.id}`);
+
+            const accessedTournamentsId = Object.keys(user?.organizer_roles || {});
+            
+            const calendarEvents = rawCalendarEvents.map(event => {
+                const tournament_id = String(event.extendedProps.tournament_id); 
+                const allowedToDragAndResize = isAdmin || accessedTournamentsId.includes(tournament_id);
+
+                return {
+                    ...event,
+                    editable: allowedToDragAndResize
+                };
+            });
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
 
                 initialView: 'dayGridMonth',
+
+                editable: true,
 
                 initialDate: calendarStartDate,
                 locale: 'pl',
@@ -416,6 +432,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 dateClick: function (info) {
                     showEventPopup('create', info.dateStr, () => renderCalendarTab(tabContainer));
+                },
+
+                eventDrop: async function(info) {
+                    await updateEventDate(info);
+                },
+
+                eventResize: async function(info) {
+                    await updateEventDate(info);
                 }
             });
 
@@ -648,7 +672,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const loadingContainer = appendLoaderDiv(listEl);
 
         const tournamentEvents = await loadData(`/api/events?tournament=${tournament.id}&format=list`);
-        console.log(tournamentEvents);
 
         listEl.removeChild(loadingContainer);
 
@@ -849,7 +872,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (mode === 'edit' || mode === 'create') {
-                await updateEvent(mode, onSuccessCallback, eventData);
+                await updateEvent(mode, eventData, onSuccessCallback);
             }
 
             if (mode === 'edit' && eventData?.id) {
@@ -1113,7 +1136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    function showErrorPopup(message) {
+    function showErrorPopup(message = 'Nieznany błąd.') {
         document.getElementById('error_message').textContent = message;
         document.getElementById('error_popup').classList.add('active');
     }
@@ -1382,7 +1405,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    async function updateEvent(mode, onSuccessCallback, eventData) {
+    async function updateEvent(mode, eventData, onSuccessCallback,) {
         // Gather all data from the inputs
         const name = document.getElementById('edit_event_name').value.trim();
         const tournamentId = document.getElementById('edit_event_tournament').value.trim();
@@ -1469,6 +1492,52 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error(error);
             closeAllPopups();
             showErrorPopup(error.message);
+        }
+    }
+
+    async function updateEventDate(eventData) {
+
+        const oldEvent = eventData.oldEvent;
+        const event = eventData.event;
+
+        const revertViusals = eventData?.revert;
+
+        if (oldEvent.id !== event.id) {
+            showErrorPopup("Coś poszło nie tak. Jeżeli błąd się powtarza skontaktuj się z administratorem.");
+            console.error("Nowe wydarzenie nie może mieć innego ID niż stare wydarzenie!");
+            if(revertViusals) {revertViusals()}
+            return;
+        }
+
+        const id = oldEvent.id;
+        
+        const startDate = event.startStr;
+        const endDate = event.endStr;
+
+        // Prepare the payload
+        const payload = {
+            id: id,
+            start_date: startDate,
+            end_date: endDate || null
+        };
+
+        try {
+
+            const response = await fetch('/api/event_update_date', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+
+            const result = await response.json();
+
+            if (!response.ok || result.error) {
+                throw new Error(result.error || "Nie udało się zapisać wydarzenia.");
+            }
+
+        } catch (error) {
+            showErrorPopup(error.message);
+            if(revertViusals) {revertViusals()}
         }
     }
 

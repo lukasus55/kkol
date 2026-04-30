@@ -22,6 +22,7 @@ Welcome to the backend API documentation.
 * [**Create Event** (`POST /api/event_create`)](./docs/api/events/event_create.md)
 * [**Update Event** (`POST /api/event_update`)](./docs/api/events/event_update.md)
 * [**Delete Event** (`POST /api/event_delete`)](./docs/api/events/event_delete.md)
+* [**Update Event Date** (`POST /api/event_update_date`)](./docs/api/events/event_update_date.md)
 * [**Update Event Results** (`POST /api/event_update_results`)](./docs/api/events/event_update_results.md)
 
 ### Tournaments
