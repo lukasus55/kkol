@@ -1492,6 +1492,10 @@ body
     font-style: italic;
 }
 
+#error_popup
+{
+    z-index: 1000;
+}
 
 /* FullCalendar forces default link colors on the day numbers and day names. This small override forces them to use lavender-mist text color instead of ugly default blue.*/
 .fc-col-header-cell-cushion, 

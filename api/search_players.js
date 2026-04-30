@@ -8,8 +8,7 @@ export default async function handler(request, response) {
     try {
         const { q } = request.query;
 
-        // This saves database load and prevents returning half the database on "a"
-        if (!q || q.trim().length < 2) {
+        if (!q || q.trim().length < 1) {
             return response.status(200).json([]);
         }
 

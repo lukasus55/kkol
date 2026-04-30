@@ -13,7 +13,7 @@ Search for player by querry.
 | :--- | :--- | :---: | :--- |
 | `q` | String | Partially* | Search by querry (either player ID or player Name). |
 
-> Note 'q' parameter is not strictly required but the api will return empty object until 'q' length is >1 (at least 2).
+> Note 'q' parameter is not strictly required but the api will return empty object until 'q' length is at least 1.
 
 ### Example Requests
 

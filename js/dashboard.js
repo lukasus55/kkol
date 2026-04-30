@@ -1,4 +1,5 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc } from "./helpers.js";
+import { initPlayerSearchBar } from "./playerSearchBar.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -29,9 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const id = user.id;
         const displayedName = user.displayed_name;
         const roleId = user.role;
-        const pfpSrc = user.pfp_base64
-            ? `data:image/webp;base64,${user.pfp_base64}`
-            : '/img/default_pfp.webp';
+        const pfpSrc = getPfpSrc(user.pfp_base64);
 
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
@@ -208,9 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const currentName = currentUser.displayed_name || '';
 
-        const pfpSrc = currentUser.pfp_base64
-            ? `data:image/webp;base64,${currentUser.pfp_base64}`
-            : '/img/default_pfp.webp';
+        const pfpSrc = getPfpSrc(currentUser.pfp_base64);
 
         const accountHTML = `
             <div class="account_wrapper">
@@ -635,8 +632,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 };
             });
 
+            initPlayerSearchBar('#tournament_add_player_container', {
+                mode: 'fill',
+                placeholder: 'Szukaj gracza do dodania...'
+            });
+
             const addPlayerBtn = document.getElementById('add_player_btn');
-            const addPlayerInput = document.getElementById('add_player_id');
+            const addPlayerInput = document.querySelector('#tournament_add_player_container input');
 
             addPlayerInput.value = '';
 
@@ -644,7 +646,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const newPlayerId = addPlayerInput.value;
 
                 if (!newPlayerId.trim()) {
-                    showErrorPopup("Proszę wpisać ID gracza.");
+                    closeAllPopups();
+                    showErrorPopup("Należy wpisać ID gracza.");
                     return;
                 }
 
