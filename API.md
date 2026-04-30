@@ -42,6 +42,7 @@ Welcome to the backend API documentation.
 ### Players
 * [**Me** (`GET /api/me`)](./docs/api/players/me.md)
 * [**Fetch Players** (`GET /api/players`)](./docs/api/players/players.md)
+* [**Search Players** (`GET /api/search_players`)](./docs/api/players/search_players.md)
 * [**Fetch KKOL Ranking** (`GET /api/ranking`)](./docs/api/players/ranking.md)
 * [**Change Name** (`POST /api/change_name`)](./docs/api/players/change_name.md)
 * [**Upload Profile Picture** (`POST /api/upload_pfp`)](./docs/api/players/upload_pfp.md)
