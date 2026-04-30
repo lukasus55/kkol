@@ -92,3 +92,11 @@ export function capitalizeFirstLetter(val) {
     if (!val) return;
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
+
+export function getPfpSrc(base64) {
+    if (typeof base64 === 'undefined' || base64 === null) {
+        return '/img/default_pfp.webp'
+    } else {
+        return `data:image/webp;base64,${base64}`
+    }
+}

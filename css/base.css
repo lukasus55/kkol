@@ -185,6 +185,115 @@ ul
   list-style: none;
 }
 
+/* --- PLAYER SEARCH BAR COMPONENT --- */
+.search_bar_wrapper
+{
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  font-family: inherit;
+}
+
+.search_bar_input
+{
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.search_bar_input:focus
+{
+  border-color: #fff;
+}
+
+.search_bar_dropdown
+{
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background-color: #000;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+
+.search_bar_dropdown.hidden
+{
+  display: none;
+}
+
+.search_bar_item
+{
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #222;
+}
+
+.search_bar_item:last-child
+{
+  border-bottom: none;
+}
+
+.search_bar_item:hover
+{
+  background-color: #1a1a1a;
+}
+
+.search_bar_pfp, .search_bar_pfp_placeholder
+{
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.search_bar_pfp_placeholder
+{
+  background-color: #444;
+}
+
+.search_bar_info
+{
+  display: flex;
+  flex-direction: column;
+}
+
+.search_bar_name
+{
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.search_bar_id
+{
+  color: #888;
+  font-size: 0.75rem;
+  text-align: left;
+}
+
+.search_bar_empty
+{
+  padding: 1rem;
+  color: #888;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

@@ -1,4 +1,5 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc } from "./helpers.js";
+import { initPlayerSearchBar } from "./playerSearchBar.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -29,9 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const id = user.id;
         const displayedName = user.displayed_name;
         const roleId = user.role;
-        const pfpSrc = user.pfp_base64
-            ? `data:image/webp;base64,${user.pfp_base64}`
-            : '/img/default_pfp.webp';
+        const pfpSrc = getPfpSrc(user.pfp_base64);
 
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
@@ -75,9 +74,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (canAdd) {
             const header = `
             <div class="tab_header">
-                <div class="tournament_create_title"> Stwórz nowy turniej </div> 
-                <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
-                <button class="btn_secondary" id="tournament_create"> Stwórz </button>
+                <div class="creator_container">
+                    <input type="text" id="new_tournament_id" class="tournament_input text_input" placeholder="ID nowego turnieju...">
+                    <button class="btn_primary" id="tournament_create">Stwórz turniej</button>
+                </div>
             </div>
             <div class="tournaments_container" id="tournaments_container"> </div>
             `;
@@ -126,11 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             allCardsHTML += `
                 <div class="tournament_card"> 
                     <div class="status" title="${isTournamentFinished ? 'Zakończony' : 'W trakcie'}">
-                        <div 
-                        class="status_dot" 
-                        style="background-color: ${isTournamentFinished ? 'transparent' : 'var(--dashboard-text)'};" 
-                        "> 
-                        </div>
+                        <div class="status_dot ${isTournamentFinished ? 'checked' : ''}"></div>
                     </div>
                     <div class="info_container">
                         <div class="info">
@@ -211,9 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const currentName = currentUser.displayed_name || '';
 
-        const pfpSrc = currentUser.pfp_base64
-            ? `data:image/webp;base64,${currentUser.pfp_base64}`
-            : '/img/default_pfp.webp';
+        const pfpSrc = getPfpSrc(currentUser.pfp_base64);
 
         const accountHTML = `
             <div class="account_wrapper">
@@ -478,6 +472,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // Header
+        const headerEl = document.querySelector('#tournament_popup .popup_header')
+        const tabSwitchButtons = headerEl.querySelectorAll('#tournament_popup .popup_tab_switch_btn');
+        tabSwitchButtons.forEach (tabSwitchButton => {
+            tabSwitchButton.addEventListener('click', () => {
+                changePopupTab(tabSwitchButton, 'tournament');
+            });
+        });
+
+
+        // Details
         const tourIdEl = document.getElementById('show_tour_id');
         const nameInput = document.getElementById('edit_tour_name');
         const dateInput = document.getElementById('edit_display_date');
@@ -491,7 +495,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const saveBtn = document.getElementById('editor_save_btn');
 
 
-        // Populate Header Data
+        // Populate Details Data
         tourIdEl.textContent = tournament.id || '';
 
         nameInput.value = tournament.displayed_name || '';
@@ -512,14 +516,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         try {
-            const response = await fetch(`/api/tournament_editor_details?tournamentId=${tournamentId}`);
+            const data = await loadData(`/api/tournament_editor_details?tournamentId=${tournamentId}`);
 
-            if (!response.ok) {
-                throw new Error("Brak uprawnień lub błąd serwera");
-            }
-
-
-            const data = await response.json();
             const members = data.members;
             const currentUserRole = data.current_user_role;
 
@@ -634,8 +632,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 };
             });
 
+            initPlayerSearchBar('#tournament_add_player_container', {
+                mode: 'fill',
+                placeholder: 'Szukaj gracza do dodania...'
+            });
+
             const addPlayerBtn = document.getElementById('add_player_btn');
-            const addPlayerInput = document.getElementById('add_player_id');
+            const addPlayerInput = document.querySelector('#tournament_add_player_container input');
 
             addPlayerInput.value = '';
 
@@ -643,7 +646,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const newPlayerId = addPlayerInput.value;
 
                 if (!newPlayerId.trim()) {
-                    showErrorPopup("Proszę wpisać ID gracza.");
+                    closeAllPopups();
+                    showErrorPopup("Należy wpisać ID gracza.");
                     return;
                 }
 
@@ -733,7 +737,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const popupEl = document.getElementById('event_popup');
 
         const popupTitleEl = document.getElementById('popup_title');
-        const headerEl = document.getElementById('popup_header');
+        const headerEl = document.querySelector('#event_popup .popup_header');
 
 
         const viewSection = document.getElementById('event_view_mode');
@@ -749,7 +753,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tabSwitchButtons = headerEl.querySelectorAll('#event_popup .popup_tab_switch_btn');
         tabSwitchButtons.forEach (tabSwitchButton => {
             tabSwitchButton.addEventListener('click', () => {
-                changeEventTab(tabSwitchButton);
+                changePopupTab(tabSwitchButton, 'event');
             });
         });
 
@@ -890,7 +894,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         popupEl.classList.add('active');
 
-        const eventResultsTabEl = document.getElementById('event_results_tab');
+        const eventResultsTabEl = document.getElementById('event_tab-results');
         eventResultsTabEl.innerHTML = ``
 
         const loadingContainer = appendLoaderDiv(eventResultsTabEl);
@@ -1073,7 +1077,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-
     // ===== HELPER FUNCTIONS =====
 
     function closeAllPopups(exception = null) {
@@ -1139,6 +1142,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showErrorPopup(message = 'Nieznany błąd.') {
         document.getElementById('error_message').textContent = message;
         document.getElementById('error_popup').classList.add('active');
+    }
+
+    function changePopupTab(clickedButton, tabId) {
+        const allButtons = document.querySelectorAll(`#${tabId}_popup .popup_tab_switch_btn`);
+        allButtons.forEach(btn => btn.classList.remove('active'));
+        clickedButton.classList.add('active');
+
+        const tabName = clickedButton.getAttribute('data-tab');
+
+        const allTabs = document.querySelectorAll(`#${tabId}_popup .popup_tab`);
+        allTabs.forEach(tab => tab.classList.remove('active'));
+
+        const targetTab = document.querySelector(`#${tabId}_tab-${tabName}`);
+        if (targetTab) {
+            targetTab.classList.add('active');
+        }
     }
 
     // format dates for HTML inputs (YYYY-MM-DDTHH:MM)
@@ -1561,22 +1580,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             closeAllPopups();
             showErrorPopup(error.message);
-        }
-    }
-
-    function changeEventTab(clickedButton) {
-        const allButtons = document.querySelectorAll('#event_popup .popup_tab_switch_btn');
-        allButtons.forEach(btn => btn.classList.remove('active'));
-        clickedButton.classList.add('active');
-
-        const tabName = clickedButton.getAttribute('data-tab');
-
-        const allTabs = document.querySelectorAll('#event_popup .event_tab');
-        allTabs.forEach(tab => tab.classList.remove('active'));
-
-        const targetTab = document.querySelector(`#event_${tabName}_tab`);
-        if (targetTab) {
-            targetTab.classList.add('active');
         }
     }
 
