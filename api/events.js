@@ -6,44 +6,78 @@ export default async function handler(request, response) {
     }
 
     try {
-        const { tournament, player, format, limit } = request.query;
+        const { tournament, player, format, limit, upcoming } = request.query;
         const outputFormat = format || 'calendar';
         const actualLimit = limit ? Math.min(limit, 100) : 100;
+        
+        // Convert the string parameter to a boolean
+        const isUpcoming = upcoming === 'true';
         
         let dbEvents;
 
         if (tournament) {
-            dbEvents = await sql`
-                SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
-                FROM events 
-                WHERE tournament_id = ${tournament}
-                ORDER BY event_date DESC
-                LIMIT ${actualLimit}
-            `;
+            if (isUpcoming) {
+                dbEvents = await sql`
+                    SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
+                    FROM events 
+                    WHERE tournament_id = ${tournament} AND event_date > NOW()
+                    ORDER BY event_date ASC
+                    LIMIT ${actualLimit}
+                `;
+            } else {
+                dbEvents = await sql`
+                    SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
+                    FROM events 
+                    WHERE tournament_id = ${tournament}
+                    ORDER BY event_date DESC
+                    LIMIT ${actualLimit}
+                `;
+            }
         } 
         else if (player) {
-            dbEvents = await sql`
-                SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
-                FROM events 
-                WHERE tournament_id IN (
-                    SELECT tournament_id FROM results WHERE player_id = ${player}
-                )
-                ORDER BY event_date DESC
-                LIMIT ${actualLimit}
-            `;
+            if (isUpcoming) {
+                dbEvents = await sql`
+                    SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
+                    FROM events 
+                    WHERE tournament_id IN (
+                        SELECT tournament_id FROM results WHERE player_id = ${player}
+                    ) AND event_date > NOW()
+                    ORDER BY event_date ASC
+                    LIMIT ${actualLimit}
+                `;
+            } else {
+                dbEvents = await sql`
+                    SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
+                    FROM events 
+                    WHERE tournament_id IN (
+                        SELECT tournament_id FROM results WHERE player_id = ${player}
+                    )
+                    ORDER BY event_date DESC
+                    LIMIT ${actualLimit}
+                `;
+            }
         } 
         else {
-            dbEvents = await sql`
-                SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
-                FROM events 
-                ORDER BY event_date DESC
-                LIMIT ${actualLimit}
-            `;
+            if (isUpcoming) {
+                dbEvents = await sql`
+                    SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
+                    FROM events 
+                    WHERE event_date > NOW()
+                    ORDER BY event_date ASC
+                    LIMIT ${actualLimit}
+                `;
+            } else {
+                dbEvents = await sql`
+                    SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
+                    FROM events 
+                    ORDER BY event_date DESC
+                    LIMIT ${actualLimit}
+                `;
+            }
         }
 
         // Format output based on format parameter
         if (outputFormat === 'list') {
-            // List format - similar to other API endpoints
             const listEvents = dbEvents.map(event => ({
                 id: event.id,
                 tournament_id: event.tournament_id,

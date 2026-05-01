@@ -14,6 +14,7 @@ Returns event data in either calendar or list format. Supports optional tourname
 | `tournament` | String | No | Filter events by tournament ID. |
 | `player` | String | No | Filter events for tournaments where the player has results. |
 | `format` | String | No | Output format: `calendar` (default) or `list`. |
+| `upcoming` | Boolean | No | Fliter by only events that will happen in the future |
 
 ### Example Requests
 
