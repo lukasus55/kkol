@@ -83,7 +83,9 @@ Saves tournament metadata and player results for a tournament editor.
 * `{"error": "Brakujące dane do edycji."}`
 * `{"error": "Nazwa turnieju może mieć maksymalnie 30 znaków."}`
 * `{"error": "Wyświetlana data turnieju może mieć maksymalnie 30 znaków."}`
+* `{"error": "Musisz podać datę końca wydarzenia."}`
 * `{"error": "Nieprawidłowy format daty."}`
+* `{"error": "Data nie może być wcześniejsza niż 01/01/2024"}`
 * `{"error": "Data nie może być późniejsza niż 01/01/2050"}`
 
 **Code:** `401 Unauthorized`

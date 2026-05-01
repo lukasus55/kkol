@@ -38,6 +38,10 @@ export default async function handler(request, response) {
 
         // Handle empty strings from datetime-local input
         const finalEndDate = tournament_info.end_date ? tournament_info.end_date : null;
+        if (finalEndDate === null)
+        {
+            return response.status(400).json({ error: "Musisz podać datę końca wydarzenia." });
+        }
 
         if (finalEndDate) {
             const parsedDate = new Date(finalEndDate);
@@ -46,7 +50,11 @@ export default async function handler(request, response) {
                 return response.status(400).json({ error: "Nieprawidłowy format daty." });
             }
 
+            const minDate = new Date('2024-01-01T00:00:00');
             const maxDate = new Date('2050-01-01T00:00:00');
+            if (parsedDate < minDate) {
+                return response.status(400).json({ error: "Data nie może być wcześniejsz niż 01/01/2024" });
+            }
             if (parsedDate > maxDate) {
                 return response.status(400).json({ error: "Data nie może być późniejsza niż 01/01/2050" });
             }
