@@ -8,6 +8,9 @@ export default async function handler(request, response) {
     }
 
     try {
+        const { limit } = request.query;
+        const actualLimit = limit ? Math.min(limit, 100) : 100;
+
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
@@ -29,6 +32,7 @@ export default async function handler(request, response) {
                 FROM tournaments 
                 WHERE finished = false OR finished IS NULL
                 ORDER BY displayed_name ASC
+                LIMIT ${actualLimit}
             `;
         } else {
             // Organizers/Managers only get unfinished tournaments they are explicitly assigned to
@@ -40,6 +44,7 @@ export default async function handler(request, response) {
                     AND o.role IN ('owner', 'manager', 'organizer')
                     AND (t.finished = false OR t.finished IS NULL)
                 ORDER BY t.displayed_name ASC
+                LIMIT ${actualLimit}
             `;
         }
 

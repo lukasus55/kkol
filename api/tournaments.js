@@ -5,7 +5,8 @@ export default async function handler(request, response) {
         
         
         // Check for the optional 'id' parameter
-        const { id, player } = request.query;
+        const { id, player, limit } = request.query;
+        const actualLimit = limit ? Math.min(limit, 100) : 100;
 
         let tournaments, results;
 
@@ -35,10 +36,10 @@ export default async function handler(request, response) {
             // Fetch All
             [tournaments, results] = await Promise.all([
                 sql`SELECT * FROM tournaments
-                    ORDER BY "end_date" DESC`,
+                    ORDER BY "end_date" DESC LIMIT ${actualLimit}`,
 
                 sql`SELECT r.tournament_id, r.player_id, r.attended, r.finished, r."position", r.total_points, p.displayed_name AS player_name FROM results r
-                    INNER JOIN players p ON r.player_id = p.id`
+                    INNER JOIN players p ON r.player_id = p.id LIMIT ${actualLimit}`
             ]);
         }
 

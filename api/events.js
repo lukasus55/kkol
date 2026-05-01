@@ -6,8 +6,9 @@ export default async function handler(request, response) {
     }
 
     try {
-        const { tournament, player, format } = request.query;
+        const { tournament, player, format, limit } = request.query;
         const outputFormat = format || 'calendar';
+        const actualLimit = limit ? Math.min(limit, 100) : 100;
         
         let dbEvents;
 
@@ -16,7 +17,8 @@ export default async function handler(request, response) {
                 SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                 FROM events 
                 WHERE tournament_id = ${tournament}
-                ORDER BY event_date ASC
+                ORDER BY event_date DESC
+                LIMIT ${actualLimit}
             `;
         } 
         else if (player) {
@@ -26,14 +28,16 @@ export default async function handler(request, response) {
                 WHERE tournament_id IN (
                     SELECT tournament_id FROM results WHERE player_id = ${player}
                 )
-                ORDER BY event_date ASC
+                ORDER BY event_date DESC
+                LIMIT ${actualLimit}
             `;
         } 
         else {
             dbEvents = await sql`
                 SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                 FROM events 
-                ORDER BY event_date ASC
+                ORDER BY event_date DESC
+                LIMIT ${actualLimit}
             `;
         }
 

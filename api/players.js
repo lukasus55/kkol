@@ -4,7 +4,8 @@ export default async function handler(request, response) {
     try {
 
         // Check for the optional parameters
-        const { id, tournament } = request.query;
+        const { id, tournament, limit } = request.query;
+        const actualLimit = limit ? Math.min(limit, 100) : 100;
 
         let players, results;
 
@@ -29,8 +30,8 @@ export default async function handler(request, response) {
         }
         else {
             [players, results] = await Promise.all([
-                sql`SELECT id, displayed_name, pfp_base64 FROM players`,
-                sql`SELECT * FROM results`
+                sql`SELECT id, displayed_name, pfp_base64 FROM players LIMIT ${actualLimit}`,
+                sql`SELECT * FROM results LIMIT ${actualLimit}`
             ]);
         }
         const dataMap = {};
