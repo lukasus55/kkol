@@ -194,8 +194,10 @@
                             </div>
 
                             <div class="details_row">
-                                <label>Koniec (Timestamp):</label>
-                                <input type="number" id="edit_timestamp" class="editor_input header_input">
+                                <label>Koniec wydarzenia:</label>
+                                <div class="end_date_picker">
+                                    <input type="datetime-local" id="edit_t_end_date" class="editor_input header_input">
+                                </div>
                             </div>
 
                         </div>
@@ -245,7 +247,7 @@
         </div>
 
         <div class="popup_overlay event_popup" id="event_popup" >
-            <div class="popup_content">
+            <div class="popup_container">
                 <div class="popup_header">
                     <div class="popup_tab_switch_section">
                         <button class="popup_tab_switch_btn active" data-tab="details">Szczegóły</button>

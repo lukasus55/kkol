@@ -29,7 +29,7 @@ Welcome to the backend API documentation.
 * [**Fetch Tournaments** (`GET /api/tournaments`)](./docs/api/tournaments/tournaments.md)
 * [**Get Active Tournaments** (`GET /api/tournaments_active`)](./docs/api/tournaments/tournaments_active.md)
 * [**Tournament Editor Details** (`GET /api/tournament_editor_details`)](./docs/api/tournaments/tournament_editor_details.md)
-* [**Save Tournament Results and Details** (`POST /api/tournament_save_results`)](./docs/api/tournaments/tournament_save_results.md)
+* [**Save Tournament Results and Details** (`POST /api/tournament_save`)](./docs/api/tournaments/tournament_save.md)
 * [**Toggle Attendance** (`POST /api/tournament_toggle_attendance`)](./docs/api/tournaments/tournament_toggle_attendance.md)
 * [**Update Organizer Role** (`POST /api/tournament_update_organizer_role`)](./docs/api/tournaments/tournament_update_organizer_role.md)
 * [**Create Tournament** (`POST /api/tournament_create`)](./docs/api/tournaments/tournament_create.md)

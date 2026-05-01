@@ -17,13 +17,7 @@ export default async function handler(request, response) {
         
         
         const users = await sql`
-            SELECT 
-                p.id, 
-                p.role, 
-                p.is_active, 
-                p.email, 
-                p.displayed_name,
-                p.pfp_base64,
+            SELECT p.id, p.role, p.is_active, p.email, p.displayed_name,p.pfp_base64,
                 COALESCE(
                     (SELECT json_object_agg(tournament_id, role) 
                     FROM tournament_organizers 
