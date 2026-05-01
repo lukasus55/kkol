@@ -1,7 +1,7 @@
 # Save Tournament Results
 Saves tournament metadata and player results for a tournament editor.
 
-* **URL:** `/api/tournament_save_results`
+* **URL:** `/api/tournament_save`
 * **Method:** `POST`
 * **Required Roles:** `owner` (tournament-specific) or `manager` (tournament-specific)
 
@@ -32,7 +32,7 @@ Saves tournament metadata and player results for a tournament editor.
   "displayed_name": "SEZON 2026",
   "displayed_date": "15 May 2026",
   "finished": false,
-  "timestamp": 1710000000
+  "end_date": "2026-05-01T11:47"
 }
 ```
 
@@ -83,7 +83,8 @@ Saves tournament metadata and player results for a tournament editor.
 * `{"error": "Brakujące dane do edycji."}`
 * `{"error": "Nazwa turnieju może mieć maksymalnie 30 znaków."}`
 * `{"error": "Wyświetlana data turnieju może mieć maksymalnie 30 znaków."}`
-* `{"error": "Timestamp nie może odpowiadać dacie starszej niż 01/01/2050"}`
+* `{"error": "Nieprawidłowy format daty."}`
+* `{"error": "Data nie może być późniejsza niż 01/01/2050"}`
 
 **Code:** `401 Unauthorized`
 * `{"error": "Not authenticated"}`

@@ -907,7 +907,7 @@ body
     gap: 1rem;
 }
 
-#tournament_popup .details_row *
+#tournament_popup .details_row > *
 {
     display: flex;
     align-items: center;
@@ -1090,6 +1090,8 @@ body
     width: 100%;
     font-family: inherit;
     font-size: 1rem;
+    color-scheme: dark;
+    justify-self: baseline;
 }
 
 #tournament_popup .editor_input:focus

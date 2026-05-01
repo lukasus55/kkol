@@ -20,7 +20,7 @@ export default async function handler(request, response) {
         } 
         else if (player) {
             [tournaments, results] = await Promise.all([
-                sql`SELECT t.id, t.displayed_name, t.page_exists, t.page_url, t.finished, t.event_timestamp, t.displayed_date, t.tier, r.player_id FROM tournaments t 
+                sql`SELECT t.id, t.displayed_name, t.page_exists, t.page_url, t.finished, t.end_date, t.displayed_date, t.tier, r.player_id FROM tournaments t 
                     inner join results r on r.tournament_id = t.id  
                     where r.player_id = ${player}`,
 
@@ -51,7 +51,7 @@ export default async function handler(request, response) {
                 finished: t.finished,
                 standings: [],
                 details: {
-                    timestamp: t.event_timestamp,
+                    end_date: t.end_date,
                     displayed_date: t.displayed_date,
                     players: t.player_count,
                     tier: t.tier

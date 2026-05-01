@@ -25,8 +25,8 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brakujące dane do edycji." });
         }
 
-        const clean_displayed_name = escapeHTML(tournament_info.displayed_name.trim()) || ''
-        const clean_displayed_date = escapeHTML(tournament_info.displayed_date.trim()) || ''
+        const clean_displayed_name = escapeHTML(tournament_info.displayed_name.trim()) || '';
+        const clean_displayed_date = escapeHTML(tournament_info.displayed_date.trim()) || '';
         
         if (clean_displayed_name && clean_displayed_name.length > 30) {
             return response.status(400).json({ error: "Nazwa turnieju może mieć maksymalnie 30 znaków." });
@@ -36,11 +36,21 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Wyświetlana data turnieju może mieć maksymalnie 30 znaków." });
         }
 
-        if (tournament_info.timestamp && tournament_info.timestamp > 2524647600) {
-            return response.status(400).json({ error: "Timestamp nie może odpowiadać dacie starszej niż 01/01/2050" });
-        }
+        // Handle empty strings from datetime-local input
+        const finalEndDate = tournament_info.end_date ? tournament_info.end_date : null;
 
-        
+        if (finalEndDate) {
+            const parsedDate = new Date(finalEndDate);
+            
+            if (isNaN(parsedDate.getTime())) {
+                return response.status(400).json({ error: "Nieprawidłowy format daty." });
+            }
+
+            const maxDate = new Date('2050-01-01T00:00:00');
+            if (parsedDate > maxDate) {
+                return response.status(400).json({ error: "Data nie może być późniejsza niż 01/01/2050" });
+            }
+        }
 
         // verify organizer role
         const authCheck = await sql`
@@ -58,7 +68,7 @@ export default async function handler(request, response) {
             SET 
                 displayed_name = ${clean_displayed_name},
                 finished = ${tournament_info.finished},
-                event_timestamp = ${tournament_info.timestamp}::numeric, 
+                end_date = ${finalEndDate}, 
                 displayed_date = ${clean_displayed_date}
             WHERE id = ${tournament_id}
         `;

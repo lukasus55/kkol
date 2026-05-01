@@ -1,4 +1,4 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput } from "./helpers.js";
 import { initPlayerSearchBar } from "./playerSearchBar.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tourIdEl = document.getElementById('show_tour_id');
         const nameInput = document.getElementById('edit_tour_name');
         const dateInput = document.getElementById('edit_display_date');
-        const timestampInput = document.getElementById('edit_timestamp');
+        const endDateInput = document.getElementById('edit_t_end_date');
         const finishedInput = document.getElementById('edit_finished');
 
         const tierSelect = document.getElementById('edit_tier');
@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         nameInput.value = tournament.displayed_name || '';
         dateInput.value = tournament.details?.displayed_date || '';
-        timestampInput.value = tournament.details?.timestamp || '';
+        endDateInput.value = formatForDateTimeInput(tournament.details.end_date);
         finishedInput.checked = tournament.finished || false;
 
         const currentTier = tournament.details?.tier || 'C';
@@ -1160,15 +1160,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // format dates for HTML inputs (YYYY-MM-DDTHH:MM)
-    function formatForDateTimeInput(dateObj) {
-        if (!dateObj) return '';
-        // Adjusts for local timezone offset before slicing
-        const tzOffset = dateObj.getTimezoneOffset() * 60000;
-        const localISOTime = (new Date(dateObj - tzOffset)).toISOString().slice(0, 16);
-        return localISOTime;
-    }
-
 
 
     // ===== ACTION FUNCTIONS =====
@@ -1272,7 +1263,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function addPlayer(newPlayerId, tournament) {
-        console.log(tournament)
         try {
             const res = await fetch('/api/tournament_add_player', {
                 method: 'POST',
@@ -1326,7 +1316,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const nameInput = document.getElementById('edit_tour_name');
         const dateInput = document.getElementById('edit_display_date');
-        const timestampInput = document.getElementById('edit_timestamp');
+        const endDateInput = document.getElementById('edit_t_end_date');
         const finishedInput = document.getElementById('edit_finished');
 
         const rows = listEl.querySelectorAll('tr[data-player-id]');
@@ -1348,12 +1338,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tournamentInfo = {
             displayed_name: nameInput.value.trim(),
             displayed_date: dateInput.value.trim(),
-            timestamp: parseInt(timestampInput.value, 10) || 0,
+            end_date: endDateInput.value,
             finished: finishedInput.checked
         };
 
         try {
-            const response = await fetch('/api/tournament_save_results', {
+            const response = await fetch('/api/tournament_save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
