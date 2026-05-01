@@ -1642,25 +1642,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Handle outside click & cancel buttons)
+    let mouseDownStartedOnPopupContent = false;
+    let mouseDownStartedOnActionMenu = false;
+
+    // Track where mousedown occurs
+    document.addEventListener('mousedown', (event) => {
+        const popupContent = event.target.closest('.popup_container');
+        const actionMenu = event.target.closest('.action_menu');
+        
+        mouseDownStartedOnPopupContent = !!popupContent;
+        mouseDownStartedOnActionMenu = !!actionMenu;
+    });
+
     document.addEventListener('click', (event) => {
         // Normal Popups/Modals
         const clickedOutsideOverlay = event.target.classList.contains('popup_overlay');
         const clickedCancelBtn = event.target.closest('.btn_cancel');
 
-        if (clickedOutsideOverlay || clickedCancelBtn) {
+        if (clickedCancelBtn || (clickedOutsideOverlay && !mouseDownStartedOnPopupContent)) {
             closeAllPopups();
         }
+
+        mouseDownStartedOnPopupContent = false;
 
         // Action Menus
         const isInsideActionMenu = event.target.closest('.action_menu');
         const isInsideTriggerBtn = event.target.closest('.more_icon');
 
-        if (!isInsideActionMenu && !isInsideTriggerBtn) {
+        // Only close if mousedown started outside the action menu
+        if (!isInsideActionMenu && !isInsideTriggerBtn && !mouseDownStartedOnActionMenu) {
             const openMenus = document.querySelectorAll('.action_menu.active');
             openMenus.forEach(menu => {
                 menu.classList.remove('active');
             });
         }
+
+        mouseDownStartedOnActionMenu = false;
     });
 
     // Handle the Escape Key

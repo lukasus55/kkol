@@ -1315,7 +1315,7 @@ body
     display: flex;
 }
 
-#event_popup .popup_content
+#event_popup .popup_container
 {
     background: var(--color-onyx);
     padding: 2rem;
