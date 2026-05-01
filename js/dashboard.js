@@ -88,18 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const playerTournaments = currentUser.tournaments ?? {};
         const organizerRoles = currentUser.organizer_roles ?? {};
 
-        const tournaments = [];
-
-        Object.keys(playerTournaments).forEach(tournamentId => {
-            const resultData = playerTournaments[tournamentId];
-
-            if (tournamentsData[tournamentId]) {
-                tournaments.push(tournamentsData[tournamentId]);
-            }
-        });
-
-        // Sort tournaments descending
-        tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
+        const tournaments = Object.keys(tournamentsData).map((key) => tournamentsData[key]);;
 
         let allCardsHTML = '';
 
