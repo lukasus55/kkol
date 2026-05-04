@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const accountHTML = `
             <div class="account_wrapper">
-                <h2 class="account_header">Ustawienia Konta</h2>
+                <h2 class="account_header">Moje Konto</h2>
 
                 <div class="account_card">
                     <h3 class="card_title">Zdjęcie profilowe</h3>
@@ -221,6 +221,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <button class="btn_primary" id="save_name_btn">Zmień</button>
                     </div>
                 </div>
+
+                <h2 class="account_header">Bezpieczeństwo i Hasło</h2>
 
                 <div class="account_card placeholder_card">
                     <h3 class="card_title">Bezpieczeństwo i Email</h3>
