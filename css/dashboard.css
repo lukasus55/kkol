@@ -138,6 +138,13 @@ body
     opacity: 0.9;
 }
 
+.btn_primary.disabled, .btn_secondary.disabled, .btn_tertiary.disabled
+{
+    transform: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 .btn_secondary
 {
     background-color: var(--dashboard-background-s4);
@@ -465,6 +472,30 @@ body
 {
     outline: none;
     border-color: var(--dashboard-text);
+}
+
+#content-account .password_container
+{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+}
+
+#content-account .password_container *
+{
+    width: 100%;
+}
+
+#content-account .password_input_container
+{
+    margin-bottom: 1.5rem;
+    gap: 0.4rem;
+}
+
+#content-account .password_input_container h5
+{
+    color: var(--dashboard-text);
 }
 
 /* Future Features Placeholder */

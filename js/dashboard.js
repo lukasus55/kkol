@@ -224,10 +224,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 <h2 class="account_header">Bezpieczeństwo i Hasło</h2>
 
-                <div class="account_card placeholder_card">
-                    <h3 class="card_title">Bezpieczeństwo i Email</h3>
-                    <p class="placeholder_text">Więcej funkcjonalności niebawem...</p>
+                <div class="account_card">
+                    <h3 class="card_title">Zmień hasło</h3>
+
+                    <form class="password_container">
+
+                        <input type="text" name="username" autocomplete="username" value="user@example.com" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
+
+                        <div class="password_input_container">
+                            <h5>Obecne hasło</h5>
+                            <input type="password" name="current_password" id="account_old_password" class="account_input" autocomplete="current-password">
+                        </div>
+
+                        <div class="password_input_container">
+                            <h5>Nowe hasło</h5>
+                            <input type="password" name="new_password" id="account_new_password" class="account_input" autocomplete="new-password">
+                        </div>
+
+                        <div class="password_input_container">
+                            <h5>Powtórz nowe hasło</h5>
+                            <input type="password" name="new_password_repeat" id="account_new_password_repeat" class="account_input" autocomplete="new-password">
+                        </div>
+
+                    </form>
+
+                    <button class="btn_primary disabled" id="save_name_btn">Work In Progress</button>
                 </div>
+
             </div>
         `;
 
