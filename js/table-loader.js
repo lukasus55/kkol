@@ -18,10 +18,7 @@ export default async function tableLoader(tournamentId) {
 
     const tournament = tournamentData[tournamentId];
     const tStandings = tournament.standings;
-
-    console.log(tournament)
-    console.log(tStandings)
-
+    
     table.innerHTML = ``
     table.append(tableHead);
     table.append(tableBody)
