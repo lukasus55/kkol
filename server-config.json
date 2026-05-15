@@ -4,22 +4,22 @@
     "redirects": [
         {
             "source": "/more/dart",
-            "destination": "https://lukasus55.github.io/dartES/",
+            "destination": "https://dart.kkol.pl",
             "permanent": true
         },
         {
             "source": "/more/dartes",
-            "destination": "https://lukasus55.github.io/dartES/",
+            "destination": "https://dart.kkol.pl",
             "permanent": true
         },
         {
             "source": "/dart",
-            "destination": "https://lukasus55.github.io/dartES/",
+            "destination": "https://dart.kkol.pl",
             "permanent": true
         },
         {
             "source": "/dartes",
-            "destination": "https://lukasus55.github.io/dartES/",
+            "destination": "https://dart.kkol.pl",
             "permanent": true
         },
         {
