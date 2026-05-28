@@ -1,4 +1,4 @@
-import { appendLoaderDiv, loadData } from "./helpers.js";
+import { appendLoaderDiv, loadData } from "./utils/helpers.js";
 
 // Display leaderboard
 async function createLeaderboardDiv()

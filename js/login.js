@@ -1,4 +1,4 @@
-import { appendLoaderDiv } from "./helpers.js";
+import { appendLoaderDiv } from "./utils/helpers.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.login_card');

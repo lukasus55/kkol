@@ -1,4 +1,4 @@
-import { loadData } from '/js/helpers.js'
+import { loadData } from '/js/utils/helpers.js'
 
 // Buttons logic
 // Select both types of buttons
