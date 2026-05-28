@@ -1,6 +1,6 @@
 import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput } from "./utils/helpers.js";
 import { initPlayerSearchBar } from "./playerSearchBar.js";
-import { validatePassword } from "./utils/validatePassword.js";
+import { passwordRequirementsNames, validatePassword } from "./utils/validatePassword.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -245,6 +245,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <div class="password_validator_bar"> 
                                 <div class="password_validator_filler" id="password_validator_filler" style="background-color:#690000; width:20%"></div>
                             </div>
+                            <div class="password_validator_req_container" id="password_validator_req_container">
+                            </div>
                         </div>
 
                         <div class="password_input_container">
@@ -488,7 +490,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // ===== MAJOR POPUPS =====
+    // ===== MAJOR COMPONENTS =====
 
     async function showTournamentPopup(tournament) {
 
@@ -932,7 +934,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // ===== TABS INSIDE POPUPS =====
+    // ===== MINOR COMPONENTS =====
 
     async function populateEventResults(eventId, mode) {
 
@@ -1015,6 +1017,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
 
         return tabHtml;
+    }
+
+    function renderPasswordRequirements(passwordInfo) {
+        const reqListEl = document.querySelector("#password_validator_req_container");
+        const requirementsNames = passwordRequirementsNames;
+        const requirements = passwordInfo.requirements;
+
+        let sectionHtml = ``
+
+        Object.entries(requirements).forEach((req) => {
+            const reqId = req[0];
+            const reqFulfilled = req[1];
+
+            const iconUrl = reqFulfilled ? "/img/dashboard/successMark.svg" : "/img/dashboard/failureMark.svg"
+
+            sectionHtml += `
+            <div class="password_validator_req"> 
+                <div class="password_validator_req_dot ${reqFulfilled ? `fulfilled` : ``}"> <img src=${iconUrl}> </div> 
+                <span>${requirementsNames[reqId]}</span> 
+            </div>`
+        })
+
+        reqListEl.innerHTML = sectionHtml;
     }
 
 
@@ -1189,13 +1214,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateVisualValidator(password) {
         const passwordInfo = validatePassword(password);
+
         const breakPoints = passwordInfo.maxScore;
+        const score = passwordInfo.score;
+
         const validatorBarEl = document.querySelector('#password_validator_filler');
-        const barColors = ['#690000', '#694700', '#646900', '#506900', '#00691f']
+        const barColors = ['#690000', '#694700', '#646900', '#506900', '#00691f'];
 
         if(!validatorBarEl) return;
-        validatorBarEl.style.width = `${(passwordInfo.score+1)*(Math.round(100/breakPoints))}%`
-        validatorBarEl.style.backgroundColor = barColors[passwordInfo.score]
+
+        validatorBarEl.style.width = `${(score+1)*(Math.round(100/breakPoints))}%`;
+        validatorBarEl.style.backgroundColor = barColors[score];
+
+        renderPasswordRequirements(passwordInfo);
     }
 
     // ===== ACTION FUNCTIONS =====
@@ -1737,6 +1768,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     renderInfoCard();
     handleTabs();
+    updateVisualValidator('')
 
     if (loadingContainer) {
         container.removeChild(loadingContainer);

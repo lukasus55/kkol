@@ -3,7 +3,8 @@ export function validatePassword(pass) {
         score: 0,
         maxScore: 5,
         requirements: {
-            correctLenght: false
+            correctLenght: false,
+            notOnList: true,
         },
         recommendations: {
             lowerCaseChar: false,
@@ -24,7 +25,7 @@ export function validatePassword(pass) {
     passInfo.recommendations.upperCaseChar = hasUpperCase(pass);
     passInfo.recommendations.number = hasNumber(pass);
     passInfo.recommendations.specialChar = hasSpecialChar(pass);
-    passInfo.recommendations.moreThan18Char = pass.length > 17;
+    passInfo.recommendations.moreThan17Char = pass.length > 17;
 
     Object.values(passInfo.recommendations).forEach(rec => {
         if (rec) passInfo.score++;
@@ -34,6 +35,19 @@ export function validatePassword(pass) {
     if(!isEveryReqFulfilled) {passInfo.score = 0};
     
     return passInfo;
+}
+
+export const passwordRequirementsNames = {
+    correctLenght: "Ma co najmniej 14 znaków.",
+    notOnList: "Nie jest na liście słabych haseł.",
+}
+
+export const passwordRecomendationsNames = {
+    lowerCaseChar: "Zawiera małą literę (a-z).",
+    upperCaseChar: "Zawiera wielką literę (A-Z).",
+    number: "Zawiera numer (0-9).",
+    specialChar: "Zawiera znak specjalny.",
+    moreThan17Char: "Ma co najmniej 18 znaków.",
 }
 
 export const hasLowerCase = (str) => {return /[a-z]/.test(str);};
