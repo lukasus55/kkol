@@ -1020,6 +1020,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderPasswordRequirements(passwordInfo) {
+        if(passwordInfo.length==0) return;
+
         const reqListEl = document.querySelector("#password_validator_req_container");
         const requirementsNames = passwordRequirementsNames;
         const requirements = passwordInfo.requirements;
@@ -1212,13 +1214,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    function updateVisualValidator(password) {
-        const passwordInfo = validatePassword(password);
+    async function updateVisualValidator(password) {
+        const passwordInfo = await validatePassword(password);
 
-        const breakPoints = passwordInfo.maxScore;
+        const breakPoints = passwordInfo.maxScore+1;
         const score = passwordInfo.score;
 
         const validatorBarEl = document.querySelector('#password_validator_filler');
+        console.log(score);
         const barColors = ['#690000', '#694700', '#646900', '#506900', '#00691f'];
 
         if(!validatorBarEl) return;
