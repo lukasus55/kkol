@@ -4,6 +4,7 @@ export function validatePassword(pass) {
         maxScore: 5,
         requirements: {
             correctLenght: false,
+            notNumbersOnly: false,
             notOnList: true,
         },
         recommendations: {
@@ -20,6 +21,7 @@ export function validatePassword(pass) {
     };
 
     passInfo.requirements.correctLenght = pass.length >= 14 && pass.length <= 128;
+    passInfo.requirements.notNumbersOnly = !isNumbersOnly(pass);
 
     passInfo.recommendations.lowerCaseChar = hasLowerCase(pass);
     passInfo.recommendations.upperCaseChar = hasUpperCase(pass);
@@ -39,6 +41,7 @@ export function validatePassword(pass) {
 
 export const passwordRequirementsNames = {
     correctLenght: "Ma co najmniej 14 znaków.",
+    notNumbersOnly: "Nie składa się wyłącznie z cyfr.",
     notOnList: "Nie jest na liście słabych haseł.",
 }
 
@@ -49,6 +52,8 @@ export const passwordRecomendationsNames = {
     specialChar: "Zawiera znak specjalny.",
     moreThan17Char: "Ma co najmniej 18 znaków.",
 }
+
+export const isNumbersOnly = (str) => {return /^\d+$/.test(str);};
 
 export const hasLowerCase = (str) => {return /[a-z]/.test(str);};
 
