@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                         <div class="password_validator">
                             <div class="password_validator_bar"> 
-                                <div class="password_validator_filler" id="password_validator_filler" style="background-color:#690000; width:25%"></div>
+                                <div class="password_validator_filler" id="password_validator_filler" style="background-color:#690000; width:20%"></div>
                             </div>
                         </div>
 
@@ -1187,17 +1187,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // ===== ACTION FUNCTIONS =====
     function updateVisualValidator(password) {
         const passwordInfo = validatePassword(password);
-        const breakPoints = 4;
+        const breakPoints = passwordInfo.maxScore;
         const validatorBarEl = document.querySelector('#password_validator_filler');
+        const barColors = ['#690000', '#694700', '#646900', '#506900', '#00691f']
 
         if(!validatorBarEl) return;
-        
-        validatorBarEl.style.width = `${(passwordInfo.score+1)*25}%`
-        
+        validatorBarEl.style.width = `${(passwordInfo.score+1)*(Math.round(100/breakPoints))}%`
+        validatorBarEl.style.backgroundColor = barColors[passwordInfo.score]
     }
+
+    // ===== ACTION FUNCTIONS =====
 
     async function leaveTournament(tournamentId) {
         try {

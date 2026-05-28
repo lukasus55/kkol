@@ -1,34 +1,39 @@
 export function validatePassword(pass) {
-    let requirements = {
-        correctLenght: false
+    let passInfo = {
+        score: 0,
+        maxScore: 5,
+        requirements: {
+            correctLenght: false
+        },
+        recommendations: {
+            lowerCaseChar: false,
+            upperCaseChar: false,
+            number: false,
+            specialChar: false,
+            moreThan17Char: false,
+        },
     }
-    let recommendations = {
-        lowerCaseChar: false,
-        upperCaseChar: false,
-        number: false,
-        specialChar: false,
-    }
-    let score=0;
 
     if(!pass || typeof pass !== "string") {
-        return ({score: score, requirements: requirements, recommendations: recommendations});
+        return (passInfo);
     };
 
-    requirements.correctLenght = pass.length >= 14 && pass.length <= 128;
-    recommendations.lowerCaseChar = hasLowerCase(pass);
-    recommendations.upperCaseChar = hasUpperCase(pass);
-    recommendations.number = hasNumber(pass);
-    recommendations.specialChar = hasSpecialChar(pass);
+    passInfo.requirements.correctLenght = pass.length >= 14 && pass.length <= 128;
 
-    Object.values(recommendations).forEach(r => {
-        if (r) score++;
+    passInfo.recommendations.lowerCaseChar = hasLowerCase(pass);
+    passInfo.recommendations.upperCaseChar = hasUpperCase(pass);
+    passInfo.recommendations.number = hasNumber(pass);
+    passInfo.recommendations.specialChar = hasSpecialChar(pass);
+    passInfo.recommendations.moreThan18Char = pass.length > 17;
+
+    Object.values(passInfo.recommendations).forEach(rec => {
+        if (rec) passInfo.score++;
     });
+
+    const isEveryReqFulfilled = Object.values(passInfo.requirements).every((req) => {return req});
+    if(!isEveryReqFulfilled) {passInfo.score = 0};
     
-    return ({
-        score: score, 
-        requirements: requirements,
-        recommendations: recommendations,
-    });
+    return passInfo;
 }
 
 export const hasLowerCase = (str) => {return /[a-z]/.test(str);};
