@@ -238,7 +238,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                         <div class="password_input_container">
                             <h5>Nowe hasło</h5>
-                            <input type="password" name="new_password" id="account_new_password" class="account_input" autocomplete="new-password">
+                            <input type="password" name="new_password" id="account_new_password" class="account_input" onValueChange="() => console.log('test')" autocomplete="new-password">
+                        </div>
+                        <div class="password_validator">
+                            <div class="password_validator_bar"> 
+                                <div class="password_validator_filler" id="password_validator_filler" style="background-color:#690000; width:25%"></div>
+                            </div>
                         </div>
 
                         <div class="password_input_container">
@@ -247,6 +252,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
 
                     </form>
+                    
 
                     <button class="btn_primary disabled" id="save_name_btn">Work In Progress</button>
                 </div>
@@ -351,6 +357,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             reader.readAsDataURL(file);
         });
+
+        const accountNewPassword = document.getElementById('account_new_password');
+
+        accountNewPassword.addEventListener('input', (e) => {
+            updateVisualValidator(e.target.value);
+        })
 
     }
 
@@ -1174,9 +1186,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function validatePassword(password) {
+        let requirements = {
+            correctLenght: false
+        }
+        let score=0;
+
+        if(!password || typeof password !== "string") {
+            return ({score: score, requirements: requirements});
+        };
+
+        if (password.length >= 14) {
+            score += 1
+        }
+        
+        return ({
+            score: score, 
+            requirements: requirements
+        });
+    }
+
 
 
     // ===== ACTION FUNCTIONS =====
+    function updateVisualValidator(password) {
+        const passwordInfo = validatePassword(password);
+        const breakPoints = 4;
+        const validatorBarEl = document.querySelector('#password_validator_filler');
+
+        if(!validatorBarEl) return;
+        
+        validatorBarEl.style.width = `${(passwordInfo.score+1)*25}%`
+        
+    }
+
     async function leaveTournament(tournamentId) {
         try {
             const response = await fetch('/api/tournament_leave', {
