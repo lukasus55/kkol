@@ -1,5 +1,6 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput } from "./utils/helpers.js";
 import { initPlayerSearchBar } from "./playerSearchBar.js";
+import { validatePassword } from "./utils/validatePassword.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -1185,28 +1186,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             targetTab.classList.add('active');
         }
     }
-
-    function validatePassword(password) {
-        let requirements = {
-            correctLenght: false
-        }
-        let score=0;
-
-        if(!password || typeof password !== "string") {
-            return ({score: score, requirements: requirements});
-        };
-
-        if (password.length >= 14) {
-            score += 1
-        }
-        
-        return ({
-            score: score, 
-            requirements: requirements
-        });
-    }
-
-
 
     // ===== ACTION FUNCTIONS =====
     function updateVisualValidator(password) {
