@@ -1,4 +1,4 @@
-export function validatePassword(pass: string) {
+export function validatePassword(pass) {
     let requirements = {
         correctLenght: false
     }
@@ -31,10 +31,10 @@ export function validatePassword(pass: string) {
     });
 }
 
-export const hasLowerCase = (str: string): boolean => {return /[a-z]/.test(str);};
+export const hasLowerCase = (str) => {return /[a-z]/.test(str);};
 
-export const hasUpperCase = (str: string): boolean => {return /[A-Z]/.test(str);};
+export const hasUpperCase = (str) => {return /[A-Z]/.test(str);};
 
-export const hasNumber = (str: string): boolean => {return /\d/.test(str);};
+export const hasNumber = (str) => {return /\d/.test(str);};
 
-export const hasSpecialChar = (str: string): boolean => {return /[!@#$%^&*]/.test(str);};
+export const hasSpecialChar = (str) => {return /[!@#$%^&*]/.test(str);};
