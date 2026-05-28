@@ -1221,7 +1221,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const score = passwordInfo.score;
 
         const validatorBarEl = document.querySelector('#password_validator_filler');
-        console.log(score);
         const barColors = ['#690000', '#694700', '#646900', '#506900', '#00691f'];
 
         if(!validatorBarEl) return;
