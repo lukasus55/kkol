@@ -19,7 +19,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const isAdmin = user.role === 'admin';
 
     const logoutBtn = document.querySelector('#logout_btn');
+    const mobileLogoutBtn = document.querySelector('#mobile_logout_btn');
     createLogoutButton(logoutBtn, container);
+    createLogoutButton(mobileLogoutBtn, container);
 
     const url = new URL(window.location);
 
