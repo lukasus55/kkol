@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <form class="password_container">
 
-                        <input type="text" name="username" autocomplete="username" value="user@example.com" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
+                        <input type="text" name="username" autocomplete="username" value="${user.id}" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
 
                         <div class="password_input_container">
                             <h5>Obecne hasło</h5>
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </form>
                     
                     <div class="password_button_container">
-                        <button class="btn_primary" id="btn_save_name">Zmień hasło</button>
+                        <button class="btn_primary" id="btn_change_password">Zmień hasło</button>
                     </div>
                 </div>
 
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateVisualValidator(e.target.value);
         })
 
-        const savePasswordBtn = document.getElementById('btn_save_name');
+        const savePasswordBtn = document.getElementById('btn_change_password');
         savePasswordBtn.addEventListener('click', () => {
             changePassword();
         })
@@ -1237,37 +1237,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderPasswordRequirements(passwordInfo);
     }
 
+
+
     // ===== ACTION FUNCTIONS =====
 
     async function changePassword() {
         const oldPasswordEl = document.getElementById('account_old_password');
         const newPasswordEl = document.getElementById('account_new_password');
-        const repeatPasswordEl = document.getElementById('account_repeat_password');[]
+        const repeatPasswordEl = document.getElementById('account_new_password_repeat');
 
-        const oldPassword = oldPasswordEl.textContent;
-        const newPassword = newPasswordEl.textContent;
-        const repeatedPassword = repeatPasswordEl.textContent;
+        const oldPassword = oldPasswordEl.value;
+        const newPassword = newPasswordEl.value;
+        const repeatedPassword = repeatPasswordEl.value;
+
+        if (newPassword !== repeatedPassword) {
+            // TODO - highlit inputs instead of popup
+            showErrorPopup("Powtórzone hasło nie jest takie samo jak nowe hasło.");
+            return;
+        }
 
         try {
-            const res = await fetch('/api/tournament_kick_player', {
+            const res = await fetch('/api/change_password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    tournament_id: tournament.id,
-                    target_player_id: targetPlayerId
+                    old_password: oldPassword,
+                    new_password: newPassword,
+                    repeated_password: repeatedPassword,
                 })
             });
 
             if (res.ok) {
-                showTournamentPopup(tournament);
+                // TODO - Add success modal
+                showErrorPopup("Pomyślnie zmieniono hasło.");
+                console.log('success')
             } else {
                 const err = await res.json();
-                closeAllPopups();
-                showErrorPopup(err.error || "Błąd podczas wyrzucania gracza.");
+                showErrorPopup(err.error || "Wystąpił nieznany błąd podczas zmiany hasła.");
             }
         } catch (error) {
             console.error(error);
-            closeAllPopups();
             showErrorPopup("Błąd połączenia z serwerem.");
         }
     }
