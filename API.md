@@ -46,6 +46,7 @@ Welcome to the backend API documentation.
 * [**Fetch KKOL Ranking** (`GET /api/ranking`)](./docs/api/players/ranking.md)
 * [**Change Name** (`POST /api/change_name`)](./docs/api/players/change_name.md)
 * [**Upload Profile Picture** (`POST /api/upload_pfp`)](./docs/api/players/upload_pfp.md)
+* [**Change Password** (`POST /api/change_password`)](./docs/api/players/change_password.md)
 
 ### GD
 * [**GD Data** (`GET /api/gd`)](./docs/api/gd/gd.md)

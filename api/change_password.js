@@ -25,11 +25,12 @@ export default async function handler(request, response) {
             WHERE id = ${userId}
         `;
         const user = users[0];
-        if (user.length === 0) return response.status(404).json({ error: "Nie znaleziono użytkownika." });
+        if (!user) return response.status(404).json({ error: "Nie znaleziono użytkownika." });
+        if (!user.is_active) return response.status(403).json({ error: "Konto jest nieaktywne." });
 
 
         const { old_password, new_password } = request.body;
-        if (!new_password || !old_password) return response.status(404).json({ error: "Wypełnij wszystkie wymagane pola." });
+        if (!new_password || !old_password) return response.status(400).json({ error: "Wypełnij wszystkie wymagane pola." });
 
         const old_password_hash = user.password_hash;
         const passwordsMatch = await bcrypt.compare(old_password, old_password_hash);
@@ -55,6 +56,9 @@ export default async function handler(request, response) {
 
     } catch (error) {
         console.error("Change Password Error:", error);
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
+        }
         return response.status(500).json({ error: "Wystąpił błąd podczas zmiany hasła." });
     }
 }
