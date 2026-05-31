@@ -1,7 +1,7 @@
 import sql from '../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
-import { escapeHTML } from '../js/helpers.js';
+import { escapeHTML } from '../js/utils/helpers.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {

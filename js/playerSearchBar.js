@@ -1,4 +1,4 @@
-import { getPfpSrc, loadData } from "./helpers.js";
+import { getPfpSrc, loadData } from "./utils/helpers.js";
 
 // Debouncer - prevents spamming the API while the user is actively typing
 function debounce(func, wait) {

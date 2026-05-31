@@ -1,4 +1,4 @@
-import { loadData, appendLoaderDiv } from "./helpers.js";
+import { loadData, appendLoaderDiv } from "./utils/helpers.js";
 
 async function createTournamentsDiv()
 {
