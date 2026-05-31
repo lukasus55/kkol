@@ -42,7 +42,7 @@ export default async function handler(request, response) {
         if (!passInfo.requirements.notOnList) return response.status(400).json({ error: "Hasło nie może być na liście słabych i wykradzionych haseł." });
         if (!passInfo.requirements.notNumbersOnly) return response.status(400).json({ error: "Hasło nie może składać się wyłącznie z cyfr." });
 
-        const saltRounds = 10;
+        const saltRounds = 12;
         const new_hash = await bcrypt.hash(new_password, saltRounds);
         
         await sql`

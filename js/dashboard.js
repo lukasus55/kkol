@@ -234,12 +234,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                         <div class="password_input_container">
                             <h5>Obecne hasło</h5>
-                            <input type="password" name="current_password" id="account_old_password" class="account_input" autocomplete="current-password">
+                            <div class="password_input_p">
+                                <input type="password" name="current_password" id="account_old_password" autocomplete="current-password">
+                                <button type="button" id="toggle_old_pass_input"><img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;"></button>
+                            </div>
                         </div>
 
                         <div class="password_input_container">
                             <h5>Nowe hasło</h5>
-                            <input type="password" name="new_password" id="account_new_password" class="account_input" onValueChange="() => console.log('test')" autocomplete="new-password">
+                            <div class="password_input_p">
+                                <input type="password" name="new_password" id="account_new_password" class="account_input" autocomplete="new-password">
+                                <button type="button" id="toggle_new_pass_input"><img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;"></button>
+                            </div>
                         </div>
                         <div class="password_validator">
                             <div class="password_validator_bar"> 
@@ -247,11 +253,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </div>
                             <div class="password_validator_req_container" id="password_validator_req_container">
                             </div>
-                        </div>
-
-                        <div class="password_input_container">
-                            <h5>Powtórz nowe hasło</h5>
-                            <input type="password" name="new_password_repeat" id="account_new_password_repeat" class="account_input" autocomplete="new-password">
                         </div>
 
                     </form>
@@ -372,6 +373,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         savePasswordBtn.addEventListener('click', () => {
             changePassword();
         })
+
+        const toggleOldPassBtn = document.getElementById('toggle_old_pass_input');
+        const toggleNewPassBtn = document.getElementById('toggle_new_pass_input');
+        toggleOldPassBtn.addEventListener('click', () => {toggleInputType('account_old_password', toggleOldPassBtn)});
+        toggleNewPassBtn.addEventListener('click', () => {toggleInputType('account_new_password', toggleNewPassBtn)});
 
     }
 
@@ -1237,6 +1243,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderPasswordRequirements(passwordInfo);
     }
 
+    function toggleInputType(inputId, btnEl) {
+        const inputEl = document.getElementById(inputId);
+        inputEl.type = inputEl.type === 'password' ? 'text' : 'password';
+        btnEl.innerHTML = inputEl.type === 'password' ? '<img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;">' : '<img src="/img/dashboard/eye.svg" style="width:1.2rem; height:1.2rem;">';
+    }
+
 
 
     // ===== ACTION FUNCTIONS =====
@@ -1244,17 +1256,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function changePassword() {
         const oldPasswordEl = document.getElementById('account_old_password');
         const newPasswordEl = document.getElementById('account_new_password');
-        const repeatPasswordEl = document.getElementById('account_new_password_repeat');
 
         const oldPassword = oldPasswordEl.value;
         const newPassword = newPasswordEl.value;
-        const repeatedPassword = repeatPasswordEl.value;
-
-        if (newPassword !== repeatedPassword) {
-            // TODO - highlit inputs instead of popup
-            showErrorPopup("Powtórzone hasło nie jest takie samo jak nowe hasło.");
-            return;
-        }
 
         try {
             const res = await fetch('/api/change_password', {
@@ -1263,14 +1267,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({
                     old_password: oldPassword,
                     new_password: newPassword,
-                    repeated_password: repeatedPassword,
                 })
             });
 
             if (res.ok) {
                 // TODO - Add success modal
                 showErrorPopup("Pomyślnie zmieniono hasło.");
-                console.log('success')
+                oldPasswordEl.value = '';
+                newPasswordEl.value = '';
             } else {
                 const err = await res.json();
                 showErrorPopup(err.error || "Wystąpił nieznany błąd podczas zmiany hasła.");

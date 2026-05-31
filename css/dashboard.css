@@ -497,6 +497,54 @@ body
     color: var(--dashboard-text);
 }
 
+#content-account .password_input_p
+{
+    display: flex;
+    width: 100%;
+    background-color: var(--dashboard-background-s2);
+    border: 1px solid var(--dashboard-stroke);
+    color: var(--dashboard-text);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+#content-account .password_input_p input
+{
+    flex-grow: 1;
+    height: 100%;
+    background-color: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    font: inherit;
+    color: inherit;
+    font-size: 1rem;
+}
+
+#content-account .password_input_p input:-webkit-autofill,
+#content-account .password_input_p input:-webkit-autofill:hover, 
+#content-account .password_input_p input:-webkit-autofill:focus, 
+#content-account .password_input_p input:-webkit-autofill:active{
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: var(--dashboard-text);
+    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: inset 0 0 20px 20px var(--dashboard-background-s2);
+    font-size: 1rem;
+}
+
+
+#content-account .password_input_p button
+{
+    flex: 0;
+}
+
 #content-account .password_validator
 {
     width: 100%;
