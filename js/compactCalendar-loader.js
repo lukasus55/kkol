@@ -1,4 +1,4 @@
-import { loadData, appendLoaderDiv } from "/js/helpers.js";
+import { loadData, appendLoaderDiv } from "/js/utils/helpers.js";
 
 export default async function compactCalendar(tournamentId) {
     if (!tournamentId) return;

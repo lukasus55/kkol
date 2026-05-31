@@ -1,5 +1,6 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput } from "./helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput } from "./utils/helpers.js";
 import { initPlayerSearchBar } from "./playerSearchBar.js";
+import { passwordRequirementsNames, validatePassword } from "./utils/validatePassword.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -209,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="pfp_actions">
                             <label for="pfp_upload_input" class="btn_tertiary">Wybierz plik</label>
                             <input type="file" id="pfp_upload_input" class="hidden_input" accept="image/png, image/jpeg, image/webp">
-                            <button class="btn_primary" id="save_pfp_btn" style="display: none;">Zapisz zdjęcie</button>
+                            <button class="btn_primary" id="btn_save_pfp" style="display: none;">Zapisz zdjęcie</button>
                         </div>
                     </div>
                 </div>
@@ -218,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h3 class="card_title">Wyświetlana nazwa</h3>
                     <div class="name_container">
                         <input type="text" id="account_display_name" class="account_input" value="${currentName}" placeholder="Wpisz nową nazwę...">
-                        <button class="btn_primary" id="save_name_btn">Zmień</button>
+                        <button class="btn_primary" id="btn_save_name">Zmień</button>
                     </div>
                 </div>
 
@@ -229,26 +230,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <form class="password_container">
 
-                        <input type="text" name="username" autocomplete="username" value="user@example.com" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
+                        <input type="text" name="username" autocomplete="username" value="${user.id}" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
 
                         <div class="password_input_container">
                             <h5>Obecne hasło</h5>
-                            <input type="password" name="current_password" id="account_old_password" class="account_input" autocomplete="current-password">
+                            <div class="password_input_p">
+                                <input type="password" name="current_password" id="account_old_password" autocomplete="current-password">
+                                <button type="button" id="toggle_old_pass_input"><img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;"></button>
+                            </div>
                         </div>
 
                         <div class="password_input_container">
                             <h5>Nowe hasło</h5>
-                            <input type="password" name="new_password" id="account_new_password" class="account_input" autocomplete="new-password">
+                            <div class="password_input_p">
+                                <input type="password" name="new_password" id="account_new_password" class="account_input" autocomplete="new-password">
+                                <button type="button" id="toggle_new_pass_input"><img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;"></button>
+                            </div>
                         </div>
-
-                        <div class="password_input_container">
-                            <h5>Powtórz nowe hasło</h5>
-                            <input type="password" name="new_password_repeat" id="account_new_password_repeat" class="account_input" autocomplete="new-password">
+                        <div class="password_validator">
+                            <div class="password_validator_bar"> 
+                                <div class="password_validator_filler" id="password_validator_filler" style="background-color:#690000; width:20%"></div>
+                            </div>
+                            <div class="password_validator_req_container" id="password_validator_req_container">
+                            </div>
                         </div>
 
                     </form>
-
-                    <button class="btn_primary disabled" id="save_name_btn">Work In Progress</button>
+                    
+                    <div class="password_button_container">
+                        <button class="btn_primary" id="btn_change_password">Zmień hasło</button>
+                    </div>
                 </div>
 
             </div>
@@ -258,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // EVENT LISTENERS
 
-        const saveNameBtn = document.getElementById('save_name_btn');
+        const saveNameBtn = document.getElementById('btn_save_name');
         const nameInput = document.getElementById('account_display_name');
 
         saveNameBtn.addEventListener('click', async () => {
@@ -299,7 +310,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         const pfpInput = document.getElementById('pfp_upload_input');
-        const savePfpBtn = document.getElementById('save_pfp_btn');
+        const savePfpBtn = document.getElementById('btn_save_pfp');
         const pfpPreview = document.getElementById('account_pfp_preview');
 
         pfpInput.addEventListener('change', (e) => {
@@ -351,6 +362,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             reader.readAsDataURL(file);
         });
+
+        const accountNewPassword = document.getElementById('account_new_password');
+
+        accountNewPassword.addEventListener('input', (e) => {
+            updateVisualValidator(e.target.value);
+        })
+
+        const savePasswordBtn = document.getElementById('btn_change_password');
+        savePasswordBtn.addEventListener('click', () => {
+            changePassword();
+        })
+
+        const toggleOldPassBtn = document.getElementById('toggle_old_pass_input');
+        const toggleNewPassBtn = document.getElementById('toggle_new_pass_input');
+        toggleOldPassBtn.addEventListener('click', () => {toggleInputType('account_old_password', toggleOldPassBtn)});
+        toggleNewPassBtn.addEventListener('click', () => {toggleInputType('account_new_password', toggleNewPassBtn)});
 
     }
 
@@ -475,7 +502,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // ===== MAJOR POPUPS =====
+    // ===== MAJOR COMPONENTS =====
 
     async function showTournamentPopup(tournament) {
 
@@ -919,7 +946,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // ===== TABS INSIDE POPUPS =====
+    // ===== MINOR COMPONENTS =====
 
     async function populateEventResults(eventId, mode) {
 
@@ -1002,6 +1029,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
 
         return tabHtml;
+    }
+
+    function renderPasswordRequirements(passwordInfo) {
+        if(passwordInfo.length==0) return;
+
+        const reqListEl = document.querySelector("#password_validator_req_container");
+        const requirementsNames = passwordRequirementsNames;
+        const requirements = passwordInfo.requirements;
+
+        let sectionHtml = ``
+
+        Object.entries(requirements).forEach((req) => {
+            const reqId = req[0];
+            const reqFulfilled = req[1];
+
+            const iconUrl = reqFulfilled ? "/img/dashboard/successMark.svg" : "/img/dashboard/failureMark.svg"
+
+            sectionHtml += `
+            <div class="password_validator_req"> 
+                <div class="password_validator_req_dot ${reqFulfilled ? `fulfilled` : ``}"> <img src=${iconUrl}> </div> 
+                <span>${requirementsNames[reqId]}</span> 
+            </div>`
+        })
+
+        reqListEl.innerHTML = sectionHtml;
     }
 
 
@@ -1174,9 +1226,65 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    async function updateVisualValidator(password) {
+        const passwordInfo = await validatePassword(password);
+
+        const breakPoints = passwordInfo.maxScore+1;
+        const score = passwordInfo.score;
+
+        const validatorBarEl = document.querySelector('#password_validator_filler');
+        const barColors = ['#690000', '#694700', '#646900', '#506900', '#00691f'];
+
+        if(!validatorBarEl) return;
+
+        validatorBarEl.style.width = `${(score+1)*(Math.round(100/breakPoints))}%`;
+        validatorBarEl.style.backgroundColor = barColors[score];
+
+        renderPasswordRequirements(passwordInfo);
+    }
+
+    function toggleInputType(inputId, btnEl) {
+        const inputEl = document.getElementById(inputId);
+        inputEl.type = inputEl.type === 'password' ? 'text' : 'password';
+        btnEl.innerHTML = inputEl.type === 'password' ? '<img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;">' : '<img src="/img/dashboard/eye.svg" style="width:1.2rem; height:1.2rem;">';
+    }
+
 
 
     // ===== ACTION FUNCTIONS =====
+
+    async function changePassword() {
+        const oldPasswordEl = document.getElementById('account_old_password');
+        const newPasswordEl = document.getElementById('account_new_password');
+
+        const oldPassword = oldPasswordEl.value;
+        const newPassword = newPasswordEl.value;
+
+        try {
+            const res = await fetch('/api/change_password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    old_password: oldPassword,
+                    new_password: newPassword,
+                })
+            });
+
+            if (res.ok) {
+                // TODO - Add success modal
+                showErrorPopup("Pomyślnie zmieniono hasło.");
+                oldPasswordEl.value = '';
+                newPasswordEl.value = '';
+            } else {
+                const err = await res.json();
+                showErrorPopup(err.error || "Wystąpił nieznany błąd podczas zmiany hasła.");
+            }
+        } catch (error) {
+            console.error(error);
+            showErrorPopup("Błąd połączenia z serwerem.");
+        }
+    }
+
     async function leaveTournament(tournamentId) {
         try {
             const response = await fetch('/api/tournament_leave', {
@@ -1714,6 +1822,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     renderInfoCard();
     handleTabs();
+    updateVisualValidator('')
 
     if (loadingContainer) {
         container.removeChild(loadingContainer);

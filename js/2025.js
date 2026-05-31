@@ -1,4 +1,4 @@
-import { loadData } from "./helpers.js";
+import { loadData } from "./utils/helpers.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
