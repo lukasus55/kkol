@@ -135,7 +135,7 @@ body
 
 .btn_primary:hover
 {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 .btn_primary.disabled, .btn_secondary.disabled, .btn_tertiary.disabled
@@ -408,7 +408,7 @@ body
     background-color: var(--dashboard-background-s3);
     border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--dashboard-stroke);
 }
 
 #content-account .card_title
@@ -497,20 +497,6 @@ body
     color: var(--dashboard-text);
 }
 
-/* Future Features Placeholder */
-#content-account .placeholder_card
-{
-    background-color: transparent;
-    border: 2px dashed var(--color-charcoal-blue);
-    opacity: 0.6;
-}
-
-#content-account .placeholder_text
-{
-    font-style: italic;
-    margin: 0;
-}
-
 #content-account .password_validator
 {
     width: 100%;
@@ -573,6 +559,12 @@ body
     height: .7rem;
     transform: translate(-0.5px, 0);
 }
+
+#content-account .password_button_container
+{
+    margin-top: 1rem;
+}
+
 
 #content-tournaments .tab_header
 {

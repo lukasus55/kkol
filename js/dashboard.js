@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="pfp_actions">
                             <label for="pfp_upload_input" class="btn_tertiary">Wybierz plik</label>
                             <input type="file" id="pfp_upload_input" class="hidden_input" accept="image/png, image/jpeg, image/webp">
-                            <button class="btn_primary" id="save_pfp_btn" style="display: none;">Zapisz zdjęcie</button>
+                            <button class="btn_primary" id="btn_save_pfp" style="display: none;">Zapisz zdjęcie</button>
                         </div>
                     </div>
                 </div>
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h3 class="card_title">Wyświetlana nazwa</h3>
                     <div class="name_container">
                         <input type="text" id="account_display_name" class="account_input" value="${currentName}" placeholder="Wpisz nową nazwę...">
-                        <button class="btn_primary" id="save_name_btn">Zmień</button>
+                        <button class="btn_primary" id="btn_save_name">Zmień</button>
                     </div>
                 </div>
 
@@ -256,8 +256,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     </form>
                     
-
-                    <button class="btn_primary disabled" id="save_name_btn">Work In Progress</button>
+                    <div class="password_button_container">
+                        <button class="btn_primary" id="btn_save_name">Zmień hasło</button>
+                    </div>
                 </div>
 
             </div>
@@ -267,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // EVENT LISTENERS
 
-        const saveNameBtn = document.getElementById('save_name_btn');
+        const saveNameBtn = document.getElementById('btn_save_name');
         const nameInput = document.getElementById('account_display_name');
 
         saveNameBtn.addEventListener('click', async () => {
@@ -308,7 +309,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         const pfpInput = document.getElementById('pfp_upload_input');
-        const savePfpBtn = document.getElementById('save_pfp_btn');
+        const savePfpBtn = document.getElementById('btn_save_pfp');
         const pfpPreview = document.getElementById('account_pfp_preview');
 
         pfpInput.addEventListener('change', (e) => {
@@ -365,6 +366,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         accountNewPassword.addEventListener('input', (e) => {
             updateVisualValidator(e.target.value);
+        })
+
+        const savePasswordBtn = document.getElementById('btn_save_name');
+        savePasswordBtn.addEventListener('click', () => {
+            changePassword();
         })
 
     }
@@ -1232,6 +1238,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ===== ACTION FUNCTIONS =====
+
+    async function changePassword() {
+        const oldPasswordEl = document.getElementById('account_old_password');
+        const newPasswordEl = document.getElementById('account_new_password');
+        const repeatPasswordEl = document.getElementById('account_repeat_password');[]
+
+        const oldPassword = oldPasswordEl.textContent;
+        const newPassword = newPasswordEl.textContent;
+        const repeatedPassword = repeatPasswordEl.textContent;
+
+        try {
+            const res = await fetch('/api/tournament_kick_player', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tournament_id: tournament.id,
+                    target_player_id: targetPlayerId
+                })
+            });
+
+            if (res.ok) {
+                showTournamentPopup(tournament);
+            } else {
+                const err = await res.json();
+                closeAllPopups();
+                showErrorPopup(err.error || "Błąd podczas wyrzucania gracza.");
+            }
+        } catch (error) {
+            console.error(error);
+            closeAllPopups();
+            showErrorPopup("Błąd połączenia z serwerem.");
+        }
+    }
 
     async function leaveTournament(tournamentId) {
         try {
