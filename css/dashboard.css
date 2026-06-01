@@ -113,6 +113,7 @@ body
     cursor: pointer;
     transition: opacity 0.2s ease, transform 0.1s ease;
     height: min-content;
+    white-space: nowrap;
 }
 
 .btn_primary img, .btn_secondary img, .btn_tertiary img
@@ -642,9 +643,15 @@ body
 
 #content-account .password_button_container
 {
-    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
 }
 
+
+#content-account .password_button_container .btn_primary
+{
+    width: min-content;
+}
 
 #content-tournaments .tab_header
 {

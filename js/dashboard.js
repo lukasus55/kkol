@@ -230,14 +230,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="account_card">
                     <h3 class="card_title">Zmień hasło</h3>
 
-                    <form class="password_container">
+                    <form class="password_container" id="change_password_form">
 
                         <input type="text" name="username" autocomplete="username" value="${user.id}" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
 
                         <div class="password_input_container">
                             <h5>Obecne hasło</h5>
                             <div class="password_input_p">
-                                <input type="password" name="current_password" id="account_old_password" autocomplete="current-password">
+                                <input type="password" required name="current_password" id="account_old_password" autocomplete="current-password">
                                 <button type="button" id="toggle_old_pass_input"><img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;"></button>
                             </div>
                         </div>
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="password_input_container">
                             <h5>Nowe hasło</h5>
                             <div class="password_input_p">
-                                <input type="password" name="new_password" id="account_new_password" class="account_input" autocomplete="new-password">
+                                <input type="password" required name="new_password" id="account_new_password" class="account_input" autocomplete="new-password">
                                 <button type="button" id="toggle_new_pass_input"><img src="/img/dashboard/eye-off.svg" style="width:1.2rem; height:1.2rem;"></button>
                             </div>
                         </div>
@@ -257,11 +257,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </div>
                         </div>
 
+                        <div class="password_button_container">
+                            <button class="btn_primary" id="btn_change_password" type="submit">Zmień hasło</button>
+                        </div>
+
                     </form>
-                    
-                    <div class="password_button_container">
-                        <button class="btn_primary" id="btn_change_password">Zmień hasło</button>
-                    </div>
                 </div>
 
             </div>
@@ -371,9 +371,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateVisualValidator(e.target.value);
         })
 
-        const savePasswordBtn = document.getElementById('btn_change_password');
-        savePasswordBtn.addEventListener('click', () => {
-            changePassword();
+        const change_password_form = document.getElementById('change_password_form');
+        change_password_form.addEventListener('submit', async (e) => {
+            changePassword(e);
         })
 
         const toggleOldPassBtn = document.getElementById('toggle_old_pass_input');
@@ -1255,7 +1255,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ===== ACTION FUNCTIONS =====
 
-    async function changePassword() {
+    async function changePassword(e) {
+        e.preventDefault();
         const oldPasswordEl = document.getElementById('account_old_password');
         const newPasswordEl = document.getElementById('account_new_password');
 
