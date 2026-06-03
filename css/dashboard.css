@@ -217,6 +217,11 @@ body
     color: var(--color-lime-moss)
 }
 
+.dashboard_navbar #logout_li
+{
+    display: none;
+}
+
 .selector
 {
     padding: 0rem 2rem;
@@ -1777,6 +1782,11 @@ body
     .dashboard_navbar .selector
     {
         padding: 1rem;
+    }
+
+    .dashboard_navbar #logout_li
+    {
+        display: block;
     }
 
     .user_card

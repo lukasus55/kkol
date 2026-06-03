@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let savedCalendarDate = null;
 
-    // Authenticate & Fetch User
+    // Authenticate & Fetch USER
     const userAuthenticated = await requireAuth();
     if (!userAuthenticated) return;
 
     const userData = await loadData('/api/me');
-    const user = userData.user;
+    const USER = userData.user;
 
-    const isAdmin = user.role === 'admin';
+    const isAdmin = USER.role === 'admin';
 
     const logoutBtn = document.querySelector('#logout_btn');
     const mobileLogoutBtn = document.querySelector('#mobile_logout_btn');
@@ -30,10 +30,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ===== RENDER TABS =====
 
     function renderInfoCard() {
-        const id = user.id;
-        const displayedName = user.displayed_name;
-        const roleId = user.role;
-        const pfpSrc = getPfpSrc(user.pfp_base64);
+        const id = USER.id;
+        const displayedName = USER.displayed_name;
+        const roleId = USER.role;
+        const pfpSrc = getPfpSrc(USER.pfp_base64);
 
         const profilePicture = document.querySelector('#player_pfp');
         const nameDiv = document.querySelector('#player_name');
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         profilePicture.src = pfpSrc;
         nameDiv.innerHTML = displayedName;
-        profileLink.href = `/player?id=${user.id}`;
+        profileLink.href = `/player?id=${USER.id}`;
 
         const roles = {
             'player': {
@@ -67,11 +67,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function renderTournamentTab(tabContainer) {
 
-        const currentUser = user;
+        const tournamentsData = await loadData(`/api/tournaments?player=${USER.id}`);
 
-        const tournamentsData = await loadData(`/api/tournaments?player=${user.id}`);
-
-        const userType = user.role;
+        const userType = USER.role;
         const canAdd = userType === 'admin' || userType === 'organizer';
 
         if (canAdd) {
@@ -88,8 +86,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             tabContainer.insertAdjacentHTML('beforeend', header);
         }
 
-        const playerTournaments = currentUser.tournaments ?? {};
-        const organizerRoles = currentUser.organizer_roles ?? {};
+        const playerTournaments = USER.tournaments ?? {};
+        const organizerRoles = USER.organizer_roles ?? {};
 
         const tournaments = Object.keys(tournamentsData).map((key) => tournamentsData[key]);;
 
@@ -109,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const tournamentPageExists = tournament.page_exists;
             const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
 
-            // Check if the user has a role in this specific tournament
+            // Check if the USER has a role in this specific tournament
             const userRole = organizerRoles[tournament.id];
             const canEdit = userRole === 'owner' || userRole === 'manager';
 
@@ -195,11 +193,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function renderAccountTab(tabContainer) {
 
-        const currentUser = user;
+        const currentName = USER.displayed_name || '';
 
-        const currentName = currentUser.displayed_name || '';
-
-        const pfpSrc = getPfpSrc(currentUser.pfp_base64);
+        const pfpSrc = getPfpSrc(USER.pfp_base64);
 
         const accountHTML = `
             <div class="account_wrapper">
@@ -232,7 +228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     <form class="password_container" id="change_password_form">
 
-                        <input type="text" name="username" autocomplete="username" value="${user.id}" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
+                        <input type="text" name="username" autocomplete="username" value="${USER.id}" style="position: absolute; opacity: 0; left: -9999px;" aria-hidden="true" tabindex="-1">
 
                         <div class="password_input_container">
                             <h5>Obecne hasło</h5>
@@ -384,7 +380,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function renderCalendarTab(tabContainer) {
-        if (!tabContainer || !user?.id) return;
+        if (!tabContainer || !USER?.id) return;
 
         const calendarEl = tabContainer.querySelector('.calendar');
         calendarEl.innerHTML = '';
@@ -411,9 +407,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const rawCalendarEvents = await loadData(`/api/events?player=${user.id}`);
+            const rawCalendarEvents = await loadData(`/api/events?player=${USER.id}`);
 
-            const accessedTournamentsId = Object.keys(user?.organizer_roles || {});
+            const accessedTournamentsId = Object.keys(USER?.organizer_roles || {});
             
             const calendarEvents = rawCalendarEvents.map(event => {
                 const tournament_id = String(event.extendedProps.tournament_id); 
@@ -501,6 +497,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error("Nie udało się załadować kalendarza:", error);
         }
     }
+    
+    async function renderPollsTab(tabContainer) {
+        console.log("Polls tab loaded")
+    }
 
 
 
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const posValue = member.position !== null ? member.position : '';
                 const ptsValue = member.total_points !== null ? member.total_points : '';
 
-                // Generate the Promote/Demote button if the current user is the owner
+                // Generate the Promote/Demote button if the current USER is the owner
                 let roleButtonHTML = '';
                 if (currentUserRole === 'owner' && member.organizer_role !== 'owner') {
                     if (member.organizer_role === 'manager') {
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <img src="/img/dashboard/notepad_icon.webp" alt="Obecność">
                                 </button>
                                 ${roleButtonHTML}
-                                ${(member.organizer_role !== 'owner' && !(currentUserRole === 'manager' && member.organizer_role === 'manager') && member.id !== user.id)
+                                ${(member.organizer_role !== 'owner' && !(currentUserRole === 'manager' && member.organizer_role === 'manager') && member.id !== USER.id)
                         ? `<button class="action_btn btn_tertiary kick_btn" title="Wyrzuć gracza">
                                     <img src="/img/dashboard/kick_icon.webp" alt="Wyrzuć">
                                 </button>` : ``}
@@ -805,9 +805,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (intention === 'create') { mode = 'create' }
         else {
             const tournament_id = eventData.extendedProps.tournament_id;
-            const accessedTournamentsId = Object.keys(user.organizer_roles || {});
+            const accessedTournamentsId = Object.keys(USER.organizer_roles || {});
 
-            if (user.role === 'admin' || accessedTournamentsId.includes(tournament_id)) {
+            if (USER.role === 'admin' || accessedTournamentsId.includes(tournament_id)) {
                 mode = 'edit';
             } else {
                 mode = 'view';
@@ -867,7 +867,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tournamentSelect.disabled = false;
                 tournamentSelect.innerHTML = '<option value="">Ładowanie turniejów...</option>'; // Temporary loading text
 
-                // Fetch the active tournaments for this user
+                // Fetch the active tournaments for this USER
                 fetch('/api/tournaments_active')
                     .then(res => res.json())
                     .then(tournaments => {
@@ -1076,7 +1076,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         closeAllPopups(actionCard);
 
-        const organizerRoles = user.organizer_roles ?? {};
+        const organizerRoles = USER.organizer_roles ?? {};
         const userRole = organizerRoles[tournament.id];
 
         const canEdit = userRole === 'owner' || userRole === 'manager';
@@ -1567,7 +1567,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // API Calls based on mode
             if (mode === 'create') {
-                payload.creator_id = user.id;
+                payload.creator_id = USER.id;
 
                 response = await fetch('/api/event_create', {
                     method: 'POST',
@@ -1711,7 +1711,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const loadedTabs = {
             account: false,
-            tournaments: false
+            tournaments: false,
+            calendar: false,
+            polls: false,
         };
 
         async function tabChange(tabId, updateUrl = true) {
@@ -1750,6 +1752,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                             break;
                         case 'calendar':
                             await renderCalendarTab(tabContent);
+                            break;
+                        case 'polls':
+                            await renderPollsTab(tabContent);
                             break;
                     }
 
