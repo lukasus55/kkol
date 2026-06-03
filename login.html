@@ -9,14 +9,25 @@
     <title> Olimpiada Karwińska - Logowanie</title>
 
     <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/login.css">
 </head>
 
 <body>
 
-    <main class="main">
-        
-        <div class="container">
+    <header class="login_header">
+        <div class="title_section">
+            <img src="/img/logos/olympic-logo-transparent.svg" style="width: 4rem; height: 4rem">
+            <div class="title_text">
+                <div class="title_line">Karwińska</div>
+                <div class="title_line">Olimpiada</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="login_main">
+        <div class="login_container">
+
             <div class="login_card">
                 <h1> Zaloguj się </h1>
                 <form action="/login" method="POST" class="login_form" id="login_form">
@@ -33,31 +44,23 @@
 
                     <div class="login_failed hiddenInstant"> Niepoprawna nazwa użytkownika lub hasło </div>
 
-                    <button type="submit" class="login_btn">Zaloguj się</button>
-                    
+                    <div class="card_footer">
+                        <div class="disclaimer">
+                            <button type="button" class="btn_question" id="question-acc"> Nie masz konta? </button>
+                            <button type="button" class="btn_question" id="question-forgot"> Zapomniałeś hasła? </button>
+                        </div>
+
+                        <button type="submit" class="btn_primary">Zaloguj się</button>
+                    </div>
                 </form>
             </div>
-        </div>
 
-        
-        <div class="disclaimer">
-
-            <div class="problem">
-                <div class="question"> Nie masz konta? </div>
-                <div class="answer">
-                    Konta posiadają jedynie gracze uczestniczący w turniejach KKOL. Organizator powinien przekazać dane do logowania. Nie ma możliwości samodzielnego założenia konta.
-                </div>
-            </div>
-
-            <div class="problem">
-                <div class="question"> Zapomniałeś hasła? </div>
-                <div class="answer">
-                    Skontaktuj się z administratorem. ADMINISTRATOR NIGDY NIE POPROSI CIĘ O HASŁO. <a href="/contact">Lista kontaktów</a>.
-                </div>
+            <div class="login_card answer_card hidden" id="answer">
+                <div class="answer_title"></div>
+                <span class="answer_content"></span>
             </div>
 
         </div>
-
     </main>
 
     <footer class="footer" id="footer">
