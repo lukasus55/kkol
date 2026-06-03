@@ -3,6 +3,11 @@ import { appendLoaderDiv } from "./utils/helpers.js";
 const container = document.querySelector('.login_card');
 const loginForm = document.querySelector('#login_form');
 
+const urlParams = new URLSearchParams(window.location.search);
+const encodedDestination = urlParams.get('r') || 'dashboard';
+const destination = decodeURIComponent(encodedDestination);
+const redirectUrl = `/${destination}`
+
 loginForm.addEventListener('submit', async (event) => {
     
     const loadingContainer = appendLoaderDiv(container, 'global_transparent');
@@ -27,7 +32,7 @@ loginForm.addEventListener('submit', async (event) => {
             console.log("Success:", data.message);
             
             // Redirect the user to the private area!
-            window.location.href = '/dashboard'; 
+            window.location.href = destination; 
         } else {
             container.removeChild(loadingContainer);
             

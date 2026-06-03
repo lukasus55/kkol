@@ -1,4 +1,4 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput } from "./utils/helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput, getParamsUrl } from "./utils/helpers.js";
 import { initPlayerSearchBar } from "./playerSearchBar.js";
 import { passwordRequirementsNames, validatePassword } from "./utils/validatePassword.js";
 
@@ -9,8 +9,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let savedCalendarDate = null;
 
+    const params = new URLSearchParams(window.location.search);
+    const paramsUrl = getParamsUrl(params);
+    const pageUrl = `dashboard?${paramsUrl}`
+
     // Authenticate & Fetch USER
-    const userAuthenticated = await requireAuth();
+    const userAuthenticated = await requireAuth(pageUrl);
     if (!userAuthenticated) return;
 
     const userData = await loadData('/api/me');
@@ -499,7 +503,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     async function renderPollsTab(tabContainer) {
-        console.log("Polls tab loaded")
+        console.log("Polls tab loaded");
+        const header = `<a href='/polls?p=teSt321&a=test2'> WIP Link </a>`
+        tabContainer.insertAdjacentHTML('beforeend', header);
     }
 
 
