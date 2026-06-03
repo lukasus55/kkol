@@ -30,7 +30,7 @@ export function appendLoaderDiv(container, containerMode='default')
     return loadingContainer;
 }
 
-export async function requireAuth(destination = 'dashboard') {
+export async function requireAuth(destination = 'dashboard', redirect = true) {
 
     // Encoding to replace & symbols, so the login page treat them as polls paramaters and not login page params. Example:
     // login?polls?p=t&x=4 (browser would treat x=4 as separate param) ---> login?polls%3Fp%3Dt%26x%3D4
@@ -41,7 +41,7 @@ export async function requireAuth(destination = 'dashboard') {
         
         if (!response.ok) {
             console.warn("User not authenticated. Redirecting to login...");
-            window.location.href = `/login?r=${encodedDestination}`;
+            if (redirect) {window.location.href = `/login?r=${encodedDestination}`};
             return null;
         }
 
@@ -50,7 +50,7 @@ export async function requireAuth(destination = 'dashboard') {
         
     } catch (error) {
         console.error("Authentication check failed:", error);
-        window.location.href = `/login?r=${encodedDestination}`;
+        if (redirect) {window.location.href = `/login?r=${encodedDestination}`};
         return null;
     }
 }
