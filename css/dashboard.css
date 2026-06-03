@@ -113,6 +113,7 @@ body
     cursor: pointer;
     transition: opacity 0.2s ease, transform 0.1s ease;
     height: min-content;
+    white-space: nowrap;
 }
 
 .btn_primary img, .btn_secondary img, .btn_tertiary img
@@ -179,21 +180,48 @@ body
     position: fixed;
 }
 
-.dashboard_navbar
+.dashboard_navbar 
 {
     background-color: var(--dashboard-background-s2);
     width: 100%;
     height: calc(100vh - 60px); /* 60px is the footer height */
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: auto 1fr auto;
     grid-template-columns: 1fr;
     border-right: 1px solid var(--dashboard-stroke);
 }
 
+.dashboard_navbar .title_section
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: min-content;
+    margin: 2rem 1.5rem 1rem 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--dashboard-stroke);
+}
+
+.dashboard_navbar .title_text
+{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-transform: uppercase;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.dashboard_navbar .title_line:nth-child(1)
+{
+    color: var(--color-lime-moss)
+}
+
 .selector
 {
-    padding: 2rem;
+    padding: 0rem 2rem;
     width: auto;
+    height: 100%;
 }
 
 .selector ul
@@ -233,6 +261,11 @@ body
 {
     background-color: var(--dashboard-background-s4);
     opacity: 100%;
+}
+
+.selector li .mobile_logout_btn
+{
+    display: none;
 }
 
 .user_card_container
@@ -610,9 +643,15 @@ body
 
 #content-account .password_button_container
 {
-    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
 }
 
+
+#content-account .password_button_container .btn_primary
+{
+    width: min-content;
+}
 
 #content-tournaments .tab_header
 {
@@ -1725,11 +1764,22 @@ body
 
     .dashboard_navbar
     {
-        grid-template-rows: auto auto;
+        display: flex;
+        flex-direction: row-reverse;
         height: min-content;
     }
 
-    .user_card .role_container
+    .dashboard_navbar .title_section
+    {
+        display: none;
+    }
+
+    .dashboard_navbar .selector
+    {
+        padding: 1rem;
+    }
+
+    .user_card
     {
         display: none;
     }
@@ -1742,6 +1792,31 @@ body
     .selector li
     {
         width: auto;
+    }
+
+    .selector li .selector-text
+    {
+        display: none;
+    }
+
+    .selector li.active .selector-text
+    {
+        display: block;
+    }
+
+    .selector li .mobile_logout_btn
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .selector li img
+    {
+        width: 1.5rem;
+        height: 1.5rem;
     }
 
     .user_actions
@@ -1760,7 +1835,7 @@ body
 
     .content
     {
-        height: calc(100vh - 60px - 132px); /* 60px = footer size, 132px = header size */
+        height: calc(100vh - 60px - 44px); /* 60px = footer size, 44px = header size */
     }
 
     #content-tournaments .tournament_card
