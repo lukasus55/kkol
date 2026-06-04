@@ -25,8 +25,8 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Brakujące dane do edycji." });
         }
 
-        const clean_displayed_name = escapeHTML(tournament_info.displayed_name.trim()) || '';
-        const clean_displayed_date = escapeHTML(tournament_info.displayed_date.trim()) || '';
+        const clean_displayed_name = escapeHTML(tournament_info.displayed_name.trim()) || tournament_id;
+        const clean_displayed_date = escapeHTML(tournament_info.displayed_date.trim()) || null;
         
         if (clean_displayed_name && clean_displayed_name.length > 30) {
             return response.status(400).json({ error: "Nazwa turnieju może mieć maksymalnie 30 znaków." });
