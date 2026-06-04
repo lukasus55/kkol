@@ -93,6 +93,7 @@ body
     transition: opacity 0.2s ease, transform 0.1s ease;
     height: min-content;
     white-space: nowrap;
+    gap: .2rem;
 }
 
 .btn_primary img, .btn_secondary img, .btn_tertiary img
@@ -111,6 +112,7 @@ body
 {
     background-color: var(--dashboard-text);
     color: var(--dashboard-background);
+    border: 1px solid var(--dashboard-stroke);
 }
 
 .btn_primary:hover

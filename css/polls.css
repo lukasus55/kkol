@@ -1,10 +1,60 @@
-.container
+main
 {
     display: flex;
     justify-content: center;
-    align-items: center;
     width: 100%;
-    height: 80vh;
-    text-transform: uppercase;
-    font-size: 2rem;
+    padding: 6rem 2rem 2rem 2rem;
+}
+
+.poll
+{
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 60rem);
+    gap: 1rem;
+    color: var(--dashboard-text);
+}
+
+.poll img
+{
+    width: .9rem;
+    height: .9rem;
+}
+
+.poll_header
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-bottom: 1px solid var(--dashboard-stroke);
+    padding-bottom: 1rem;
+}
+
+.poll_header_row
+{
+    display: flex;
+    width: 100%;
+}
+
+.poll_name
+{
+    flex: 1;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.poll_buttons
+{
+    display: inline-flex;
+    gap: 1rem;
+}
+
+.poll_date
+{
+    color: var(--dashboard-text-s2);
+}
+
+.poll_date_relative
+{
+    color: var(--color-lime-moss);
 }
