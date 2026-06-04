@@ -17,7 +17,7 @@ async function createTournamentsDiv()
 
     tournaments.forEach(tournament => {
 
-        console.log(tournament)
+        console.log(tournament);
 
         const tournamentName = tournament.displayed_name || '-';
         const tournamentDate = tournament.details.displayed_date || '-';
@@ -27,13 +27,27 @@ async function createTournamentsDiv()
         const tournamentPageExists = tournament.page_exists;
         const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
 
-        const winnerId = tournament.standings[0]?.id;
-        const winner = players[winnerId];
-        const winnerName = isFinished ? winner.displayed_name : `TBD`;
+        let winnersHTML = `TBD`;
 
-        const pfpSrc = isFinished ? (winner.pfp_base64 
-            ? `data:image/webp;base64,${winner.pfp_base64}` 
-            : '/img/default_pfp.webp') : ``;
+        if (isFinished && tournament.standings && tournament.standings.length > 0) {
+            const topPosition = tournament.standings[0].position;
+            
+            // Filter all players who tied
+            const winners = tournament.standings.filter(s => s.position === topPosition);
+
+            winnersHTML = winners.map(standing => {
+                const winnerId = standing.id;
+                const winner = players[winnerId];
+                
+                const winnerName = winner?.displayed_name || standing.displayed_name;
+                
+                const pfpSrc = winner?.pfp_base64 
+                    ? `data:image/webp;base64,${winner.pfp_base64}` 
+                    : '/img/default_pfp.webp';
+
+                return `<div class="winner"><img src="${pfpSrc}"><a href="/player?id=${winnerId}">${winnerName}</a></div>`;
+            }).join('');
+        }
 
         const cardHTML = `
             <div class="card"> 
@@ -45,11 +59,8 @@ async function createTournamentsDiv()
                 </div>
                 <div class="tier"> ${tournamentTier}-Tier </div>
                 <div class="date"> ${tournamentDate} </div>
-                <div class="winner"> 
-                    ${isFinished ? `
-                        <img src="${pfpSrc}"><a href="/player?id=${winnerId}">${winnerName}</a>` 
-                        : `TBD` 
-                    }
+                <div class="winners_container"> 
+                    ${winnersHTML}
                 </div>
             </div>
         `;
@@ -59,4 +70,4 @@ async function createTournamentsDiv()
     });
 }
 
-createTournamentsDiv()
+createTournamentsDiv();
