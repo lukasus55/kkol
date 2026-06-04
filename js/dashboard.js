@@ -504,7 +504,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     async function renderPollsTab(tabContainer) {
         console.log("Polls tab loaded");
-        const header = `<a href='/polls?p=teSt321&a=test2'> WIP Link </a>`
+        const header = `<a href='/polls'> Work In Progress </a>`
         tabContainer.insertAdjacentHTML('beforeend', header);
     }
 
