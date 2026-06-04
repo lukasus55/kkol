@@ -30,13 +30,18 @@ export function appendLoaderDiv(container, containerMode='default')
     return loadingContainer;
 }
 
-export async function requireAuth(redirect = true) {
+export async function requireAuth(destination = 'dashboard', redirect = true) {
+
+    // Encoding to replace & symbols, so the login page treat them as polls paramaters and not login page params. Example:
+    // login?polls?p=t&x=4 (browser would treat x=4 as separate param) ---> login?polls%3Fp%3Dt%26x%3D4
+    const encodedDestination = encodeURIComponent(destination);
+
     try {
         const response = await fetch('/api/me');
         
         if (!response.ok) {
             console.warn("User not authenticated. Redirecting to login...");
-            if (redirect) {window.location.href = '/login'};
+            if (redirect) {window.location.href = `/login?r=${encodedDestination}`};
             return null;
         }
 
@@ -45,7 +50,7 @@ export async function requireAuth(redirect = true) {
         
     } catch (error) {
         console.error("Authentication check failed:", error);
-        if (redirect) {window.location.href = '/login'};
+        if (redirect) {window.location.href = `/login?r=${encodedDestination}`};
         return null;
     }
 }
@@ -114,4 +119,12 @@ export function formatForDateTimeInput(input) {
     const localISOTime = (new Date(dateObj - tzOffset)).toISOString().slice(0, 16);
     
     return localISOTime;
+}
+
+export function getParamsUrl(params) {
+    let url = '';
+    for (const [key, value] of params){
+        url+=`${key}=${value}&`
+    }
+    return url;
 }
