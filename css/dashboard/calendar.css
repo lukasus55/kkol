@@ -1,0 +1,341 @@
+:root
+{
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: rgba(243, 239, 245, 0.03);
+    --fc-neutral-text-color: var(--dashboard-text);
+    --fc-border-color: rgba(243, 239, 245, 0.1);
+
+    --fc-button-text-color: var(--dashboard-text);
+    --fc-button-bg-color: var(--dashboard-background-s4);
+    --fc-button-border-color: var(--dashboard-stroke);
+    --fc-button-hover-bg-color: var(--dashboard-background-s6);
+    --fc-button-hover-border-color: var(--dashboard-stroke);
+    --fc-button-active-bg-color: var(--dashboard-background-s6);
+    --fc-button-active-border-color: var(--dashboard-background-s6);
+
+    --fc-event-bg-color: var(--color-green);
+    --fc-event-border-color: var(--color-lime-moss);
+    --fc-event-text-color: var(--dashboard-text);
+
+    --fc-today-bg-color: rgba(114, 176, 29, 0.15);
+    --fc-highlight-color: var(--dashboard-background-s2);
+    --fc-now-indicator-color: var(--dashboard-text);
+}
+
+#content-calendar .calendar_container
+{
+    width: 100%;
+    height: 45rem;
+    overflow: auto;
+}
+
+#content-calendar .calendar
+{
+    width: 100%;
+    height: 100%;
+}
+
+.event_popup
+{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 20;
+    justify-content: center;
+    align-items: center;
+}
+
+.event_popup.active
+{
+    display: flex;
+}
+
+#event_popup .popup_container
+{
+    background: var(--color-onyx);
+    padding: 2rem;
+    border-radius: 12px;
+    color: var(--dashboard-text);
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--dashboard-stroke);
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+/* Header */
+#event_popup .popup_title
+{
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    text-align: center;
+}
+
+#event_popup #event_view_mode p
+{
+    margin: 0.8rem 0;
+    font-size: 1rem;
+    color: var(--dashboard-text)
+}
+
+#event_popup #event_view_mode .p_title
+{
+    color: var(--dashboard-text-s2);
+}
+
+#event_popup #event_edit_mode label
+{
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--dashboard-text);
+    font-weight: 600;
+}
+
+#event_popup .popup_input
+{
+    width: 100%;
+    background: var(--dashboard-background-s2);
+    color: var(--dashboard-text);
+    border: 1px solid var(--dashboard-stroke);
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1.2rem;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    color-scheme: dark;
+}
+
+#event_popup .popup_input:disabled
+{
+    color: var(--dashboard-text-s2);
+    border: none;
+    background: none;
+    -webkit-appearance: none;    
+    -moz-appearance: none;
+    opacity: 100%;
+    padding: 0;
+}
+
+
+#event_popup .popup_input:focus
+{
+    outline: none;
+    border-color: var(--dashboard-text);
+    box-shadow: 0 0 0 2px rgba(114, 176, 29, 0.2);
+}
+
+#event_popup .popup_footer
+{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(243, 239, 245, 0.1);
+}
+
+#event_popup .popup_footer button
+{
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+#event_popup .btn_delete
+{
+    background: transparent;
+    color: var(--color-warning-red);
+    border: 1px solid var(--color-warning-red);
+    margin-right: auto; /* Pushes the button far left */
+}
+
+#event_popup .btn_delete:hover
+{
+    background: var(--color-warning-red);
+    color: var(--dashboard-text);
+}
+
+/* Event Results Tab */
+#event_popup .event_results_container {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+#event_popup .event_results_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#event_popup .event_results_table th,
+#event_popup .event_results_table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--dashboard-background-s3);
+}
+
+#event_popup .event_results_table th {
+    font-weight: 600;
+    color: var(--dashboard-text-s2);
+    background-color: var(--dashboard-background-s2);
+}
+
+#event_popup .event_results_table tr:hover {
+    background-color: var(--dashboard-background-s3);
+}
+
+#event_popup .event_result_input {
+    width: 5rem;
+    padding: 0.4rem 0rem;
+    border: 1px solid var(--dashboard-background-s4);
+    border-radius: 4px;
+    background-color: var(--dashboard-background-s1);
+    color: var(--dashboard-text);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+#event_popup .event_result_input:focus {
+    outline: none;
+    border-color: var(--dashboard-text);
+}
+
+/* View mode - text instead of inputs */
+#event_popup .event_result_text {
+    display: inline-block;
+    min-width: 3rem;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+    color: var(--dashboard-text);
+    font-size: 0.9rem;
+}
+
+#event_popup .event_results_empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--dashboard-text-s2);
+    font-style: italic;
+}
+
+#error_popup
+{
+    z-index: 1000;
+}
+
+/* FullCalendar forces default link colors on the day numbers and day names. This small override forces them to use lavender-mist text color instead of ugly default blue.*/
+.fc-col-header-cell-cushion, 
+.fc-daygrid-day-number {
+    color: var(--dashboard-text) !important;
+    text-decoration: none;
+}
+
+.fc .fc-header-toolbar
+{
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    text-transform: capitalize;
+}
+
+.fc-header-toolbar, .fc .fc-button {
+    font-size: .8rem !important;
+}
+
+.fc td, .fc th {
+    padding: .2rem;
+}
+
+.fc a.fc-event
+{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.fc .fc-toolbar-chunk *
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    flex-wrap: wrap;
+    gap: .2rem;
+}
+
+.fc .fc-next-button, .fc .fc-prev-button
+{
+    background-color: transparent;
+    border: none;
+    padding: .2rem .3rem;
+    font-size: .8rem;
+}
+
+.fc .fc-next-button:hover, .fc .fc-prev-button:hover
+{
+    background-color: var(--dashboard-background-s3);
+}
+
+.fc .fc-button:focus
+{
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.fc .fc-next-button:active, .fc .fc-prev-button:active
+{
+    background-color: var(--dashboard-background-s4) !important; 
+    border: none;
+}
+
+.fc-toolbar-title
+{
+    width: 15rem;
+}
+
+.fc-day:hover{
+    background-color: var(--dashboard-background-s2);
+}
+
+.fc-event:hover
+{
+    background-color: var(--dashboard-background-s4);
+}
+
+@media (max-width:768px)
+{
+    
+    .fc-event-time
+    {
+        display: none;
+    }
+
+    .fc .fc-toolbar-chunk:nth-child(1)
+    {
+        display: none;
+    }
+
+    .fc .fc-toolbar-chunk:nth-child(2)
+    {
+        width: 100%;
+    }
+
+    .fc .fc-header-toolbar
+    {
+        justify-content: center;
+    }
+}
