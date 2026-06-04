@@ -17,15 +17,17 @@ async function createTournamentsDiv()
 
     tournaments.forEach(tournament => {
 
-        const tournamentName = tournament.displayed_name;
-        const tournamentDate = tournament.details.displayed_date;
-        const tournamentTier = tournament.details.tier;
-        const isFinished = tournament.finished;
+        console.log(tournament)
+
+        const tournamentName = tournament.displayed_name || '-';
+        const tournamentDate = tournament.details.displayed_date || '-';
+        const tournamentTier = tournament.details.tier || '-';
+        const isFinished = tournament.finished || false;
 
         const tournamentPageExists = tournament.page_exists;
         const tournamentPageUrl = tournamentPageExists ? tournament.page_url : '#';
 
-        const winnerId = tournament.standings[0].id;
+        const winnerId = tournament.standings[0]?.id;
         const winner = players[winnerId];
         const winnerName = isFinished ? winner.displayed_name : `TBD`;
 
