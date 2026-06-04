@@ -1772,6 +1772,7 @@ body
         display: flex;
         flex-direction: row-reverse;
         height: min-content;
+        justify-content: center;
     }
 
     .dashboard_navbar .title_section
@@ -1804,16 +1805,6 @@ body
         width: auto;
     }
 
-    .selector li .selector-text
-    {
-        display: none;
-    }
-
-    .selector li.active .selector-text
-    {
-        display: block;
-    }
-
     .selector li .mobile_logout_btn
     {
         display: flex;
@@ -1821,6 +1812,8 @@ body
         align-items: center;
         width: 100%;
         height: 100%;
+        gap: .7rem;
+        color: #B52526;
     }
 
     .selector li img
