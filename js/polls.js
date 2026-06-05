@@ -7,8 +7,8 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
     const poll = {
         end_date: "2026-07-05T13:19:00.000Z",
         labels: [
-            {name: "Planszówka", hex: "#f7ff80"},
-            {name: "Gra wideo", hex: "#84ff80"}
+            {id:"423", name: "Planszówka", hex: "f7ff80", description: "Gra planszowa itp."},
+            {id:"519", name: "Gra wideo", hex: "84ff80", description: "Fajna gierka i takie tam."}
         ]
     }
 
@@ -24,30 +24,61 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
 
 
 
-    // ====== HEADER ======
+    function renderHeader() {
+        const relativeEl = document.querySelector('#poll_date_relative');
 
-    const relativeEl = document.querySelector('#poll_date_relative');
+        const relativeDate = formatRelativeTimePL(poll.end_date);
+        const formattedDate = new Intl.DateTimeFormat('pl-PL', {
+            day: '2-digit', month: 'long', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+        }).format(new Date(poll.end_date));
 
-    const relativeDate = formatRelativeTimePL(poll.end_date);
-    const formattedDate = new Intl.DateTimeFormat('pl-PL', {
-        day: '2-digit', month: 'long', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-    }).format(new Date(poll.end_date));
+        relativeEl.textContent = relativeDate;
+        relativeEl.title = formattedDate;
 
-    relativeEl.textContent = relativeDate;
-    relativeEl.title = formattedDate;
+        const labelsListEl = document.querySelector('#poll_labels_list');
+        const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
 
-    const labelsEditorEl = document.querySelector('#poll_labels_editor');
-    const labelEditorToggleBtn = document.querySelector('#btn_toggle_labels_menu');
+        labelsListToggleBtn.onclick = () => {
+            labelsListToggleBtn.classList.toggle('btn_active');
+            labelsListEl.classList.toggle('hidden');
+            adjustModalPosition(labelsListEl);
+        }
 
-    labelEditorToggleBtn.onclick = () => {
-        labelEditorToggleBtn.classList.toggle('btn_active');
-        labelsEditorEl.classList.toggle('hidden');
-        adjustModalPosition(labelsEditorEl);
+        let labelsHtml = ''
+        const labels = poll.labels;
+        labels.forEach((label) => {
+            const questionWithLabel = 12; // TODO: add counter of question with this label
+            labelsHtml+=`
+                <div class="labels_list_label" data-id="${label.id}">
+                    <div class="labels_list_label_hex">
+                        <div class="labels_list_label_hex_dot" style="background-color: #${label.hex};"></div>
+                    </div>
+                    <div class="labels_list_label_title">
+                        <div class="labels_list_label_name">${label.name}</div>
+                        <div class="labels_list_label_description">${label.description}</div>
+                    </div>
+                    <div class="labels_list_label_counter">
+                        <div class="labels_list_label_counter_circle">${questionWithLabel}</div>
+                    </div>
+                </div>
+            `
+        })
+
+        labelsListEl.insertAdjacentHTML('beforeend', labelsHtml);
+
+        const labelBtns = document.querySelectorAll('.labels_list_label')
+        labelBtns.forEach((btn) => {
+            const labelId = btn.getAttribute('data-id');
+            btn.onclick = () => showLabelEditor(labelId);
+        })
+
+        function showLabelEditor(labelId) {
+            const label = poll.labels.find(l => l.id === labelId);
+            // TODO: Label Editor
+            window.alert(label.name);
+        }
     }
-
-
-
 
 
     // ====== UI HANDLERS ======
@@ -82,5 +113,8 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
     }, 50)
 
     window.addEventListener('resize', handleMenuResize);
+
+
+    renderHeader();
 
 })()

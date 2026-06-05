@@ -82,13 +82,75 @@ main
     color: var(--color-lime-moss);
 }
 
-.poll_labels_editor_container
+.poll_labels_list_container
 {
     position: relative;
 }
 
-.poll_labels_editor
+.poll_labels_list
 {
-    width: 20rem;
-    height: 6rem;
+    display: flex;
+    flex-direction: column;
+    width: 16rem;
+    padding: .5rem;
+}
+
+.labels_list_label
+{
+    display: flex;
+    gap: .5rem;
+    width: 100%;
+    padding: .3rem .5rem;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.labels_list_label:hover
+{
+    background-color: var(--dashboard-background-s6);
+}
+
+.labels_list_label_hex
+{
+    flex: 0;
+    padding-top: .3rem;
+}
+
+.labels_list_label_title
+{
+    flex: 1;
+    overflow: hidden;
+}
+
+.labels_list_label_counter
+{
+    display: flex;
+    align-items: center;
+    flex: 0;
+}
+
+.labels_list_label_hex_dot
+{
+    width: .8rem;
+    height: .8rem;
+    border-radius: 100%;
+}
+
+.labels_list_label_description
+{
+    color: var(--dashboard-text-s2);
+    font-weight: 400;
+    font-size: .75rem;
+}
+
+.labels_list_label_counter_circle
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .75rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1px solid var(--dashboard-text);
+    border-radius: 100%;
 }
