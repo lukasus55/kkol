@@ -6,6 +6,16 @@ main
     padding: 6rem 2rem 2rem 2rem;
 }
 
+.hidden
+{
+    transition: none;
+}
+
+.btn_secondary.btn_active
+{
+    background-color: var(--dashboard-background-s6);
+}
+
 .poll
 {
     display: flex;
@@ -19,6 +29,19 @@ main
 {
     width: .9rem;
     height: .9rem;
+}
+
+.poll_action_menu
+{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--dashboard-background-s4);
+    border-radius: .5rem;
+    margin-top: 1rem;
+    border: 1px solid var(--dashboard-stroke);
+    padding: 1rem;
+    white-space: nowrap;
 }
 
 .poll_header
@@ -57,4 +80,15 @@ main
 .poll_date_relative
 {
     color: var(--color-lime-moss);
+}
+
+.poll_labels_editor_container
+{
+    position: relative;
+}
+
+.poll_labels_editor
+{
+    width: 20rem;
+    height: 6rem;
 }
