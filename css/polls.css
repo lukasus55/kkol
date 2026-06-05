@@ -82,17 +82,28 @@ main
     color: var(--color-lime-moss);
 }
 
-.poll_labels_list_container
+.poll_labels_list_section
 {
     position: relative;
+}
+
+.poll_labels_list_container
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 16rem;
+    padding: .5rem;
+    z-index: 10;
 }
 
 .poll_labels_list
 {
     display: flex;
     flex-direction: column;
-    width: 16rem;
-    padding: .5rem;
+    height: 16rem;
+    overflow: auto;
+    width: 100%;
 }
 
 .labels_list_label
@@ -125,7 +136,9 @@ main
 .labels_list_label_counter
 {
     display: flex;
+    justify-content: center;
     align-items: center;
+    font-size: .75rem;
     flex: 0;
 }
 
@@ -143,14 +156,29 @@ main
     font-size: .75rem;
 }
 
-.labels_list_label_counter_circle
+.poll_labels_list_new
 {
     display: flex;
+    justify-self: flex-end;
+    width: 100%;
     justify-content: center;
     align-items: center;
-    font-size: .75rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    border: 1px solid var(--dashboard-text);
-    border-radius: 100%;
+    gap: .2rem;
+    margin-top: .5rem;
+    cursor: pointer;
+    padding: .2rem .5rem;
+    border-radius: .5rem;
+    font-size: .9rem;
+    background-color: var(--dashboard-background-s3);
+}
+
+.poll_labels_list_new:hover
+{
+    background-color: var(--dashboard-background-s5);
+}
+
+.poll_labels_list_new img
+{
+    width: .75rem;
+    height: .75rem;
 }

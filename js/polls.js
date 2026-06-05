@@ -5,6 +5,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
 
     // Placeholder poll
     const poll = {
+        id: "3221",
         end_date: "2026-07-05T13:19:00.000Z",
         labels: [
             {id:"423", name: "Planszówka", hex: "f7ff80", description: "Gra planszowa itp."},
@@ -36,13 +37,14 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         relativeEl.textContent = relativeDate;
         relativeEl.title = formattedDate;
 
+        const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
         const labelsListEl = document.querySelector('#poll_labels_list');
         const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
 
         labelsListToggleBtn.onclick = () => {
             labelsListToggleBtn.classList.toggle('btn_active');
-            labelsListEl.classList.toggle('hidden');
-            adjustModalPosition(labelsListEl);
+            labelsListContainerEl.classList.toggle('hidden');
+            adjustModalPosition(labelsListContainerEl);
         }
 
         let labelsHtml = ''
@@ -59,7 +61,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
                         <div class="labels_list_label_description">${label.description}</div>
                     </div>
                     <div class="labels_list_label_counter">
-                        <div class="labels_list_label_counter_circle">${questionWithLabel}</div>
+                        ${questionWithLabel}
                     </div>
                 </div>
             `
@@ -73,10 +75,17 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
             btn.onclick = () => showLabelEditor(labelId);
         })
 
+        document.querySelector('#poll_labels_list_new').onclick = () => createNewLabel()
+
+        // TODO: Label Editor
         function showLabelEditor(labelId) {
             const label = poll.labels.find(l => l.id === labelId);
-            // TODO: Label Editor
-            window.alert(label.name);
+            window.alert(`Edit label: ${label.name}`);
+        }
+
+        // TODO: Create label
+        function createNewLabel() {
+            window.alert(`Create new label in: ${poll.id}`);
         }
     }
 
