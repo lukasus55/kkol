@@ -31,6 +31,50 @@ main
     height: .9rem;
 }
 
+
+.poll_input
+{
+    background-color: var(--dashboard-background-s2);
+    border: 1px solid var(--dashboard-stroke);
+    color: var(--dashboard-text);
+    padding: 0.75rem;
+    border-radius: 4px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    color-scheme: dark;
+    justify-self: baseline;
+    text-align: start;
+    resize: vertical;
+}
+
+.poll_input_tall
+{
+    height: 8rem;
+}
+
+.poll_input_narrow
+{
+    width: 12rem;
+}
+
+.poll_btn_x
+{
+    padding: .5rem;
+    border-radius: .5rem;
+}
+
+.poll_btn_x:hover
+{
+    background-color: var(--dashboard-background-s4);
+}
+
+.poll_btn_x img
+{
+    width: 1rem;
+    height: 1rem;
+}
+
 .poll_action_menu
 {
     position: absolute;
@@ -197,9 +241,12 @@ main
 .label_editor_header
 {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     border-bottom: 1px solid var(--dashboard-stroke);
     padding: 1rem;
+    font-weight: 700;
 }
 
 .label_editor_main
@@ -244,30 +291,9 @@ main
     gap: 1rem;
 }
 
-.polls_input
+.label_editor_form label
 {
-    background-color: var(--dashboard-background-s2);
-    border: 1px solid var(--dashboard-stroke);
-    color: var(--dashboard-text);
-    padding: 0.75rem;
-    border-radius: 4px;
-    width: 100%;
-    font-family: inherit;
-    font-size: 1rem;
-    color-scheme: dark;
-    justify-self: baseline;
-    text-align: start;
-    resize: vertical;
-}
-
-.polls_input_tall
-{
-    height: 8rem;
-}
-
-.polls_input_narrow
-{
-    width: 12rem;
+    font-weight: 700;
 }
 
 .label_edit_color_section
@@ -279,8 +305,17 @@ main
 
 .label_color_rect
 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: .5rem;
     border: 1px solid var(--dashboard-stroke);
+}
+
+.label_color_rect img
+{
+    width: 1rem;
+    height: 1rem;
 }

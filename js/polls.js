@@ -8,8 +8,8 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         id: "3221",
         end_date: "2026-07-05T13:19:00.000Z",
         labels: [
-            { id: "423", name: "Planszówka", hex: "f7ff80", description: "Gra planszowa itp." },
-            { id: "519", name: "Gra wideo", hex: "84ff80", description: "Fajna gierka i takie tam." }
+            { id: "423", name: "Planszówka", hex: "#f7ff80", description: "Gra planszowa itp." },
+            { id: "519", name: "Gra wideo", hex: "#84ff80", description: "Fajna gierka i takie tam." }
         ]
     }
 
@@ -54,7 +54,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
             labelsHtml += `
                 <div class="labels_list_label" data-id="${label.id}">
                     <div class="labels_list_label_hex">
-                        <div class="labels_list_label_hex_dot" style="background-color: #${label.hex};"></div>
+                        <div class="labels_list_label_hex_dot" style="background-color: ${label.hex};"></div>
                     </div>
                     <div class="labels_list_label_title">
                         <div class="labels_list_label_name">${label.name}</div>
@@ -77,7 +77,9 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
 
         document.querySelector('#poll_labels_list_new').onclick = () => createNewLabel()
 
-        // TODO: Label Editor
+
+        let previewLabel = { id: "423", name: "Planszówka", hex: "f7ff80", description: "Gra planszowa itp." };
+
         function showLabelEditor(labelId) {
             const label = POLL.labels.find(l => l.id === labelId);
             if (!label) {
@@ -86,20 +88,45 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
             }
 
             document.querySelector('#popup_label_editor').classList.add('active');
+            
+            const nameInput = document.querySelector('#label_edit_name');
+            const descInput = document.querySelector('#label_edit_desc');
+            const colorInput = document.querySelector('#label_edit_color');
 
+            nameInput.value = label.name;
+            descInput.value = label.description;
+            colorInput.value = label.hex;
+            nameInput.oninput = () => setPreviewLabel('name', (nameInput.value || 'Etykieta'));
+            descInput.oninput = () => {previewLabel.description = descInput.value}; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
+            colorInput.oninput = () => setPreviewLabel('hex', formatHex(colorInput.value));
+
+            updateLabelBadge(label);
+
+            const labelColorEl = document.querySelector('#label_color_rect');
+            labelColorEl.style.backgroundColor = label.hex;
+            labelColorEl.onclick = () => {
+                setPreviewLabel('hex', getRandomHex());
+                document.querySelector('#label_edit_color').value = previewLabel.hex;
+            };
+        }
+
+        function updateLabelBadge(label) {
             const badgeEl = document.querySelector('#label_editor_badge');
             const colors = getLabelColors(label.hex);
-
-            document.querySelector('#label_edit_name').value = label.description;
-            document.querySelector('#label_edit_desc').value = label.name;
-            document.querySelector('#label_edit_color').value = `#${label.hex}`;
-
-            badgeEl.textContent = label.name;
+            badgeEl.textContent = label.name.length>0 ? label.name : 'Etykieta';
             badgeEl.style.color = colors.textColor;
             badgeEl.style.borderColor = colors.textColor;
             badgeEl.style.backgroundColor = colors.backgroundColor;
-            document.querySelector('#label_color_rect').style.backgroundColor = `#${label.hex}`;
+        }
 
+        function setPreviewLabel(key, value) {
+            if (!previewLabel[key]) return;
+
+            previewLabel[key] = value;
+
+            updateLabelBadge(previewLabel);
+            document.querySelector('#label_color_rect').style.backgroundColor = previewLabel.hex;
+            if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
         }
 
         // TODO: Create label
@@ -149,6 +176,22 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
             textColor
         };
     }
+
+    /** 
+     * Format hex and escape (replace with #ffffff) incorrect (not 3 or 6 long) hex 
+     * @param {string} hex - Hex with #
+     * @returns {string} Formatted hex with 6char
+     * */
+    function formatHex(hex) {
+        if (hex.length === 7) return hex;
+        if (hex.length === 4) return '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+        return '#ffffff';
+    }
+
+    function getRandomHex() {
+        return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    } 
+
 
 
 
@@ -204,10 +247,19 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         const isInsidePopup = event.target.closest('.popup_container');
         const isAnyPopupOpen = document.querySelectorAll('.popup_overlay.active').length > 0;
 
-        console.log(isAnyPopupOpen)
         if (!isInsideMenu && !isAnyPopupOpen) { closeAllActionMenus(); }
         if (!isInsidePopup) { closeAllPopups(); }
     };
+
+    const closeButtons = document.querySelectorAll('.poll_btn_close');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const overlay = this.closest('.popup_overlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        });
+    });
 
     const handleMenuResize = debounce(() => {
         const openMenus = document.querySelectorAll('.poll_action_menu:not(.hidden)');
