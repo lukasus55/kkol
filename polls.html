@@ -48,6 +48,32 @@
         </div>
     </main>
 
+    <div class="popup_overlay" id="popup_label_editor">
+        <div class="popup_container poll_popup">
+            <div class="label_editor" id="label_editor">
+                <div class="label_editor_header">
+                    Edytuj etykietę
+                </div>
+                <div class="label_editor_main">
+                    <div class="label_editor_badge_container">
+                        <div class="label_editor_badge" id="label_editor_badge">prio</div>
+                    </div>
+                    <div class="label_editor_form">
+                        <label>Nazwa:</label>
+                        <input autocomplete="off" type="text" id="label_edit_name" class="polls_input">
+                        <label>Opis:</label>
+                        <textarea id="label_edit_desc" class="polls_input polls_input_tall"></textarea>
+                        <label>Kolor:</label>
+                        <div class="label_edit_color_section">
+                            <button class="label_color_rect" id="label_color_rect"></button>
+                            <input autocomplete="off" type="text" id="label_edit_color" class="polls_input polls_input_narrow">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <footer class="footer" id="footer">
         <div id="common-footer"></div>

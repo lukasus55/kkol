@@ -44,6 +44,11 @@ main
     white-space: nowrap;
 }
 
+.poll_popup
+{
+    padding: 0;
+}
+
 .poll_header
 {
     display: flex;
@@ -181,4 +186,101 @@ main
 {
     width: .75rem;
     height: .75rem;
+}
+
+.label_editor
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.label_editor_header
+{
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid var(--dashboard-stroke);
+    padding: 1rem;
+}
+
+.label_editor_main
+{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 1rem;
+    width: 100%;
+}
+
+.label_editor_badge_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 3rem;
+}
+
+.label_editor_badge
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .25rem .75rem;
+    border-radius: 1.5rem;
+    background-color: #ff5f5f40;
+    border: .5px solid #ff4f4f90;
+    color: #ffc3c390;
+    font-weight: 300;
+    font-size: .9rem;
+}
+
+.label_editor_form
+{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.polls_input
+{
+    background-color: var(--dashboard-background-s2);
+    border: 1px solid var(--dashboard-stroke);
+    color: var(--dashboard-text);
+    padding: 0.75rem;
+    border-radius: 4px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 1rem;
+    color-scheme: dark;
+    justify-self: baseline;
+    text-align: start;
+    resize: vertical;
+}
+
+.polls_input_tall
+{
+    height: 8rem;
+}
+
+.polls_input_narrow
+{
+    width: 12rem;
+}
+
+.label_edit_color_section
+{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.label_color_rect
+{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: .5rem;
+    border: 1px solid var(--dashboard-stroke);
 }
