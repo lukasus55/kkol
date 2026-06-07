@@ -72,23 +72,30 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         const labelBtns = document.querySelectorAll('.labels_list_label')
         labelBtns.forEach((btn) => {
             const labelId = btn.getAttribute('data-id');
-            btn.onclick = () => showLabelEditor(labelId);
+            const label = POLL.labels.find(l => l.id === labelId);
+            btn.onclick = () => showLabelEditor(label);
         })
 
-        document.querySelector('#poll_labels_list_new').onclick = () => createNewLabel()
+        const newLabel = { name: "", hex: getRandomHex(), description: "" };
+        let previewLabel = { id: "", name: "", hex: "#ffffff", description: ""}
+        document.querySelector('#poll_labels_list_new').onclick = () => showLabelEditor(newLabel, true)
 
+        function showLabelEditor(label, isCreateMode=false) {
 
-        let previewLabel = { id: "423", name: "Planszówka", hex: "f7ff80", description: "Gra planszowa itp." };
-
-        function showLabelEditor(labelId) {
-            const label = POLL.labels.find(l => l.id === labelId);
+            // --- Initialize ---
             if (!label) {
                 // TODO: Error popup
-                console.error('Label not found')
+                console.error('Label not found');
+                return;
             }
+            previewLabel = label;
 
             document.querySelector('#popup_label_editor').classList.add('active');
-            
+
+            /// --- Header ---
+            document.querySelector('#label_editor_title').textContent = isCreateMode ? 'Utwórz etykietę' : 'Edytuj etykietę';
+
+            /// --- Main ---
             const nameInput = document.querySelector('#label_edit_name');
             const descInput = document.querySelector('#label_edit_desc');
             const colorInput = document.querySelector('#label_edit_color');
@@ -108,6 +115,21 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
                 setPreviewLabel('hex', getRandomHex());
                 document.querySelector('#label_edit_color').value = previewLabel.hex;
             };
+
+            // --- Footer ---
+            const saveBtn = document.querySelector('#btn_save_label');
+            const deleteBtn = document.querySelector('#btn_delete_label');
+
+            saveBtn.textContent = isCreateMode ? 'Utwórz' : 'Zapisz';
+            deleteBtn.style.display = isCreateMode ? 'none' : 'block';
+
+            saveBtn.onclick = () => isCreateMode ? createNewLabel() : saveLabel(previewLabel);
+            deleteBtn.onclick = () => showConfirmationPopup(
+                () => deleteLabel(previewLabel), 
+                `Czy na pewno chcesz trwale usunąć etykietę <strong>${previewLabel.name}</strong>?`,
+                "Usuń",
+                "Anuluj"
+            );
         }
 
         function updateLabelBadge(label) {
@@ -129,7 +151,17 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
             if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
         }
 
-        // TODO: Create label
+        // TODO
+        function saveLabel(label) {
+            window.alert(`Save label: ${label.name}`)
+        }
+
+        // TODO
+        function deleteLabel(label) {
+            window.alert(`Delete label: ${label.name}`)
+        }
+
+        // TODO
         function createNewLabel() {
             window.alert(`Create new label in: ${POLL.id}`);
         }
@@ -226,8 +258,6 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         activePopups.forEach(popup => {
             if (!isException(popup)) {
                 popup.classList.remove('active');
-                // Ensures even worst browsers will move unused .onClick events to garbage.
-                popup.outerHTML = popup.outerHTML;
             }
         });
     }
@@ -255,9 +285,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
     closeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const overlay = this.closest('.popup_overlay');
-            if (overlay) {
-                overlay.classList.remove('active');
-            }
+            if (overlay) {overlay.classList.remove('active');}
         });
     });
 
@@ -267,6 +295,37 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
             adjustModalPosition(menu);
         });
     }, 50)
+
+    /** 
+     * Show confirmation popup
+     * @param {() => void} actionCallback - Callback function
+     * @param {string} message - Confirm question
+     * @param {string} confirmText - Text on on confirm button
+     * @param {string} cancelText - Text on cancel button
+     * @returns {void} Nothing
+     * */
+    function showConfirmationPopup(actionCallback, message = 'Czy na pewno chcesz to zrobić?', confirmText = 'Potwierdź', cancelText = 'Anuluj') {
+        const popup = document.getElementById('confirmation_popup');
+        const closeBtn = document.querySelector('.btn_cancel_only_this');
+        popup.classList.add('active');
+
+        document.querySelector('#confirmation_popup_message').innerHTML = message;
+        document.querySelector('#confirmation_popup_confirm').innerHTML = confirmText;
+        document.querySelector('#confirmation_popup_cancel').innerHTML = cancelText;
+
+        const confirmBtn = document.getElementById('confirmation_popup_confirm');
+        confirmBtn.disabled = false;
+
+        confirmBtn.onclick = async () => {
+            confirmBtn.disabled = true;
+            await actionCallback();
+            popup.classList.remove('active');
+        };
+
+        popup.onclick = (event) => {
+            if (event.target === popup) {popup.classList.remove('active');}
+        };
+    }
 
     window.addEventListener('resize', handleMenuResize);
 

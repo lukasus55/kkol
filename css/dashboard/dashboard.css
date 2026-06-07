@@ -591,6 +591,29 @@ body
     background-color: #690000;
 }
 
+.btn_delete
+{
+    background-color: transparent;
+    color: var(--color-warning-red);
+    border: 1px solid var(--color-warning-red);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn_delete:hover
+{
+    background-color: rgba(255, 76, 76, 0.1);
+}
+
+.btn_delete:active
+{
+    transform: scale(0.97);
+}
+
 @media (max-width:768px)
 {
     .dashboard

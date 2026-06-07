@@ -258,6 +258,15 @@ main
     width: 100%;
 }
 
+.label_editor_footer
+{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: .5rem;
+    border-top: 1px solid var(--dashboard-stroke);
+}
+
 .label_editor_badge_container
 {
     display: flex;
@@ -318,4 +327,16 @@ main
 {
     width: 1rem;
     height: 1rem;
+}
+
+.label_editor_footer_row
+{
+    display: flex;
+    width: 100%;
+    gap: .5rem;
+}
+
+.btn_label_editor
+{
+    width: 100%;
 }
