@@ -128,3 +128,38 @@ export function getParamsUrl(params) {
     }
     return url;
 }
+
+export function adjustModalPosition(modal) {
+    if (!modal) return;
+    modal.style.left = '0';
+    modal.style.transform = 'none';
+
+    const rect = modal.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    
+    const edgeBuffer = 16; 
+
+    if (rect.right > viewportWidth - edgeBuffer) {
+        const shiftAmount = rect.right - viewportWidth + edgeBuffer;
+        modal.style.transform = `translateX(-${shiftAmount}px)`;
+    }
+
+    if (rect.left < edgeBuffer) {
+        const shiftAmount = edgeBuffer - rect.left;
+        modal.style.transform = `translateX(${shiftAmount}px)`;
+    }
+}
+
+/** 
+    * Discards operations that occur too close together during a specific interval,
+    * @param {() => void} func - Function to be executed once in a specified time interval,
+    * @param {number} wait - Time interval in milliseconds
+    * @return {() => void} Function with delay
+**/
+export function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
