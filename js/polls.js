@@ -77,7 +77,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         })
 
         const newLabel = { name: "", hex: getRandomHex(), description: "" };
-        let previewLabel = { id: "", name: "", hex: "#ffffff", description: ""}
+        let previewLabel = { id: "0", name: "Etykieta", hex: "#ffffff", description: ""}
         document.querySelector('#poll_labels_list_new').onclick = () => showLabelEditor(newLabel, true)
 
         function showLabelEditor(label, isCreateMode=false) {
@@ -103,7 +103,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
             nameInput.value = label.name;
             descInput.value = label.description;
             colorInput.value = label.hex;
-            nameInput.oninput = () => setPreviewLabel('name', (nameInput.value || 'Etykieta'));
+            nameInput.oninput = () => setPreviewLabel('name', nameInput.value);
             descInput.oninput = () => {previewLabel.description = descInput.value}; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
             colorInput.oninput = () => setPreviewLabel('hex', formatHex(colorInput.value));
 
@@ -135,14 +135,14 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         function updateLabelBadge(label) {
             const badgeEl = document.querySelector('#label_editor_badge');
             const colors = getLabelColors(label.hex);
-            badgeEl.textContent = label.name.length>0 ? label.name : 'Etykieta';
+            badgeEl.textContent = label.name || 'Etykieta';
             badgeEl.style.color = colors.textColor;
             badgeEl.style.borderColor = colors.textColor;
             badgeEl.style.backgroundColor = colors.backgroundColor;
         }
 
         function setPreviewLabel(key, value) {
-            if (!previewLabel[key]) return;
+            if (previewLabel[key] === undefined) return;
 
             previewLabel[key] = value;
 
