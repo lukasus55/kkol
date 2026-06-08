@@ -22,7 +22,7 @@ export default async function handler(request, response) {
         const { tournament_id, name } = request.body;
 
         if (!tournament_id || !name) {
-            return response.status(400).json({ error: "Brakujące dane (Nazwa lub Data)." });
+            return response.status(400).json({ error: "Brakujące dane (Nazwa lub Id turnieju)." });
         }
 
         const clean_name = escapeHTML(name);
