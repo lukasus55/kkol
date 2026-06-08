@@ -1,21 +1,28 @@
 import { formatRelativeTimePL } from "./utils/formatDate.js";
-import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./utils/helpers.js";
+import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } from "./utils/helpers.js";
 
 (async () => {
 
-    // Placeholder poll
-    const POLL = {
-        id: "3221",
-        end_date: "2026-07-05T13:19:00.000Z",
-        labels: [
-            { id: "423", name: "Planszówka", hex: "#f7ff80", description: "Gra planszowa itp." },
-            { id: "519", name: "Gra wideo", hex: "#84ff80", description: "Fajna gierka i takie tam." }
-        ]
-    }
-
+    // Handling params
     const params = new URLSearchParams(window.location.search);
     const paramsUrl = getParamsUrl(params);
     const pageUrl = `polls?${paramsUrl}`;
+
+    const pid = params.get('p');
+    if (!pid) {
+        window.location.replace('/dashboard?tab=polls');
+        return;
+    }
+
+    // Fetching data
+    const pollData = await loadData(`/api/polls?id=${pid}`)
+    const POLL = pollData[0]
+
+    // Placeholder labels
+    const LABELS = [
+        { id: "423", name: "Planszówka", hex: "#f7ff80", description: "Gra planszowa itp." },
+        { id: "519", name: "Gra wideo", hex: "#84ff80", description: "Fajna gierka i takie tam." }
+    ]
 
     // Authenticate user
     const userAuthenticated = await requireAuth(pageUrl);
@@ -37,6 +44,8 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         relativeEl.textContent = relativeDate;
         relativeEl.title = formattedDate;
 
+        document.querySelector('#poll_name').textContent = POLL.name;
+
         const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
         const labelsListEl = document.querySelector('#poll_labels_list');
         const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
@@ -48,8 +57,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         }
 
         let labelsHtml = ''
-        const labels = POLL.labels;
-        labels.forEach((label) => {
+        LABELS.forEach((label) => {
             const questionWithLabel = 12; // TODO: add counter of question with this label
             labelsHtml += `
                 <div class="labels_list_label" data-id="${label.id}">
@@ -72,7 +80,7 @@ import { adjustModalPosition, debounce, getParamsUrl, requireAuth } from "./util
         const labelBtns = document.querySelectorAll('.labels_list_label')
         labelBtns.forEach((btn) => {
             const labelId = btn.getAttribute('data-id');
-            const label = POLL.labels.find(l => l.id === labelId);
+            const label = LABELS.find(l => l.id === labelId);
             btn.onclick = () => showLabelEditor(label);
         })
 
