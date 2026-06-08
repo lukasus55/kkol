@@ -2,21 +2,23 @@ import sql from '../db.js';
 
 export default async function handler(request, response) {
     try {
-        const { id, player, tournament, limit } = request.query;
+        const { id, player, tournament, limit, order } = request.query;
         const actualLimit = limit ? Math.min(limit, 100) : 100;
+        const orderClause = sql.unsafe(order === 'reversed' ? 'ORDER BY "end_date" ASC' : 'ORDER BY "end_date" DESC');
 
         let polls;
 
-        if (id) {polls = await sql`SELECT * FROM "polls" WHERE id = ${id} LIMIT ${actualLimit}`;}
-        else if (tournament) {polls = await sql`SELECT * FROM "polls" WHERE tournament_id = ${tournament} LIMIT ${actualLimit}`;}
+        if (id) {polls = await sql`SELECT * FROM "polls" WHERE id = ${id} ${orderClause} LIMIT ${actualLimit}`;}
+        else if (tournament) {polls = await sql`SELECT * FROM "polls" WHERE tournament_id = ${tournament} ${orderClause} LIMIT ${actualLimit}`;}
         else if (player) {polls = await sql`
-                SELECT p.id, p.create_default_options, p.name, p.end_date, p.rights_level, p.start_date, p.tournament_id, r.player_id 
+                SELECT p.id, p.create_default_options, p.name, p.end_date, p.rights_level, p.start_date, p.tournament_id, r.player_id
                 FROM "polls" p 
                 INNER JOIN "results" r ON p.tournament_id = r.tournament_id
                 WHERE r.player_id = ${player}
+                ${orderClause}
                 LIMIT ${actualLimit}
             `;}
-        else {polls = await sql`SELECT * FROM "polls" LIMIT ${actualLimit}`};
+        else {polls = await sql`SELECT * FROM "polls" ${orderClause} LIMIT ${actualLimit}`};
 
         return response.status(200).json(polls);
 

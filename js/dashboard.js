@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userData = await loadData('/api/me');
     const USER = userData.user;
 
-    const isAdmin = USER.role === 'admin';
+    const IS_ADMIN = USER.role === 'admin';
+    const IS_ORGANIZER = USER.role === 'organizer';
+    const CAN_CREATE = IS_ADMIN || IS_ORGANIZER;
 
     const logoutBtn = document.querySelector('#logout_btn');
     const mobileLogoutBtn = document.querySelector('#mobile_logout_btn');
@@ -418,7 +420,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const calendarEvents = rawCalendarEvents.map(event => {
                 const tournament_id = String(event.extendedProps.tournament_id); 
-                const allowedToDragAndResize = isAdmin || accessedTournamentsId.includes(tournament_id);
+                const allowedToDragAndResize = IS_ADMIN || accessedTournamentsId.includes(tournament_id);
 
                 return {
                     ...event,
@@ -503,32 +505,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     
+    // TODO: Add filters.
     async function renderPollsTab(tabContainer) {
-        // TODO
         const polls = await loadData(`/api/polls?player=${USER.id}`);
-
-        console.log(polls);
 
         let pollCardsHtml = ``
         polls.forEach((p) => {
             const end = new Date(p.end_date);
             const now = new Date();
-            const timeRemaining = end > now ? `${formatRelativeTimePL(end, false)}` : `Koniec`
-            console.log(timeRemaining)
+            const relativeDate = formatRelativeTimePL(end, false);
+
+            const timeRemaining = end > now ? relativeDate : `Koniec`;
+
+            const formattedDate = new Intl.DateTimeFormat('pl-PL', {
+                day: '2-digit', month: 'long', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).format(new Date(p.end_date));
 
             pollCardsHtml += `
-                <div classs="poll_card">
-                    <div class="poll_name">
+                <div class="poll_card">
+                    <div class="poll_info">
                         <div class="poll_title">
                             <a href="/poll?p=${p.id}">
                                 ${p.name}
                             </a> 
                         </div>
                         <div class="poll_subtitle">
-                            ${p.tournament_id}
+                            <h5>${p.tournament_id}</h5>
                         </div>
                     </div>
-                    <div class="poll_time">
+                    <div class="poll_time" title="${formattedDate}">
                         ${timeRemaining}
                     </div>
                 </div>
@@ -537,9 +543,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const containerHtml = `
             <div class="container">
-                <div class="polls_header">
-                    <div class="btn_primary">Utwórz ankietę</div>
-                </div>
+                ${CAN_CREATE ? 
+                    `<div class="polls_header">
+                        <div class="btn_primary">Utwórz ankietę</div>
+                    </div>`
+                :''}
                 <div class="polls_main">
                     ${pollCardsHtml}
                 </div>
