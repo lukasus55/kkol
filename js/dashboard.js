@@ -541,11 +541,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             `
         })
 
+        let headerHtml = ''
+
         const containerHtml = `
             <div class="container">
                 ${CAN_CREATE ? 
                     `<div class="polls_header">
-                        <div class="btn_primary">Utwórz ankietę</div>
+                        <button class="btn_primary" id="btn_create_poll">Utwórz ankietę</button>
                     </div>`
                 :''}
                 <div class="polls_main">
@@ -554,7 +556,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             
         `
+
         tabContainer.insertAdjacentHTML('beforeend', containerHtml);
+
+        if (CAN_CREATE) {
+            const createBtn = document.querySelector('#btn_create_poll');
+            createBtn.onclick = async () => createPoll();
+        }
     }
 
 
@@ -1746,6 +1754,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             closeAllPopups();
             if (onSuccessCallback) onSuccessCallback();
+
+        } catch (error) {
+            closeAllPopups();
+            showErrorPopup(error.message);
+        }
+    }
+
+    async function createPoll() {
+        try {
+            const response = await fetch('/api/poll_create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    tournament_id: 'test2', //WIP
+                    name: 'Testowa nazwa' // WIP
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || result.error) {
+                throw new Error(result.error || "Nie udało się utworzyć ankiety.");
+            }
+
+            window.location.reload()
 
         } catch (error) {
             closeAllPopups();
