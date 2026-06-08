@@ -25,6 +25,10 @@ Welcome to the backend API documentation.
 * [**Update Event Date** (`POST /api/event_update_date`)](./docs/api/events/event_update_date.md)
 * [**Update Event Results** (`POST /api/event_update_results`)](./docs/api/events/event_update_results.md)
 
+### Polls
+* [**Fetch Polls** (`GET /api/polls`)](./docs/api/polls/polls.md)
+* [**Create Poll** (`POST /api/poll_create`)](./docs/api/polls/poll_create.md)
+
 ### Tournaments
 * [**Fetch Tournaments** (`GET /api/tournaments`)](./docs/api/tournaments/tournaments.md)
 * [**Get Active Tournaments** (`GET /api/tournaments_active`)](./docs/api/tournaments/tournaments_active.md)
@@ -55,4 +59,5 @@ Welcome to the backend API documentation.
 
 ## 📑 Database Diagram
 
-![Test](./docs/api/db-diagram.png)
+Database diagram is available here:
+[**https://drawsql.app/teams/kostys/diagrams/kkol**](https://drawsql.app/teams/kostys/diagrams/kkol)
