@@ -1,1 +1,14 @@
 /* Polls tab css */
+#content-polls .container
+{
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+}
+
+#content-polls .polls_header
+{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}

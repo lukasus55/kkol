@@ -1,6 +1,7 @@
 import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput, getParamsUrl } from "./utils/helpers.js";
 import { initPlayerSearchBar } from "./playerSearchBar.js";
 import { passwordRequirementsNames, validatePassword } from "./utils/validatePassword.js";
+import { formatRelativeTimePL } from "./utils/formatDate.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -503,9 +504,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     async function renderPollsTab(tabContainer) {
-        console.log("Polls tab loaded");
-        const header = `<a href='/polls'> Work In Progress </a>`
-        tabContainer.insertAdjacentHTML('beforeend', header);
+        // TODO
+        const polls = await loadData(`/api/polls?player=${USER.id}`);
+
+        console.log(polls);
+
+        let pollCardsHtml = ``
+        polls.forEach((p) => {
+            const end = new Date(p.end_date);
+            const now = new Date();
+            const timeRemaining = end > now ? `${formatRelativeTimePL(end, false)}` : `Koniec`
+            console.log(timeRemaining)
+
+            pollCardsHtml += `
+                <div classs="poll_card">
+                    <div class="poll_name">
+                        <div class="poll_title">
+                            <a href="/poll?p=${p.id}">
+                                ${p.name}
+                            </a> 
+                        </div>
+                        <div class="poll_subtitle">
+                            ${p.tournament_id}
+                        </div>
+                    </div>
+                    <div class="poll_time">
+                        ${timeRemaining}
+                    </div>
+                </div>
+            `
+        })
+
+        const containerHtml = `
+            <div class="container">
+                <div class="polls_header">
+                    <div class="btn_primary">Utwórz ankietę</div>
+                </div>
+                <div class="polls_main">
+                    ${pollCardsHtml}
+                </div>
+            </div>
+            
+        `
+        tabContainer.insertAdjacentHTML('beforeend', containerHtml);
     }
 
 
