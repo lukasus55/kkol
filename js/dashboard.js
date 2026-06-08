@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const IS_ORGANIZER = USER.role === 'organizer';
     const CAN_CREATE = IS_ADMIN || IS_ORGANIZER;
 
+    // Fetch the active tournaments for this USER
+    const ACTIVE_TOURNAMENTS = await loadData('/api/tournaments_active');
+
     const logoutBtn = document.querySelector('#logout_btn');
     const mobileLogoutBtn = document.querySelector('#mobile_logout_btn');
     createLogoutButton(logoutBtn, container);
@@ -541,12 +544,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             `
         })
 
-        let headerHtml = ''
-
         const containerHtml = `
             <div class="container">
                 ${CAN_CREATE ? 
                     `<div class="polls_header">
+                        <input type="text" placeholder="Nazwa" id="poll_name">
+                        <select class="dashboard_selector poll_tournament_select" id="poll_tournament_select"> </select>
                         <button class="btn_primary" id="btn_create_poll">Utwórz ankietę</button>
                     </div>`
                 :''}
@@ -560,8 +563,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         tabContainer.insertAdjacentHTML('beforeend', containerHtml);
 
         if (CAN_CREATE) {
+            const tSelectEl = document.querySelector('#poll_tournament_select');
+
+            ACTIVE_TOURNAMENTS.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t.id;
+                option.textContent = t.displayed_name || t.id; // Fallback to ID if name is missing
+                tSelectEl.appendChild(option);
+            });
+            tSelectEl.selectedIndex = -1;
+
+
+
             const createBtn = document.querySelector('#btn_create_poll');
-            createBtn.onclick = async () => createPoll();
+            createBtn.onclick = async () => {
+                const name = document.querySelector('#poll_name').value;
+                const tournamentId = document.querySelector('#poll_tournament_select').value;
+
+                if (!name || !tournamentId) {
+                    showErrorPopup("Wypełnij wszystkie wymagane pola: Nazwa ankiety oraz Turniej");
+                    return;
+                }
+
+                createPoll(name, tournamentId);
+            };
+            
         }
     }
 
@@ -928,35 +954,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('edit_event_end').value = '';
 
                 tournamentSelect.disabled = false;
-                tournamentSelect.innerHTML = '<option value="">Ładowanie turniejów...</option>'; // Temporary loading text
 
-                // Fetch the active tournaments for this USER
-                fetch('/api/tournaments_active')
-                    .then(res => res.json())
-                    .then(tournaments => {
-                        tournamentSelect.innerHTML = '';
-
-                        if (tournaments.error) throw new Error(tournaments.error);
-
-                        if (tournaments.length === 0) {
-                            tournamentSelect.innerHTML = '<option value="" disabled selected>Brak aktywnych turniejów</option>';
-                            btnSave.disabled = true;
-                            return;
-                        }
-
-                        btnSave.disabled = false;
-
-                        tournaments.forEach(t => {
-                            const option = document.createElement('option');
-                            option.value = t.id;
-                            option.textContent = t.displayed_name || t.id; // Fallback to ID if name is missing
-                            tournamentSelect.appendChild(option);
-                        });
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        tournamentSelect.innerHTML = '<option value="" disabled selected>Błąd ładowania</option>';
-                    });
+                ACTIVE_TOURNAMENTS.forEach(t => {
+                    const option = document.createElement('option');
+                    option.value = t.id;
+                    option.textContent = t.displayed_name || t.id; // Fallback to ID if name is missing
+                    tournamentSelect.appendChild(option);
+                });
 
             }
         }
@@ -1761,14 +1765,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    async function createPoll() {
+    async function createPoll(name, tournamentId) {
         try {
             const response = await fetch('/api/poll_create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    tournament_id: 'test2', //WIP
-                    name: 'Testowa nazwa' // WIP
+                    name: name,
+                    tournament_id: tournamentId,
                 })
             });
 
@@ -1778,7 +1782,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error(result.error || "Nie udało się utworzyć ankiety.");
             }
 
-            window.location.reload()
+            window.location = `poll?p=${result.id}`
 
         } catch (error) {
             closeAllPopups();

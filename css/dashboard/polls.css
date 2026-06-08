@@ -10,6 +10,7 @@
 #content-polls .polls_header
 {
     display: flex;
+    gap: 1rem;
     justify-content: flex-end;
     width: 100%;
 }
@@ -53,4 +54,9 @@
     width: 6rem;
     color: var(--dashboard-text-s2);
     cursor: default;
+}
+
+#content-polls .poll_tournament_select
+{
+    width: 10rem;
 }
