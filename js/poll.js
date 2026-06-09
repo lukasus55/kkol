@@ -186,10 +186,26 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } fr
                 const nameInput = document.querySelector('#poll_edit_name');
                 const startInput = document.querySelector('#poll_edit_start');
                 const endInput = document.querySelector('#poll_edit_end');
+                const levelInput = document.querySelector('#poll_edit_rights_level');
 
                 nameInput.value = POLL.name;
                 startInput.value = formatForDateTimeInput(POLL.start_date);
                 endInput.value = formatForDateTimeInput(POLL.end_date);
+                levelInput.selectedIndex = POLL.rights_level-1; // rights_level=1 === index=0 cause there's no 'Not selected default option'
+                
+
+                document.querySelector('#btn_save_poll').onclick = () => savePoll()
+                document.querySelector('#btn_delete_poll').onclick = () => deletePoll()
+
+                // TODO
+                function savePoll() {
+                    window.alert(`Save poll: ${POLL.id}`)
+                }
+
+                // TODO
+                function deletePoll() {
+                    window.alert(`Delete label: ${POLL.id}`)
+                }
             }
         }
 
