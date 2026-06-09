@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { uuidv7 } from "uuidv7";
 import { parse } from 'cookie';
 import { escapeHTML } from '../js/utils/helpers.js';
+import { getTournamentPermission } from '../js/utils/permissionChecks.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -71,36 +72,18 @@ export default async function handler(request, response) {
             return response.status(404).json({ error: "Nie możesz edytować ankiety która nie istnieje." });
         }
 
-        const tournament_id = pollCheck[0].tournament_id;
+        const tournamentId = pollCheck[0].tournament_id;
 
         // tournament validation
         const tournamentCheck = await sql`
-            SELECT finished FROM tournaments WHERE id = ${tournament_id}
+            SELECT finished FROM tournaments WHERE id = ${tournamentId}
         `;
 
         if (tournamentCheck.length === 0) {
             return response.status(400).json({ error: "Nie możesz edytować ankiety w turnieju, który nie istnieje." });
         }
 
-        // PERMISSION CHECK
-        const [globalRoleCheck, tournamentRoleCheck] = await Promise.all([
-            sql`SELECT role FROM players WHERE id = ${requesterId}`,
-            sql`SELECT role FROM tournament_organizers WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}`
-        ]);
-
-        const globalRole = globalRoleCheck.length > 0 ? globalRoleCheck[0].role : 'user';
-
-        let hasPermission = false;
-        
-        if (globalRole === 'admin') {
-            hasPermission = true;
-        } else if (tournamentRoleCheck.length > 0) {
-            const tournamentRole = tournamentRoleCheck[0].role;
-            if (['owner', 'manager'].includes(tournamentRole)) {
-                hasPermission = true;
-            }
-        }
-
+        const hasPermission = await getTournamentPermission(requesterId, tournamentId);
         if (!hasPermission) {
             return response.status(403).json({ error: "Brak uprawnień. Musisz być administratorem lub zarządcą turnieju do którego przypisana jest ta ankieta." });
         }
@@ -118,7 +101,7 @@ export default async function handler(request, response) {
         return response.status(200).json({ success: true });
 
     } catch (error) {
-        console.error("Create Event Error:", error);
+        console.error("Update Poll Error:", error);
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
             return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
         }
