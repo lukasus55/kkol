@@ -8,7 +8,7 @@ import sql from "../../db.js";
  */
 export async function hasTournamentPermission(pId, tId) {
     if (!pId || !tId) {
-        console.warn('hasTournamentPermission() params not specified!')
+        console.error('hasTournamentPermission() params not specified!')
         return;
     }
 
@@ -26,9 +26,32 @@ export async function hasTournamentPermission(pId, tId) {
     if (tournamentRoleCheck.length > 0) {
         const tournamentRole = tournamentRoleCheck[0].role;
         if (['owner', 'manager'].includes(tournamentRole)) {
+            console.log('Is owner or manager')
             return true;
         }
     }
 
     return false;
+}
+
+/**
+ * Checks if user is part of specific tournament. IMPORTANT: User being "a part of" means he is assigned to the tournament not that he has 'attended' set to true in "results" table.
+ * @param {string} pId - Player id
+ * @param {string} tId - Tournament id
+ * @returns {boolean} Is user assigned to specified tournament.
+ */
+export async function isPartOfTournament(pId, tId) {
+    if (!pId || !tId) {
+        console.error('isPartOfTournament params not specified!')
+        return;
+    }
+
+    const isPartOf = await sql`
+    SELECT EXISTS (
+        SELECT 1 
+        FROM results
+        WHERE tournament_id = ${tId} AND player_id = ${pId}
+    );`
+
+    return isPartOf.exists;
 }

@@ -157,41 +157,54 @@ async function renderPage(){
                     "Usuń",
                     "Anuluj"
                 );
+
+                /// --- FUNCTIONS ---
+                function updateLabelBadge(label) {
+                    const badgeEl = document.querySelector('#label_editor_badge');
+                    const colors = getLabelColors(label.hex);
+                    badgeEl.textContent = label.name || 'Etykieta';
+                    badgeEl.style.color = colors.textColor;
+                    badgeEl.style.borderColor = colors.textColor;
+                    badgeEl.style.backgroundColor = colors.backgroundColor;
+                }
+
+                function setPreviewLabel(key, value) {
+                    if (previewLabel[key] === undefined) return;
+
+                    previewLabel[key] = value;
+
+                    updateLabelBadge(previewLabel);
+                    document.querySelector('#label_color_rect').style.backgroundColor = previewLabel.hex;
+                    if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
+                }
+
+                // TODO
+                async function saveLabel(label) {
+                    window.alert(`Save label: ${label.name}`)
+                }
+
+                // TODO
+                async function deleteLabel(label) {
+                    window.alert(`Delete label: ${label.name}`)
+                }
+
+                async function createNewLabel() {
+                    try {
+                        const payload = {
+                            poll: POLL.id,
+                            name: nameInput.value,
+                            hex: colorInput.value,
+                            description: descInput.value
+                        };
+                        const result = await postData('/api/poll_label_create', payload, "Nie udało się utworzyć etykiety.");
+                        window.location.reload();
+
+                    } catch (error) {
+                        showErrorPopup(error.message);
+                    }
+                }
             }
 
-            function updateLabelBadge(label) {
-                const badgeEl = document.querySelector('#label_editor_badge');
-                const colors = getLabelColors(label.hex);
-                badgeEl.textContent = label.name || 'Etykieta';
-                badgeEl.style.color = colors.textColor;
-                badgeEl.style.borderColor = colors.textColor;
-                badgeEl.style.backgroundColor = colors.backgroundColor;
-            }
-
-            function setPreviewLabel(key, value) {
-                if (previewLabel[key] === undefined) return;
-
-                previewLabel[key] = value;
-
-                updateLabelBadge(previewLabel);
-                document.querySelector('#label_color_rect').style.backgroundColor = previewLabel.hex;
-                if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
-            }
-
-            // TODO
-            function saveLabel(label) {
-                window.alert(`Save label: ${label.name}`)
-            }
-
-            // TODO
-            function deleteLabel(label) {
-                window.alert(`Delete label: ${label.name}`)
-            }
-
-            // TODO
-            function createNewLabel() {
-                window.alert(`Create new label in: ${POLL.id}`);
-            }
         }
 
         async function renderSettings() {
