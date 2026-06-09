@@ -82,7 +82,7 @@ export default async function handler(request, response) {
         return response.status(200).json({ success: true, id: id });
 
     } catch (error) {
-        console.error("Create Event Error:", error);
+        console.error("Create Poll Error:", error);
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
             return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
         }
