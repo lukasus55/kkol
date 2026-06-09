@@ -347,11 +347,33 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
         });
     }
 
+    function closeTopPopup() {
+        const activePopups = Array.from(document.querySelectorAll('.popup_overlay.active')); 
+        
+        if (activePopups.length === 0) return; 
+
+        let topPopup = activePopups[0];
+        let maxZIndex = parseInt(window.getComputedStyle(topPopup).zIndex) || 0;
+
+        for (let i = 1; i < activePopups.length; i++) {
+            const currentPopup = activePopups[i];
+            const currentZIndex = parseInt(window.getComputedStyle(currentPopup).zIndex) || 0;
+            
+            // Use '>=' so that if z-indexes are equal, it picks the one later in the DOM (which visually sits on top of the earlier ones)
+            if (currentZIndex >= maxZIndex) {
+                maxZIndex = currentZIndex;
+                topPopup = currentPopup;
+            }
+        }
+
+        topPopup.classList.remove('active');
+    }
+
     // Close on Escape key press
     document.onkeydown = (event) => {
         if (event.key === 'Escape') {
             const isAnyPopupOpen = document.querySelectorAll('.popup_overlay.active').length > 0;
-            if (isAnyPopupOpen) { closeAllPopups() }
+            if (isAnyPopupOpen) { closeTopPopup() }
             else { closeAllActionMenus() };
         }
     }
@@ -363,7 +385,7 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
         const isAnyPopupOpen = document.querySelectorAll('.popup_overlay.active').length > 0;
 
         if (!isInsideMenu && !isAnyPopupOpen) { closeAllActionMenus(); }
-        if (!isInsidePopup) { closeAllPopups(); }
+        if (!isInsidePopup) { closeTopPopup(); }
     };
 
     const closeButtons = document.querySelectorAll('.poll_btn_close');
