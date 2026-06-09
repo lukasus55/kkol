@@ -150,6 +150,11 @@ main
     gap: .5rem;
 }
 
+#confirmation_popup.popup_overlay
+{
+    z-index: 500;
+}
+
 .btn_poll_popup
 {
     width: 100%;

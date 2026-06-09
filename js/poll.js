@@ -195,7 +195,12 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
                 
 
                 document.querySelector('#btn_save_poll').onclick = () => savePoll()
-                document.querySelector('#btn_delete_poll').onclick = () => deletePoll()
+                document.querySelector('#btn_delete_poll').onclick = () => showConfirmationPopup(
+                    () => deletePoll(), 
+                    `Czy na pewno chcesz usunąć ankietę <strong>${POLL.name}</strong>?`,
+                    `Usuń`,
+                    `Anuluj`
+                )
 
                 // TODO
                 async function savePoll() {
@@ -217,8 +222,18 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
                 }
 
                 // TODO
-                function deletePoll() {
-                    window.alert(`Delete label: ${POLL.id}`)
+                async function deletePoll() {
+                    try {
+                        const payload = {
+                            id: POLL.id,
+                        };
+                        const result = await postData('/api/poll_delete', payload, "Nie udało się usunąć ankiety.");
+                        window.location = '/dashboard?tab=polls';
+
+                    } catch (error) {
+                        showErrorPopup(error.message);
+                        console.error("Poll deletion failed:", error);
+                    }
                 }
             }
         }

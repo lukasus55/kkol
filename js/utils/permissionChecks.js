@@ -1,7 +1,16 @@
 import sql from "../../db.js";
 
+/**
+ * Checks if user has permission to edit specific tournament.
+ * @param {string} pId - Player id
+ * @param {string} tId - Tournament id
+ * @returns {boolean} Do user have permission to modify specified tournament.
+ */
 export async function getTournamentPermission(pId, tId) {
-    if (!pId || !tId) return false; 
+    if (!pId || !tId) {
+        console.warn('getTournamentPermission() params not specified!')
+        return;
+    }
 
     const [globalRoleCheck, tournamentRoleCheck] = await Promise.all([
         sql`SELECT role FROM players WHERE id = ${pId}`,
