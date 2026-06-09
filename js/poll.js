@@ -1,4 +1,4 @@
-import { formatRelativeTimePL } from "./utils/formatDate.js";
+import { formatForDateTimeInput, formatRelativeTimePL } from "./utils/formatDate.js";
 import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } from "./utils/helpers.js";
 
 (async () => {
@@ -43,138 +43,159 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } fr
 
         document.querySelector('#poll_name').textContent = POLL.name;
 
-        const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
-        const labelsListEl = document.querySelector('#poll_labels_list');
-        const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
+        function renderLabels() {
+            const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
+            const labelsListEl = document.querySelector('#poll_labels_list');
+            const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
 
-        labelsListToggleBtn.onclick = () => {
-            labelsListToggleBtn.classList.toggle('btn_active');
-            labelsListContainerEl.classList.toggle('hidden');
-            adjustModalPosition(labelsListContainerEl);
-        }
-
-        let labelsHtml = ''
-        if (LABELS.length === 0) {
-            labelsHtml = '<div class="labels_empty">Nie ma jeszcze żadnych etykiet</div>'
-        } else {
-            LABELS.forEach((label) => {
-                const questionWithLabel = 12; // TODO: add counter of question with this label
-                labelsHtml += `
-                    <div class="labels_list_label" data-id="${label.id}">
-                        <div class="labels_list_label_hex">
-                            <div class="labels_list_label_hex_dot" style="background-color: ${label.hex};"></div>
-                        </div>
-                        <div class="labels_list_label_title">
-                            <div class="labels_list_label_name">${label.name}</div>
-                            <div class="labels_list_label_description">${label.description}</div>
-                        </div>
-                        <div class="labels_list_label_counter">
-                            ${questionWithLabel}
-                        </div>
-                    </div>
-                `
-            })
-        }
-
-
-        labelsListEl.insertAdjacentHTML('beforeend', labelsHtml);
-
-        const labelBtns = document.querySelectorAll('.labels_list_label')
-        labelBtns.forEach((btn) => {
-            const labelId = btn.getAttribute('data-id');
-            const label = LABELS.find(l => l.id === labelId);
-            btn.onclick = () => showLabelEditor(label);
-        })
-
-        const newLabel = { name: "", hex: getRandomHex(), description: "" };
-        let previewLabel = { id: "0", name: "Etykieta", hex: "#ffffff", description: ""}
-        document.querySelector('#poll_labels_list_new').onclick = () => showLabelEditor(newLabel, true)
-
-        function showLabelEditor(label, isCreateMode=false) {
-
-            // --- Initialize ---
-            if (!label) {
-                // TODO: Error popup
-                console.error('Label not found');
-                return;
+            labelsListToggleBtn.onclick = () => {
+                labelsListToggleBtn.classList.toggle('btn_active');
+                labelsListContainerEl.classList.toggle('hidden');
+                adjustModalPosition(labelsListContainerEl);
             }
-            previewLabel = label;
 
-            document.querySelector('#popup_label_editor').classList.add('active');
+            let labelsHtml = ''
+            if (LABELS.length === 0) {
+                labelsHtml = '<div class="labels_empty">Nie ma jeszcze żadnych etykiet</div>'
+            } else {
+                LABELS.forEach((label) => {
+                    const questionWithLabel = 12; // TODO: add counter of question with this label
+                    labelsHtml += `
+                        <div class="labels_list_label" data-id="${label.id}">
+                            <div class="labels_list_label_hex">
+                                <div class="labels_list_label_hex_dot" style="background-color: ${label.hex};"></div>
+                            </div>
+                            <div class="labels_list_label_title">
+                                <div class="labels_list_label_name">${label.name}</div>
+                                <div class="labels_list_label_description">${label.description || ``}</div>
+                            </div>
+                            <div class="labels_list_label_counter">
+                                ${questionWithLabel}
+                            </div>
+                        </div>
+                    `
+                })
+            }
 
-            /// --- Header ---
-            document.querySelector('#label_editor_title').textContent = isCreateMode ? 'Utwórz etykietę' : 'Edytuj etykietę';
+            labelsListEl.insertAdjacentHTML('beforeend', labelsHtml);
 
-            /// --- Main ---
-            const nameInput = document.querySelector('#label_edit_name');
-            const descInput = document.querySelector('#label_edit_desc');
-            const colorInput = document.querySelector('#label_edit_color');
+            const labelBtns = document.querySelectorAll('.labels_list_label')
+            labelBtns.forEach((btn) => {
+                const labelId = btn.getAttribute('data-id');
+                const label = LABELS.find(l => l.id === labelId);
+                btn.onclick = () => showLabelEditor(label);
+            })
 
-            nameInput.value = label.name;
-            descInput.value = label.description;
-            colorInput.value = label.hex;
-            nameInput.oninput = () => setPreviewLabel('name', nameInput.value);
-            descInput.oninput = () => {previewLabel.description = descInput.value}; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
-            colorInput.oninput = () => setPreviewLabel('hex', formatHex(colorInput.value));
+            const newLabel = { name: "", hex: getRandomHex(), description: "" };
+            let previewLabel = { id: "0", name: "Etykieta", hex: "#ffffff", description: ""}
+            document.querySelector('#poll_labels_list_new').onclick = () => showLabelEditor(newLabel, true)
 
-            updateLabelBadge(label);
+            function showLabelEditor(label, isCreateMode=false) {
 
-            const labelColorEl = document.querySelector('#label_color_rect');
-            labelColorEl.style.backgroundColor = label.hex;
-            labelColorEl.onclick = () => {
-                setPreviewLabel('hex', getRandomHex());
-                document.querySelector('#label_edit_color').value = previewLabel.hex;
-            };
+                // --- Initialize ---
+                if (!label) {
+                    // TODO: Error popup
+                    console.error('Label not found');
+                    return;
+                }
+                previewLabel = label;
 
-            // --- Footer ---
-            const saveBtn = document.querySelector('#btn_save_label');
-            const deleteBtn = document.querySelector('#btn_delete_label');
+                document.querySelector('#popup_label_editor').classList.add('active');
 
-            saveBtn.textContent = isCreateMode ? 'Utwórz' : 'Zapisz';
-            deleteBtn.style.display = isCreateMode ? 'none' : 'block';
+                /// --- Header ---
+                document.querySelector('#label_editor_title').textContent = isCreateMode ? 'Utwórz etykietę' : 'Edytuj etykietę';
 
-            saveBtn.onclick = () => isCreateMode ? createNewLabel() : saveLabel(previewLabel);
-            deleteBtn.onclick = () => showConfirmationPopup(
-                () => deleteLabel(previewLabel), 
-                `Czy na pewno chcesz trwale usunąć etykietę <strong>${previewLabel.name}</strong>?`,
-                "Usuń",
-                "Anuluj"
-            );
+                /// --- Main ---
+                const nameInput = document.querySelector('#label_edit_name');
+                const descInput = document.querySelector('#label_edit_desc');
+                const colorInput = document.querySelector('#label_edit_color');
+
+                nameInput.value = label.name;
+                descInput.value = label.description;
+                colorInput.value = label.hex;
+                nameInput.oninput = () => setPreviewLabel('name', nameInput.value);
+                descInput.oninput = () => {previewLabel.description = descInput.value}; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
+                colorInput.oninput = () => setPreviewLabel('hex', formatHex(colorInput.value));
+
+                updateLabelBadge(label);
+
+                const labelColorEl = document.querySelector('#label_color_rect');
+                labelColorEl.style.backgroundColor = label.hex;
+                labelColorEl.onclick = () => {
+                    setPreviewLabel('hex', getRandomHex());
+                    document.querySelector('#label_edit_color').value = previewLabel.hex;
+                };
+
+                // --- Footer ---
+                const saveBtn = document.querySelector('#btn_save_label');
+                const deleteBtn = document.querySelector('#btn_delete_label');
+
+                saveBtn.textContent = isCreateMode ? 'Utwórz' : 'Zapisz';
+                deleteBtn.style.display = isCreateMode ? 'none' : 'block';
+
+                saveBtn.onclick = () => isCreateMode ? createNewLabel() : saveLabel(previewLabel);
+                deleteBtn.onclick = () => showConfirmationPopup(
+                    () => deleteLabel(previewLabel), 
+                    `Czy na pewno chcesz trwale usunąć etykietę <strong>${previewLabel.name}</strong>?`,
+                    "Usuń",
+                    "Anuluj"
+                );
+            }
+
+            function updateLabelBadge(label) {
+                const badgeEl = document.querySelector('#label_editor_badge');
+                const colors = getLabelColors(label.hex);
+                badgeEl.textContent = label.name || 'Etykieta';
+                badgeEl.style.color = colors.textColor;
+                badgeEl.style.borderColor = colors.textColor;
+                badgeEl.style.backgroundColor = colors.backgroundColor;
+            }
+
+            function setPreviewLabel(key, value) {
+                if (previewLabel[key] === undefined) return;
+
+                previewLabel[key] = value;
+
+                updateLabelBadge(previewLabel);
+                document.querySelector('#label_color_rect').style.backgroundColor = previewLabel.hex;
+                if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
+            }
+
+            // TODO
+            function saveLabel(label) {
+                window.alert(`Save label: ${label.name}`)
+            }
+
+            // TODO
+            function deleteLabel(label) {
+                window.alert(`Delete label: ${label.name}`)
+            }
+
+            // TODO
+            function createNewLabel() {
+                window.alert(`Create new label in: ${POLL.id}`);
+            }
         }
 
-        function updateLabelBadge(label) {
-            const badgeEl = document.querySelector('#label_editor_badge');
-            const colors = getLabelColors(label.hex);
-            badgeEl.textContent = label.name || 'Etykieta';
-            badgeEl.style.color = colors.textColor;
-            badgeEl.style.borderColor = colors.textColor;
-            badgeEl.style.backgroundColor = colors.backgroundColor;
+        function renderSettings() {
+            document.querySelector('#btn_poll_settings').onclick = () => showSettingsPopup();
+
+            function showSettingsPopup() {
+                document.querySelector('#popup_settings').classList.add('active');
+
+                const nameInput = document.querySelector('#poll_edit_name');
+                const startInput = document.querySelector('#poll_edit_start');
+                const endInput = document.querySelector('#poll_edit_end');
+
+                nameInput.value = POLL.name;
+                startInput.value = formatForDateTimeInput(POLL.start_date);
+                endInput.value = formatForDateTimeInput(POLL.end_date);
+            }
         }
 
-        function setPreviewLabel(key, value) {
-            if (previewLabel[key] === undefined) return;
+        renderLabels();
+        renderSettings();
 
-            previewLabel[key] = value;
-
-            updateLabelBadge(previewLabel);
-            document.querySelector('#label_color_rect').style.backgroundColor = previewLabel.hex;
-            if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
-        }
-
-        // TODO
-        function saveLabel(label) {
-            window.alert(`Save label: ${label.name}`)
-        }
-
-        // TODO
-        function deleteLabel(label) {
-            window.alert(`Delete label: ${label.name}`)
-        }
-
-        // TODO
-        function createNewLabel() {
-            window.alert(`Create new label in: ${POLL.id}`);
-        }
     }
 
 

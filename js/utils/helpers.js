@@ -106,21 +106,6 @@ export function getPfpSrc(base64) {
     }
 }
 
-// format dates for HTML inputs (YYYY-MM-DDTHH:MM)
-export function formatForDateTimeInput(input) {
-    if (!input) return '';
-
-    const dateObj = typeof input === 'string' ? new Date(input) : input;
-
-    if (!(dateObj instanceof Date) || isNaN(dateObj)) return '';
-
-    // Adjusts for local timezone offset before slicing
-    const tzOffset = dateObj.getTimezoneOffset() * 60000;
-    const localISOTime = (new Date(dateObj - tzOffset)).toISOString().slice(0, 16);
-    
-    return localISOTime;
-}
-
 export function getParamsUrl(params) {
     let url = '';
     for (const [key, value] of params){
