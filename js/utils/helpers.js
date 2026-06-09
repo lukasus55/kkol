@@ -13,9 +13,14 @@ export async function loadHtml(url)
     return html;
 }
 
-// Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
-// Use "container.removeChild(loadingContainer);" after fetch
-// Container Modes: deafult, global
+/**
+ * Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
+ * or add <div class="loader loader-global" id="loader-global"><div class="loader_spinner"></div></div> on top of html if spinner is meant to act as a page loader.
+ * Use "container.removeChild(loadingContainer);" after fetch
+ * @param {HTMLDivElement} container 
+ * @param {string} containerMode - deafult or global
+ * @returns {HTMLDivElement} loading element
+ */
 export function appendLoaderDiv(container, containerMode='default') 
 {
     const loadingContainer = document.createElement('div');

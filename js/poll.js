@@ -1,8 +1,10 @@
 import { formatForDateTimeInput, formatRelativeTimePL } from "./utils/formatDate.js";
-import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requireAuth } from "./utils/helpers.js";
+import { adjustModalPosition, appendLoaderDiv, debounce, getParamsUrl, loadData, postData, requireAuth } from "./utils/helpers.js";
 
-(async () => {
+const CONTAINER = document.querySelector('#poll');
+const loadingContainer = document.querySelector('#loader-global');
 
+async function renderPage(){
     // Handling params
     const params = new URLSearchParams(window.location.search);
     const paramsUrl = getParamsUrl(params);
@@ -23,11 +25,11 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
         return;
     }
 
-    const POLL = pollData[0]
-
+    const POLL = pollData[0];
+    
     if (!POLL) {
         console.error(`Błąd przy ładowaniu ankiety: ${pollData.error || `Nieznany błąd.`}`)
-        document.querySelector('#poll').innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
+        CONTAINER.innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
         return;
     }
 
@@ -58,7 +60,7 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
 
         document.querySelector('#poll_name').textContent = POLL.name;
 
-        function renderLabels() {
+        async function renderLabels() {
             const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
             const labelsListEl = document.querySelector('#poll_labels_list');
             const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
@@ -192,7 +194,7 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
             }
         }
 
-        function renderSettings() {
+        async function renderSettings() {
             document.querySelector('#btn_poll_settings').onclick = () => showSettingsPopup();
 
             function showSettingsPopup() {
@@ -255,7 +257,6 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
 
         renderLabels();
         renderSettings();
-
     }
 
 
@@ -451,7 +452,8 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
 
     window.addEventListener('resize', handleMenuResize);
 
-
     renderHeader();
+}
 
-})()
+await renderPage();
+CONTAINER.removeChild(loadingContainer);
