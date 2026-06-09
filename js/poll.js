@@ -197,7 +197,17 @@ async function renderPage(){
 
                 // TODO
                 async function deleteLabel(label) {
-                    window.alert(`Delete label: ${label.name}`)
+                    try {
+                        const payload = {
+                            id: label.id,
+                        };
+                        const result = await postData('/api/poll_label_delete', payload, "Nie udało się usunąć etykiety.");
+                        window.location.reload();
+
+                    } catch (error) {
+                        showErrorPopup(error.message);
+                        console.error("Label deletion failed:", error);
+                    }
                 }
 
                 async function createNewLabel() {
