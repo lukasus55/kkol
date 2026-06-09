@@ -178,9 +178,21 @@ async function renderPage(){
                     if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
                 }
 
-                // TODO
                 async function saveLabel(label) {
-                    window.alert(`Save label: ${label.name}`)
+                    try {
+                        const payload = {
+                            id: label.id,
+                            name: nameInput.value,
+                            hex: colorInput.value,
+                            description: descInput.value
+                        };
+                        const result = await postData('/api/poll_label_update', payload, "Nie udało się edytować etykiety.");
+                        window.location.reload();
+
+                    } catch (error) {
+                        showErrorPopup(error.message);
+                        console.error("Label creation failed:", error);
+                    }
                 }
 
                 // TODO
@@ -201,6 +213,7 @@ async function renderPage(){
 
                     } catch (error) {
                         showErrorPopup(error.message);
+                        console.error("Label creation failed:", error);
                     }
                 }
             }
