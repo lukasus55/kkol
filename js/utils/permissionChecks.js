@@ -6,9 +6,9 @@ import sql from "../../db.js";
  * @param {string} tId - Tournament id
  * @returns {boolean} Do user have permission to modify specified tournament.
  */
-export async function getTournamentPermission(pId, tId) {
+export async function hasTournamentPermission(pId, tId) {
     if (!pId || !tId) {
-        console.warn('getTournamentPermission() params not specified!')
+        console.warn('hasTournamentPermission() params not specified!')
         return;
     }
 
