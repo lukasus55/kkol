@@ -45,12 +45,13 @@ export async function isPartOfTournament(pId, tId) {
         return;
     }
 
-    const isPartOf = await sql`
+    const result = await sql`
     SELECT EXISTS (
         SELECT 1 
         FROM results
         WHERE tournament_id = ${tId} AND player_id = ${pId}
     );`
 
-    return isPartOf.exists;
+    const isPartOf = result[0].exists;
+    return isPartOf;
 }
