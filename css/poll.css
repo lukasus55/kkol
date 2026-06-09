@@ -340,3 +340,14 @@ main
 {
     width: 100%;
 }
+
+.labels_empty
+{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: .75rem;
+    color: var(--dashboard-text-s2);
+}

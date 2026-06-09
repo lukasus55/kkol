@@ -15,14 +15,11 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } fr
     }
 
     // Fetching data
-    const pollData = await loadData(`/api/polls?id=${pid}`)
+    const [pollData, LABELS] = await Promise.all([
+        loadData(`/api/polls?id=${pid}`),
+        loadData(`/api/poll_labels?poll=${pid}`)
+    ])
     const POLL = pollData[0]
-
-    // Placeholder labels
-    const LABELS = [
-        { id: "423", name: "Planszówka", hex: "#f7ff80", description: "Gra planszowa itp." },
-        { id: "519", name: "Gra wideo", hex: "#84ff80", description: "Fajna gierka i takie tam." }
-    ]
 
     // Authenticate user
     const userAuthenticated = await requireAuth(pageUrl);
@@ -57,23 +54,28 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } fr
         }
 
         let labelsHtml = ''
-        LABELS.forEach((label) => {
-            const questionWithLabel = 12; // TODO: add counter of question with this label
-            labelsHtml += `
-                <div class="labels_list_label" data-id="${label.id}">
-                    <div class="labels_list_label_hex">
-                        <div class="labels_list_label_hex_dot" style="background-color: ${label.hex};"></div>
+        if (LABELS.length === 0) {
+            labelsHtml = '<div class="labels_empty">Nie ma jeszcze żadnych etykiet</div>'
+        } else {
+            LABELS.forEach((label) => {
+                const questionWithLabel = 12; // TODO: add counter of question with this label
+                labelsHtml += `
+                    <div class="labels_list_label" data-id="${label.id}">
+                        <div class="labels_list_label_hex">
+                            <div class="labels_list_label_hex_dot" style="background-color: ${label.hex};"></div>
+                        </div>
+                        <div class="labels_list_label_title">
+                            <div class="labels_list_label_name">${label.name}</div>
+                            <div class="labels_list_label_description">${label.description}</div>
+                        </div>
+                        <div class="labels_list_label_counter">
+                            ${questionWithLabel}
+                        </div>
                     </div>
-                    <div class="labels_list_label_title">
-                        <div class="labels_list_label_name">${label.name}</div>
-                        <div class="labels_list_label_description">${label.description}</div>
-                    </div>
-                    <div class="labels_list_label_counter">
-                        ${questionWithLabel}
-                    </div>
-                </div>
-            `
-        })
+                `
+            })
+        }
+
 
         labelsListEl.insertAdjacentHTML('beforeend', labelsHtml);
 
