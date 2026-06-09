@@ -13,9 +13,14 @@ export async function loadHtml(url)
     return html;
 }
 
-// Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
-// Use "container.removeChild(loadingContainer);" after fetch
-// Container Modes: deafult, global
+/**
+ * Use "const loadingContainer = appendLoaderDiv(container, optionalId);" before fetch
+ * or add <div class="loader loader-global" id="loader-global"><div class="loader_spinner"></div></div> on top of html if spinner is meant to act as a page loader.
+ * Use "container.removeChild(loadingContainer);" after fetch
+ * @param {HTMLDivElement} container 
+ * @param {string} containerMode - deafult or global
+ * @returns {HTMLDivElement} loading element
+ */
 export function appendLoaderDiv(container, containerMode='default') 
 {
     const loadingContainer = document.createElement('div');
@@ -106,21 +111,6 @@ export function getPfpSrc(base64) {
     }
 }
 
-// format dates for HTML inputs (YYYY-MM-DDTHH:MM)
-export function formatForDateTimeInput(input) {
-    if (!input) return '';
-
-    const dateObj = typeof input === 'string' ? new Date(input) : input;
-
-    if (!(dateObj instanceof Date) || isNaN(dateObj)) return '';
-
-    // Adjusts for local timezone offset before slicing
-    const tzOffset = dateObj.getTimezoneOffset() * 60000;
-    const localISOTime = (new Date(dateObj - tzOffset)).toISOString().slice(0, 16);
-    
-    return localISOTime;
-}
-
 export function getParamsUrl(params) {
     let url = '';
     for (const [key, value] of params){
@@ -162,4 +152,41 @@ export function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
+}
+
+/**
+ * Utility function to make a JSON POST request.
+ * @param {string} url - The endpoint URL to send the request to.
+ * @param {Object} payload - The data to be stringified and sent in the body.
+ * @param {string} [defaultErrorMsg="Wystąpił błąd podczas żądania."] - Fallback error message.
+ * @returns {Promise<Object>} The parsed JSON response.
+ */
+export async function postData(url, payload, defaultErrorMsg = "Wystąpił błąd podczas żądania.") {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.error) {
+            throw new Error(result.error || defaultErrorMsg);
+        }
+
+        return result;
+
+    } catch (error) {
+        // Re-throw the error in case the caller needs to run additional failure logic
+        throw error;
+    }
+}
+
+export function isUUIDv7(value) {
+    if (typeof value !== 'string') return false;
+    const uuid7Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuid7Regex.test(value);
 }

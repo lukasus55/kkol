@@ -16,23 +16,24 @@
 <body>
 
     <main>
-        <div class="poll">
+        <div class="poll" id="poll">
+            <div class="loader loader-global" id="loader-global"><div class="loader_spinner"></div></div>
 
             <div class="poll_header">
                 <div class="poll_header_row">
-                    <div class="poll_name">Poll Name</div>
+                    <div class="poll_name" id="poll_name">Poll Name</div>
                     <div class="poll_buttons">
+                        <button class="btn_secondary" id="btn_poll_settings"><img src="img/polls/settings.svg"> Ustawienia</button>
                         <div class="poll_labels_list_section">
                             <button class="btn_secondary btn_menu_toggler" id="btn_toggle_labels_menu"><img src="img/polls/label.svg"> Etykiety</button>
                             <div class="poll_labels_list_container poll_action_menu hidden" id="poll_labels_list_container">
                                 <div class="poll_labels_list" id="poll_labels_list">
                                     <!-- renderHeader() inserts here -->
                                 </div>
-                                <div class="poll_labels_list_new" id="poll_labels_list_new"> <img src="/img/polls/plusWhite.svg"> Stwórz nową</div>
+                                <div class="poll_labels_list_new" id="poll_labels_list_new"> <img src="/img/polls/plusWhite.svg"> Utwórz etykietę</div>
                             </div>
-
                         </div>
-                        <button class="btn_primary" id="btn_new_question"><img src="img/polls/plus.svg"> Dodaj</button>
+                        <button class="btn_primary" id="btn_new_question"><img src="img/polls/plus.svg"> Utwórz pytanie</button>
                     </div>
                 </div>
                 <div class="poll_header_row">
@@ -48,36 +49,13 @@
         </div>
     </main>
 
-    <div class="popup_overlay" id="popup_label_editor">
-        <div class="popup_container poll_popup">
-            <div class="label_editor" id="label_editor">
-                <div class="label_editor_header">
-                    <span id="label_editor_title">Edytuj etykietę</span>
-                    <button class="poll_btn_close poll_btn_x"><img src="/img/polls/close.svg"></button>
-                </div>
-                <div class="label_editor_main">
-                    <div class="label_editor_badge_container">
-                        <div class="label_editor_badge" id="label_editor_badge">prio</div>
-                    </div>
-                    <div class="label_editor_form">
-                        <label>Nazwa</label>
-                        <input autocomplete="off" type="text" id="label_edit_name" placeholder="Nazwa etykiety" class="poll_input">
-                        <label>Opis</label>
-                        <textarea id="label_edit_desc"  placeholder="Opcjonalnie dodaj opis etykiety" class="poll_input poll_input_tall"></textarea>
-                        <label>Kolor</label>
-                        <div class="label_edit_color_section">
-                            <button class="label_color_rect" id="label_color_rect"><img src='/img/polls/refresh.svg'></button>
-                            <input autocomplete="off" type="text" id="label_edit_color" class="poll_input poll_input_narrow">
-                        </div>
-                    </div>
-                </div>
-                <div class="label_editor_footer">
-                    <button id="btn_delete_label" class="btn_delete btn_label_editor">Usuń</button>
-                    <div class="label_editor_footer_row">
-                        <button class="poll_btn_close btn_cancel btn_tertiary btn_label_editor">Anuluj</button>
-                        <button id="btn_save_label" class="btn_primary btn_label_editor">Zapisz</button>
-                    </div>
-                </div>
+    <div class="popup_overlay" id="error_popup">
+        <div class="popup_container">
+            <div class="popup_body">
+                <p id="error_message">Wystąpił błąd.</p>
+            </div>
+            <div class="popup_footer">
+                <button class="btn btn_cancel" id="error_close_btn">Zamknij</button>
             </div>
         </div>
     </div>
@@ -96,6 +74,79 @@
             <div class="popup_footer">
                 <button class="btn btn_cancel poll_btn_close" id="confirmation_popup_cancel">Anuluj</button>
                 <button class="btn btn_confirm" id="confirmation_popup_confirm">Potwierdź</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup_overlay" id="popup_label_editor">
+        <div class="popup_container poll_popup">
+            <div class="poll_popup_content" id="label_editor">
+                <div class="poll_popup_header">
+                    <span id="label_editor_title">Edytuj etykietę</span>
+                    <button class="poll_btn_close poll_btn_x"><img src="/img/polls/close.svg"></button>
+                </div>
+                <div class="poll_popup_main">
+                    <div class="label_editor_badge_container">
+                        <div class="label_editor_badge" id="label_editor_badge">prio</div>
+                    </div>
+                    <div class="poll_popup_form">
+                        <label>Nazwa</label>
+                        <input autocomplete="off" type="text" id="label_edit_name" placeholder="Nazwa etykiety" class="poll_input">
+
+                        <label>Opis</label>
+                        <textarea id="label_edit_desc"  placeholder="Opcjonalnie dodaj opis etykiety" class="poll_input poll_input_tall"></textarea>
+
+                        <label>Kolor</label>
+                        <div class="label_edit_color_section">
+                            <button class="label_color_rect" id="label_color_rect"><img src='/img/polls/refresh.svg'></button>
+                            <input autocomplete="off" type="text" id="label_edit_color" class="poll_input poll_input_narrow">
+                        </div>
+                    </div>
+                </div>
+                <div class="poll_popup_footer">
+                    <button id="btn_delete_label" class="btn_delete btn_poll_popup">Usuń etykietę</button>
+                    <div class="poll_popup_footer_row">
+                        <button class="poll_btn_close btn_cancel btn_tertiary btn_poll_popup">Anuluj</button>
+                        <button id="btn_save_label" class="btn_primary btn_poll_popup">Zapisz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup_overlay" id="popup_settings">
+        <div class="popup_container poll_popup">
+            <div class="poll_popup_content" id="label_editor">
+                <div class="poll_popup_header">
+                    <span id="poll_popup_header">Edytuj ankietę</span>
+                    <button class="poll_btn_close poll_btn_x"><img src="/img/polls/close.svg"></button>
+                </div>
+            </div>
+            <div class="poll_popup_main">
+                <div class="poll_popup_form">
+                    <label>Nazwa</label>
+                    <input autocomplete="off" type="text" id="poll_edit_name" placeholder="Nazwa etykiety" class="poll_input">
+
+                    <label>Początek:</label>
+                    <input type="datetime-local" id="poll_edit_start" class="poll_input">
+                    
+                    <label>Koniec:</label>
+                    <input type="datetime-local" id="poll_edit_end" class="poll_input">
+
+                    <label>Uczestnicy mogą:</label>
+                    <select class="poll_input" id="poll_edit_rights_level">
+                        <option value="1">I - odpowiadać na pytania</option>
+                        <option value="2">II - zarządzać pytaniami</option>
+                        <option value="3">III - zarządzać pytaniami i etykietami</option>
+                    </select>
+                </div>
+            </div>
+            <div class="poll_popup_footer">
+                <button id="btn_delete_poll" class="btn_delete btn_poll_popup">Usuń ankietę</button>
+                <div class="poll_popup_footer_row">
+                    <button class="poll_btn_close btn_cancel btn_tertiary btn_poll_popup">Anuluj</button>
+                    <button id="btn_save_poll" class="btn_primary btn_poll_popup">Zapisz</button>
+                </div>
             </div>
         </div>
     </div>
