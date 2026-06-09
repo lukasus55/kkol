@@ -1,4 +1,5 @@
 import sql from '../db.js';
+import { isUUIDv7 } from '../js/utils/helpers.js';
 
 export default async function handler(request, response) {
     try {
@@ -8,7 +9,10 @@ export default async function handler(request, response) {
 
         let polls;
 
-        if (id) {polls = await sql`SELECT * FROM "polls" WHERE id = ${id} ${orderClause} LIMIT ${actualLimit}`;}
+        if (id) {
+            if (!isUUIDv7(id)) {return response.status(400).json({ error: "Id ankiety musi być typu uuidv7" });}
+            polls = await sql`SELECT * FROM "polls" WHERE id = ${id} ${orderClause} LIMIT ${actualLimit}`;
+        }
         else if (tournament) {polls = await sql`SELECT * FROM "polls" WHERE tournament_id = ${tournament} ${orderClause} LIMIT ${actualLimit}`;}
         else if (player) {polls = await sql`
                 SELECT p.id, p.create_default_options, p.name, p.end_date, p.rights_level, p.start_date, p.tournament_id, r.player_id

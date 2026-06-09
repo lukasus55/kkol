@@ -179,3 +179,9 @@ export async function postData(url, payload, defaultErrorMsg = "Wystąpił błą
         throw error;
     }
 }
+
+export function isUUIDv7(value) {
+    if (typeof value !== 'string') return false;
+    const uuid7Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuid7Regex.test(value);
+}

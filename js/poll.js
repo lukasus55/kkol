@@ -14,12 +14,27 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
         return;
     }
 
-    // Fetching data
-    const [pollData, LABELS] = await Promise.all([
-        loadData(`/api/polls?id=${pid}`),
+    // Verifying if poll exists
+    const pollData = await loadData(`/api/polls?id=${pid}`);
+
+    if (!pollData || pollData.length===0) {
+        console.warn(`Ankieta nie istnieje.`);
+        document.querySelector('#poll').innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
+        return;
+    }
+
+    const POLL = pollData[0]
+
+    if (!POLL) {
+        console.error(`Błąd przy ładowaniu ankiety: ${pollData.error || `Nieznany błąd.`}`)
+        document.querySelector('#poll').innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
+        return;
+    }
+
+    // Fetching detailed data
+    const [LABELS] = await Promise.all([
         loadData(`/api/poll_labels?poll=${pid}`)
     ])
-    const POLL = pollData[0]
 
     // Authenticate user
     const userAuthenticated = await requireAuth(pageUrl);

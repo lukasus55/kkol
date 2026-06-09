@@ -31,7 +31,6 @@ main
     height: .9rem;
 }
 
-
 .poll_input
 {
     background-color: var(--dashboard-background-s2);
@@ -158,6 +157,13 @@ main
 .btn_poll_popup
 {
     width: 100%;
+}
+
+.poll_not_found
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .poll_header
