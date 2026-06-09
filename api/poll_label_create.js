@@ -36,7 +36,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Nazwa etykiety może mieć maksymalnie 30 znaków." });
         }
 
-        const clean_description = escapeHTML(name);
+        const clean_description = escapeHTML(description);
         
         if (clean_description.trim().length > 500) {
             return response.status(400).json({ error: "Opis etykiety może mieć maksymalnie 500 znaków." });
@@ -54,7 +54,7 @@ export default async function handler(request, response) {
         const tournamentId = pollCheck[0].tournament_id;
         const rightsLevel = pollCheck[0].rights_level;
 
-        const allowedByRules =  rightsLevel >= 3 && await isPartOfTournament(requesterId, tournamentId); // Rights level 3 or higher allows everyone who attended tournmanet to edit labels
+        const allowedByRules = rightsLevel >= 3 && await isPartOfTournament(requesterId, tournamentId); // Rights level 3 or higher allows everyone who attended tournmanet to edit labels
 
         const hasPermission = allowedByRules || await hasTournamentPermission(requesterId, tournamentId)
         if (!hasPermission) {
@@ -64,16 +64,16 @@ export default async function handler(request, response) {
         // EXECUTE
         const result = await sql`
             INSERT INTO poll_labels (poll_id, name, hex, description)
-            VALUES (${poll}, ${clean_name}, ${hex}, ${description || null})
+            VALUES (${poll}, ${clean_name}, ${hex}, ${clean_description || null})
         `;
 
         return response.status(200).json({ success: true });
 
     } catch (error) {
-        console.error("Create Poll Error:", error);
+        console.error("Create Label Error:", error);
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
             return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
         }
-        return response.status(500).json({ error: "Wystąpił błąd podczas tworzenia wydarzenia." });
+        return response.status(500).json({ error: "Wystąpił błąd podczas tworzenia etykiety." });
     }
 }

@@ -26,7 +26,6 @@ export async function hasTournamentPermission(pId, tId) {
     if (tournamentRoleCheck.length > 0) {
         const tournamentRole = tournamentRoleCheck[0].role;
         if (['owner', 'manager'].includes(tournamentRole)) {
-            console.log('Is owner or manager')
             return true;
         }
     }
