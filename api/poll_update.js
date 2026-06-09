@@ -19,9 +19,9 @@ export default async function handler(request, response) {
         const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
         const requesterId = decodedPayload.id;
 
-        const {poll, name, start_date, end_date, rights_level} = request.body;
+        const {id, name, start_date, end_date, rights_level} = request.body;
 
-        if (!poll || !name || !start_date || !end_date || !rights_level) {
+        if (!id || !name || !start_date || !end_date || !rights_level) {
             return response.status(400).json({ error: "Brakujące dane." });
         }
 
@@ -64,7 +64,7 @@ export default async function handler(request, response) {
 
         // poll validation
         const pollCheck = await sql`
-            SELECT tournament_id FROM polls WHERE id = ${poll}
+            SELECT tournament_id FROM polls WHERE id = ${id}
         `;
         
         if (pollCheck.length === 0) {
@@ -112,7 +112,7 @@ export default async function handler(request, response) {
                 rights_level = ${rights_level}, 
                 start_date = ${start_date},
                 end_date = ${end_date}
-            WHERE id = ${poll}
+            WHERE id = ${id}
         `;
 
         return response.status(200).json({ success: true });

@@ -201,7 +201,7 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requir
                 async function savePoll() {
                     try {
                         const payload = {
-                            poll: POLL.id,
+                            id: POLL.id,
                             name: nameInput.value,
                             start_date: startInput.value,
                             end_date: endInput.value,
