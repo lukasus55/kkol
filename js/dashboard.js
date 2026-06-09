@@ -1,4 +1,5 @@
-import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, formatForDateTimeInput, getParamsUrl } from "./utils/helpers.js";
+import { createLogoutButton, loadData, requireAuth, appendLoaderDiv, capitalizeFirstLetter, getPfpSrc, getParamsUrl } from "./utils/helpers.js";
+import { formatForDateTimeInput } from "./utils/formatDate.js";
 import { initPlayerSearchBar } from "./playerSearchBar.js";
 import { passwordRequirementsNames, validatePassword } from "./utils/validatePassword.js";
 import { formatRelativeTimePL } from "./utils/formatDate.js";

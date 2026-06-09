@@ -668,6 +668,11 @@ input:focus
     box-shadow: 0 0 0 2px rgba(114, 176, 29, 0.2);
 }
 
+#error_popup
+{
+    z-index: 1000;
+}
+
 
 @media (max-width:768px)
 {
