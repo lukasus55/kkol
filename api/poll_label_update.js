@@ -65,7 +65,7 @@ export default async function handler(request, response) {
         const tournamentId = pollCheck[0].tournament_id;
         const rightsLevel = pollCheck[0].rights_level;
 
-        const allowedByRules =  rightsLevel >= 3 && await isPartOfTournament(requesterId, tournamentId); // Rights level 3 or higher allows everyone who attended tournmanet to edit labels
+        const allowedByRules =  rightsLevel >= 3 && await isPartOfTournament(requesterId, tournamentId); // Rights level 3 or higher allows everyone who is a part of tournmanet to edit labels
 
         const hasPermission = allowedByRules || await hasTournamentPermission(requesterId, tournamentId)
         if (!hasPermission) {
