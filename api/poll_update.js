@@ -68,7 +68,7 @@ export default async function handler(request, response) {
         `;
         
         if (pollCheck.length === 0) {
-            return response.status(400).json({ error: "Nie możesz edytować ankiety która nie istnieje." });
+            return response.status(404).json({ error: "Nie możesz edytować ankiety która nie istnieje." });
         }
 
         const tournament_id = pollCheck[0].tournament_id;
