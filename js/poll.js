@@ -1,12 +1,12 @@
 import { formatForDateTimeInput, formatRelativeTimePL } from "./utils/formatDate.js";
-import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } from "./utils/helpers.js";
+import { adjustModalPosition, debounce, getParamsUrl, loadData, postData, requireAuth } from "./utils/helpers.js";
 
 (async () => {
 
     // Handling params
     const params = new URLSearchParams(window.location.search);
     const paramsUrl = getParamsUrl(params);
-    const pageUrl = `polls?${paramsUrl}`;
+    const pageUrl = `poll?${paramsUrl}`;
 
     const pid = params.get('p');
     if (!pid) {
@@ -198,8 +198,22 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } fr
                 document.querySelector('#btn_delete_poll').onclick = () => deletePoll()
 
                 // TODO
-                function savePoll() {
-                    window.alert(`Save poll: ${POLL.id}`)
+                async function savePoll() {
+                    try {
+                        const payload = {
+                            poll: POLL.id,
+                            name: nameInput.value,
+                            start_date: startInput.value,
+                            end_date: endInput.value,
+                            rights_level: levelInput.value
+                        };
+                        const result = await postData('/api/poll_update', payload, "Nie udało się zapisać ankiety.");
+                        window.location.reload();
+
+                    } catch (error) {
+                        showErrorPopup(error.message);
+                        console.error("Poll update failed:", error);
+                    }
                 }
 
                 // TODO
@@ -270,6 +284,15 @@ import { adjustModalPosition, debounce, getParamsUrl, loadData, requireAuth } fr
     function getRandomHex() {
         return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
     } 
+
+    function showErrorPopup(message = 'Nieznany błąd.') {
+        const popup = document.getElementById('error_popup')
+        popup.classList.add('active');
+
+        document.getElementById('error_message').textContent = message;
+        document.getElementById('error_close_btn').onclick = () => {popup.classList.remove('active')}
+    }
+
 
 
 

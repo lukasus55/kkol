@@ -48,6 +48,35 @@
         </div>
     </main>
 
+    <div class="popup_overlay" id="error_popup">
+        <div class="popup_container">
+            <div class="popup_body">
+                <p id="error_message">Wystąpił błąd.</p>
+            </div>
+            <div class="popup_footer">
+                <button class="btn btn_cancel" id="error_close_btn">Zamknij</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup_overlay" id="confirmation_popup">
+        <div class="popup_container">
+            
+            <div class="popup_icon">
+                <img src="/img/dashboard/warning_icon.webp">
+            </div>
+
+            <div class="popup_body">
+                <p id="confirmation_popup_message">Czy na pewno chcesz to zrobić?</p>
+            </div>
+
+            <div class="popup_footer">
+                <button class="btn btn_cancel poll_btn_close" id="confirmation_popup_cancel">Anuluj</button>
+                <button class="btn btn_confirm" id="confirmation_popup_confirm">Potwierdź</button>
+            </div>
+        </div>
+    </div>
+
     <div class="popup_overlay" id="popup_label_editor">
         <div class="popup_container poll_popup">
             <div class="poll_popup_content" id="label_editor">
@@ -117,24 +146,6 @@
                     <button class="poll_btn_close btn_cancel btn_tertiary btn_poll_popup">Anuluj</button>
                     <button id="btn_save_poll" class="btn_primary btn_poll_popup">Zapisz</button>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="popup_overlay" id="confirmation_popup">
-        <div class="popup_container">
-            
-            <div class="popup_icon">
-                <img src="/img/dashboard/warning_icon.webp">
-            </div>
-
-            <div class="popup_body">
-                <p id="confirmation_popup_message">Czy na pewno chcesz to zrobić?</p>
-            </div>
-
-            <div class="popup_footer">
-                <button class="btn btn_cancel poll_btn_close" id="confirmation_popup_cancel">Anuluj</button>
-                <button class="btn btn_confirm" id="confirmation_popup_confirm">Potwierdź</button>
             </div>
         </div>
     </div>

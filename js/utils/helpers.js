@@ -148,3 +148,34 @@ export function debounce(func, wait) {
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
 }
+
+/**
+ * Utility function to make a JSON POST request.
+ * @param {string} url - The endpoint URL to send the request to.
+ * @param {Object} payload - The data to be stringified and sent in the body.
+ * @param {string} [defaultErrorMsg="Wystąpił błąd podczas żądania."] - Fallback error message.
+ * @returns {Promise<Object>} The parsed JSON response.
+ */
+export async function postData(url, payload, defaultErrorMsg = "Wystąpił błąd podczas żądania.") {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.error) {
+            throw new Error(result.error || defaultErrorMsg);
+        }
+
+        return result;
+
+    } catch (error) {
+        // Re-throw the error in case the caller needs to run additional failure logic
+        throw error;
+    }
+}
