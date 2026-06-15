@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { uuidv7 } from "uuidv7";
 import { parse } from 'cookie';
 import { escapeHTML } from '../js/utils/helpers.js';
-import { getTournamentPermission } from '../js/utils/permissionChecks.js';
+import { hasTournamentPermission } from '../js/utils/permissionChecks.js';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -83,7 +83,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: "Nie możesz edytować ankiety w turnieju, który nie istnieje." });
         }
 
-        const hasPermission = await getTournamentPermission(requesterId, tournamentId);
+        const hasPermission = await hasTournamentPermission(requesterId, tournamentId);
         if (!hasPermission) {
             return response.status(403).json({ error: "Brak uprawnień. Musisz być administratorem lub zarządcą turnieju do którego przypisana jest ta ankieta." });
         }

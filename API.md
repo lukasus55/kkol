@@ -30,6 +30,9 @@ Welcome to the backend API documentation.
 * [**Create Poll** (`POST /api/poll_create`)](./docs/api/polls/poll_create.md)
 * [**Update Poll** (`POST /api/poll_update`)](./docs/api/polls/poll_update.md)
 * [**Delete Poll** (`POST /api/poll_delete`)](./docs/api/polls/poll_delete.md)
+* [**Create Poll Label** (`POST /api/poll_label_create`)](./docs/api/polls/poll_label_create.md)
+* [**Update Poll Label** (`POST /api/poll_label_update`)](./docs/api/polls/poll_label_update.md)
+* [**Delete Poll Label** (`POST /api/poll_label_delete`)](./docs/api/polls/poll_label_delete.md)
 
 ### Tournaments
 * [**Fetch Tournaments** (`GET /api/tournaments`)](./docs/api/tournaments/tournaments.md)
