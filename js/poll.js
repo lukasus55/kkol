@@ -295,6 +295,149 @@ async function renderPage(){
         renderSettings();
     }
 
+    async function renderMain() {
+        const POLL_CONTAINER = document.querySelector('#poll_container')
+        const questions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
+        console.log(questions)
+
+        
+
+        questions.forEach((q) => {
+            renderQuestion(q);
+        })
+
+        function renderQuestion(q) {
+            const isMultipleChoice = q.multiple_choice;
+
+            const qHtml = `
+                <div class="question" draggable="true"> 
+                    <div class="question_header">
+                        <div class="question_title"> 
+                            <input class="" value="${q.name}">
+                        </div>
+                        <div class="question_mode">
+                            <button class="question_mode_toggle_btn" id="question_mode_toggle_btn-${q.id}" title="${isMultipleChoice ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`}">
+                                <div class="question_mode_toggle_icon">
+                                    <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="question_labels">
+                        
+                    </div>
+                    <div class="question_answers"> 
+                        TODO: Options
+                    </div>
+                </div>`
+
+            POLL_CONTAINER.insertAdjacentHTML('beforeend', qHtml);
+
+            // TODO: Link logic to backend.
+            const modeBtn = document.querySelector(`#question_mode_toggle_btn-${q.id}`)
+            modeBtn.onclick = () => {
+                const shape = document.querySelector(`#question_mode_toggle_btn-${q.id} .question_mode_toggle_shape`);
+                shape.classList.toggle('square');
+
+                modeBtn.title = modeBtn.title === `Tryb jednokrotnego wyboru` ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`;
+            }
+        }
+
+        function handleDragging() {
+            const questionItems = document.querySelectorAll('.question');
+
+            // A transparent 1x1 pixel image to feed to the native API
+            const transparentImg = new Image();
+            transparentImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+            let customGhost = null;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            questionItems.forEach(item => {
+                item.addEventListener('dragstart', e => {
+                    item.classList.add('is_dragging');
+
+                    // 1. Calculate where the user clicked inside the element
+                    const rect = item.getBoundingClientRect();
+                    offsetX = e.clientX - rect.left;
+                    offsetY = e.clientY - rect.top;
+
+                    // 2. Create our custom 100% opaque ghost
+                    customGhost = item.cloneNode(true);
+                    customGhost.classList.add('custom_drag_ghost');
+                    
+                    // Lock in the original width so it doesn't collapse
+                    customGhost.style.width = `${rect.width}px`; 
+                    
+                    // Position it exactly beneath the cursor
+                    customGhost.style.left = `${e.clientX - offsetX}px`;
+                    customGhost.style.top = `${e.clientY - offsetY}px`;
+                    
+                    document.body.appendChild(customGhost);
+
+                    // 3. Trick the browser into hiding its default translucent ghost
+                    e.dataTransfer.setDragImage(transparentImg, 0, 0);
+                });
+
+                // 4. Manually move our custom ghost around the screen
+                item.addEventListener('drag', e => {
+                    // The HTML5 drag event sometimes fires with 0,0 right as you drop; ignore it
+                    if (e.clientX === 0 && e.clientY === 0) return; 
+
+                    if (customGhost) {
+                        customGhost.style.left = `${e.clientX - offsetX}px`;
+                        customGhost.style.top = `${e.clientY - offsetY}px`;
+                    }
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('is_dragging');
+                    
+                    // 5. Destroy our custom ghost when the drag finishes
+                    if (customGhost) {
+                        customGhost.remove();
+                        customGhost = null;
+                    }
+                });
+            });
+
+            POLL_CONTAINER.addEventListener('dragover', e => {
+                e.preventDefault();
+                
+                const afterElement = getDragAfterElement(POLL_CONTAINER, e.clientY);
+                const draggable = document.querySelector('.is_dragging');
+                
+                // If not hovering over anything, append to the bottom
+                if (afterElement == null) {
+                    POLL_CONTAINER.appendChild(draggable);
+                } else {
+                    POLL_CONTAINER.insertBefore(draggable, afterElement);
+                }
+            });
+
+            // Math helper to figure out cursor placement
+            function getDragAfterElement(POLL_CONTAINER, y) {
+                const draggableElements = [...POLL_CONTAINER.querySelectorAll('.question:not(.is_dragging)')];
+
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    
+                    // If cursor is above the center point - drop it here
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+        }
+
+        handleDragging();
+
+    }
+
 
 
 
@@ -489,6 +632,7 @@ async function renderPage(){
     window.addEventListener('resize', handleMenuResize);
 
     renderHeader();
+    renderMain();
 }
 
 await renderPage();
