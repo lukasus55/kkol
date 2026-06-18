@@ -191,6 +191,11 @@ export function isUUIDv7(value) {
     return uuid7Regex.test(value);
 }
 
+/**
+ * Convert any url (youtube.com) from potentialy relative url (kkol.pl/youtube.com) to absolute url (https://youtube.com)
+ * @param {string} url Any url (url that is already absolute will return itself)
+ * @returns Absolute url (https://youtube.com)
+ */
 export function ensureAbsoluteUrl(url) {
     if (!url) return '';
 

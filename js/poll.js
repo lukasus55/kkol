@@ -34,12 +34,6 @@ async function renderPage() {
         return;
     }
 
-    
-    // Fetching detailed data
-    const [LABELS] = await Promise.all([
-        loadData(`/api/poll_labels?poll=${pid}`)
-    ])
-
     // Authenticate user
     const userAuthenticated = await requireAuth(pageUrl);
     if (!userAuthenticated) return;
@@ -63,6 +57,14 @@ async function renderPage() {
         return MODE;
     }
 
+    // Fetching detailed data
+    const [LABELS, fetchedQuestions] = await Promise.all([
+        loadData(`/api/poll_labels?poll=${pid}`),
+        loadData(`/api/poll_questions?poll=${POLL.id}`)
+    ])
+
+    let QUESTIONS = fetchedQuestions;
+
 
 
 
@@ -80,6 +82,24 @@ async function renderPage() {
         relativeEl.title = formattedDate;
 
         document.querySelector('#poll_name').textContent = POLL.name;
+        
+        document.querySelector('#btn_new_question').onclick = () => {createQuestion()};
+
+        async function createQuestion() {
+            try {
+                const payload = {
+                    poll: POLL.id,
+                    name: `Pytanie ${QUESTIONS.length+1}`
+                };
+                const result = await postData('/api/poll_question_create', payload, "Nie udało się utworzyć pytania.");
+                QUESTIONS = await loadData(`/api/poll_questions?poll=${pid}`);
+                renderMain(false);
+
+            } catch (error) {
+                showErrorPopup(error.message);
+                console.error("Question creation failed:", error);
+            }
+        }
 
         function renderModeSelector() {
             const modeEl = document.querySelector('#poll_tools_mode');
@@ -128,7 +148,7 @@ async function renderPage() {
              * Changes page mode
              * @param {string} m "vote" || "results" || "edit"
              */
-            async function changeMode(m) {
+            function changeMode(m) {
                 if (m !== "vote" && m !== "results" && m !== "edit") {
                     console.error("Incorrect mode");
                     return;
@@ -136,8 +156,7 @@ async function renderPage() {
 
                 MODE = m;
 
-                await renderMain(false);
-                handleTooltips();
+                renderMain(false);
 
                 return;
             }
@@ -375,13 +394,29 @@ async function renderPage() {
             }
         }
 
+        window.onscroll = () => {
+            const nameRow = document.querySelector("#poll_name_row");
+            const dateRow = document.querySelector("#poll_date_row");
+
+
+            if(window.scrollY > 0) {
+                nameRow.classList.remove('poll_header_visible');
+                nameRow.classList.add('poll_header_hidden');
+                dateRow.classList.remove('poll_header_visible');
+                dateRow.classList.add('poll_header_hidden');
+            } else {
+                nameRow.classList.add('poll_header_visible');
+                nameRow.classList.remove('poll_header_hidden');
+                dateRow.classList.add('poll_header_visible');
+                dateRow.classList.remove('poll_header_hidden');
+            }
+        };
+
+
         renderLabels();
         renderSettings();
     }
 
-
-    const loadedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
-    let questions = loadedQuestions;
 
     /**
      * Renders the main content.
@@ -405,8 +440,8 @@ async function renderPage() {
 
 
         async function renderQuestions() {
-            console.log(questions)
-            questions.forEach((q) => {
+            console.log(QUESTIONS)
+            QUESTIONS.forEach((q) => {
                 renderQuestion(q);
             })
 
@@ -494,6 +529,7 @@ async function renderPage() {
                 }
             }
 
+            handleTooltips();
             if (!fullReRender) return;
 
             function handleDragging() {
@@ -820,8 +856,7 @@ async function renderPage() {
 
 
     renderHeader();
-    await renderMain();
-    handleTooltips();
+    renderMain();
 
 
 }
