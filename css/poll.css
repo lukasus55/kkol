@@ -251,7 +251,6 @@ main
     padding: .5rem;
     flex-direction: column;
     padding: 1rem 0;
-
 }
 
 .poll_header_row
@@ -307,7 +306,7 @@ main
     }
 
     100% {
-        transform: translateX(-100px);
+        transform: translateY(-100px);
         opacity: 0%;
         height: 0;
         display: none;
@@ -316,7 +315,7 @@ main
 
 @keyframes showPollHeader {
     0% {
-        transform: translateX(-100px);
+        transform: translateY(-100px);
         opacity: 0%;
         height: 0;
         display: none;
