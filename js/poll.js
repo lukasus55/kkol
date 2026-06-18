@@ -4,7 +4,7 @@ import { adjustModalPosition, appendLoaderDiv, debounce, getParamsUrl, loadData,
 const CONTAINER = document.querySelector('#poll');
 const loadingContainer = document.querySelector('#loader-global');
 
-async function renderPage(){
+async function renderPage() {
     // Handling params
     const params = new URLSearchParams(window.location.search);
     const paramsUrl = getParamsUrl(params);
@@ -19,14 +19,14 @@ async function renderPage(){
     // Verifying if poll exists
     const pollData = await loadData(`/api/polls?id=${pid}`);
 
-    if (!pollData || pollData.length===0) {
+    if (!pollData || pollData.length === 0) {
         console.warn(`Ankieta nie istnieje.`);
         document.querySelector('#poll').innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
         return;
     }
 
     const POLL = pollData[0];
-    
+
     if (!POLL) {
         console.error(`Błąd przy ładowaniu ankiety: ${pollData.error || `Nieznany błąd.`}`)
         CONTAINER.innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
@@ -41,6 +41,21 @@ async function renderPage(){
     // Authenticate user
     const userAuthenticated = await requireAuth(pageUrl);
     if (!userAuthenticated) return;
+
+
+    const modeParam = params.get('m');
+    let MODE;
+    switch (modeParam) {
+        case "r":
+            MODE = "results"
+            break;
+        case "e":
+            MODE = "edit"
+            break;
+        default:
+            MODE = "vote"
+            break;
+    }
 
 
 
@@ -59,6 +74,69 @@ async function renderPage(){
         relativeEl.title = formattedDate;
 
         document.querySelector('#poll_name').textContent = POLL.name;
+
+        function renderModeSelector() {
+            const modeEl = document.querySelector('#poll_tools_mode');
+            modeEl.innerHTML = `
+                <div class="tooltip_container">
+                    <button class="btn_transparent btn_page_mode ${MODE === "vote" && `selected`}" data-id="vote">
+                        <img src="img/polls/vote.svg">
+                    </button>
+                    <span class="tooltip_popup">Tryb głosowania</span>
+                </div>
+                <div class="tooltip_container">
+                    <button class="btn_transparent btn_page_mode ${MODE === "results" && `selected`}" data-id="results">
+                        <img src="img/polls/graph.svg">
+                    </button>
+                    <span class="tooltip_popup">Tryb wyników</span>
+                </div>
+                <div class="tooltip_container">
+                    <button class="btn_transparent btn_page_mode ${MODE === "edit" && `selected`}" data-id="edit">
+                        <img src="img/polls/pencil.svg">
+                    </button>
+                    <span class="tooltip_popup">Tryb edycji</span>
+                </div>
+            `
+
+
+            const modeBtns = document.querySelectorAll('.btn_page_mode');
+            modeBtns.forEach((btn) => {
+                handleModeButton(btn)
+            })
+
+            function handleModeButton(btn) {
+                const modeId = btn?.getAttribute('data-id');
+
+                // Manually changing selected classlist instead of calling renderModeSelector() in changeMode()
+                // to prevent tooltip flickering.
+                btn.onclick = () => {
+                    modeBtns.forEach((btn) => {
+                        btn.classList.remove(`selected`);
+                    })
+                    btn.classList.add(`selected`);
+                    changeMode(modeId);
+                };
+            }
+
+            /**
+             * Changes page mode
+             * @param {string} m "vote" || "results" || "edit"
+             */
+            async function changeMode(m) {
+                if (m !== "vote" && m !== "results" && m !== "edit") {
+                    console.error("Incorrect mode");
+                    return;
+                }
+
+                MODE = m;
+
+                await renderMain(false);
+                handleTooltips();
+
+                return;
+            }
+        };
+        renderModeSelector();
 
         async function renderLabels() {
             const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
@@ -104,10 +182,10 @@ async function renderPage(){
             })
 
             const newLabel = { name: "", hex: getRandomHex(), description: "" };
-            let previewLabel = { id: "0", name: "Etykieta", hex: "#ffffff", description: ""}
+            let previewLabel = { id: "0", name: "Etykieta", hex: "#ffffff", description: "" }
             document.querySelector('#poll_labels_list_new').onclick = () => showLabelEditor(newLabel, true)
 
-            function showLabelEditor(label, isCreateMode=false) {
+            function showLabelEditor(label, isCreateMode = false) {
 
                 // --- Initialize ---
                 if (!label) {
@@ -131,7 +209,7 @@ async function renderPage(){
                 descInput.value = label.description;
                 colorInput.value = label.hex;
                 nameInput.oninput = () => setPreviewLabel('name', nameInput.value);
-                descInput.oninput = () => {previewLabel.description = descInput.value}; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
+                descInput.oninput = () => { previewLabel.description = descInput.value }; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
                 colorInput.oninput = () => setPreviewLabel('hex', formatHex(colorInput.value));
 
                 updateLabelBadge(label);
@@ -152,7 +230,7 @@ async function renderPage(){
 
                 saveBtn.onclick = () => isCreateMode ? createNewLabel() : saveLabel(previewLabel);
                 deleteBtn.onclick = () => showConfirmationPopup(
-                    () => deleteLabel(previewLabel), 
+                    () => deleteLabel(previewLabel),
                     `Czy na pewno chcesz trwale usunąć etykietę <strong>${previewLabel.name}</strong>?`,
                     "Usuń",
                     "Anuluj"
@@ -175,7 +253,7 @@ async function renderPage(){
 
                     updateLabelBadge(previewLabel);
                     document.querySelector('#label_color_rect').style.backgroundColor = previewLabel.hex;
-                    if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
+                    if (key !== 'hex') { document.querySelector('#label_edit_color').value = previewLabel.hex };
                 }
 
                 async function saveLabel(label) {
@@ -244,12 +322,12 @@ async function renderPage(){
                 nameInput.value = POLL.name;
                 startInput.value = formatForDateTimeInput(POLL.start_date);
                 endInput.value = formatForDateTimeInput(POLL.end_date);
-                levelInput.selectedIndex = POLL.rights_level-1; // rights_level=1 === index=0 cause there's no 'Not selected default option'
-                
+                levelInput.selectedIndex = POLL.rights_level - 1; // rights_level=1 === index=0 cause there's no 'Not selected default option'
+
 
                 document.querySelector('#btn_save_poll').onclick = () => savePoll()
                 document.querySelector('#btn_delete_poll').onclick = () => showConfirmationPopup(
-                    () => deletePoll(), 
+                    () => deletePoll(),
                     `Czy na pewno chcesz usunąć ankietę <strong>${POLL.name}</strong>?`,
                     `Usuń`,
                     `Anuluj`
@@ -295,32 +373,65 @@ async function renderPage(){
         renderSettings();
     }
 
-    async function renderMain() {
-        const POLL_CONTAINER = document.querySelector('#poll_container')
-        const questions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
-        console.log(questions)
+
+    const loadedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
+    let questions = loadedQuestions;
+
+    /**
+     * Renders the main content.
+     * @param {boolean} fullReRender - Should be 'true' only when adding or removing new questions.
+     */
+    async function renderMain(fullReRender = true) {
+        const Q_CONTAINER = document.querySelector('#question_container');
+        const R_CONTAINER = document.querySelector('#results_container');
+        R_CONTAINER.innerHTML = "";
 
         
 
-        questions.forEach((q) => {
-            renderQuestion(q);
-        })
+        const isEditMode = MODE === "edit";  
+        if (MODE === "results") {
+            Q_CONTAINER.classList.add('hidden');
+            R_CONTAINER.innerHTML = 'TODO: Results pannel';
+        } else {
+            Q_CONTAINER.classList.remove('hidden');
+            renderQuestions();
+        }
 
-        function renderQuestion(q) {
-            const isMultipleChoice = q.multiple_choice;
 
-            const qHtml = `
-                <div class="question" draggable="true"> 
+
+        async function renderQuestions() {
+            questions.forEach((q) => {
+                renderQuestion(q);
+            })
+
+            function renderQuestion(q) {
+                const isMultipleChoice = q.multiple_choice; 
+
+                const existingQEl = document.querySelector(`#question-${q.id}`);
+                if (!existingQEl) {
+                    Q_CONTAINER.insertAdjacentHTML('beforeend', 
+                        `<div class="question" id="question-${q.id}"> </div>`
+                    );
+                }
+
+                const qEl = document.querySelector(`#question-${q.id}`);
+                qEl.draggable = isEditMode;
+                qEl.style.cursor = isEditMode ? `grabbing` : `default`;
+
+                qEl.innerHTML = `
                     <div class="question_header">
                         <div class="question_title"> 
-                            <input class="" value="${q.name}">
+                            <input class="question_input ${!isEditMode && `fake_input`}" value="${q.name}" ${!isEditMode && `disabled`}">
                         </div>
                         <div class="question_mode">
-                            <button class="question_mode_toggle_btn" id="question_mode_toggle_btn-${q.id}" title="${isMultipleChoice ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`}">
-                                <div class="question_mode_toggle_icon">
-                                    <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
-                                </div>
-                            </button>
+                            <div class="tooltip_container">
+                                <button class="question_mode_toggle_btn poll_btn ${!isEditMode && `disabled`}" ${!isEditMode && `disabled`}>
+                                    <div class="question_mode_toggle_icon">
+                                        <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
+                                    </div>
+                                </button>
+                                <span class="tooltip_popup">${isMultipleChoice ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="question_labels">
@@ -329,112 +440,118 @@ async function renderPage(){
                     <div class="question_answers"> 
                         TODO: Options
                     </div>
-                </div>`
+                `
 
-            POLL_CONTAINER.insertAdjacentHTML('beforeend', qHtml);
+                // TODO: Link logic to backend.
+                document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
+                document.querySelector(`#question-${q.id} .question_input`).oninput = (e) => (q.name = e.target.value);
 
-            // TODO: Link logic to backend.
-            const modeBtn = document.querySelector(`#question_mode_toggle_btn-${q.id}`)
-            modeBtn.onclick = () => {
-                const shape = document.querySelector(`#question_mode_toggle_btn-${q.id} .question_mode_toggle_shape`);
-                shape.classList.toggle('square');
+                function changeQuestionMode(q) {
+                    const newIsMult = !q.multiple_choice;
+                    
+                    const shape = document.querySelector(`#question-${q.id} .question_mode_toggle_shape`);
+                    shape.classList.toggle('square');
 
-                modeBtn.title = modeBtn.title === `Tryb jednokrotnego wyboru` ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`;
+                    const tooltipEl = document.querySelector(`#question-${q.id} .question_mode .tooltip_popup`)
+                    tooltipEl.textContent = newIsMult ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`;
+
+                    q.multiple_choice = newIsMult;
+                
+                    // renderOptions(q); - TODO
+                    return;
+                }
             }
-        }
 
-        function handleDragging() {
-            const questionItems = document.querySelectorAll('.question');
+            if (!fullReRender) return;
 
-            // A transparent 1x1 pixel image to feed to the native API
-            const transparentImg = new Image();
-            transparentImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+            function handleDragging() {
+                const questionItems = document.querySelectorAll('.question');
 
-            let customGhost = null;
-            let offsetX = 0;
-            let offsetY = 0;
+                // A transparent 1x1 pixel image to feed to the native API
+                const transparentImg = new Image();
+                transparentImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-            questionItems.forEach(item => {
-                item.addEventListener('dragstart', e => {
-                    item.classList.add('is_dragging');
+                let customGhost = null;
+                let offsetX = 0;
+                let offsetY = 0;
 
-                    // 1. Calculate where the user clicked inside the element
-                    const rect = item.getBoundingClientRect();
-                    offsetX = e.clientX - rect.left;
-                    offsetY = e.clientY - rect.top;
+                questionItems.forEach(item => {
+                    item.addEventListener('dragstart', e => {
+                        item.classList.add('is_dragging');
 
-                    // 2. Create our custom 100% opaque ghost
-                    customGhost = item.cloneNode(true);
-                    customGhost.classList.add('custom_drag_ghost');
-                    
-                    // Lock in the original width so it doesn't collapse
-                    customGhost.style.width = `${rect.width}px`; 
-                    
-                    // Position it exactly beneath the cursor
-                    customGhost.style.left = `${e.clientX - offsetX}px`;
-                    customGhost.style.top = `${e.clientY - offsetY}px`;
-                    
-                    document.body.appendChild(customGhost);
+                        const rect = item.getBoundingClientRect();
+                        offsetX = e.clientX - rect.left;
+                        offsetY = e.clientY - rect.top;
 
-                    // 3. Trick the browser into hiding its default translucent ghost
-                    e.dataTransfer.setDragImage(transparentImg, 0, 0);
-                });
+                        customGhost = item.cloneNode(true);
+                        customGhost.classList.add('custom_drag_ghost');
 
-                // 4. Manually move our custom ghost around the screen
-                item.addEventListener('drag', e => {
-                    // The HTML5 drag event sometimes fires with 0,0 right as you drop; ignore it
-                    if (e.clientX === 0 && e.clientY === 0) return; 
+                        // Lock original width so it doesn't collapse
+                        customGhost.style.width = `${rect.width}px`;
 
-                    if (customGhost) {
                         customGhost.style.left = `${e.clientX - offsetX}px`;
                         customGhost.style.top = `${e.clientY - offsetY}px`;
-                    }
+
+                        document.body.appendChild(customGhost);
+
+                        // Hide default browser ghost
+                        e.dataTransfer.setDragImage(transparentImg, 0, 0);
+                    });
+
+                    item.addEventListener('drag', e => {
+                        // The HTML5 drag event sometimes fires with 0,0 right as you drop; ignore it
+                        if (e.clientX === 0 && e.clientY === 0) return;
+
+                        if (customGhost) {
+                            customGhost.style.left = `${e.clientX - offsetX}px`;
+                            customGhost.style.top = `${e.clientY - offsetY}px`;
+                        }
+                    });
+
+                    item.addEventListener('dragend', () => {
+                        item.classList.remove('is_dragging');
+
+                        if (customGhost) {
+                            customGhost.remove();
+                            customGhost = null;
+                        }
+                    });
                 });
 
-                item.addEventListener('dragend', () => {
-                    item.classList.remove('is_dragging');
-                    
-                    // 5. Destroy our custom ghost when the drag finishes
-                    if (customGhost) {
-                        customGhost.remove();
-                        customGhost = null;
-                    }
-                });
-            });
+                Q_CONTAINER.addEventListener('dragover', e => {
+                    e.preventDefault();
 
-            POLL_CONTAINER.addEventListener('dragover', e => {
-                e.preventDefault();
-                
-                const afterElement = getDragAfterElement(POLL_CONTAINER, e.clientY);
-                const draggable = document.querySelector('.is_dragging');
-                
-                // If not hovering over anything, append to the bottom
-                if (afterElement == null) {
-                    POLL_CONTAINER.appendChild(draggable);
-                } else {
-                    POLL_CONTAINER.insertBefore(draggable, afterElement);
-                }
-            });
+                    const afterElement = getDragAfterElement(Q_CONTAINER, e.clientY);
+                    const draggable = document.querySelector('.is_dragging');
 
-            // Math helper to figure out cursor placement
-            function getDragAfterElement(POLL_CONTAINER, y) {
-                const draggableElements = [...POLL_CONTAINER.querySelectorAll('.question:not(.is_dragging)')];
-
-                return draggableElements.reduce((closest, child) => {
-                    const box = child.getBoundingClientRect();
-                    const offset = y - box.top - box.height / 2;
-                    
-                    // If cursor is above the center point - drop it here
-                    if (offset < 0 && offset > closest.offset) {
-                        return { offset: offset, element: child };
+                    // If not hovering over anything, append to the bottom
+                    if (afterElement == null) {
+                        Q_CONTAINER.appendChild(draggable);
                     } else {
-                        return closest;
+                        Q_CONTAINER.insertBefore(draggable, afterElement);
                     }
-                }, { offset: Number.NEGATIVE_INFINITY }).element;
-            }
-        }
+                });
 
-        handleDragging();
+                // Math helper to figure out cursor placement
+                function getDragAfterElement(Q_CONTAINER, y) {
+                    const draggableElements = [...Q_CONTAINER.querySelectorAll('.question:not(.is_dragging)')];
+
+                    return draggableElements.reduce((closest, child) => {
+                        const box = child.getBoundingClientRect();
+                        const offset = y - box.top - box.height / 2;
+
+                        // If cursor is above the center point - drop it here
+                        if (offset < 0 && offset > closest.offset) {
+                            return { offset: offset, element: child };
+                        } else {
+                            return closest;
+                        }
+                    }, { offset: Number.NEGATIVE_INFINITY }).element;
+                }
+            }
+
+            handleDragging();
+        }
 
     }
 
@@ -493,14 +610,14 @@ async function renderPage(){
 
     function getRandomHex() {
         return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-    } 
+    }
 
     function showErrorPopup(message = 'Nieznany błąd.') {
         const popup = document.getElementById('error_popup')
         popup.classList.add('active');
 
         document.getElementById('error_message').textContent = message;
-        document.getElementById('error_close_btn').onclick = () => {popup.classList.remove('active')}
+        document.getElementById('error_close_btn').onclick = () => { popup.classList.remove('active') };
     }
 
 
@@ -543,9 +660,9 @@ async function renderPage(){
     }
 
     function closeTopPopup() {
-        const activePopups = Array.from(document.querySelectorAll('.popup_overlay.active')); 
-        
-        if (activePopups.length === 0) return; 
+        const activePopups = Array.from(document.querySelectorAll('.popup_overlay.active'));
+
+        if (activePopups.length === 0) return;
 
         let topPopup = activePopups[0];
         let maxZIndex = parseInt(window.getComputedStyle(topPopup).zIndex) || 0;
@@ -553,7 +670,7 @@ async function renderPage(){
         for (let i = 1; i < activePopups.length; i++) {
             const currentPopup = activePopups[i];
             const currentZIndex = parseInt(window.getComputedStyle(currentPopup).zIndex) || 0;
-            
+
             // Use '>=' so that if z-indexes are equal, it picks the one later in the DOM (which visually sits on top of the earlier ones)
             if (currentZIndex >= maxZIndex) {
                 maxZIndex = currentZIndex;
@@ -585,9 +702,9 @@ async function renderPage(){
 
     const closeButtons = document.querySelectorAll('.poll_btn_close');
     closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const overlay = this.closest('.popup_overlay');
-            if (overlay) {overlay.classList.remove('active');}
+            if (overlay) { overlay.classList.remove('active'); }
         });
     });
 
@@ -625,14 +742,40 @@ async function renderPage(){
         };
 
         popup.onclick = (event) => {
-            if (event.target === popup) {popup.classList.remove('active');}
+            if (event.target === popup) { popup.classList.remove('active'); }
         };
+    }
+
+    function handleTooltips() {
+        const targetElements = document.querySelectorAll('.tooltip_container');
+
+        targetElements.forEach(element => {
+            const popup = element.querySelector('.tooltip_popup');
+
+            element.addEventListener('mouseenter', () => {
+                
+                if (popup) {
+                    popup.classList.add('tooltip_visible');
+                }
+            });
+
+            element.addEventListener('mouseleave', () => {
+                if (popup) {
+                    popup.classList.remove('tooltip_visible');
+                }
+            });
+        });
     }
 
     window.addEventListener('resize', handleMenuResize);
 
+
+
     renderHeader();
-    renderMain();
+    await renderMain();
+    handleTooltips();
+
+
 }
 
 await renderPage();

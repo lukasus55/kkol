@@ -58,6 +58,16 @@ main
     width: 12rem;
 }
 
+.poll_btn
+{
+    cursor: pointer;
+}
+
+.poll_btn.disabled
+{
+    cursor: default;
+}
+
 .poll_btn_x
 {
     padding: .5rem;
@@ -167,6 +177,49 @@ main
     align-items: center;
 }
 
+.tooltip_container
+{
+    position: relative;
+}
+
+.tooltip_popup
+{
+    visibility: hidden;
+    background-color: var(--dashboard-background-s4);
+    color: var(--dashboard-text);
+    border: 1px solid var(--dashboard-stroke);
+    text-align: center;
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+    position: absolute;
+    z-index: 10;
+    bottom: 130%; 
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.tooltip_popup::after
+{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -.4rem;
+    border-width: .4rem;
+    border-style: solid;
+    border-color: var(--dashboard-background-s6) transparent transparent transparent;
+}
+
+.tooltip_visible
+{
+    visibility: visible;
+    opacity: 1;
+}
+
 .poll_header
 {
     display: flex;
@@ -187,12 +240,6 @@ main
     flex: 1;
     font-size: 1.75rem;
     font-weight: 700;
-}
-
-.poll_buttons
-{
-    display: inline-flex;
-    gap: 1rem;
 }
 
 .poll_date
@@ -330,7 +377,6 @@ main
     font-size: .9rem;
 }
 
-
 .label_edit_color_section
 {
     display: flex;
@@ -366,7 +412,38 @@ main
     color: var(--dashboard-text-s2);
 }
 
+.poll_header_tools_row
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.poll_tools_mode
+{
+    display: flex;
+    gap: .2rem;
+    background-color: var(--dashboard-background-s3);
+    border: 1px solid var(--dashboard-stroke);
+    padding: .5rem;
+    border-radius: .5rem;
+}
+
+.poll_tools_buttons
+{
+    display: inline-flex;
+    gap: 1rem;
+}
+
 .poll_container
+{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.question_container
 {
     display: flex;
     flex-direction: column;
@@ -423,7 +500,7 @@ main
     flex: 0;
 }
 
-.question_title input
+.question_input
 {
     width: 100%;
     height: 2.75rem;
@@ -478,4 +555,13 @@ main
 .question_mode_toggle_shape.square::after
 {
     border-radius: 0;
+}
+
+.fake_input
+{
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    color: var(--dashboard-text);
+    height: min-content;
 }
