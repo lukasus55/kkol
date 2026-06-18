@@ -82,24 +82,8 @@ async function renderPage() {
         relativeEl.title = formattedDate;
 
         document.querySelector('#poll_name').textContent = POLL.name;
-        
-        document.querySelector('#btn_new_question').onclick = () => {createQuestion()};
 
-        async function createQuestion() {
-            try {
-                const payload = {
-                    poll: POLL.id,
-                    name: `Pytanie ${QUESTIONS.length+1}`
-                };
-                const result = await postData('/api/poll_question_create', payload, "Nie udało się utworzyć pytania.");
-                QUESTIONS = await loadData(`/api/poll_questions?poll=${pid}`);
-                renderMain(false);
 
-            } catch (error) {
-                showErrorPopup(error.message);
-                console.error("Question creation failed:", error);
-            }
-        }
 
         function renderModeSelector() {
             const modeEl = document.querySelector('#poll_tools_mode');
@@ -157,6 +141,7 @@ async function renderPage() {
                 MODE = m;
 
                 renderMain(false);
+                renderFooter()
 
                 return;
             }
@@ -427,9 +412,8 @@ async function renderPage() {
         const R_CONTAINER = document.querySelector('#results_container');
         R_CONTAINER.innerHTML = "";
 
-        
-
         const isEditMode = MODE === "edit";  
+        
         if (MODE === "results") {
             Q_CONTAINER.classList.add('hidden');
             R_CONTAINER.innerHTML = 'TODO: Results pannel';
@@ -494,7 +478,7 @@ async function renderPage() {
                                             <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
                                         </div>
                                     </button>
-                                    <span class="tooltip_popup">${isMultipleChoice ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`}</span>
+                                    <span class="tooltip_popup">${isMultipleChoice ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`}</span>
                                 </div>
                             </div>
                         </div>
@@ -520,7 +504,7 @@ async function renderPage() {
                     shape.classList.toggle('square');
 
                     const tooltipEl = document.querySelector(`#question-${q.id} .question_mode .tooltip_popup`)
-                    tooltipEl.textContent = newIsMult ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`;
+                    tooltipEl.textContent = newIsMult ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`;
 
                     q.multiple_choice = newIsMult;
                 
@@ -637,6 +621,34 @@ async function renderPage() {
             handleDragging();
         }
 
+    }
+
+    function renderFooter() {
+        const createQBtn = document.querySelector('#btn_new_question');
+
+        if (getMode() !== "edit") {
+            createQBtn.classList.add('hidden');
+            return;
+        }
+
+        createQBtn.classList.remove('hidden');
+        createQBtn.onclick = () => {createQuestion()};
+
+        async function createQuestion() {
+            try {
+                const payload = {
+                    poll: POLL.id,
+                    name: `Pytanie ${QUESTIONS.length+1}`
+                };
+                const result = await postData('/api/poll_question_create', payload, "Nie udało się utworzyć pytania.");
+                QUESTIONS = await loadData(`/api/poll_questions?poll=${pid}`);
+                renderMain(false);
+
+            } catch (error) {
+                showErrorPopup(error.message);
+                console.error("Question creation failed:", error);
+            }
+        }
     }
 
 
@@ -857,6 +869,7 @@ async function renderPage() {
 
     renderHeader();
     renderMain();
+    renderFooter();
 
 
 }
