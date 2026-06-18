@@ -190,3 +190,13 @@ export function isUUIDv7(value) {
     const uuid7Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuid7Regex.test(value);
 }
+
+export function ensureAbsoluteUrl(url) {
+    if (!url) return '';
+
+    if (/^https?:\/\//i.test(url)) {
+        return url;
+    }
+    
+    return `https://${url}`;
+}

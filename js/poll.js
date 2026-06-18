@@ -1,5 +1,5 @@
 import { formatForDateTimeInput, formatRelativeTimePL } from "./utils/formatDate.js";
-import { adjustModalPosition, appendLoaderDiv, debounce, getParamsUrl, loadData, postData, requireAuth } from "./utils/helpers.js";
+import { adjustModalPosition, appendLoaderDiv, debounce, ensureAbsoluteUrl, getParamsUrl, loadData, postData, requireAuth } from "./utils/helpers.js";
 
 const CONTAINER = document.querySelector('#poll');
 const loadingContainer = document.querySelector('#loader-global');
@@ -15,6 +15,7 @@ async function renderPage() {
         window.location.replace('/dashboard?tab=polls');
         return;
     }
+
 
     // Verifying if poll exists
     const pollData = await loadData(`/api/polls?id=${pid}`);
@@ -33,6 +34,7 @@ async function renderPage() {
         return;
     }
 
+    
     // Fetching detailed data
     const [LABELS] = await Promise.all([
         loadData(`/api/poll_labels?poll=${pid}`)
@@ -55,6 +57,10 @@ async function renderPage() {
         default:
             MODE = "vote"
             break;
+    }
+
+    function getMode() {
+        return MODE;
     }
 
 
@@ -382,7 +388,7 @@ async function renderPage() {
      * @param {boolean} fullReRender - Should be 'true' only when adding or removing new questions.
      */
     async function renderMain(fullReRender = true) {
-        const Q_CONTAINER = document.querySelector('#question_container');
+        const Q_CONTAINER = document.querySelector('#questions_container');
         const R_CONTAINER = document.querySelector('#results_container');
         R_CONTAINER.innerHTML = "";
 
@@ -398,8 +404,8 @@ async function renderPage() {
         }
 
 
-
         async function renderQuestions() {
+            console.log(questions)
             questions.forEach((q) => {
                 renderQuestion(q);
             })
@@ -419,32 +425,58 @@ async function renderPage() {
                 qEl.style.cursor = isEditMode ? `grabbing` : `default`;
 
                 qEl.innerHTML = `
-                    <div class="question_header">
-                        <div class="question_title"> 
-                            <input class="question_input ${!isEditMode && `fake_input`}" value="${q.name}" ${!isEditMode && `disabled`}">
-                        </div>
-                        <div class="question_mode">
-                            <div class="tooltip_container">
-                                <button class="question_mode_toggle_btn poll_btn ${!isEditMode && `disabled`}" ${!isEditMode && `disabled`}>
-                                    <div class="question_mode_toggle_icon">
-                                        <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
+
+                        <div class="question_header">
+                            <div class="question_left"> 
+                                ${isEditMode ? `
+                                    <div class="question_left_edit"> 
+                                        <div>
+                                            <input class="question_input question_header_input question_name_input" value="${q.name}" placeholder="Pytanie">
+                                        </div>
+                                        <div>
+                                            <input class="question_input question_header_input question_page_input" value="${q.page_url || ``}" placeholder="Link (opcjonalne)">
+                                        </div>
                                     </div>
-                                </button>
-                                <span class="tooltip_popup">${isMultipleChoice ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`}</span>
+                                ` : `
+                                    <div class="question_left_view">
+                                        <h2 class="question_name"> 
+                                            ${q.name}
+                                        </h2>
+                                        ${q.page_url ?
+                                            `<h5 class="question_page"> 
+                                                <a href=${ensureAbsoluteUrl(q.page_url)} target="_blank"> ${q.page_url} </a>
+                                            </h5>`
+                                        : ``}
+                                    </div>
+                                `
+                                }
+
+                            </div>
+                            <div class="question_mode">
+                                <div class="tooltip_container">
+                                    <button class="question_mode_toggle_btn poll_btn ${!isEditMode && `disabled`}" ${!isEditMode && `disabled`}>
+                                        <div class="question_mode_toggle_icon">
+                                            <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
+                                        </div>
+                                    </button>
+                                    <span class="tooltip_popup">${isMultipleChoice ? `Tryb wielokrotnego wyboru` : `Tryb jednokrotnego wyboru`}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="question_labels">
-                        
-                    </div>
-                    <div class="question_answers"> 
-                        TODO: Options
-                    </div>
+                        <div class="question_labels">
+                            
+                        </div>
+                        <div class="question_answers"> 
+                            TODO: Options
+                        </div>
+
                 `
 
-                // TODO: Link logic to backend.
-                document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
-                document.querySelector(`#question-${q.id} .question_input`).oninput = (e) => (q.name = e.target.value);
+                if (isEditMode) {
+                    document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
+                    document.querySelector(`#question-${q.id} .question_page_input`).oninput = (e) => (q.page_url = e.target.value);
+                    document.querySelector(`#question-${q.id} .question_name_input`).oninput = (e) => (q.name = e.target.value);
+                }
 
                 function changeQuestionMode(q) {
                     const newIsMult = !q.multiple_choice;
@@ -476,7 +508,23 @@ async function renderPage() {
                 let offsetY = 0;
 
                 questionItems.forEach(item => {
+
+                    item.addEventListener('mousedown', (e) => {
+                        // If the target is an input or inside a button, disable dragging
+                        if (e.target.tagName === 'INPUT' || e.target.closest('button')) {
+                            item.draggable = false;
+                        } else {
+                            item.draggable = true;
+                        }
+                    });
+
                     item.addEventListener('dragstart', e => {
+                        // Not using isEdit mode here cause isEdit can be outdated when !fullReRender
+                        if (getMode() !== "edit") {
+                            e.preventDefault();
+                            return;
+                        }
+
                         item.classList.add('is_dragging');
 
                         const rect = item.getBoundingClientRect();
