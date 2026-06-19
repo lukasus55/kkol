@@ -34,9 +34,12 @@ async function renderPage() {
         return;
     }
 
-    // Authenticate user
+    // Authenticate & Fetch user
     const userAuthenticated = await requireAuth(pageUrl);
     if (!userAuthenticated) return;
+
+    const userData = await loadData('/api/me');
+    const USER = userData.user;
 
 
     const modeParam = params.get('m');
@@ -411,15 +414,28 @@ async function renderPage() {
     }
 
 
-    const Q_CONTAINER = document.querySelector('#questions_container');
-    const R_CONTAINER = document.querySelector('#results_container');
+
 
     /**
      * Renders the main content.
      * @param {boolean} fullReRender - Should be 'true' only when adding or removing new questions.
      */
     async function renderMain(fullReRender = true) {
+
+        let Q_CONTAINER = document.querySelector('#questions_container');
+        const R_CONTAINER = document.querySelector('#results_container');
+
         R_CONTAINER.innerHTML = "";
+
+        if (fullReRender) {
+            Q_CONTAINER.remove();
+
+            Q_CONTAINER = document.createElement("div");
+            Q_CONTAINER.id = "questions_container";
+            Q_CONTAINER.classList.add(`questions_container`);
+
+            document.querySelector(`#poll_container`).append(Q_CONTAINER);
+        }
 
         const isEditMode = MODE === "edit";
 
@@ -695,36 +711,46 @@ async function renderPage() {
         createQBtn.onclick = () => { createQuestion() };
 
         async function createQuestion() {
-            if (notAppliedChanges()) {
-                shakeChangesModal();
-                return;
-            }
+            QUESTIONS.push({
+                id: `temp-id-${QUESTIONS.length + 1}`,
+                added_on: null,
+                creator_id: USER.id,
+                multiple_choice: false,
+                name: `Pytanie ${QUESTIONS.length + 1}`,
+                page_url: null,
+                poll_id: POLL.id,
+                sort_order: null,
+            });
 
-            try {
-                const payload = {
-                    poll: POLL.id,
-                    name: `Pytanie ${QUESTIONS.length + 1}`
-                };
-                const result = await postData('/api/poll_question_create', payload, "Nie udało się utworzyć pytania.");
-                await reFetchQuestions();
-                renderMain(true);
-
-            } catch (error) {
-                showErrorPopup(error.message);
-                console.error("Question creation failed:", error);
-            }
+            document.dispatchEvent(EDIT_EVT);
+            renderMain(true);
         }
 
     }
 
     function renderChangesModal() {
         document.querySelector(`#changes_reset`).onclick = () => resetChanges();
+        document.querySelector(`#changes_save`).onclick = () => saveChanges();
 
         function resetChanges() {
             QUESTIONS = cloneArray(fetchedQuestions);
-            renderMain(false);
+            renderMain(true);
             document.dispatchEvent(EDIT_EVT);
         }
+
+        function saveChanges() {
+            if (getMode() === 'edit') {
+                updateQuestions()
+            } else {
+                // TODO
+                // updateAnswers()
+            }
+        }
+
+        function updateQuestions() {
+            console.log(QUESTIONS)
+        }
+
     }
 
     function shakeChangesModal() {
@@ -735,7 +761,7 @@ async function renderPage() {
                 CONTAINER.classList.remove(`shaked`);
                 CHANGES_MODAL.classList.remove(`changes_popup_highlited`);
             }
-            , 500);
+        , 500);
     }
 
 
