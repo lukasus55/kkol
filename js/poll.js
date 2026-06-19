@@ -648,7 +648,9 @@ async function renderPage() {
                             customGhost = null;
                         }
 
-                        QUESTIONS = cloneArray(syncSortOrders(QUESTIONS));
+                        /** Actuall reordering is being done in updateQuestions() just before post request.
+                         *  When i tried to do it here by adding: QUESTIONS = cloneArray(syncSortOrders(QUESTIONS));
+                         *  change popup was sometimes not being shown and I didn't bother to find the reason*/ 
                         document.dispatchEvent(EDIT_EVT);
                     });
                 });
@@ -868,7 +870,8 @@ async function renderPage() {
     document.addEventListener("changesEvent", changesEventHandler);
 
     function notAppliedChanges() {
-        return !isEqual(QUESTIONS, fetchedQuestions)
+        //TODO: Make the QUESTIONS that are being passed already synced with sort order (Ref: handleDragging()).
+        return !isEqual(syncSortOrders(QUESTIONS), fetchedQuestions)
     }
 
     function changesEventHandler() {
