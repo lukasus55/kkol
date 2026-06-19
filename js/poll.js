@@ -475,7 +475,7 @@ async function renderPage() {
                                 ${isEditMode ? `
                                     <div class="question_left_edit"> 
                                         <div>
-                                            <input class="question_input question_header_input question_name_input ${!q.name && `input_incorrect`}" value="${q.name}" placeholder="Pytanie">
+                                            <input class="question_input question_header_input question_name_input ${q.name.length<3 && `input_incorrect`}" value="${q.name}" placeholder="Pytanie">
                                         </div>
                                         <div>
                                             <input class="question_input question_header_input question_page_input" value="${q.page_url || ``}" placeholder="Link (opcjonalne)">
@@ -534,23 +534,13 @@ async function renderPage() {
                 }
 
                 async function deleteQuestion(q) {
-                    if (notAppliedChanges()) {
-                        shakeChangesModal();
-                        return;
+                    const index = QUESTIONS.indexOf(q);
+                    if (index > -1) {
+                        QUESTIONS.splice(index, 1);
                     }
 
-                    try {
-                        const payload = {
-                            id: q.id,
-                        };
-                        const result = await postData('/api/poll_question_delete', payload, "Nie udało się usunąć pytania.");
-                        document.querySelector(`#question-${q.id}`).remove();
-                        return;
-
-                    } catch (error) {
-                        showErrorPopup(error.message);
-                        console.error("Question deletion failed:", error);
-                    }
+                    renderMain(true);
+                    document.dispatchEvent(EDIT_EVT);
                 }
 
                 function changeQuestionMode(q) {
@@ -575,10 +565,10 @@ async function renderPage() {
                 function changeQuestionName(q, value) {
                     const nameInput = document.querySelector(`#question-${q.id} .question_name_input`);
 
-                    if (value) {
-                        nameInput.classList.remove('input_incorrect');
-                    } else {
+                    if (value.length<3) {
                         nameInput.classList.add('input_incorrect');
+                    } else {
+                        nameInput.classList.remove('input_incorrect');
                     }
 
                     q.name = value;
