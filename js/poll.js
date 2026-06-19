@@ -486,7 +486,7 @@ async function renderPage() {
                                             <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
                                         </div>
                                     </button>
-                                    <span class="tooltip_popup">${isMultipleChoice ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`}</span>
+                                    <span class="tooltip_popup mult_choice_tooltip_popup">${isMultipleChoice ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`}</span>
                                 </div>
                             </div>
 
@@ -530,7 +530,7 @@ async function renderPage() {
                     const shape = document.querySelector(`#question-${q.id} .question_mode_toggle_shape`);
                     shape.classList.toggle('square');
 
-                    const tooltipEl = document.querySelector(`#question-${q.id} .question_mode .tooltip_popup`)
+                    const tooltipEl = document.querySelector(`#question-${q.id} .question_mode .mult_choice_tooltip_popup`)
                     tooltipEl.textContent = newIsMult ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`;
 
                     q.multiple_choice = newIsMult;
