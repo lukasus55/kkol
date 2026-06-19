@@ -804,3 +804,8 @@ main
 {
     transform: scale(0.96);
 }
+
+.btn_changes_save
+{
+    width: 8rem;
+}

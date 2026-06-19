@@ -69,10 +69,10 @@ async function renderPage() {
     let QUESTIONS = cloneArray(fetchedQuestions);
     const CHANGES_MODAL = document.querySelector('#changes_popup');
 
-    // async function reFetchQuestions() {
-    //     fetchedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
-    //     QUESTIONS = cloneArray(fetchedQuestions);
-    // }
+    async function reFetchQuestions() {
+        fetchedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
+        QUESTIONS = cloneArray(fetchedQuestions);
+    }
 
 
     // Render header
@@ -700,6 +700,9 @@ async function renderPage() {
 
     }
 
+
+
+
     function renderFooter() {
         const createQBtn = document.querySelector('#btn_new_question');
 
@@ -729,10 +732,16 @@ async function renderPage() {
 
     }
 
-    function renderChangesModal() {
-        document.querySelector(`#changes_reset`).onclick = () => resetChanges();
-        document.querySelector(`#changes_save`).onclick = () => saveChanges();
 
+
+
+    function renderChangesModal() {
+        const saveBtn = document.querySelector(`#btn_changes_save`);
+        saveBtn.textContent = `Zapisz`;
+        
+        saveBtn.onclick = () => saveChanges();
+        document.querySelector(`#btn_changes_reset`).onclick = () => resetChanges();
+        
         function resetChanges() {
             QUESTIONS = cloneArray(fetchedQuestions);
             renderMain(true);
@@ -748,23 +757,31 @@ async function renderPage() {
             }
         }
 
-        function updateQuestions() {
+        async function updateQuestions() {
+            saveBtn.innerHTML = `Zapisywanie...`;
+            try {
+                const payload = {
+                    poll_id: POLL.id,
+                    questions: syncSortOrders(QUESTIONS),
+                };
+                const result = await postData('/api/poll_question_update', payload, "Nie udało się zapisać zmian pytań.");
 
-            console.log(QUESTIONS)
+                await reFetchQuestions();
+                document.dispatchEvent(EDIT_EVT);
+                saveBtn.textContent = `Zapisz`;
+                renderMain(true);
+                return;
+
+            } catch (error) {
+                showErrorPopup(error.message);
+                console.error("Question update failed:", error);
+                saveBtn.textContent = `Zapisz`;
+                return;
+            }
         }
 
     }
 
-    function shakeChangesModal() {
-        CONTAINER.classList.add(`shaked`);
-        CHANGES_MODAL.classList.add(`changes_popup_highlited`);
-        setTimeout(
-            () => {
-                CONTAINER.classList.remove(`shaked`);
-                CHANGES_MODAL.classList.remove(`changes_popup_highlited`);
-            }
-        , 500);
-    }
 
 
 
@@ -1012,6 +1029,17 @@ async function renderPage() {
                 }
             });
         });
+    }
+
+    function shakeChangesModal() {
+        CONTAINER.classList.add(`shaked`);
+        CHANGES_MODAL.classList.add(`changes_popup_highlited`);
+        setTimeout(
+            () => {
+                CONTAINER.classList.remove(`shaked`);
+                CHANGES_MODAL.classList.remove(`changes_popup_highlited`);
+            }
+        , 500);
     }
 
     window.addEventListener('resize', handleMenuResize);
