@@ -205,3 +205,22 @@ export function ensureAbsoluteUrl(url) {
     
     return `https://${url}`;
 }
+
+/**
+ * Clone array
+ * @param {Array} src 
+ * @returns {Array}
+ */
+export function cloneArray(src) {
+    return JSON.parse(JSON.stringify(src));
+}
+
+/**
+ * Compare two stringified values
+ * @param {*} a 
+ * @param {*} b 
+ * @returns {boolean}
+ */
+export function isEqual(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+}

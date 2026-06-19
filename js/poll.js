@@ -1,5 +1,5 @@
 import { formatForDateTimeInput, formatRelativeTimePL } from "./utils/formatDate.js";
-import { adjustModalPosition, appendLoaderDiv, debounce, ensureAbsoluteUrl, getParamsUrl, loadData, postData, requireAuth } from "./utils/helpers.js";
+import { adjustModalPosition, appendLoaderDiv, cloneArray, debounce, ensureAbsoluteUrl, getParamsUrl, isEqual, loadData, postData, requireAuth } from "./utils/helpers.js";
 
 const CONTAINER = document.querySelector('#poll');
 const loadingContainer = document.querySelector('#loader-global');
@@ -58,17 +58,21 @@ async function renderPage() {
     }
 
     // Fetching detailed data
-    const [LABELS, fetchedQuestions] = await Promise.all([
+    let [LABELS, fetchedQuestions] = await Promise.all([
         loadData(`/api/poll_labels?poll=${pid}`),
         loadData(`/api/poll_questions?poll=${POLL.id}`)
     ])
 
-    let QUESTIONS = fetchedQuestions;
+    let QUESTIONS = cloneArray(fetchedQuestions);
+    const CHANGES_MODAL = document.querySelector('#changes_popup');
+
+    async function reFetchQuestions() {
+        fetchedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
+        QUESTIONS = cloneArray(fetchedQuestions);
+    }
 
 
-
-
-
+    // Render header
     function renderHeader() {
         const relativeEl = document.querySelector('#poll_date_relative');
 
@@ -120,6 +124,11 @@ async function renderPage() {
                 // Manually changing selected classlist instead of calling renderModeSelector() in changeMode()
                 // to prevent tooltip flickering.
                 btn.onclick = () => {
+                    if (notAppliedChanges()) {
+                        shakeChangesModal();
+                        return;
+                    }
+
                     modeBtns.forEach((btn) => {
                         btn.classList.remove(`selected`);
                     })
@@ -383,7 +392,7 @@ async function renderPage() {
             const dateRow = document.querySelector("#poll_date_row");
 
 
-            if(window.scrollY > 0) {
+            if (window.scrollY > 0) {
                 nameRow.classList.remove('poll_header_visible');
                 nameRow.classList.add('poll_header_hidden');
                 dateRow.classList.remove('poll_header_visible');
@@ -402,17 +411,18 @@ async function renderPage() {
     }
 
 
+    const Q_CONTAINER = document.querySelector('#questions_container');
+    const R_CONTAINER = document.querySelector('#results_container');
+
     /**
      * Renders the main content.
      * @param {boolean} fullReRender - Should be 'true' only when adding or removing new questions.
      */
     async function renderMain(fullReRender = true) {
-        const Q_CONTAINER = document.querySelector('#questions_container');
-        const R_CONTAINER = document.querySelector('#results_container');
         R_CONTAINER.innerHTML = "";
 
-        const isEditMode = MODE === "edit";  
-        
+        const isEditMode = MODE === "edit";
+
         if (MODE === "results") {
             Q_CONTAINER.classList.add('hidden');
             R_CONTAINER.innerHTML = 'TODO: Results pannel';
@@ -429,11 +439,11 @@ async function renderPage() {
             })
 
             function renderQuestion(q) {
-                const isMultipleChoice = q.multiple_choice; 
+                const isMultipleChoice = q.multiple_choice;
 
                 const existingQEl = document.querySelector(`#question-${q.id}`);
                 if (!existingQEl) {
-                    Q_CONTAINER.insertAdjacentHTML('beforeend', 
+                    Q_CONTAINER.insertAdjacentHTML('beforeend',
                         `<div class="question" id="question-${q.id}"> </div>`
                     );
                 }
@@ -449,7 +459,7 @@ async function renderPage() {
                                 ${isEditMode ? `
                                     <div class="question_left_edit"> 
                                         <div>
-                                            <input class="question_input question_header_input question_name_input" value="${q.name}" placeholder="Pytanie">
+                                            <input class="question_input question_header_input question_name_input ${!q.name && `input_incorrect`}" value="${q.name}" placeholder="Pytanie">
                                         </div>
                                         <div>
                                             <input class="question_input question_header_input question_page_input" value="${q.page_url || ``}" placeholder="Link (opcjonalne)">
@@ -461,19 +471,19 @@ async function renderPage() {
                                             ${q.name}
                                         </h2>
                                         ${q.page_url ?
-                                            `<h5 class="question_page"> 
+                        `<h5 class="question_page"> 
                                                 <a href=${ensureAbsoluteUrl(q.page_url)} target="_blank"> ${q.page_url} </a>
                                             </h5>`
-                                        : ``}
+                        : ``}
                                     </div>
                                 `
-                                }
+                    }
                             </div>
 
                             <div class="question_mode">
 
-                                ${isEditMode ? 
-                                `<div class="tooltip_container" draggable="false">
+                                ${isEditMode ?
+                        `<div class="tooltip_container" draggable="false">
                                     <button class="btn_delete_question">
                                         <img src="img/polls/trash.svg">
                                     </button>
@@ -501,19 +511,24 @@ async function renderPage() {
                 `
 
                 if (isEditMode) {
-                    document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
                     document.querySelector(`#question-${q.id} .btn_delete_question`).onclick = () => deleteQuestion(q);
-                    document.querySelector(`#question-${q.id} .question_page_input`).oninput = (e) => (q.page_url = e.target.value);
-                    document.querySelector(`#question-${q.id} .question_name_input`).oninput = (e) => (q.name = e.target.value);
+                    document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
+                    document.querySelector(`#question-${q.id} .question_page_input`).oninput = (e) => changeQuestionUrl(q, e.target.value)
+                    document.querySelector(`#question-${q.id} .question_name_input`).oninput = (e) => changeQuestionName(q, e.target.value)
                 }
 
                 async function deleteQuestion(q) {
+                    if (notAppliedChanges()) {
+                        shakeChangesModal();
+                        return;
+                    }
+
                     try {
                         const payload = {
                             id: q.id,
                         };
                         const result = await postData('/api/poll_question_delete', payload, "Nie udało się usunąć pytania.");
-                        QUESTIONS = await loadData(`/api/poll_questions?poll=${pid}`);
+                        await reFetchQuestions()
                         document.querySelector(`#question-${q.id}`).remove();
                         renderMain(false);
                         return;
@@ -526,7 +541,7 @@ async function renderPage() {
 
                 function changeQuestionMode(q) {
                     const newIsMult = !q.multiple_choice;
-                    
+
                     const shape = document.querySelector(`#question-${q.id} .question_mode_toggle_shape`);
                     shape.classList.toggle('square');
 
@@ -534,10 +549,28 @@ async function renderPage() {
                     tooltipEl.textContent = newIsMult ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`;
 
                     q.multiple_choice = newIsMult;
-                
-                    // renderOptions(q); - TODO
+                    document.dispatchEvent(EDIT_EVT);
                     return;
                 }
+
+                function changeQuestionUrl(q, value) {
+                    q.page_url = value || null;
+                    document.dispatchEvent(EDIT_EVT);
+                }
+
+                function changeQuestionName(q, value) {
+                    const nameInput = document.querySelector(`#question-${q.id} .question_name_input`);
+
+                    if (value) {
+                        nameInput.classList.remove('input_incorrect');
+                    } else {
+                        nameInput.classList.add('input_incorrect');
+                    }
+
+                    q.name = value;
+                    document.dispatchEvent(EDIT_EVT);
+                }
+
             }
 
             handleTooltips();
@@ -659,16 +692,21 @@ async function renderPage() {
         }
 
         createQBtn.classList.remove('hidden');
-        createQBtn.onclick = () => {createQuestion()};
+        createQBtn.onclick = () => { createQuestion() };
 
         async function createQuestion() {
+            if (notAppliedChanges()) {
+                shakeChangesModal();
+                return;
+            }
+
             try {
                 const payload = {
                     poll: POLL.id,
-                    name: `Pytanie ${QUESTIONS.length+1}`
+                    name: `Pytanie ${QUESTIONS.length + 1}`
                 };
                 const result = await postData('/api/poll_question_create', payload, "Nie udało się utworzyć pytania.");
-                QUESTIONS = await loadData(`/api/poll_questions?poll=${pid}`);
+                await reFetchQuestions();
                 renderMain(true);
 
             } catch (error) {
@@ -676,6 +714,28 @@ async function renderPage() {
                 console.error("Question creation failed:", error);
             }
         }
+
+    }
+
+    function renderChangesModal() {
+        document.querySelector(`#changes_reset`).onclick = () => resetChanges();
+
+        function resetChanges() {
+            QUESTIONS = cloneArray(fetchedQuestions);
+            renderMain(false);
+            document.dispatchEvent(EDIT_EVT);
+        }
+    }
+
+    function shakeChangesModal() {
+        CONTAINER.classList.add(`shaked`);
+        CHANGES_MODAL.classList.add(`changes_popup_highlited`);
+        setTimeout(
+            () => {
+                CONTAINER.classList.remove(`shaked`);
+                CHANGES_MODAL.classList.remove(`changes_popup_highlited`);
+            }
+            , 500);
     }
 
 
@@ -748,6 +808,23 @@ async function renderPage() {
 
 
     // ====== UI HANDLERS ======
+
+    const EDIT_EVT = new CustomEvent("changesEvent")
+
+    document.addEventListener("changesEvent", changesEventHandler);
+
+    function notAppliedChanges() {
+        return !isEqual(QUESTIONS, fetchedQuestions)
+    }
+
+    function changesEventHandler() {
+        if (notAppliedChanges()) {
+            CHANGES_MODAL.classList.remove('changes_popup_hidden');
+        } else {
+            CHANGES_MODAL.classList.add('changes_popup_hidden');
+        }
+    }
+
 
     function closeAllActionMenus() {
         const menus = document.querySelectorAll('.poll_action_menu');
@@ -876,7 +953,7 @@ async function renderPage() {
             const popup = element.querySelector('.tooltip_popup');
 
             element.addEventListener('mouseenter', () => {
-                
+
                 if (popup) {
                     popup.classList.add('tooltip_visible');
                 }
@@ -897,6 +974,7 @@ async function renderPage() {
     renderHeader();
     renderMain();
     renderFooter();
+    renderChangesModal();
 
 
 }
