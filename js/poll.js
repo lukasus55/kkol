@@ -69,10 +69,10 @@ async function renderPage() {
     let QUESTIONS = cloneArray(fetchedQuestions);
     const CHANGES_MODAL = document.querySelector('#changes_popup');
 
-    async function reFetchQuestions() {
-        fetchedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
-        QUESTIONS = cloneArray(fetchedQuestions);
-    }
+    // async function reFetchQuestions() {
+    //     fetchedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
+    //     QUESTIONS = cloneArray(fetchedQuestions);
+    // }
 
 
     // Render header
@@ -460,7 +460,7 @@ async function renderPage() {
                 const existingQEl = document.querySelector(`#question-${q.id}`);
                 if (!existingQEl) {
                     Q_CONTAINER.insertAdjacentHTML('beforeend',
-                        `<div class="question" id="question-${q.id}"> </div>`
+                        `<div class="question" id="question-${q.id}" data-id="${q.id}"> </div>`
                     );
                 }
 
@@ -544,9 +544,7 @@ async function renderPage() {
                             id: q.id,
                         };
                         const result = await postData('/api/poll_question_delete', payload, "Nie udało się usunąć pytania.");
-                        await reFetchQuestions()
                         document.querySelector(`#question-${q.id}`).remove();
-                        renderMain(false);
                         return;
 
                     } catch (error) {
@@ -659,6 +657,9 @@ async function renderPage() {
                             customGhost.remove();
                             customGhost = null;
                         }
+
+                        QUESTIONS = cloneArray(syncSortOrders(QUESTIONS));
+                        document.dispatchEvent(EDIT_EVT);
                     });
                 });
 
@@ -748,6 +749,7 @@ async function renderPage() {
         }
 
         function updateQuestions() {
+
             console.log(QUESTIONS)
         }
 
@@ -827,6 +829,25 @@ async function renderPage() {
 
         document.getElementById('error_message').textContent = message;
         document.getElementById('error_close_btn').onclick = () => { popup.classList.remove('active') };
+    }
+
+    function syncSortOrders(questionsArray) {
+        const domQuestions = document.querySelectorAll('.question');
+
+        domQuestions.forEach((element, index) => {
+            const questionId = element.dataset.id;
+
+            const questionObj = questionsArray.find(q => q.id === questionId);
+
+            if (questionObj) {
+                questionObj.sort_order = index + 1;
+            } else {
+                console.warn("No question obj found!");
+            }
+        });
+
+        questionsArray.sort((a, b) => a.sort_order - b.sort_order);
+        return questionsArray;
     }
 
 
