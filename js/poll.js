@@ -283,7 +283,6 @@ async function renderPage() {
                     }
                 }
 
-                // TODO
                 async function deleteLabel(label) {
                     try {
                         const payload = {
@@ -469,9 +468,18 @@ async function renderPage() {
                                     </div>
                                 `
                                 }
-
                             </div>
+
                             <div class="question_mode">
+
+                                ${isEditMode ? 
+                                `<div class="tooltip_container" draggable="false">
+                                    <button class="btn_delete_question">
+                                        <img src="img/polls/trash.svg">
+                                    </button>
+                                    <span class="tooltip_popup">Usuń pytanie</span>
+                                </div>` : ``}
+                                
                                 <div class="tooltip_container">
                                     <button class="question_mode_toggle_btn poll_btn ${!isEditMode && `disabled`}" ${!isEditMode && `disabled`}>
                                         <div class="question_mode_toggle_icon">
@@ -481,6 +489,7 @@ async function renderPage() {
                                     <span class="tooltip_popup">${isMultipleChoice ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`}</span>
                                 </div>
                             </div>
+
                         </div>
                         <div class="question_labels">
                             
@@ -493,8 +502,26 @@ async function renderPage() {
 
                 if (isEditMode) {
                     document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
+                    document.querySelector(`#question-${q.id} .btn_delete_question`).onclick = () => deleteQuestion(q);
                     document.querySelector(`#question-${q.id} .question_page_input`).oninput = (e) => (q.page_url = e.target.value);
                     document.querySelector(`#question-${q.id} .question_name_input`).oninput = (e) => (q.name = e.target.value);
+                }
+
+                async function deleteQuestion(q) {
+                    try {
+                        const payload = {
+                            id: q.id,
+                        };
+                        const result = await postData('/api/poll_question_delete', payload, "Nie udało się usunąć pytania.");
+                        QUESTIONS = await loadData(`/api/poll_questions?poll=${pid}`);
+                        document.querySelector(`#question-${q.id}`).remove();
+                        renderMain(false);
+                        return;
+
+                    } catch (error) {
+                        showErrorPopup(error.message);
+                        console.error("Question deletion failed:", error);
+                    }
                 }
 
                 function changeQuestionMode(q) {
@@ -540,7 +567,7 @@ async function renderPage() {
 
                     item.addEventListener('dragstart', e => {
                         // Not using isEdit mode here cause isEdit can be outdated when !fullReRender
-                        if (getMode() !== "edit") {
+                        if (item.draggable === false || getMode() !== "edit") {
                             e.preventDefault();
                             return;
                         }
@@ -642,7 +669,7 @@ async function renderPage() {
                 };
                 const result = await postData('/api/poll_question_create', payload, "Nie udało się utworzyć pytania.");
                 QUESTIONS = await loadData(`/api/poll_questions?poll=${pid}`);
-                renderMain(false);
+                renderMain(true);
 
             } catch (error) {
                 showErrorPopup(error.message);

@@ -611,7 +611,10 @@ main
 
 .question_mode
 {
+    display: flex;
+    justify-content: center;
     flex: 0;
+    align-items: center;
 }
 
 .question_input
@@ -683,4 +686,24 @@ main
     background-color: transparent;
     color: var(--dashboard-text);
     height: min-content;
+}
+
+.btn_delete_question
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #cf3737;
+    padding: .5rem;
+    border-radius: .5rem;
+}
+
+.btn_delete_question:hover
+{
+    background-color: #dd4444;
+}
+
+.btn_delete_question:active
+{
+    transform: scale(0.96);
 }
