@@ -365,7 +365,6 @@ async function renderPage() {
                     `Anuluj`
                 )
 
-                // TODO
                 async function savePoll() {
                     try {
                         const payload = {
@@ -384,7 +383,6 @@ async function renderPage() {
                     }
                 }
 
-                // TODO
                 async function deletePoll() {
                     try {
                         const payload = {
@@ -476,12 +474,14 @@ async function renderPage() {
                 }
 
                 const qEl = document.querySelector(`#question-${q.id}`);
+                qEl.innerHTML = ``;
                 qEl.draggable = isEditMode;
                 qEl.style.cursor = isEditMode ? `grabbing` : `default`;
 
-                qEl.innerHTML = `
-
+                function renderQuestionHeader() {
+                    const qHeaderHtml = `
                         <div class="question_header">
+
                             <div class="question_left"> 
                                 ${isEditMode ? `
                                     <div class="question_left_edit"> 
@@ -498,19 +498,18 @@ async function renderPage() {
                                             ${q.name}
                                         </h2>
                                         ${q.page_url ?
-                        `<h5 class="question_page"> 
+                                        `<h5 class="question_page"> 
                                                 <a href=${ensureAbsoluteUrl(q.page_url)} target="_blank"> ${q.page_url} </a>
                                             </h5>`
-                        : ``}
+                                        : ``}
                                     </div>
                                 `
-                    }
+                                }
                             </div>
 
                             <div class="question_mode">
-
                                 ${isEditMode ?
-                        `<div class="tooltip_container" draggable="false">
+                                `<div class="tooltip_container" draggable="false">
                                     <button class="btn_delete_question">
                                         <img src="img/polls/trash.svg">
                                     </button>
@@ -528,64 +527,163 @@ async function renderPage() {
                             </div>
 
                         </div>
-                        <div class="question_labels">
-                            
-                        </div>
-                        <div class="question_answers"> 
-                            TODO: Options
-                        </div>
+                    `
 
-                `
+                    qEl.insertAdjacentHTML('beforeend', qHeaderHtml)
 
-                if (isEditMode) {
-                    document.querySelector(`#question-${q.id} .btn_delete_question`).onclick = () => deleteQuestion(q);
-                    document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
-                    document.querySelector(`#question-${q.id} .question_page_input`).oninput = (e) => changeQuestionUrl(q, e.target.value)
-                    document.querySelector(`#question-${q.id} .question_name_input`).oninput = (e) => changeQuestionName(q, e.target.value)
-                }
-
-                async function deleteQuestion(q) {
-                    const index = QUESTIONS.indexOf(q);
-                    if (index > -1) {
-                        QUESTIONS.splice(index, 1);
+                    if (isEditMode) {
+                        document.querySelector(`#question-${q.id} .btn_delete_question`).onclick = () => deleteQuestion(q);
+                        document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
+                        document.querySelector(`#question-${q.id} .question_page_input`).oninput = (e) => changeQuestionUrl(q, e.target.value)
+                        document.querySelector(`#question-${q.id} .question_name_input`).oninput = (e) => changeQuestionName(q, e.target.value)
                     }
 
-                    renderMain(true);
-                    document.dispatchEvent(EDIT_EVT);
-                }
+                    async function deleteQuestion(q) {
+                        const index = QUESTIONS.indexOf(q);
+                        if (index > -1) {
+                            QUESTIONS.splice(index, 1);
+                        }
 
-                function changeQuestionMode(q) {
-                    const newIsMult = !q.multiple_choice;
-
-                    const shape = document.querySelector(`#question-${q.id} .question_mode_toggle_shape`);
-                    shape.classList.toggle('square');
-
-                    const tooltipEl = document.querySelector(`#question-${q.id} .question_mode .mult_choice_tooltip_popup`)
-                    tooltipEl.textContent = newIsMult ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`;
-
-                    q.multiple_choice = newIsMult;
-                    document.dispatchEvent(EDIT_EVT);
-                    return;
-                }
-
-                function changeQuestionUrl(q, value) {
-                    q.page_url = value || null;
-                    document.dispatchEvent(EDIT_EVT);
-                }
-
-                function changeQuestionName(q, value) {
-                    const nameInput = document.querySelector(`#question-${q.id} .question_name_input`);
-
-                    if (value.length<3) {
-                        nameInput.classList.add('input_incorrect');
-                    } else {
-                        nameInput.classList.remove('input_incorrect');
+                        renderMain(true);
+                        document.dispatchEvent(EDIT_EVT);
                     }
 
-                    q.name = value;
-                    document.dispatchEvent(EDIT_EVT);
+                    function changeQuestionMode(q) {
+                        const newIsMult = !q.multiple_choice;
+
+                        const shape = document.querySelector(`#question-${q.id} .question_mode_toggle_shape`);
+                        shape.classList.toggle('square');
+
+                        const tooltipEl = document.querySelector(`#question-${q.id} .question_mode .mult_choice_tooltip_popup`)
+                        tooltipEl.textContent = newIsMult ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`;
+
+                        q.multiple_choice = newIsMult;
+                        document.dispatchEvent(EDIT_EVT);
+                        return;
+                    }
+
+                    function changeQuestionUrl(q, value) {
+                        q.page_url = value || null;
+                        document.dispatchEvent(EDIT_EVT);
+                    }
+
+                    function changeQuestionName(q, value) {
+                        const nameInput = document.querySelector(`#question-${q.id} .question_name_input`);
+
+                        if (value.length<3) {
+                            nameInput.classList.add('input_incorrect');
+                        } else {
+                            nameInput.classList.remove('input_incorrect');
+                        }
+
+                        q.name = value;
+                        document.dispatchEvent(EDIT_EVT);
+                    }
+
                 }
 
+                function renderQuestionLabels() {
+                    const qLabels = q.labels;
+
+                    const qLabelsInnerHtml = qLabels.map(l => {
+                        const colors = getLabelColors(l.hex);
+
+                        return `<div class="tooltip_container">
+                                    <div 
+                                    class="question_label_badge" 
+                                    style="background-color:${colors.backgroundColor}; border-color:${colors.textColor}"
+                                    >
+                                        <div class="question_label_badge_content" style="color:${colors.textColor}">
+                                            ${l.name}
+                                        </div>
+                                    </div>
+                                    <span class="tooltip_popup"><strong>${l.name}</strong>${l.description ? `: ${l.description}` : ``}</span>
+                                </div>`;
+                    }).join('');
+
+
+                    const questionLabelIds = new Set(q.labels.map(label => String(label.id)));
+                    const availableLabelsHtml = LABELS.map(label => {
+                        const isSelected = questionLabelIds.has(String(label.id))
+                        return `
+                            <div class="labels_list_label ${isSelected ? `selected` : ``}" data-label-id="${String(label.id)}" draggable="false">
+                                <div class="labels_list_label_hex">
+                                    <div class="labels_list_label_hex_dot" style="background-color: ${label.hex};"></div>
+                                </div>
+                                <div class="labels_list_label_title">
+                                    <div class="labels_list_label_name">${label.name}</div>
+                                    <div class="labels_list_label_description">${label.description || ``}</div>
+                                </div>
+                                <div class="labels_list_label_action">
+                                    <div class="labels_list_label_action_icon">
+                                        ${isSelected ? `<img src="/img/polls/minus.svg">` : `<img src="/img/polls/plusWhite.svg">`}
+                                    </div>
+                                </div>
+                            </div>
+                    `}).join('');
+
+
+                    const qLabelsHtml = 
+                        `<div class="question_labels"> 
+                            <div class="question_labels_list">
+                                ${qLabelsInnerHtml}
+
+                            </div>
+                            ${isEditMode ? `
+                                <div class="question_labels_list_section">
+                                    <button class="btn_secondary btn_menu_toggler btn_toggle_q_labels_menu">
+                                        <img src="/img/polls/pencil.svg" alt="Pencil icon">
+                                    </button>
+                                    <div class="poll_labels_list_container poll_action_menu hidden" id="question_labels_menu_${q.id}">
+                                        <div class="poll_labels_list">
+                                            ${availableLabelsHtml}
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ``}
+                        </div>`;
+
+                    qEl.insertAdjacentHTML('beforeend', qLabelsHtml);
+
+                    const toggleBtn = document.querySelector(`#question-${q.id} .btn_toggle_q_labels_menu`);
+                    const menuEl = document.querySelector(`#question-${q.id} #question_labels_menu_${q.id}`);
+
+                    toggleBtn.onclick = () => toggleLabelsMenu();
+
+                    menuEl.querySelectorAll('.labels_list_label').forEach(labelBtn => {
+                        const labelId = String(labelBtn.getAttribute('data-label-id'));
+                        labelBtn.onclick = () => removeQuestionLabel(q, labelId);
+                    });
+
+                    function removeQuestionLabel(q, labelId) {
+                        // Using string so existing labels and cloned objects match correctly
+                        const targetLabel = q.labels.find(l => String(l.id) === labelId);
+
+                        if (targetLabel) {
+                            q.labels = q.labels.filter(l => String(l.id) !== labelId);
+                        } else {
+                            const labelData = LABELS.find(l => String(l.id) === labelId);
+                            if (labelData) {
+                                q.labels = [...q.labels, labelData];
+                            }
+                        }
+
+                        document.dispatchEvent(EDIT_EVT);
+                        renderMain(false);
+                    }
+                    
+                    function toggleLabelsMenu() {
+                        closeAllActionMenus();
+                        toggleBtn.classList.add('btn_active');
+                        menuEl.classList.remove('hidden');
+                        adjustModalPosition(menuEl);
+                    }
+
+                }
+
+                renderQuestionHeader();
+                renderQuestionLabels();
+                
             }
 
             handleTooltips();
@@ -727,6 +825,8 @@ async function renderPage() {
                 page_url: null,
                 poll_id: POLL.id,
                 sort_order: null,
+                labels: [],
+                options: [],
             });
 
             document.dispatchEvent(EDIT_EVT);
@@ -1017,12 +1117,26 @@ async function renderPage() {
     function handleTooltips() {
         const targetElements = document.querySelectorAll('.tooltip_container');
 
+        // This method prevent overflow settings on parent element impact the tooltip.
+        function positionTooltip(element, popup) {
+            const rect = element.getBoundingClientRect();
+            const popupWidth = popup.offsetWidth || 180;
+            const left = Math.min(
+                window.innerWidth - popupWidth / 2 - 8,
+                Math.max(popupWidth / 2 + 8, rect.left + rect.width / 2)
+            );
+            const top = Math.max(8, rect.top - 8);
+
+            popup.style.left = `${left}px`;
+            popup.style.top = `${top}px`;
+        }
+
         targetElements.forEach(element => {
             const popup = element.querySelector('.tooltip_popup');
 
             element.addEventListener('mouseenter', () => {
-
                 if (popup) {
+                    positionTooltip(element, popup);
                     popup.classList.add('tooltip_visible');
                 }
             });
