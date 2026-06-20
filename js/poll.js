@@ -682,8 +682,98 @@ async function renderPage() {
 
                 }
 
+                function renderQuestionOptions() {
+                    const qOptions = q.options;
+
+                    const qOptionsInnerHtml = qOptions.map(o => {
+                        if (isEditMode) {
+                            return `
+                            <div class="question_edit_option" data-option-id="${o.id}">
+                                <input class="poll_input question_option_input" value="${o.name || ``}" data-option-id="${o.id}" placeholder="Odpowiedź">
+                                <div class="tooltip_container" draggable="false">
+                                    <button class="btn_transparent btn_delete_option" data-option-id="${o.id}">
+                                        <img src="img/polls/trash.svg">
+                                    </button>
+                                    <span class="tooltip_popup">Usuń odpowiedź</span>
+                                </div>
+                            </div>`;
+                        }
+                        else if(MODE === "vote") {
+                            return `
+                            <div class="question_view_option">
+                                ${o.name}
+                            </div>`;
+                        } else {
+                            return `
+                            <div class="question_view_option">
+                                Results for ${o.name}
+                            </div>;
+                            `
+                        }
+                    }).join('');
+
+                    const qOptionsHtml = 
+                        `<div class="question_options"> 
+                                ${qOptionsInnerHtml}
+                                ${isEditMode ? `<button class="btn_secondary btn_add_option"> Utwórz odpowiedź </button>` : ``}
+                        </div>`;
+
+                    qEl.insertAdjacentHTML('beforeend', qOptionsHtml);
+
+                    if (isEditMode) {
+                        const optionInputs = document.querySelectorAll(`#question-${q.id} .question_option_input`);
+                        optionInputs.forEach((input) => {
+                            input.oninput = (e) => {
+                                updateQuestionOption(q, input.dataset.optionId, e.target.value);
+                            };
+                        });
+
+                        const deleteButtons = document.querySelectorAll(`#question-${q.id} .btn_delete_option`);
+                        deleteButtons.forEach((button) => {
+                            button.onclick = () => removeQuestionOption(q, button.dataset.optionId);
+                        });
+
+                        const addOptionBtn = document.querySelector(`#question-${q.id} .btn_add_option`);
+                        if (addOptionBtn) {
+                            addOptionBtn.onclick = () => addQuestionOption(q);
+                        }
+                    }
+                }
+
+                function updateQuestionOption(question, optionId, value) {
+                    const target = question.options.find((opt) => String(opt.id) === String(optionId));
+                    if (!target) {
+                        question.options.push({
+                            id: `temp-${Date.now()}-${Math.random()}`,
+                            name: value
+                        });
+                    } else {
+                        target.name = value;
+                    }
+
+                    document.dispatchEvent(EDIT_EVT);
+                }
+
+                function addQuestionOption(question) {
+                    const newOption = {
+                        id: `temp-${Date.now()}-${Math.random()}`,
+                        name: ``
+                    };
+
+                    question.options = [...question.options, newOption];
+                    document.dispatchEvent(EDIT_EVT);
+                    renderMain(false);
+                }
+
+                function removeQuestionOption(question, optionId) {
+                    question.options = question.options.filter((opt) => String(opt.id) !== String(optionId));
+                    document.dispatchEvent(EDIT_EVT);
+                    renderMain(false);
+                }
+
                 renderQuestionHeader();
                 renderQuestionLabels();
+                renderQuestionOptions();
                 
             }
 
@@ -871,7 +961,8 @@ async function renderPage() {
                 const result = await postData('/api/poll_question_update', payload, "Nie udało się zapisać zmian pytań.");
 
                 document.dispatchEvent(EDIT_EVT);
-                window.location.replace(`poll?${paramsUrl}&m=e`);
+                const editModePageUrl = `poll?${paramsUrl.replace('&m=e', '')}m=e`
+                window.location.replace(editModePageUrl);
                 return;
 
             } catch (error) {
