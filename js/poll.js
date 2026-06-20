@@ -1009,7 +1009,7 @@ async function renderPage() {
                 const result = await postData('/api/poll_question_update', payload, "Nie udało się zapisać zmian pytań.");
 
                 document.dispatchEvent(EDIT_EVT);
-                const editModePageUrl = `poll?${paramsUrl.replace('&m=e', '')}m=e`
+                const editModePageUrl = `poll?${paramsUrl.replace(/&m=[a-zA-Z]/g, '')}&m=e`;
                 window.location.replace(editModePageUrl);
                 return;
 
@@ -1031,7 +1031,7 @@ async function renderPage() {
                 const result = await postData('/api/poll_players_answers_update', payload, "Nie udało się zapisać odpowiedzi.");
 
                 document.dispatchEvent(EDIT_EVT);
-                const voteModePageUrl = `poll?${paramsUrl.replace('&m=v', '')}m=v`
+                const voteModePageUrl = `poll?${paramsUrl.replace(/&m=[a-zA-Z]/g, '')}&m=v`;
                 window.location.replace(voteModePageUrl);
                 return;
 
