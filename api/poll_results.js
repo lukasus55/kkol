@@ -1,0 +1,124 @@
+import sql from '../db.js';
+import { isUUIDv7 } from '../js/utils/helpers.js';
+
+export default async function handler(request, response) {
+    if (request.method !== 'GET') {
+        return response.status(405).json({ error: "Method not allowed" });
+    }
+
+    try {
+        const { poll } = request.query;
+
+        if (!poll) {
+            return response.status(400).json({ error: "Brakujące dane (Id ankiety)." });
+        }
+        
+        if (!isUUIDv7(poll)) {
+            return response.status(400).json({ error: "Id ankiety musi być typu uuidv7" });
+        }
+
+        // Verify poll exists
+        const pollCheck = await sql`
+            SELECT id FROM polls WHERE id = ${poll}
+        `;
+        
+        if (pollCheck.length === 0) {
+            return response.status(404).json({ error: "Ankieta nie istnieje." });
+        }
+
+        // Get total unique participants for the entire poll
+        const participantsResult = await sql`
+            SELECT COUNT(DISTINCT ca.player_id)::int AS total
+            FROM checked_answers ca
+            JOIN "options" o ON ca.option_id = o.id
+            JOIN questions q ON o.question_id = q.id
+            WHERE q.poll_id = ${poll}
+        `;
+        const totalParticipants = participantsResult[0].total;
+
+        // Aggregated Math Query (returning a nested Dictionary/Map object)
+        const resultsData = await sql`
+            WITH option_counts AS (
+                -- Count the votes for every specific option
+                SELECT 
+                    o.question_id,
+                    o.id AS option_id,
+                    o.name AS option_name,
+                    COUNT(ca.option_id)::int AS vote_count
+                FROM "options" o
+                LEFT JOIN checked_answers ca ON o.id = ca.option_id
+                JOIN questions q ON o.question_id = q.id
+                WHERE q.poll_id = ${poll}
+                GROUP BY o.question_id, o.id, o.name
+            ),
+            question_totals AS (
+                -- Find the total votes cast per question
+                SELECT 
+                    question_id,
+                    SUM(vote_count)::int AS total_votes
+                FROM option_counts
+                GROUP BY question_id
+            ),
+            calculated_options AS (
+                -- Calculate the percentages
+                SELECT 
+                    oc.question_id,
+                    oc.option_id,
+                    oc.option_name,
+                    oc.vote_count,
+                    CASE 
+                        WHEN qt.total_votes > 0 THEN ROUND((oc.vote_count::numeric / qt.total_votes) * 100, 1)::float
+                        ELSE 0.0 
+                    END AS percentage
+                FROM option_counts oc
+                JOIN question_totals qt ON oc.question_id = qt.question_id
+            ),
+            questions_aggregated AS (
+                -- Package options into a JSON object mapped by option_id
+                SELECT 
+                    q.id AS question_id,
+                    q."name" AS question_name,
+                    q.sort_order,
+                    COALESCE(
+                        json_object_agg(
+                            co.option_id,
+                            json_build_object(
+                                'name', co.option_name,
+                                'vote_count', co.vote_count,
+                                'percentage', co.percentage
+                            )
+                        ) FILTER (WHERE co.option_id IS NOT NULL), '{}'::json
+                    ) AS options_map
+                FROM questions q
+                LEFT JOIN calculated_options co ON q.id = co.question_id
+                WHERE q.poll_id = ${poll}
+                GROUP BY q.id, q."name", q.sort_order
+            )
+            -- Package all questions into a final JSON object mapped by question_id
+            SELECT COALESCE(
+                json_object_agg(
+                    question_id,
+                    json_build_object(
+                        'name', question_name,
+                        'sort_order', sort_order,
+                        'options', options_map
+                    )
+                ), '{}'::json
+            ) AS final_results
+            FROM questions_aggregated;
+        `;
+
+        // sql[] returns an array of rows
+        const finalResultsMap = resultsData[0].final_results;
+
+        return response.status(200).json({
+            poll_id: poll,
+            total_participants: totalParticipants,
+            results: finalResultsMap
+        });
+
+    } catch (error) {
+        console.error("Fetch Poll Results Error:", error);
+        return response.status(500).json({ error: "Wystąpił błąd podczas pobierania wyników ankiety." });
+    }
+}
