@@ -165,7 +165,13 @@ async function renderPage() {
             const labelsListEl = document.querySelector('#poll_labels_list');
             const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
 
-            labelsListToggleBtn.onclick = () => {
+            labelsListToggleBtn.onclick = () => toggleLabelsMenu()
+
+            function toggleLabelsMenu() {
+                if (notAppliedChanges()) {
+                    shakeChangesModal();
+                    return;
+                }
                 labelsListToggleBtn.classList.toggle('btn_active');
                 labelsListContainerEl.classList.toggle('hidden');
                 adjustModalPosition(labelsListContainerEl);
@@ -333,6 +339,11 @@ async function renderPage() {
             document.querySelector('#btn_poll_settings').onclick = () => showSettingsPopup();
 
             function showSettingsPopup() {
+                if (notAppliedChanges()) {
+                    shakeChangesModal();
+                    return;
+                }
+
                 document.querySelector('#popup_settings').classList.add('active');
 
                 const nameInput = document.querySelector('#poll_edit_name');
