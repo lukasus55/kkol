@@ -229,8 +229,8 @@ export default async function handler(request, response) {
 
                 for (const labelId of q.label_ids) {
                     await sqlTransaction`
-                        INSERT INTO questions_poll_labels (question_id, label_id)
-                        VALUES (${q.id}, ${labelId})
+                        INSERT INTO questions_poll_labels (question_id, label_id, poll_id)
+                        VALUES (${q.id}, ${labelId}, ${poll_id})
                     `;
                 }
             }

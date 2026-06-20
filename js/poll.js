@@ -160,7 +160,7 @@ async function renderPage() {
         };
         renderModeSelector();
 
-        async function renderLabels() {
+        async function renderHeaderLabels() {
             const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
             const labelsListEl = document.querySelector('#poll_labels_list');
             const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
@@ -182,7 +182,7 @@ async function renderPage() {
                 labelsHtml = '<div class="labels_empty">Nie ma jeszcze żadnych etykiet</div>'
             } else {
                 LABELS.forEach((label) => {
-                    const questionWithLabel = 12; // TODO: add counter of question with this label
+                    const questionWithLabel = label.questions_count; // TODO: add counter of question with this label
                     labelsHtml += `
                         <div class="labels_list_label" data-id="${label.id}">
                             <div class="labels_list_label_hex">
@@ -217,8 +217,7 @@ async function renderPage() {
 
                 // --- Initialize ---
                 if (!label) {
-                    // TODO: Error popup
-                    console.error('Label not found');
+                    showErrorPopup("Nie znaleziono etykiety.")
                     return;
                 }
                 previewLabel = label;
@@ -418,7 +417,7 @@ async function renderPage() {
         };
 
 
-        renderLabels();
+        renderHeaderLabels();
         renderSettings();
     }
 
@@ -631,7 +630,7 @@ async function renderPage() {
                             </div>
                             ${isEditMode ? `
                                 <div class="question_labels_list_section">
-                                    <button class="btn_secondary btn_menu_toggler btn_toggle_q_labels_menu">
+                                    <button class="btn_transparent btn_menu_toggler btn_toggle_q_labels_menu">
                                         <img src="/img/polls/pencil.svg" alt="Pencil icon">
                                     </button>
                                     <div class="poll_labels_list_container poll_action_menu hidden" id="question_labels_menu_${q.id}">
@@ -645,10 +644,12 @@ async function renderPage() {
 
                     qEl.insertAdjacentHTML('beforeend', qLabelsHtml);
 
+                    if (!isEditMode) return;
+
                     const toggleBtn = document.querySelector(`#question-${q.id} .btn_toggle_q_labels_menu`);
                     const menuEl = document.querySelector(`#question-${q.id} #question_labels_menu_${q.id}`);
-
-                    toggleBtn.onclick = () => toggleLabelsMenu();
+                    
+                    toggleBtn.onclick = () => toggleLabelsMenu(); 
 
                     menuEl.querySelectorAll('.labels_list_label').forEach(labelBtn => {
                         const labelId = String(labelBtn.getAttribute('data-label-id'));
@@ -704,7 +705,7 @@ async function renderPage() {
 
                     item.addEventListener('mousedown', (e) => {
                         // If the target is an input or inside a button, disable dragging
-                        if (e.target.tagName === 'INPUT' || e.target.closest('button')) {
+                        if (e.target.tagName === 'INPUT' || e.target.closest('button')  || e.target.closest('.poll_labels_list')) {
                             item.draggable = false;
                         } else {
                             item.draggable = true;
@@ -869,10 +870,8 @@ async function renderPage() {
                 };
                 const result = await postData('/api/poll_question_update', payload, "Nie udało się zapisać zmian pytań.");
 
-                await reFetchQuestions();
                 document.dispatchEvent(EDIT_EVT);
-                saveBtn.textContent = `Zapisz`;
-                renderMain(true);
+                window.location.replace(`poll?${paramsUrl}&m=e`);
                 return;
 
             } catch (error) {
