@@ -36,11 +36,10 @@ export default async function handler(request, response) {
         `;
         const totalParticipants = participantsResult[0].total;
 
-        // Aggregated Math Query
-        const results = await sql`
+        // Aggregated Math Query (returning a nested Dictionary/Map object)
+        const resultsData = await sql`
             WITH option_counts AS (
                 -- Count the votes for every specific option
-                -- LEFT JOIN ensures options with 0 votes are still included
                 SELECT 
                     o.question_id,
                     o.id AS option_id,
@@ -73,33 +72,49 @@ export default async function handler(request, response) {
                     END AS percentage
                 FROM option_counts oc
                 JOIN question_totals qt ON oc.question_id = qt.question_id
+            ),
+            questions_aggregated AS (
+                -- Package options into a JSON object mapped by option_id
+                SELECT 
+                    q.id AS question_id,
+                    q."name" AS question_name,
+                    q.sort_order,
+                    COALESCE(
+                        json_object_agg(
+                            co.option_id,
+                            json_build_object(
+                                'name', co.option_name,
+                                'vote_count', co.vote_count,
+                                'percentage', co.percentage
+                            )
+                        ) FILTER (WHERE co.option_id IS NOT NULL), '{}'::json
+                    ) AS options_map
+                FROM questions q
+                LEFT JOIN calculated_options co ON q.id = co.question_id
+                WHERE q.poll_id = ${poll}
+                GROUP BY q.id, q."name", q.sort_order
             )
-            --  everything into JSON arrays per question
-            SELECT 
-                q.id AS question_id,
-                q."name" AS question_name,
-                q.sort_order,
-                COALESCE(
-                    json_agg(
-                        json_build_object(
-                            'option_id', co.option_id,
-                            'name', co.option_name,
-                            'vote_count', co.vote_count,
-                            'percentage', co.percentage
-                        ) ORDER BY co.option_id
-                    ) FILTER (WHERE co.option_id IS NOT NULL), '[]'::json
-                ) AS options
-            FROM questions q
-            LEFT JOIN calculated_options co ON q.id = co.question_id
-            WHERE q.poll_id = ${poll}
-            GROUP BY q.id, q."name", q.sort_order
-            ORDER BY q.sort_order ASC;
+            -- Package all questions into a final JSON object mapped by question_id
+            SELECT COALESCE(
+                json_object_agg(
+                    question_id,
+                    json_build_object(
+                        'name', question_name,
+                        'sort_order', sort_order,
+                        'options', options_map
+                    )
+                ), '{}'::json
+            ) AS final_results
+            FROM questions_aggregated;
         `;
+
+        // sql[] returns an array of rows
+        const finalResultsMap = resultsData[0].final_results;
 
         return response.status(200).json({
             poll_id: poll,
             total_participants: totalParticipants,
-            results: results
+            results: finalResultsMap
         });
 
     } catch (error) {

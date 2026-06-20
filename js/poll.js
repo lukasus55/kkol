@@ -64,17 +64,16 @@ async function renderPage() {
     }
 
     // Fetching detailed data
-    let [LABELS, fetchedQuestions, fetchedAnswers] = await Promise.all([
+    let [LABELS, fetchedQuestions, fetchedAnswers, resultsData] = await Promise.all([
         loadData(`/api/poll_labels?poll=${pid}`),
         loadData(`/api/poll_questions?poll=${POLL.id}`),
-        loadData(`/api/poll_player_answers?poll=${POLL.id}&player=${USER.id}`)
+        loadData(`/api/poll_player_answers?poll=${POLL.id}&player=${USER.id}`),
+        loadData(`/api/poll_results?poll=${POLL.id}`)
     ])
 
     let QUESTIONS = cloneArray(fetchedQuestions);
     let ANSWERS = cloneArray(fetchedAnswers);
-
-    // const qResuts = await loadData(`/api/poll_results?poll=${POLL.id}`)
-    // console.log(qResuts)
+    const RESULTS = resultsData.results
 
     const CHANGES_MODAL = document.querySelector('#changes_popup');
 
@@ -453,13 +452,10 @@ async function renderPage() {
         const isEditMode = MODE === "edit";
 
         if (MODE === "results") {
-            Q_CONTAINER.classList.add('hidden');
-            R_CONTAINER.innerHTML = 'TODO: Results pannel';
-        } else {
-            Q_CONTAINER.classList.remove('hidden');
-            renderQuestions();
+            R_CONTAINER.innerHTML = `<div class="wip_disclaimer" style="font-size: 1.5rem; padding: 1rem 0rem;"> Ta sekcja jest wziąż w trakcie budowy! </div>`;
         }
 
+        renderQuestions();
 
         async function renderQuestions() {
             QUESTIONS.forEach((q) => {
@@ -690,6 +686,7 @@ async function renderPage() {
                     const qOptions = q.options;
                     const qAnswers = ANSWERS[q.id];
                     const isMultChoice = q.multiple_choice;
+                    const qResults = RESULTS[q.id];
 
                     const qOptionsInnerHtml = qOptions.map(o => {
                         if (isEditMode) {
@@ -716,10 +713,11 @@ async function renderPage() {
                                 </button>
                             </div>`;
                         } else {
+                            const oResults = qResults?.options[o.id];
                             return `
                             <div class="question_view_option">
-                                Results for ${o.name}
-                            </div>;
+                                ${o.name} - <strong> ${oResults.vote_count} </strong> (${oResults.percentage}%)
+                            </div>
                             `
                         }
                     }).join('');
