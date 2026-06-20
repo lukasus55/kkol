@@ -296,9 +296,9 @@ main
     transform: translate(-50%, -100%);
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
-    white-space: nowrap;
     font-size: 14px;
     pointer-events: none;
+    max-width: 24rem;
 }
 
 .tooltip_popup::after
