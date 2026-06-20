@@ -52,7 +52,7 @@ export default async function handler(request, response) {
         // ------------------------------------------------------------------
         // PAYLOAD PARSING & SANITIZATION
         // ------------------------------------------------------------------
-        const incomingValidIds = []; // To track which existing questions were kept
+        const incomingValidIds = []; 
         const toInsert = [];
         const toUpdate = [];
 
@@ -71,11 +71,34 @@ export default async function handler(request, response) {
                 name: clean_name,
                 page_url: q.page_url || null,
                 multiple_choice: Boolean(q.multiple_choice),
-                sort_order: Number(q.sort_order) || 0
+                sort_order: Number(q.sort_order) || 0,
+                options: [],
+                label_ids: []
             };
 
+            // Process Options
+            if (Array.isArray(q.options)) {
+                for (const opt of q.options) {
+                    const clean_opt_name = escapeHTML(opt.name || '');
+                    if (clean_opt_name.trim().length === 0) continue;
+                    
+                    processedQuestion.options.push({
+                        id: opt.id,
+                        name: clean_opt_name
+                    });
+                }
+            }
+
+            // Process Labels (we only need their IDs for the junction table)
+            if (Array.isArray(q.labels)) {
+                for (const lbl of q.labels) {
+                    if (lbl.id) processedQuestion.label_ids.push(lbl.id);
+                }
+            }
+
+            // Route to correct array
             if (!q.id || String(q.id).startsWith('temp-')) {
-                processedQuestion.id = uuidv7(); // Generate a real UUID for DB insertion
+                processedQuestion.id = uuidv7(); 
                 toInsert.push(processedQuestion);
             } else {
                 incomingValidIds.push(q.id);
@@ -88,14 +111,32 @@ export default async function handler(request, response) {
         // ------------------------------------------------------------------
         await sql.begin(async (sqlTransaction) => {
 
-            // DELETE MISSING QUESTIONS
+            // DELETE MISSING QUESTIONS (And their dependencies)
             if (incomingValidIds.length > 0) {
+                // Explicitly delete dependencies in case ON DELETE CASCADE is missing
+                await sqlTransaction`
+                    DELETE FROM questions_poll_labels 
+                    WHERE question_id IN (
+                        SELECT id FROM questions WHERE poll_id = ${poll_id} AND id NOT IN ${sqlTransaction(incomingValidIds)}
+                    )
+                `;
+                await sqlTransaction`
+                    DELETE FROM options 
+                    WHERE question_id IN (
+                        SELECT id FROM questions WHERE poll_id = ${poll_id} AND id NOT IN ${sqlTransaction(incomingValidIds)}
+                    )
+                `;
                 await sqlTransaction`
                     DELETE FROM questions 
-                    WHERE poll_id = ${poll_id} 
-                    AND id NOT IN ${sqlTransaction(incomingValidIds)}
+                    WHERE poll_id = ${poll_id} AND id NOT IN ${sqlTransaction(incomingValidIds)}
                 `;
             } else {
+                await sqlTransaction`
+                    DELETE FROM questions_poll_labels WHERE question_id IN (SELECT id FROM questions WHERE poll_id = ${poll_id})
+                `;
+                await sqlTransaction`
+                    DELETE FROM options WHERE question_id IN (SELECT id FROM questions WHERE poll_id = ${poll_id})
+                `;
                 await sqlTransaction`
                     DELETE FROM questions WHERE poll_id = ${poll_id}
                 `;
@@ -103,8 +144,6 @@ export default async function handler(request, response) {
 
             // UPDATE EXISTING QUESTIONS
             if (toUpdate.length > 0) {
-                // To avoid UNIQUE(poll_id, sort_order) constraint collisions when swapping positions
-                // (e.g., swapping 1 and 2), first shift all updating rows to a negative temporary order.
                 for (let i = 0; i < toUpdate.length; i++) {
                     const tempOrder = -1000 - i;
                     await sqlTransaction`
@@ -121,7 +160,7 @@ export default async function handler(request, response) {
                             name = ${q.name},
                             multiple_choice = ${q.multiple_choice},
                             sort_order = ${q.sort_order},
-                            page_url = ${q.page_url || null}
+                            page_url = ${q.page_url}
                         WHERE id = ${q.id} AND poll_id = ${poll_id}
                     `;
                 }
@@ -139,14 +178,65 @@ export default async function handler(request, response) {
                             ${requesterId}, 
                             ${q.sort_order}, 
                             ${q.multiple_choice},
-                            ${q.page_url || null}
+                            ${q.page_url}
                         )
+                    `;
+                }
+            }
+
+            // HANDLE OPTIONS AND LABELS FOR ALL QUESTIONS
+            const allProcessedQuestions = [...toUpdate, ...toInsert];
+
+            for (const q of allProcessedQuestions) {
+                
+                const incomingOptIds = q.options
+                    .filter(o => o.id && !String(o.id).startsWith('temp-'))
+                    .map(o => o.id);
+
+                // Delete removed options for this question
+                if (incomingOptIds.length > 0) {
+                    await sqlTransaction`
+                        DELETE FROM "options" 
+                        WHERE question_id = ${q.id} 
+                        AND id NOT IN ${sqlTransaction(incomingOptIds)}
+                    `;
+                } else {
+                    await sqlTransaction`
+                        DELETE FROM "options" WHERE question_id = ${q.id}
+                    `;
+                }
+
+                // Upsert options
+                for (const opt of q.options) {
+                    if (!opt.id || String(opt.id).startsWith('temp-')) {
+                        await sqlTransaction`
+                            INSERT INTO "options" (question_id, name)
+                            VALUES (${q.id}, ${opt.name})
+                        `;
+                    } else {
+                        await sqlTransaction`
+                            UPDATE "options" 
+                            SET name = ${opt.name}
+                            WHERE id = ${opt.id} AND question_id = ${q.id}
+                        `;
+                    }
+                }
+
+                // Process Labels
+                await sqlTransaction`
+                    DELETE FROM questions_poll_labels WHERE question_id = ${q.id}
+                `;
+
+                for (const labelId of q.label_ids) {
+                    await sqlTransaction`
+                        INSERT INTO questions_poll_labels (question_id, label_id)
+                        VALUES (${q.id}, ${labelId})
                     `;
                 }
             }
         });
 
-        return response.status(200).json({ success: true, message: "Pytania zostały zaktualizowane." });
+        return response.status(200).json({ success: true, message: "Pytania, opcje i etykiety zostały zaktualizowane." });
 
     } catch (error) {
         console.error("Update Questions Error:", error);
@@ -155,9 +245,8 @@ export default async function handler(request, response) {
             return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
         }
         
-        // postgres.js error code 23505 is unique_violation
         if (error.code === '23505') {
-            return response.status(409).json({ error: "Konflikt w kolejności (sort_order). Spróbuj zapisać ponownie." });
+            return response.status(409).json({ error: "Konflikt danych (np. w kolejności). Spróbuj zapisać ponownie." });
         }
 
         return response.status(500).json({ error: "Wystąpił błąd podczas zapisywania pytań." });
