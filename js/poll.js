@@ -1,10 +1,10 @@
 import { formatForDateTimeInput, formatRelativeTimePL } from "./utils/formatDate.js";
-import { adjustModalPosition, appendLoaderDiv, debounce, getParamsUrl, loadData, postData, requireAuth } from "./utils/helpers.js";
+import { adjustModalPosition, appendLoaderDiv, cloneArray, debounce, ensureAbsoluteUrl, getParamsUrl, isEqual, loadData, postData, requireAuth } from "./utils/helpers.js";
 
 const CONTAINER = document.querySelector('#poll');
 const loadingContainer = document.querySelector('#loader-global');
 
-async function renderPage(){
+async function renderPage() {
     // Handling params
     const params = new URLSearchParams(window.location.search);
     const paramsUrl = getParamsUrl(params);
@@ -16,36 +16,66 @@ async function renderPage(){
         return;
     }
 
+
     // Verifying if poll exists
     const pollData = await loadData(`/api/polls?id=${pid}`);
 
-    if (!pollData || pollData.length===0) {
+    if (!pollData || pollData.length === 0) {
         console.warn(`Ankieta nie istnieje.`);
         document.querySelector('#poll').innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
         return;
     }
 
     const POLL = pollData[0];
-    
+
     if (!POLL) {
         console.error(`Błąd przy ładowaniu ankiety: ${pollData.error || `Nieznany błąd.`}`)
         CONTAINER.innerHTML = `<div class="poll_not_found"> Ankieta nie istnieje. </div>`;
         return;
     }
 
-    // Fetching detailed data
-    const [LABELS] = await Promise.all([
-        loadData(`/api/poll_labels?poll=${pid}`)
-    ])
-
-    // Authenticate user
+    // Authenticate & Fetch user
     const userAuthenticated = await requireAuth(pageUrl);
     if (!userAuthenticated) return;
 
+    const userData = await loadData('/api/me');
+    const USER = userData.user;
 
 
+    const modeParam = params.get('m');
+    let MODE;
+    switch (modeParam) {
+        case "r":
+            MODE = "results"
+            break;
+        case "e":
+            MODE = "edit"
+            break;
+        default:
+            MODE = "vote"
+            break;
+    }
+
+    function getMode() {
+        return MODE;
+    }
+
+    // Fetching detailed data
+    let [LABELS, fetchedQuestions] = await Promise.all([
+        loadData(`/api/poll_labels?poll=${pid}`),
+        loadData(`/api/poll_questions?poll=${POLL.id}`)
+    ])
+
+    let QUESTIONS = cloneArray(fetchedQuestions);
+    const CHANGES_MODAL = document.querySelector('#changes_popup');
+
+    async function reFetchQuestions() {
+        fetchedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
+        QUESTIONS = cloneArray(fetchedQuestions);
+    }
 
 
+    // Render header
     function renderHeader() {
         const relativeEl = document.querySelector('#poll_date_relative');
 
@@ -60,12 +90,88 @@ async function renderPage(){
 
         document.querySelector('#poll_name').textContent = POLL.name;
 
-        async function renderLabels() {
+
+
+        function renderModeSelector() {
+            const modeEl = document.querySelector('#poll_tools_mode');
+            modeEl.innerHTML = `
+                <div class="tooltip_container">
+                    <button class="btn_transparent btn_page_mode ${MODE === "vote" && `selected`}" data-id="vote">
+                        <img src="img/polls/vote.svg">
+                    </button>
+                    <span class="tooltip_popup">Tryb głosowania</span>
+                </div>
+                <div class="tooltip_container">
+                    <button class="btn_transparent btn_page_mode ${MODE === "results" && `selected`}" data-id="results">
+                        <img src="img/polls/graph.svg">
+                    </button>
+                    <span class="tooltip_popup">Tryb wyników</span>
+                </div>
+                <div class="tooltip_container">
+                    <button class="btn_transparent btn_page_mode ${MODE === "edit" && `selected`}" data-id="edit">
+                        <img src="img/polls/pencil.svg">
+                    </button>
+                    <span class="tooltip_popup">Tryb edycji</span>
+                </div>
+            `
+
+
+            const modeBtns = document.querySelectorAll('.btn_page_mode');
+            modeBtns.forEach((btn) => {
+                handleModeButton(btn)
+            })
+
+            function handleModeButton(btn) {
+                const modeId = btn?.getAttribute('data-id');
+
+                // Manually changing selected classlist instead of calling renderModeSelector() in changeMode()
+                // to prevent tooltip flickering.
+                btn.onclick = () => {
+                    if (nonAppliedChanges()) {
+                        shakeChangesModal();
+                        return;
+                    }
+
+                    modeBtns.forEach((btn) => {
+                        btn.classList.remove(`selected`);
+                    })
+                    btn.classList.add(`selected`);
+                    changeMode(modeId);
+                };
+            }
+
+            /**
+             * Changes page mode
+             * @param {string} m "vote" || "results" || "edit"
+             */
+            function changeMode(m) {
+                if (m !== "vote" && m !== "results" && m !== "edit") {
+                    console.error("Incorrect mode");
+                    return;
+                }
+
+                MODE = m;
+
+                renderMain(false);
+                renderFooter()
+
+                return;
+            }
+        };
+        renderModeSelector();
+
+        async function renderHeaderLabels() {
             const labelsListContainerEl = document.querySelector('#poll_labels_list_container');
             const labelsListEl = document.querySelector('#poll_labels_list');
             const labelsListToggleBtn = document.querySelector('#btn_toggle_labels_menu');
 
-            labelsListToggleBtn.onclick = () => {
+            labelsListToggleBtn.onclick = () => toggleLabelsMenu()
+
+            function toggleLabelsMenu() {
+                if (nonAppliedChanges()) {
+                    shakeChangesModal();
+                    return;
+                }
                 labelsListToggleBtn.classList.toggle('btn_active');
                 labelsListContainerEl.classList.toggle('hidden');
                 adjustModalPosition(labelsListContainerEl);
@@ -76,7 +182,7 @@ async function renderPage(){
                 labelsHtml = '<div class="labels_empty">Nie ma jeszcze żadnych etykiet</div>'
             } else {
                 LABELS.forEach((label) => {
-                    const questionWithLabel = 12; // TODO: add counter of question with this label
+                    const questionWithLabel = label.questions_count; // TODO: add counter of question with this label
                     labelsHtml += `
                         <div class="labels_list_label" data-id="${label.id}">
                             <div class="labels_list_label_hex">
@@ -104,15 +210,14 @@ async function renderPage(){
             })
 
             const newLabel = { name: "", hex: getRandomHex(), description: "" };
-            let previewLabel = { id: "0", name: "Etykieta", hex: "#ffffff", description: ""}
+            let previewLabel = { id: "0", name: "Etykieta", hex: "#ffffff", description: "" }
             document.querySelector('#poll_labels_list_new').onclick = () => showLabelEditor(newLabel, true)
 
-            function showLabelEditor(label, isCreateMode=false) {
+            function showLabelEditor(label, isCreateMode = false) {
 
                 // --- Initialize ---
                 if (!label) {
-                    // TODO: Error popup
-                    console.error('Label not found');
+                    showErrorPopup("Nie znaleziono etykiety.")
                     return;
                 }
                 previewLabel = label;
@@ -131,7 +236,7 @@ async function renderPage(){
                 descInput.value = label.description;
                 colorInput.value = label.hex;
                 nameInput.oninput = () => setPreviewLabel('name', nameInput.value);
-                descInput.oninput = () => {previewLabel.description = descInput.value}; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
+                descInput.oninput = () => { previewLabel.description = descInput.value }; // No need to use setPreviewLabel here because desc change doesn't update anything on the preview. 
                 colorInput.oninput = () => setPreviewLabel('hex', formatHex(colorInput.value));
 
                 updateLabelBadge(label);
@@ -152,7 +257,7 @@ async function renderPage(){
 
                 saveBtn.onclick = () => isCreateMode ? createNewLabel() : saveLabel(previewLabel);
                 deleteBtn.onclick = () => showConfirmationPopup(
-                    () => deleteLabel(previewLabel), 
+                    () => deleteLabel(previewLabel),
                     `Czy na pewno chcesz trwale usunąć etykietę <strong>${previewLabel.name}</strong>?`,
                     "Usuń",
                     "Anuluj"
@@ -175,7 +280,7 @@ async function renderPage(){
 
                     updateLabelBadge(previewLabel);
                     document.querySelector('#label_color_rect').style.backgroundColor = previewLabel.hex;
-                    if (key !== 'hex') {document.querySelector('#label_edit_color').value = previewLabel.hex};
+                    if (key !== 'hex') { document.querySelector('#label_edit_color').value = previewLabel.hex };
                 }
 
                 async function saveLabel(label) {
@@ -195,7 +300,6 @@ async function renderPage(){
                     }
                 }
 
-                // TODO
                 async function deleteLabel(label) {
                     try {
                         const payload = {
@@ -234,6 +338,11 @@ async function renderPage(){
             document.querySelector('#btn_poll_settings').onclick = () => showSettingsPopup();
 
             function showSettingsPopup() {
+                if (nonAppliedChanges()) {
+                    shakeChangesModal();
+                    return;
+                }
+
                 document.querySelector('#popup_settings').classList.add('active');
 
                 const nameInput = document.querySelector('#poll_edit_name');
@@ -244,18 +353,17 @@ async function renderPage(){
                 nameInput.value = POLL.name;
                 startInput.value = formatForDateTimeInput(POLL.start_date);
                 endInput.value = formatForDateTimeInput(POLL.end_date);
-                levelInput.selectedIndex = POLL.rights_level-1; // rights_level=1 === index=0 cause there's no 'Not selected default option'
-                
+                levelInput.selectedIndex = POLL.rights_level - 1; // rights_level=1 === index=0 cause there's no 'Not selected default option'
+
 
                 document.querySelector('#btn_save_poll').onclick = () => savePoll()
                 document.querySelector('#btn_delete_poll').onclick = () => showConfirmationPopup(
-                    () => deletePoll(), 
+                    () => deletePoll(),
                     `Czy na pewno chcesz usunąć ankietę <strong>${POLL.name}</strong>?`,
                     `Usuń`,
                     `Anuluj`
                 )
 
-                // TODO
                 async function savePoll() {
                     try {
                         const payload = {
@@ -274,7 +382,6 @@ async function renderPage(){
                     }
                 }
 
-                // TODO
                 async function deletePoll() {
                     try {
                         const payload = {
@@ -291,9 +398,583 @@ async function renderPage(){
             }
         }
 
-        renderLabels();
+        window.onscroll = () => {
+            const nameRow = document.querySelector("#poll_name_row");
+            const dateRow = document.querySelector("#poll_date_row");
+
+
+            if (window.scrollY > 0) {
+                nameRow.classList.remove('poll_header_visible');
+                nameRow.classList.add('poll_header_hidden');
+                dateRow.classList.remove('poll_header_visible');
+                dateRow.classList.add('poll_header_hidden');
+            } else {
+                nameRow.classList.add('poll_header_visible');
+                nameRow.classList.remove('poll_header_hidden');
+                dateRow.classList.add('poll_header_visible');
+                dateRow.classList.remove('poll_header_hidden');
+            }
+        };
+
+
+        renderHeaderLabels();
         renderSettings();
     }
+
+
+
+
+    /**
+     * Renders the main content.
+     * @param {boolean} fullReRender - Should be 'true' only when adding or removing new questions.
+     */
+    async function renderMain(fullReRender = true) {
+
+        let Q_CONTAINER = document.querySelector('#questions_container');
+        const R_CONTAINER = document.querySelector('#results_container');
+
+        R_CONTAINER.innerHTML = "";
+
+        if (fullReRender) {
+            Q_CONTAINER.remove();
+
+            Q_CONTAINER = document.createElement("div");
+            Q_CONTAINER.id = "questions_container";
+            Q_CONTAINER.classList.add(`questions_container`);
+
+            document.querySelector(`#poll_container`).append(Q_CONTAINER);
+        }
+
+        const isEditMode = MODE === "edit";
+
+        if (MODE === "results") {
+            Q_CONTAINER.classList.add('hidden');
+            R_CONTAINER.innerHTML = 'TODO: Results pannel';
+        } else {
+            Q_CONTAINER.classList.remove('hidden');
+            renderQuestions();
+        }
+
+
+        async function renderQuestions() {
+            console.log(QUESTIONS)
+            QUESTIONS.forEach((q) => {
+                renderQuestion(q);
+            })
+
+            function renderQuestion(q) {
+                const isMultipleChoice = q.multiple_choice;
+
+                const existingQEl = document.querySelector(`#question-${q.id}`);
+                if (!existingQEl) {
+                    Q_CONTAINER.insertAdjacentHTML('beforeend',
+                        `<div class="question" id="question-${q.id}" data-id="${q.id}"> </div>`
+                    );
+                }
+
+                const qEl = document.querySelector(`#question-${q.id}`);
+                qEl.innerHTML = ``;
+                qEl.draggable = isEditMode;
+                qEl.style.cursor = isEditMode ? `grabbing` : `default`;
+
+                function renderQuestionHeader() {
+                    const qHeaderHtml = `
+                        <div class="question_header">
+
+                            <div class="question_left"> 
+                                ${isEditMode ? `
+                                    <div class="question_left_edit"> 
+                                        <div>
+                                            <input class="question_input question_header_input question_name_input ${q.name.length<3 && `input_incorrect`}" value="${q.name}" placeholder="Pytanie">
+                                        </div>
+                                        <div>
+                                            <input class="question_input question_header_input question_page_input" value="${q.page_url || ``}" placeholder="Link (opcjonalne)">
+                                        </div>
+                                    </div>
+                                ` : `
+                                    <div class="question_left_view">
+                                        <h2 class="question_name"> 
+                                            ${q.name}
+                                        </h2>
+                                        ${q.page_url ?
+                                        `<h5 class="question_page"> 
+                                                <a href=${ensureAbsoluteUrl(q.page_url)} target="_blank"> ${q.page_url} </a>
+                                            </h5>`
+                                        : ``}
+                                    </div>
+                                `
+                                }
+                            </div>
+
+                            <div class="question_mode">
+                                ${isEditMode ?
+                                `<div class="tooltip_container" draggable="false">
+                                    <button class="btn_delete_question">
+                                        <img src="img/polls/trash.svg">
+                                    </button>
+                                    <span class="tooltip_popup">Usuń pytanie</span>
+                                </div>` : ``}
+                                
+                                <div class="tooltip_container">
+                                    <button class="question_mode_toggle_btn poll_btn ${!isEditMode && `disabled`}" ${!isEditMode && `disabled`}>
+                                        <div class="question_mode_toggle_icon">
+                                            <div class="question_mode_toggle_shape ${isMultipleChoice ? `square` : ``}"></div>
+                                        </div>
+                                    </button>
+                                    <span class="tooltip_popup mult_choice_tooltip_popup">${isMultipleChoice ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    `
+
+                    qEl.insertAdjacentHTML('beforeend', qHeaderHtml)
+
+                    if (isEditMode) {
+                        document.querySelector(`#question-${q.id} .btn_delete_question`).onclick = () => deleteQuestion(q);
+                        document.querySelector(`#question-${q.id} .question_mode_toggle_btn`).onclick = () => changeQuestionMode(q);
+                        document.querySelector(`#question-${q.id} .question_page_input`).oninput = (e) => changeQuestionUrl(q, e.target.value)
+                        document.querySelector(`#question-${q.id} .question_name_input`).oninput = (e) => changeQuestionName(q, e.target.value)
+                    }
+
+                    async function deleteQuestion(q) {
+                        const index = QUESTIONS.indexOf(q);
+                        if (index > -1) {
+                            QUESTIONS.splice(index, 1);
+                        }
+
+                        renderMain(true);
+                        document.dispatchEvent(EDIT_EVT);
+                    }
+
+                    function changeQuestionMode(q) {
+                        const newIsMult = !q.multiple_choice;
+
+                        const shape = document.querySelector(`#question-${q.id} .question_mode_toggle_shape`);
+                        shape.classList.toggle('square');
+
+                        const tooltipEl = document.querySelector(`#question-${q.id} .question_mode .mult_choice_tooltip_popup`)
+                        tooltipEl.textContent = newIsMult ? `Pytanie wielokrotnego wyboru` : `Pytanie jednokrotnego wyboru`;
+
+                        q.multiple_choice = newIsMult;
+                        document.dispatchEvent(EDIT_EVT);
+                        return;
+                    }
+
+                    function changeQuestionUrl(q, value) {
+                        q.page_url = value || null;
+                        document.dispatchEvent(EDIT_EVT);
+                    }
+
+                    function changeQuestionName(q, value) {
+                        const nameInput = document.querySelector(`#question-${q.id} .question_name_input`);
+
+                        if (value.length<3) {
+                            nameInput.classList.add('input_incorrect');
+                        } else {
+                            nameInput.classList.remove('input_incorrect');
+                        }
+
+                        q.name = value;
+                        document.dispatchEvent(EDIT_EVT);
+                    }
+
+                }
+
+                function renderQuestionLabels() {
+                    const qLabels = q.labels;
+
+                    const qLabelsInnerHtml = qLabels.map(l => {
+                        const colors = getLabelColors(l.hex);
+
+                        return `<div class="tooltip_container">
+                                    <div 
+                                    class="question_label_badge" 
+                                    style="background-color:${colors.backgroundColor}; border-color:${colors.textColor}"
+                                    >
+                                        <div class="question_label_badge_content" style="color:${colors.textColor}">
+                                            ${l.name}
+                                        </div>
+                                    </div>
+                                    <span class="tooltip_popup"><strong>${l.name}</strong>${l.description ? `: ${l.description}` : ``}</span>
+                                </div>`;
+                    }).join('');
+
+
+                    const questionLabelIds = new Set(q.labels.map(label => String(label.id)));
+                    const availableLabelsHtml = LABELS.map(label => {
+                        const isSelected = questionLabelIds.has(String(label.id))
+                        return `
+                            <div class="labels_list_label ${isSelected ? `selected` : ``}" data-label-id="${String(label.id)}" draggable="false">
+                                <div class="labels_list_label_hex">
+                                    <div class="labels_list_label_hex_dot" style="background-color: ${label.hex};"></div>
+                                </div>
+                                <div class="labels_list_label_title">
+                                    <div class="labels_list_label_name">${label.name}</div>
+                                    <div class="labels_list_label_description">${label.description || ``}</div>
+                                </div>
+                                <div class="labels_list_label_action">
+                                    <div class="labels_list_label_action_icon">
+                                        ${isSelected ? `<img src="/img/polls/minus.svg">` : `<img src="/img/polls/plusWhite.svg">`}
+                                    </div>
+                                </div>
+                            </div>
+                    `}).join('');
+
+
+                    const qLabelsHtml = 
+                        `<div class="question_labels"> 
+                            <div class="question_labels_list">
+                                ${qLabelsInnerHtml}
+
+                            </div>
+                            ${isEditMode ? `
+                                <div class="question_labels_list_section">
+                                    <button class="btn_transparent btn_menu_toggler btn_toggle_q_labels_menu">
+                                        <img src="/img/polls/pencil.svg" alt="Pencil icon">
+                                    </button>
+                                    <div class="poll_labels_list_container poll_action_menu hidden" id="question_labels_menu_${q.id}">
+                                        <div class="poll_labels_list">
+                                            ${availableLabelsHtml}
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ``}
+                        </div>`;
+
+                    qEl.insertAdjacentHTML('beforeend', qLabelsHtml);
+
+                    if (!isEditMode) return;
+
+                    const toggleBtn = document.querySelector(`#question-${q.id} .btn_toggle_q_labels_menu`);
+                    const menuEl = document.querySelector(`#question-${q.id} #question_labels_menu_${q.id}`);
+                    
+                    toggleBtn.onclick = () => toggleLabelsMenu(); 
+
+                    menuEl.querySelectorAll('.labels_list_label').forEach(labelBtn => {
+                        const labelId = String(labelBtn.getAttribute('data-label-id'));
+                        labelBtn.onclick = () => removeQuestionLabel(q, labelId);
+                    });
+
+                    function removeQuestionLabel(q, labelId) {
+                        // Using string so existing labels and cloned objects match correctly
+                        const targetLabel = q.labels.find(l => String(l.id) === labelId);
+
+                        if (targetLabel) {
+                            q.labels = q.labels.filter(l => String(l.id) !== labelId);
+                        } else {
+                            const labelData = LABELS.find(l => String(l.id) === labelId);
+                            if (labelData) {
+                                q.labels = [...q.labels, labelData];
+                            }
+                        }
+
+                        document.dispatchEvent(EDIT_EVT);
+                        renderMain(false);
+                    }
+                    
+                    function toggleLabelsMenu() {
+                        closeAllActionMenus();
+                        toggleBtn.classList.add('btn_active');
+                        menuEl.classList.remove('hidden');
+                        adjustModalPosition(menuEl);
+                    }
+
+                }
+
+                function renderQuestionOptions() {
+                    const qOptions = q.options;
+
+                    const qOptionsInnerHtml = qOptions.map(o => {
+                        if (isEditMode) {
+                            return `
+                            <div class="question_edit_option" data-option-id="${o.id}">
+                                <input class="poll_input question_option_input" value="${o.name || ``}" data-option-id="${o.id}" placeholder="Odpowiedź">
+                                <div class="tooltip_container" draggable="false">
+                                    <button class="btn_transparent btn_delete_option" data-option-id="${o.id}">
+                                        <img src="img/polls/trash.svg">
+                                    </button>
+                                    <span class="tooltip_popup">Usuń odpowiedź</span>
+                                </div>
+                            </div>`;
+                        }
+                        else if(MODE === "vote") {
+                            return `
+                            <div class="question_view_option">
+                                ${o.name}
+                            </div>`;
+                        } else {
+                            return `
+                            <div class="question_view_option">
+                                Results for ${o.name}
+                            </div>;
+                            `
+                        }
+                    }).join('');
+
+                    const qOptionsHtml = 
+                        `<div class="question_options"> 
+                                ${qOptionsInnerHtml}
+                                ${isEditMode ? `<button class="btn_secondary btn_add_option"> Utwórz odpowiedź </button>` : ``}
+                        </div>`;
+
+                    qEl.insertAdjacentHTML('beforeend', qOptionsHtml);
+
+                    if (isEditMode) {
+                        const optionInputs = document.querySelectorAll(`#question-${q.id} .question_option_input`);
+                        optionInputs.forEach((input) => {
+                            input.oninput = (e) => {
+                                updateQuestionOption(q, input.dataset.optionId, e.target.value);
+                            };
+                        });
+
+                        const deleteButtons = document.querySelectorAll(`#question-${q.id} .btn_delete_option`);
+                        deleteButtons.forEach((button) => {
+                            button.onclick = () => removeQuestionOption(q, button.dataset.optionId);
+                        });
+
+                        const addOptionBtn = document.querySelector(`#question-${q.id} .btn_add_option`);
+                        if (addOptionBtn) {
+                            addOptionBtn.onclick = () => addQuestionOption(q);
+                        }
+                    }
+                }
+
+                function updateQuestionOption(question, optionId, value) {
+                    const target = question.options.find((opt) => String(opt.id) === String(optionId));
+                    if (!target) {
+                        question.options.push({
+                            id: `temp-${Date.now()}-${Math.random()}`,
+                            name: value
+                        });
+                    } else {
+                        target.name = value;
+                    }
+
+                    document.dispatchEvent(EDIT_EVT);
+                }
+
+                function addQuestionOption(question) {
+                    const newOption = {
+                        id: `temp-${Date.now()}-${Math.random()}`,
+                        name: ``
+                    };
+
+                    question.options = [...question.options, newOption];
+                    document.dispatchEvent(EDIT_EVT);
+                    renderMain(false);
+                }
+
+                function removeQuestionOption(question, optionId) {
+                    question.options = question.options.filter((opt) => String(opt.id) !== String(optionId));
+                    document.dispatchEvent(EDIT_EVT);
+                    renderMain(false);
+                }
+
+                renderQuestionHeader();
+                renderQuestionLabels();
+                renderQuestionOptions();
+                
+            }
+
+            handleTooltips();
+            if (!fullReRender) return;
+
+            function handleDragging() {
+                const questionItems = document.querySelectorAll('.question');
+
+                // A transparent 1x1 pixel image to feed to the native API
+                const transparentImg = new Image();
+                transparentImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+                let customGhost = null;
+                let offsetX = 0;
+                let offsetY = 0;
+
+                questionItems.forEach(item => {
+
+                    item.addEventListener('mousedown', (e) => {
+                        // If the target is an input or inside a button, disable dragging
+                        if (e.target.tagName === 'INPUT' || e.target.closest('button')  || e.target.closest('.poll_labels_list')) {
+                            item.draggable = false;
+                        } else {
+                            item.draggable = true;
+                        }
+                    });
+
+                    item.addEventListener('dragstart', e => {
+                        // Not using isEdit mode here cause isEdit can be outdated when !fullReRender
+                        if (item.draggable === false || getMode() !== "edit") {
+                            e.preventDefault();
+                            return;
+                        }
+
+                        item.classList.add('is_dragging');
+
+                        const rect = item.getBoundingClientRect();
+                        offsetX = e.clientX - rect.left;
+                        offsetY = e.clientY - rect.top;
+
+                        customGhost = item.cloneNode(true);
+                        customGhost.classList.add('custom_drag_ghost');
+
+                        // Lock original width so it doesn't collapse
+                        customGhost.style.width = `${rect.width}px`;
+
+                        customGhost.style.left = `${e.clientX - offsetX}px`;
+                        customGhost.style.top = `${e.clientY - offsetY}px`;
+
+                        document.body.appendChild(customGhost);
+
+                        // Hide default browser ghost
+                        e.dataTransfer.setDragImage(transparentImg, 0, 0);
+                    });
+
+                    item.addEventListener('drag', e => {
+                        // The HTML5 drag event sometimes fires with 0,0 right as you drop; ignore it
+                        if (e.clientX === 0 && e.clientY === 0) return;
+
+                        if (customGhost) {
+                            customGhost.style.left = `${e.clientX - offsetX}px`;
+                            customGhost.style.top = `${e.clientY - offsetY}px`;
+                        }
+                    });
+
+                    item.addEventListener('dragend', () => {
+                        item.classList.remove('is_dragging');
+
+                        if (customGhost) {
+                            customGhost.remove();
+                            customGhost = null;
+                        }
+
+                        /** Actuall reordering is being done in updateQuestions() just before post request.
+                         *  When i tried to do it here by adding: QUESTIONS = cloneArray(syncSortOrders(QUESTIONS));
+                         *  change popup was sometimes not being shown and I didn't bother to find the reason*/ 
+                        document.dispatchEvent(EDIT_EVT);
+                    });
+                });
+
+                Q_CONTAINER.addEventListener('dragover', e => {
+                    e.preventDefault();
+
+                    const afterElement = getDragAfterElement(Q_CONTAINER, e.clientY);
+                    const draggable = document.querySelector('.is_dragging');
+
+                    // If not hovering over anything, append to the bottom
+                    if (afterElement == null) {
+                        Q_CONTAINER.appendChild(draggable);
+                    } else {
+                        Q_CONTAINER.insertBefore(draggable, afterElement);
+                    }
+                });
+
+                // Math helper to figure out cursor placement
+                function getDragAfterElement(Q_CONTAINER, y) {
+                    const draggableElements = [...Q_CONTAINER.querySelectorAll('.question:not(.is_dragging)')];
+
+                    return draggableElements.reduce((closest, child) => {
+                        const box = child.getBoundingClientRect();
+                        const offset = y - box.top - box.height / 2;
+
+                        // If cursor is above the center point - drop it here
+                        if (offset < 0 && offset > closest.offset) {
+                            return { offset: offset, element: child };
+                        } else {
+                            return closest;
+                        }
+                    }, { offset: Number.NEGATIVE_INFINITY }).element;
+                }
+            }
+
+            handleDragging();
+        }
+
+    }
+
+
+
+
+    function renderFooter() {
+        const createQBtn = document.querySelector('#btn_new_question');
+
+        if (getMode() !== "edit") {
+            createQBtn.classList.add('hidden');
+            return;
+        }
+
+        createQBtn.classList.remove('hidden');
+        createQBtn.onclick = () => { createQuestion() };
+
+        async function createQuestion() {
+            QUESTIONS.push({
+                id: `temp-id-${QUESTIONS.length + 1}`,
+                added_on: null,
+                creator_id: USER.id,
+                multiple_choice: false,
+                name: `Pytanie ${QUESTIONS.length + 1}`,
+                page_url: null,
+                poll_id: POLL.id,
+                sort_order: null,
+                labels: [],
+                options: [],
+            });
+
+            document.dispatchEvent(EDIT_EVT);
+            renderMain(true);
+        }
+
+    }
+
+
+
+
+    function renderChangesModal() {
+        const saveBtn = document.querySelector(`#btn_changes_save`);
+        saveBtn.textContent = `Zapisz`;
+        
+        saveBtn.onclick = () => saveChanges();
+        document.querySelector(`#btn_changes_reset`).onclick = () => resetChanges();
+        
+        function resetChanges() {
+            QUESTIONS = cloneArray(fetchedQuestions);
+            renderMain(true);
+            document.dispatchEvent(EDIT_EVT);
+        }
+
+        function saveChanges() {
+            if (getMode() === 'edit') {
+                updateQuestions()
+            } else {
+                // TODO
+                // updateAnswers()
+            }
+        }
+
+        async function updateQuestions() {
+            saveBtn.innerHTML = `Zapisywanie...`;
+            try {
+                const payload = {
+                    poll_id: POLL.id,
+                    questions: syncSortOrders(QUESTIONS),
+                };
+                const result = await postData('/api/poll_question_update', payload, "Nie udało się zapisać zmian pytań.");
+
+                document.dispatchEvent(EDIT_EVT);
+                const editModePageUrl = `poll?${paramsUrl.replace('&m=e', '')}m=e`
+                window.location.replace(editModePageUrl);
+                return;
+
+            } catch (error) {
+                showErrorPopup(error.message);
+                console.error("Question update failed:", error);
+                saveBtn.textContent = `Zapisz`;
+                return;
+            }
+        }
+
+    }
+
 
 
 
@@ -350,14 +1031,33 @@ async function renderPage(){
 
     function getRandomHex() {
         return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-    } 
+    }
 
     function showErrorPopup(message = 'Nieznany błąd.') {
         const popup = document.getElementById('error_popup')
         popup.classList.add('active');
 
         document.getElementById('error_message').textContent = message;
-        document.getElementById('error_close_btn').onclick = () => {popup.classList.remove('active')}
+        document.getElementById('error_close_btn').onclick = () => { popup.classList.remove('active') };
+    }
+
+    function syncSortOrders(questionsArray) {
+        const domQuestions = document.querySelectorAll('.question');
+
+        domQuestions.forEach((element, index) => {
+            const questionId = element.dataset.id;
+
+            const questionObj = questionsArray.find(q => q.id === questionId);
+
+            if (questionObj) {
+                questionObj.sort_order = index + 1;
+            } else {
+                console.warn("No question obj found!");
+            }
+        });
+
+        questionsArray.sort((a, b) => a.sort_order - b.sort_order);
+        return questionsArray;
     }
 
 
@@ -365,6 +1065,24 @@ async function renderPage(){
 
 
     // ====== UI HANDLERS ======
+
+    const EDIT_EVT = new CustomEvent("changesEvent")
+
+    document.addEventListener("changesEvent", changesEventHandler);
+
+    function nonAppliedChanges() {
+        //TODO: Make the QUESTIONS that are being passed already synced with sort order (Ref: handleDragging()).
+        return !isEqual(syncSortOrders(QUESTIONS), fetchedQuestions)
+    }
+
+    function changesEventHandler() {
+        if (nonAppliedChanges()) {
+            CHANGES_MODAL.classList.remove('changes_popup_hidden');
+        } else {
+            CHANGES_MODAL.classList.add('changes_popup_hidden');
+        }
+    }
+
 
     function closeAllActionMenus() {
         const menus = document.querySelectorAll('.poll_action_menu');
@@ -400,9 +1118,9 @@ async function renderPage(){
     }
 
     function closeTopPopup() {
-        const activePopups = Array.from(document.querySelectorAll('.popup_overlay.active')); 
-        
-        if (activePopups.length === 0) return; 
+        const activePopups = Array.from(document.querySelectorAll('.popup_overlay.active'));
+
+        if (activePopups.length === 0) return;
 
         let topPopup = activePopups[0];
         let maxZIndex = parseInt(window.getComputedStyle(topPopup).zIndex) || 0;
@@ -410,7 +1128,7 @@ async function renderPage(){
         for (let i = 1; i < activePopups.length; i++) {
             const currentPopup = activePopups[i];
             const currentZIndex = parseInt(window.getComputedStyle(currentPopup).zIndex) || 0;
-            
+
             // Use '>=' so that if z-indexes are equal, it picks the one later in the DOM (which visually sits on top of the earlier ones)
             if (currentZIndex >= maxZIndex) {
                 maxZIndex = currentZIndex;
@@ -442,9 +1160,9 @@ async function renderPage(){
 
     const closeButtons = document.querySelectorAll('.poll_btn_close');
     closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const overlay = this.closest('.popup_overlay');
-            if (overlay) {overlay.classList.remove('active');}
+            if (overlay) { overlay.classList.remove('active'); }
         });
     });
 
@@ -482,13 +1200,66 @@ async function renderPage(){
         };
 
         popup.onclick = (event) => {
-            if (event.target === popup) {popup.classList.remove('active');}
+            if (event.target === popup) { popup.classList.remove('active'); }
         };
+    }
+
+    function handleTooltips() {
+        const targetElements = document.querySelectorAll('.tooltip_container');
+
+        // This method prevent overflow settings on parent element impact the tooltip.
+        function positionTooltip(element, popup) {
+            const rect = element.getBoundingClientRect();
+            const popupWidth = popup.offsetWidth || 180;
+            const left = Math.min(
+                window.innerWidth - popupWidth / 2 - 8,
+                Math.max(popupWidth / 2 + 8, rect.left + rect.width / 2)
+            );
+            const top = Math.max(8, rect.top - 8);
+
+            popup.style.left = `${left}px`;
+            popup.style.top = `${top}px`;
+        }
+
+        targetElements.forEach(element => {
+            const popup = element.querySelector('.tooltip_popup');
+
+            element.addEventListener('mouseenter', () => {
+                if (popup) {
+                    positionTooltip(element, popup);
+                    popup.classList.add('tooltip_visible');
+                }
+            });
+
+            element.addEventListener('mouseleave', () => {
+                if (popup) {
+                    popup.classList.remove('tooltip_visible');
+                }
+            });
+        });
+    }
+
+    function shakeChangesModal() {
+        CONTAINER.classList.add(`shaked`);
+        CHANGES_MODAL.classList.add(`changes_popup_highlited`);
+        setTimeout(
+            () => {
+                CONTAINER.classList.remove(`shaked`);
+                CHANGES_MODAL.classList.remove(`changes_popup_highlited`);
+            }
+        , 500);
     }
 
     window.addEventListener('resize', handleMenuResize);
 
+
+
     renderHeader();
+    renderMain();
+    renderFooter();
+    renderChangesModal();
+
+
 }
 
 await renderPage();

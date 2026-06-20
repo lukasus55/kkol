@@ -190,3 +190,37 @@ export function isUUIDv7(value) {
     const uuid7Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuid7Regex.test(value);
 }
+
+/**
+ * Convert any url (youtube.com) from potentialy relative url (kkol.pl/youtube.com) to absolute url (https://youtube.com)
+ * @param {string} url Any url (url that is already absolute will return itself)
+ * @returns Absolute url (https://youtube.com)
+ */
+export function ensureAbsoluteUrl(url) {
+    if (!url) return '';
+
+    if (/^https?:\/\//i.test(url)) {
+        return url;
+    }
+    
+    return `https://${url}`;
+}
+
+/**
+ * Clone array
+ * @param {Array} src 
+ * @returns {Array}
+ */
+export function cloneArray(src) {
+    return JSON.parse(JSON.stringify(src));
+}
+
+/**
+ * Compare two stringified values
+ * @param {*} a 
+ * @param {*} b 
+ * @returns {boolean}
+ */
+export function isEqual(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+}
