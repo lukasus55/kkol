@@ -127,7 +127,7 @@ async function renderPage() {
                 // Manually changing selected classlist instead of calling renderModeSelector() in changeMode()
                 // to prevent tooltip flickering.
                 btn.onclick = () => {
-                    if (notAppliedChanges()) {
+                    if (nonAppliedChanges()) {
                         shakeChangesModal();
                         return;
                     }
@@ -168,7 +168,7 @@ async function renderPage() {
             labelsListToggleBtn.onclick = () => toggleLabelsMenu()
 
             function toggleLabelsMenu() {
-                if (notAppliedChanges()) {
+                if (nonAppliedChanges()) {
                     shakeChangesModal();
                     return;
                 }
@@ -339,7 +339,7 @@ async function renderPage() {
             document.querySelector('#btn_poll_settings').onclick = () => showSettingsPopup();
 
             function showSettingsPopup() {
-                if (notAppliedChanges()) {
+                if (nonAppliedChanges()) {
                     shakeChangesModal();
                     return;
                 }
@@ -880,13 +880,13 @@ async function renderPage() {
 
     document.addEventListener("changesEvent", changesEventHandler);
 
-    function notAppliedChanges() {
+    function nonAppliedChanges() {
         //TODO: Make the QUESTIONS that are being passed already synced with sort order (Ref: handleDragging()).
         return !isEqual(syncSortOrders(QUESTIONS), fetchedQuestions)
     }
 
     function changesEventHandler() {
-        if (notAppliedChanges()) {
+        if (nonAppliedChanges()) {
             CHANGES_MODAL.classList.remove('changes_popup_hidden');
         } else {
             CHANGES_MODAL.classList.add('changes_popup_hidden');
