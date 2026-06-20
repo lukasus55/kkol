@@ -51,6 +51,9 @@ async function renderPage() {
         case "e":
             MODE = "edit"
             break;
+        case "v":
+            MODE = "vote"
+            break;
         default:
             MODE = "vote"
             break;
@@ -683,7 +686,6 @@ async function renderPage() {
 
                 }
 
-                console.log(ANSWERS)
                 function renderQuestionOptions(q) {
                     const qOptions = q.options;
                     const qAnswers = ANSWERS[q.id];
@@ -1020,7 +1022,25 @@ async function renderPage() {
         }
 
         async function updateAnswers() {
-            // TODO
+            saveBtn.innerHTML = `Zapisywanie...`;
+            try {
+                const payload = {
+                    poll_id: POLL.id,
+                    answers: ANSWERS,
+                };
+                const result = await postData('/api/poll_players_answers_update', payload, "Nie udało się zapisać odpowiedzi.");
+
+                document.dispatchEvent(EDIT_EVT);
+                const voteModePageUrl = `poll?${paramsUrl.replace('&m=v', '')}m=v`
+                window.location.replace(voteModePageUrl);
+                return;
+
+            } catch (error) {
+                showErrorPopup(error.message);
+                console.error("Question update failed:", error);
+                saveBtn.textContent = `Zapisz`;
+                return;
+            }
         }
 
     }
