@@ -61,18 +61,20 @@ async function renderPage() {
     }
 
     // Fetching detailed data
-    let [LABELS, fetchedQuestions] = await Promise.all([
+    let [LABELS, fetchedQuestions, fetchedAnswers] = await Promise.all([
         loadData(`/api/poll_labels?poll=${pid}`),
-        loadData(`/api/poll_questions?poll=${POLL.id}`)
+        loadData(`/api/poll_questions?poll=${POLL.id}`),
+        loadData(`/api/poll_player_answers?poll=${POLL.id}&player=${USER.id}`)
     ])
 
     let QUESTIONS = cloneArray(fetchedQuestions);
+    let ANSWERS = cloneArray(fetchedAnswers);
+
+    // const qResuts = await loadData(`/api/poll_results?poll=${POLL.id}`)
+    // console.log(qResuts)
+
     const CHANGES_MODAL = document.querySelector('#changes_popup');
 
-    async function reFetchQuestions() {
-        fetchedQuestions = await loadData(`/api/poll_questions?poll=${POLL.id}`);
-        QUESTIONS = cloneArray(fetchedQuestions);
-    }
 
 
     // Render header
@@ -457,7 +459,6 @@ async function renderPage() {
 
 
         async function renderQuestions() {
-            console.log(QUESTIONS)
             QUESTIONS.forEach((q) => {
                 renderQuestion(q);
             })
@@ -477,7 +478,7 @@ async function renderPage() {
                 qEl.draggable = isEditMode;
                 qEl.style.cursor = isEditMode ? `grabbing` : `default`;
 
-                function renderQuestionHeader() {
+                function renderQuestionHeader(q) {
                     const qHeaderHtml = `
                         <div class="question_header">
 
@@ -581,7 +582,7 @@ async function renderPage() {
 
                 }
 
-                function renderQuestionLabels() {
+                function renderQuestionLabels(q) {
                     const qLabels = q.labels;
 
                     const qLabelsInnerHtml = qLabels.map(l => {
@@ -682,8 +683,11 @@ async function renderPage() {
 
                 }
 
-                function renderQuestionOptions() {
+                console.log(ANSWERS)
+                function renderQuestionOptions(q) {
                     const qOptions = q.options;
+                    const qAnswers = ANSWERS[q.id];
+                    const isMultChoice = q.multiple_choice;
 
                     const qOptionsInnerHtml = qOptions.map(o => {
                         if (isEditMode) {
@@ -699,9 +703,15 @@ async function renderPage() {
                             </div>`;
                         }
                         else if(MODE === "vote") {
+                            const selected = qAnswers?.includes(String(o.id)) || false;
                             return `
-                            <div class="question_view_option">
-                                ${o.name}
+                            <div class="question_vote_option" data-option-id="${o.id}">
+                                <button class="question_vote_btn" data-option-id="${o.id}"> 
+                                    <div class="question_vote_status">
+                                        <div class="question_vote_status_shape ${selected ? 'selected ' : ''} ${isMultChoice ? 'square' : ''}"> </div>
+                                    </div>
+                                    <div class="question_vote_name"> ${o.name} </div>
+                                </button>
                             </div>`;
                         } else {
                             return `
@@ -738,6 +748,18 @@ async function renderPage() {
                             addOptionBtn.onclick = () => addQuestionOption(q);
                         }
                     }
+                    else if (MODE === "vote") {
+                        const voteButtons = document.querySelectorAll(`#question-${q.id} .question_vote_btn`);
+                        voteButtons.forEach((button) => {
+                            button.onclick = () => {
+                                const optionId = button.dataset.optionId;
+                                if (optionId) {
+                                    toggleAnswer(q.id, optionId, isMultChoice);
+                                }
+                            };
+                        });
+
+                    }
                 }
 
                 function updateQuestionOption(question, optionId, value) {
@@ -771,9 +793,33 @@ async function renderPage() {
                     renderMain(false);
                 }
 
-                renderQuestionHeader();
-                renderQuestionLabels();
-                renderQuestionOptions();
+                function toggleAnswer(questionId, optionId, isMultChoice) {
+                    const optionKey = String(optionId);
+                    const currentAnswers = Array.isArray(ANSWERS[questionId])
+                        ? ANSWERS[questionId].map(String)
+                        : [];
+
+                    if (isMultChoice) {
+                        ANSWERS[questionId] = currentAnswers.includes(optionKey)
+                            ? currentAnswers.filter(id => id !== optionKey)
+                            : [...currentAnswers, optionKey];
+                    } else {
+                        ANSWERS[questionId] = currentAnswers.includes(optionKey)
+                            ? []
+                            : [optionKey];
+                    }
+
+                    if (ANSWERS[questionId].length === 0) {
+                        delete ANSWERS[questionId];
+                    }
+
+                    document.dispatchEvent(EDIT_EVT);
+                    renderMain(false);
+                }
+
+                renderQuestionHeader(q);
+                renderQuestionLabels(q);
+                renderQuestionOptions(q);
                 
             }
 
@@ -938,6 +984,7 @@ async function renderPage() {
         
         function resetChanges() {
             QUESTIONS = cloneArray(fetchedQuestions);
+            ANSWERS = cloneArray(fetchedAnswers);
             renderMain(true);
             document.dispatchEvent(EDIT_EVT);
         }
@@ -945,9 +992,8 @@ async function renderPage() {
         function saveChanges() {
             if (getMode() === 'edit') {
                 updateQuestions()
-            } else {
-                // TODO
-                // updateAnswers()
+            } else if (getMode() === 'vote') {
+                updateAnswers()
             }
         }
 
@@ -971,6 +1017,10 @@ async function renderPage() {
                 saveBtn.textContent = `Zapisz`;
                 return;
             }
+        }
+
+        async function updateAnswers() {
+            // TODO
         }
 
     }
@@ -1072,7 +1122,7 @@ async function renderPage() {
 
     function nonAppliedChanges() {
         //TODO: Make the QUESTIONS that are being passed already synced with sort order (Ref: handleDragging()).
-        return !isEqual(syncSortOrders(QUESTIONS), fetchedQuestions)
+        return (!isEqual(syncSortOrders(QUESTIONS), fetchedQuestions) || !isEqual(ANSWERS, fetchedAnswers))
     }
 
     function changesEventHandler() {

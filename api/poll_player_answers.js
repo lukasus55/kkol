@@ -50,21 +50,30 @@ export default async function handler(request, response) {
             }
         }
 
-        const playerAnswers = await sql`
-            SELECT 
-                o.question_id,
-                ca.option_id AS selected_option_id
-            FROM checked_answers ca
-            JOIN "options" o ON ca.option_id = o.id
-            JOIN questions q ON o.question_id = q.id
-            WHERE q.poll_id = ${poll} AND ca.player_id = ${player}
+        // FETCH DATA (Using JSON Aggregation for Dictionary Map)
+        const result = await sql`
+            WITH grouped_answers AS (
+                -- Group the options into an array for each question
+                SELECT 
+                    o.question_id,
+                    array_agg(ca.option_id::text) AS selected_options
+                FROM checked_answers ca
+                JOIN "options" o ON ca.option_id = o.id
+                JOIN questions q ON o.question_id = q.id
+                WHERE q.poll_id = ${poll} AND ca.player_id = ${player}
+                GROUP BY o.question_id
+            )
+            -- Turn rows into a single JSON object where question_id is the key
+            SELECT COALESCE(
+                json_object_agg(question_id, selected_options), 
+                '{}'::json
+            ) AS answers_map
+            FROM grouped_answers
         `;
 
-        return response.status(200).json({
-            poll_id: poll,
-            player_id: player,
-            answers: playerAnswers
-        });
+        const answersMap = result[0].answers_map;
+
+        return response.status(200).json(answersMap);
 
     } catch (error) {
         console.error("Fetch Player Answers Error:", error);
