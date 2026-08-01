@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -11,9 +11,12 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl', footer }: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      setTimeout(() => modalRef.current?.focus(), 10);
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -25,7 +28,20 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div 
+      ref={modalRef}
+      tabIndex={-1}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          onClose();
+        }
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 outline-none"
+    >
       <div 
         className={`bg-dashboard-bg border border-dashboard-stroke rounded-xl shadow-2xl w-full flex flex-col h-[650px] max-h-[95vh] sm:max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200 ${maxWidth}`}
       >
