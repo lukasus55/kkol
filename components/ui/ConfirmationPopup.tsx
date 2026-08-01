@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from './Button';
 
@@ -23,10 +23,31 @@ export function ConfirmationPopup({
   onConfirm, 
   onClose 
 }: ConfirmationPopupProps) {
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => popupRef.current?.focus(), 10);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div 
+      ref={popupRef}
+      tabIndex={-1}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          onClose();
+        }
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 outline-none"
+    >
       <div className="bg-dashboard-bg border border-dashboard-stroke rounded-xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="flex items-start gap-4 p-6">
           <div className="flex-shrink-0 p-3 bg-yellow-500/10 rounded-full">
