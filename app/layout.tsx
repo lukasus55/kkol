@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import Footer from '../components/Footer';
+
 import '../public/css/base.css';
-import '../public/css/home.css';
 import '../public/css/footer.css';
 
 export const metadata: Metadata = {
@@ -18,7 +19,12 @@ export default function RootLayout({
       <head>
         <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer className="footer" id="footer">
+          <Footer />
+        </footer>
+      </body>
     </html>
   );
 }

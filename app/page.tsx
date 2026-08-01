@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Footer from '../components/Footer';
+import '../public/css/home.css';
 
 export default function Home() {
   return (

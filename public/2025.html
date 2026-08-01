@@ -27,11 +27,11 @@
                     2025
                 </div>
             </div>
-    
+
 
             <section class="champion_section" id="championSection">
                 <h3 class="champion_title">ZWYCIĘZCA</h3>
-                
+
                 <a href="/players/kostys" class="champion_card">
                     <img src="img/default_pfp.webp" class="champion_img" id="championPfp">
                 </a>
@@ -39,7 +39,7 @@
                 <h1 class="champion_name">Kostyś</h1>
                 <p class="champion_stats">12pkt. / 12pkt.</p>
             </section>
-              
+
 
         </div>
 
@@ -63,19 +63,26 @@
                         </tr>
                         <tr class="ranking_table_games_icons">
                             <td class="ranking_game ranking_game1_td ranking_game_clickable">
-                                <a href="#catan"><div class="ranking_game1" title="Catan">
-                                    <img src="/img/2025/games/catan-logo.webp" alt="Hexagonalna mapa catana w czarno-białym wariancie">
-                                </div></a>
+                                <a href="#catan">
+                                    <div class="ranking_game1" title="Catan">
+                                        <img src="/img/2025/games/catan-logo.webp"
+                                            alt="Hexagonalna mapa catana w czarno-białym wariancie">
+                                    </div>
+                                </a>
                             </td>
                             <td class="ranking_game ranking_game2_td ranking_game_clickable">
-                                <a href="#codenames"><div class="ranking_game2" title="Codenames">
-                                    <img src="/img/2025/games/codenames-logo.webp">
-                                </div></a>
+                                <a href="#codenames">
+                                    <div class="ranking_game2" title="Codenames">
+                                        <img src="/img/2025/games/codenames-logo.webp">
+                                    </div>
+                                </a>
                             </td>
                             <td class="ranking_game ranking_game4_td ranking_game_clickable">
-                                <a href="#brain"><div class="ranking_game3" title="Brain Show">
-                                    <img src="/img/2025/games/brain-show-logo.webp">
-                                </div></a>
+                                <a href="#brain">
+                                    <div class="ranking_game3" title="Brain Show">
+                                        <img src="/img/2025/games/brain-show-logo.webp">
+                                    </div>
+                                </a>
                             </td>
                             <td class="ranking_total_header">Total</th>
                         </tr>
@@ -87,7 +94,7 @@
             </div>
 
             <div class="ranking_button_section">
-                <button class="ranking_details_button" onclick="showResultsPopup()"> 
+                <button class="ranking_details_button" onclick="showResultsPopup()">
                     <div class="ranking_details_button_text"> Szczegóły </div>
                 </button>
             </div>
@@ -97,7 +104,7 @@
                 import tableLoader from "/js/table-loader.js"
                 tableLoader(`kol2025`);
             </script>
-            
+
         </section>
 
         <div class="results_popup" id="results_popup">
@@ -107,9 +114,10 @@
                 </div>
                 <div class="results_game" id="results_game">
                     <div class="results_title" id="results_title"></div>
-                    <div class="results_box" id="results_box"> 
-                        
-                        <div class="results_single_game" id="results_game_noResults"> Ta gra się jeszcze nie odbyła. </div>
+                    <div class="results_box" id="results_box">
+
+                        <div class="results_single_game" id="results_game_noResults"> Ta gra się jeszcze nie odbyła.
+                        </div>
 
                         <div class="results_single_game results_game_catan" id="results_game_catan">
                             <table class="results_game_table">
@@ -123,15 +131,18 @@
                                     </tr>
                                     <tr>
                                         <th class="results_game_catan_position" title="Punkty gry"> Pkt. </th>
-                                        <th class="results_game_catan_vp" title="Victory Points (Punkty pomocnicze gry)"> VP </th>
+                                        <th class="results_game_catan_vp"
+                                            title="Victory Points (Punkty pomocnicze gry)"> VP </th>
                                         <th class="results_game_catan_position" title="Punkty gry"> Pkt. </th>
-                                        <th class="results_game_catan_vp" title="Victory Points (Punkty pomocnicze gry)"> VP </th>
+                                        <th class="results_game_catan_vp"
+                                            title="Victory Points (Punkty pomocnicze gry)"> VP </th>
                                         <th class="results_game_catan_position" title="Punkty gry"> Pkt. </th>
-                                        <th class="results_game_catan_vp" title="Victory Points (Punkty pomocnicze gry)"> VP </th>
+                                        <th class="results_game_catan_vp"
+                                            title="Victory Points (Punkty pomocnicze gry)"> VP </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                     <tr>
                                         <td> 1 </td>
                                         <td class="results_game_player_name"> DamiDami2 </td>
@@ -199,7 +210,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                     <tr>
                                         <td> 1 </td>
                                         <td class="results_game_player_name"> Kostyś </td>
@@ -266,7 +277,7 @@
 
                         <div class="results_single_game results_game_brain" id="results_game_brain">
                             <table class="results_game_table">
-                                                                <thead>
+                                <thead>
                                     <tr>
                                         <th rowspan="2" class="results_game_position"> Poz. </th>
                                         <th rowspan="2" class="results_game_player"> Gracz </th>
@@ -283,7 +294,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                     <tr>
                                         <td> 1 </td>
                                         <td class="results_game_player_name"> Kostyś </td>
@@ -338,24 +349,27 @@
                 <div class="results_footer">
                     <div class="results_footer_disabled" id="results_footer_disabled"></div>
                     <div class="results_footer_container">
-                        <div class="results_footer_container_single_game" title="Catan" id="results_footer_catan" onclick="showGameResults(`catan`)">
+                        <div class="results_footer_container_single_game" title="Catan" id="results_footer_catan"
+                            onclick="showGameResults(`catan`)">
                             <img src="/img/2025/games/catan-logo-black.webp">
                         </div>
                     </div>
                     <div class="results_footer_container">
-                        <div class="results_footer_container_single_game" title="Codenames" id="results_footer_codenames" onclick="showGameResults(`codenames`)">
+                        <div class="results_footer_container_single_game" title="Codenames"
+                            id="results_footer_codenames" onclick="showGameResults(`codenames`)">
                             <img src="/img/2025/games/codenames-logo-black.webp">
                         </div>
                     </div>
                     <div class="results_footer_container">
-                        <div class="results_footer_container_single_game" title="Brain Show" id="results_footer_brain" onclick="showGameResults(`brain`)">
+                        <div class="results_footer_container_single_game" title="Brain Show" id="results_footer_brain"
+                            onclick="showGameResults(`brain`)">
                             <img src="/img/2025/games/brain-show-logo-black.webp">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <section class="games" id="games">
             <div class="games_title"> <span class="main_title_text"> KONKURENCJE </span> </div>
             <div class="games_list">
@@ -366,9 +380,14 @@
                     </div>
                     <div class="games_single_game_details">
                         <div class="games_single_game_title">Settlers of Catan</div>
-                        <div class="games_single_game_description">Catan to strategiczna gra planszowa, w której gracze rywalizują o dominację na wyspie, budując osady, drogi i miasta. Plansza składa się z heksagonalnych pól reprezentujących różne surowce: drewno, glinę, zboże, owce i rudy. Gracze zdobywają surowce, handlują nimi i rozwijają swoje osady, dążąc do uzyskania 10 punktów zwycięstwa.
+                        <div class="games_single_game_description">Catan to strategiczna gra planszowa, w której gracze
+                            rywalizują o dominację na wyspie, budując osady, drogi i miasta. Plansza składa się z
+                            heksagonalnych pól reprezentujących różne surowce: drewno, glinę, zboże, owce i rudy. Gracze
+                            zdobywają surowce, handlują nimi i rozwijają swoje osady, dążąc do uzyskania 10 punktów
+                            zwycięstwa.
                         </div>
-                        <div class="games_single_game_results"> <a href="https://www.catan.com/" target="_blank"> Zobacz więcej </a> </div>
+                        <div class="games_single_game_results"> <a href="https://www.catan.com/" target="_blank"> Zobacz
+                                więcej </a> </div>
                     </div>
                 </div>
 
@@ -378,9 +397,13 @@
                     </div>
                     <div class="games_single_game_details">
                         <div class="games_single_game_title">Codenames</div>
-                        <div class="games_single_game_description">Codenames to drużynowa gra słowna, w której gracze starają się odgadnąć hasła swojej drużyny na podstawie wskazówek od mistrza szpiegów. Liczy się spryt, skojarzenia i unikanie zakazanych słów, zwłaszcza tego jednego — zabójcy, który kończy grę.
+                        <div class="games_single_game_description">Codenames to drużynowa gra słowna, w której gracze
+                            starają się odgadnąć hasła swojej drużyny na podstawie wskazówek od mistrza szpiegów. Liczy
+                            się spryt, skojarzenia i unikanie zakazanych słów, zwłaszcza tego jednego — zabójcy, który
+                            kończy grę.
                         </div>
-                        <div class="games_single_game_results"> <a href="https://codenames.game/" target="_blank"> Zagraj online </a> </div>
+                        <div class="games_single_game_results"> <a href="https://codenames.game/" target="_blank">
+                                Zagraj online </a> </div>
                     </div>
                 </div>
 
@@ -390,9 +413,15 @@
                     </div>
                     <div class="games_single_game_details">
                         <div class="games_single_game_title">Brain Show</div>
-                        <div class="games_single_game_description"> Brain Show to humorystyczna gra quizowa, w której gracze rywalizują w zwariowanym teleturnieju, odpowiadając na pytania i eliminując przeciwników. Gra charakteryzuje się trybem, w którym może brać udział do 8 osób, a jej format opiera się na dynamicznym przeplataniu różnych, zabierających wiedzę i umiejętności mini-gier.
+                        <div class="games_single_game_description"> Brain Show to humorystyczna gra quizowa, w której
+                            gracze rywalizują w zwariowanym teleturnieju, odpowiadając na pytania i eliminując
+                            przeciwników. Gra charakteryzuje się trybem, w którym może brać udział do 8 osób, a jej
+                            format opiera się na dynamicznym przeplataniu różnych, zabierających wiedzę i umiejętności
+                            mini-gier.
                         </div>
-                        <div class="games_single_game_results"> <a href="https://store.steampowered.com/app/2235150/Brain_Show_Party_Game/" target="_blank"> Zobacz więcej </a> </div>
+                        <div class="games_single_game_results"> <a
+                                href="https://store.steampowered.com/app/2235150/Brain_Show_Party_Game/"
+                                target="_blank"> Zobacz więcej </a> </div>
                     </div>
                 </div>
 
@@ -402,7 +431,9 @@
                     </div>
                     <div class="games_single_game_details">
                         <div class="games_single_game_title">Dogrywki</div>
-                        <div class="games_single_game_description"> Dodatkowa runda w razie remisu na 1 miejscu. W przypadku dogrywki dwóch osób - gra w "Wyższa lub niższa". W przypadku dogrywki trzech lub czterech osób - gra w "UNO". O zasadach gier przeczytaj w regulaminie dogrywek.
+                        <div class="games_single_game_description"> Dodatkowa runda w razie remisu na 1 miejscu. W
+                            przypadku dogrywki dwóch osób - gra w "Wyższa lub niższa". W przypadku dogrywki trzech lub
+                            czterech osób - gra w "UNO". O zasadach gier przeczytaj w regulaminie dogrywek.
                         </div>
                         <div class="games_single_game_results"> <a href="#download"> Zobacz regulaminy </a> </div>
                     </div>
@@ -440,13 +471,14 @@
                     </div>
                     <div class="catan_details">
                         <div class="catan_details_text">
-                            Zapoznaj się z mapami na jakich rozgrywane będą rundy Catana za pomocą interaktywnej mapy. Sprawdź szczegóły pól, wymaganą ilość oczek i procentowe szanse.
+                            Zapoznaj się z mapami na jakich rozgrywane będą rundy Catana za pomocą interaktywnej mapy.
+                            Sprawdź szczegóły pól, wymaganą ilość oczek i procentowe szanse.
                         </div>
                     </div>
                     <div class="catan_button_section">
                         <a href="/more/catan"><button class="catan_button">
-                            ZOBACZ
-                        </button></a>
+                                ZOBACZ
+                            </button></a>
                     </div>
                 </div>
 
@@ -455,7 +487,7 @@
 
         <section class="download" id="download">
             <div class="download_title"> <span class="main_title_text"> Pliki do pobrania </span> </div>
-            <div class="download_legend"> 
+            <div class="download_legend">
                 <div class="download_legend_container">
                     <div class="download_lengend_single_type">
                         <div class="download_legend_rectangle download_legend_type_rules"></div>
@@ -466,7 +498,7 @@
                         <div class="download_legend_text">Wyniki</div>
                     </div>
                     <div class="download_lengend_single_type">
-                        <div class="download_legend_rectangle download_legend_type_other"></div> 
+                        <div class="download_legend_rectangle download_legend_type_other"></div>
                         <div class="download_legend_text">Inne</div>
                     </div>
                 </div>
@@ -475,7 +507,7 @@
 
                 <div class="download_single_file download_type_rules">
                     <div class="download_single_file_icon" title="Dokument">
-                        <div class="download_single_file_icon_container"> 
+                        <div class="download_single_file_icon_container">
                             <img src="/img/docs_icon.webp">
                         </div>
                     </div>
@@ -483,14 +515,15 @@
                         <div class="download_single_file_title"> Regulamin dogrywek </div>
                         <div class="download_single_file_name"> s2025-dogrywki.pdf </div>
                     </div>
-                    <div class="download_single_file_download" title="Pobierz"> <a href="/download/2025/s2025-dogrywki.pdf" download>
-                        <img class="download_single_file_download_icon" src="/img/download_icon.webp">
-                    </a> </div>
+                    <div class="download_single_file_download" title="Pobierz"> <a
+                            href="/download/2025/s2025-dogrywki.pdf" download>
+                            <img class="download_single_file_download_icon" src="/img/download_icon.webp">
+                        </a> </div>
                 </div>
 
                 <div class="download_single_file download_type_rules">
                     <div class="download_single_file_icon" title="Dokument">
-                        <div class="download_single_file_icon_container"> 
+                        <div class="download_single_file_icon_container">
                             <img src="/img/docs_icon.webp">
                         </div>
                     </div>
@@ -498,16 +531,17 @@
                         <div class="download_single_file_title"> Zasady i format </div>
                         <div class="download_single_file_name"> s2025-regulamin.pdf </div>
                     </div>
-                    <div class="download_single_file_download" title="Pobierz"> <a href="/download/2025/s2025-regulamin.pdf" download>
-                        <img class="download_single_file_download_icon" src="/img/download_icon.webp">
-                    </a> </div>
+                    <div class="download_single_file_download" title="Pobierz"> <a
+                            href="/download/2025/s2025-regulamin.pdf" download>
+                            <img class="download_single_file_download_icon" src="/img/download_icon.webp">
+                        </a> </div>
                 </div>
 
             </div>
         </section>
 
     </main>
-        
+
     <footer class="footer" id="footer">
         <div id="common-footer"></div>
     </footer>
@@ -516,5 +550,5 @@
     <script src="/js/footer-loader.js"></script>
 
     <script type="module" src="/js/2025.js"></script>
-    
+
 </body>
