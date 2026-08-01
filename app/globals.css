@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-warning-red: #b42525;
+    --color-overlay: rgba(0, 0, 0, 0.7);
+
+    --dashboard-background: oklch(0.04 0 129);
+    --dashboard-background-s2: oklch(0.14 0 129);
+    --dashboard-background-s3: oklch(0.18 0 129);
+    --dashboard-background-s4: oklch(0.24 0 129);
+    --dashboard-background-s5: oklch(0.30 0 129);
+    --dashboard-background-s6: oklch(0.36 0 129);
+
+    --dashboard-stroke: oklch(0.30 0 129);
+
+    --dashboard-text: oklch(0.90 0 129);
+    --dashboard-text-s2: oklch(0.60 0 129);
+    --dashboard-text-s3: oklch(0.40 0 129);
+  }
+}
