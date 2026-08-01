@@ -5,12 +5,17 @@ import { Card, CardTitle } from '../../ui/Card';
 import { Input } from '../../ui/Input';
 import { Button } from '../../ui/Button';
 import { validatePassword } from '../../../lib/validatePassword';
+import { Check, X } from 'lucide-react';
+import { useToast } from '../../ui/ToastProvider';
+import { ErrorPopup } from '../../ui/ErrorPopup';
 
 export default function PasswordCard({ username }: { username: string }) {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [valInfo, setValInfo] = useState<any>(null);
+  const [errorModal, setErrorModal] = useState('');
+  const { addToast } = useToast();
 
   useEffect(() => {
     let isMounted = true;
@@ -32,7 +37,7 @@ export default function PasswordCard({ username }: { username: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (valInfo && valInfo.score === 0) {
-      alert("Hasło nie spełnia wszystkich wymagań!");
+      addToast({ type: 'error', message: 'Hasło nie spełnia wszystkich wymagań!' });
       return;
     }
 
@@ -49,15 +54,15 @@ export default function PasswordCard({ username }: { username: string }) {
       });
 
       if (res.ok) {
-        alert("Pomyślnie zmieniono hasło.");
+        addToast({ type: 'success', message: 'Pomyślnie zmieniono hasło.' });
         setOldPassword('');
         setNewPassword('');
       } else {
         const err = await res.json();
-        alert(err.error || "Wystąpił nieznany błąd podczas zmiany hasła.");
+        setErrorModal(err.error || "Wystąpił nieznany błąd podczas zmiany hasła.");
       }
     } catch (error) {
-      alert("Błąd połączenia z serwerem.");
+      setErrorModal("Błąd połączenia z serwerem.");
     } finally {
       setLoading(false);
     }
@@ -72,7 +77,9 @@ export default function PasswordCard({ username }: { username: string }) {
   const barColor = allReqsMet && score > 2 ? 'bg-dashboard-primary' : (allReqsMet ? 'bg-yellow-500' : 'bg-[#a01010]');
 
   return (
-    <Card>
+    <>
+      <ErrorPopup isOpen={!!errorModal} message={errorModal} onClose={() => setErrorModal('')} />
+      <Card>
       <CardTitle>Zmień hasło</CardTitle>
       
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 relative">
@@ -113,20 +120,20 @@ export default function PasswordCard({ username }: { username: string }) {
           <div className={`absolute top-0 left-0 h-0.5 transition-all duration-300 ${barColor}`} style={{ width: `${barWidth}%` }}></div>
           
           <div className="flex items-center gap-2 text-xs text-white">
-            <span className={req.correctLenght ? "text-dashboard-primary font-bold" : "text-dashboard-danger font-bold"}>
-              {req.correctLenght ? '✔' : '✖'}
+            <span className={req.correctLenght ? "text-dashboard-primary" : "text-dashboard-danger"}>
+              {req.correctLenght ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <X className="w-3.5 h-3.5 stroke-[3]" />}
             </span>
             Od 14 do 128 znaków włącznie.
           </div>
           <div className="flex items-center gap-2 text-xs text-white">
-            <span className={req.notNumbersOnly ? "text-dashboard-primary font-bold" : "text-dashboard-danger font-bold"}>
-              {req.notNumbersOnly ? '✔' : '✖'}
+            <span className={req.notNumbersOnly ? "text-dashboard-primary" : "text-dashboard-danger"}>
+              {req.notNumbersOnly ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <X className="w-3.5 h-3.5 stroke-[3]" />}
             </span>
             Nie składa się wyłącznie z cyfr.
           </div>
           <div className="flex items-center gap-2 text-xs text-white">
-            <span className={req.notOnList ? "text-dashboard-primary font-bold" : "text-dashboard-danger font-bold"}>
-              {req.notOnList ? '✔' : '✖'}
+            <span className={req.notOnList ? "text-dashboard-primary" : "text-dashboard-danger"}>
+              {req.notOnList ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <X className="w-3.5 h-3.5 stroke-[3]" />}
             </span>
             Nie jest na liście słabych i wykradzionych haseł.
           </div>
@@ -143,5 +150,6 @@ export default function PasswordCard({ username }: { username: string }) {
         </div>
       </form>
     </Card>
+    </>
   );
 }

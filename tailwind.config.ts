@@ -13,7 +13,6 @@ const config: Config = {
         'charcoal-blue': '#222429',
         'lavender-mist': '#E0E1E9',
         'onyx': '#0F1115',
-        'dashboard-stroke': 'rgba(255, 255, 255, 0.15)',
         'dashboard-bg': 'var(--dashboard-background)',
         'dashboard-bg-s2': 'var(--dashboard-background-s2)',
         'dashboard-bg-s3': 'var(--dashboard-background-s3)',
