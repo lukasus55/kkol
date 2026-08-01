@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Footer from '../components/Footer';
+import { ToastProvider } from '../components/ui/ToastProvider';
 
 import './globals.css';
 import '../public/css/base.css';
@@ -21,7 +22,9 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon" />
       </head>
       <body>
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
         <footer className="footer" id="footer">
           <Footer />
         </footer>

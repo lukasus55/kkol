@@ -21,3 +21,18 @@
     --dashboard-text-s3: oklch(0.40 0 129);
   }
 }
+
+@keyframes toast-progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* Hide number input spinners when not focused */
+input[type="number"]:not(:focus)::-webkit-inner-spin-button,
+input[type="number"]:not(:focus)::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"]:not(:focus) {
+  -moz-appearance: textfield;
+}
