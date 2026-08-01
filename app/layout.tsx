@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Footer from '../components/Footer';
 
+import './globals.css';
 import '../public/css/base.css';
 import '../public/css/footer.css';
 
