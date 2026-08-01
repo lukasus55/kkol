@@ -23,7 +23,7 @@ export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, clo
         onClick={closeMenu}
       />
       <div 
-        className="absolute right-8 top-12 w-48 bg-dashboard-bg border border-dashboard-stroke rounded-md shadow-xl z-50 py-1 overflow-hidden"
+        className="absolute left-0 bottom-full mb-2 w-48 bg-dashboard-bg border border-dashboard-stroke rounded-md shadow-xl z-50 py-1 overflow-hidden animate-in slide-in-from-bottom-2 fade-in duration-200"
         onClick={handleClick}
       >
         {canEdit && (

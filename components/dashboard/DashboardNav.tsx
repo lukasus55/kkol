@@ -64,7 +64,7 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
             <img src="/img/dashboard/poll_icon.svg" alt="Głosowania" />
             <span className="selector-text">Głosowania</span>
           </li>
-          <li title="Wyloguj się" onClick={handleLogout}>
+          <li id="logout_li" title="Wyloguj się" onClick={handleLogout}>
             <div className="mobile_logout_btn">
               <img src="/img/dashboard/leave_icon.webp" alt="Wyloguj" />
               <span className="selector-text">Wyloguj się</span>
@@ -96,8 +96,8 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
             </Link>
           </div>
 
-          <div className="more_icon">
-            <button className="more_button" onClick={() => setShowUserMenu(!showUserMenu)}>
+          <div className="more_icon relative">
+            <button className="more_button hover:text-white transition-colors" onClick={() => setShowUserMenu(!showUserMenu)}>
               <svg fill="currentColor" width="2rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="17.5" cy="12" r="1.5" />
                 <circle cx="12" cy="12" r="1.5" />
@@ -106,21 +106,30 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
             </button>
 
             {showUserMenu && (
-              <div className="action_menu user_actions show">
-                <ul>
-                  <li>
-                    <button onClick={handleLogout}>
-                      <h4>
-                        <svg width="0.8rem" viewBox="0 0 12 12">
-                          <polygon fill="currentColor" points="9,2 9,0 1,0 1,12 9,12 9,10 8,10 8,11 2,11 2,1 8,1 8,2 " />
-                          <polygon fill="currentColor" points="8.2929688,3.2929688 7.5859375,4 9.0859375,5.5 5,5.5 5,6.5 9.0859375,6.5 7.5859375,8 8.2929688,8.7070313 11,6 " />
-                        </svg>{' '}
-                        Wyloguj się
-                      </h4>
-                    </button>
-                  </li>
-                </ul>
-              </div>
+              <>
+                <div 
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowUserMenu(false)}
+                />
+                <div className="absolute bottom-full left-0 mb-3 w-52 bg-dashboard-bg-s3 border border-dashboard-stroke rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-in slide-in-from-bottom-2 fade-in duration-200">
+                  <div className="px-3.5 py-2 text-[11px] font-bold text-dashboard-text-s3 uppercase tracking-wider border-b border-white/5 mb-1">
+                    Akcje konta
+                  </div>
+                  
+                  {/* Space for future options */}
+                  
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors text-left"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 12 12" className="flex-shrink-0">
+                      <polygon fill="currentColor" points="9,2 9,0 1,0 1,12 9,12 9,10 8,10 8,11 2,11 2,1 8,1 8,2 " />
+                      <polygon fill="currentColor" points="8.2929688,3.2929688 7.5859375,4 9.0859375,5.5 5,5.5 5,6.5 9.0859375,6.5 7.5859375,8 8.2929688,8.7070313 11,6 " />
+                    </svg>
+                    Wyloguj się
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </div>
