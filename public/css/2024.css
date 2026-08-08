@@ -5,6 +5,11 @@
     font-style: normal;
 }
 
+
+.season-2024 {
+    min-height: 100vh;
+    font-family: 'Markazi Text', sans-serif;
+
 .logo {
     position: absolute;
     top: 0.625rem;
@@ -940,4 +945,5 @@
         width: 80%;
         height: auto;
     }
+}
 }
