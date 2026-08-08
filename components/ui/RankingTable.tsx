@@ -47,9 +47,9 @@ export default function RankingTable({ tournamentId, children }: RankingTablePro
     <table className="ranking_table">
       {children}
       <tbody>
-        {standings.map((player: any) => {
+        {standings.map((player: any, rowIndex: number) => {
           return (
-            <tr key={player.id} className="ranking_table_standard">
+            <tr key={player.id} className="ranking_table_standard animate-row" style={{ animationDelay: `${rowIndex * 0.1}s` }}>
               <td className="ranking_table_position">{player.position}</td>
               <td className="ranking_player">{player.displayed_name}</td>
               {events.map((event: any, idx: number) => {

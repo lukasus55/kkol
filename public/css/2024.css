@@ -8,7 +8,6 @@
 
 .season-2024 {
     min-height: 100vh;
-    font-family: 'Markazi Text', sans-serif;
 
 .logo {
     position: absolute;
@@ -288,6 +287,9 @@
     padding-top: 0.25rem;
     height: 100%;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -329,7 +331,6 @@
 .ranking_table .ranking_game img {
     width: 1.625rem;
     height: 1.625rem;
-    align-self: flex-end;
 }
 
 .ranking_description {
