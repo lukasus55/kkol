@@ -29,7 +29,7 @@ const config: Config = {
         'dashboard-danger-hover': 'var(--color-danger-600)',
       },
       fontFamily: {
-        sans: ['var(--font-lexend)', 'Lexend', 'sans-serif'],
+        sans: ['var(--font-outfit)', 'Outfit', 'sans-serif'],
       },
     },
   },
