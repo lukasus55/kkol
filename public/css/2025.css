@@ -4,6 +4,59 @@
     src: url("/fonts/Markazi_Text/MarkaziText-VariableFont_wght.ttf");
 }
 
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes crown-bounce {
+    0% { transform: translateX(-50%) rotate(-10deg) translateY(0); }
+    50% { transform: translateX(-50%) rotate(-10deg) translateY(-20px); }
+    100% { transform: translateX(-50%) rotate(-10deg) translateY(0); }
+}
+
+@keyframes fall {
+    0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from {
+      scale: 0;
+    }
+    to {
+      scale: 1;
+    }
+}
+
+@keyframes appearFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-200px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+@keyframes appearFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(200px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+
+.season-2025 {
+    min-height: 100vh;
+    font-family: 'Markazi Text', sans-serif;
+
 .hidden 
 {
     opacity: 0;
@@ -151,7 +204,7 @@
 }
 
 .champion_name {
-    color: var(#ffffff);
+    color: #ffffff;
     font-size: 3rem;
     margin: 0;
     font-weight: 800;
@@ -210,22 +263,11 @@
 }
 
 /* Animations */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
-}
 
-@keyframes crown-bounce {
-    0% { transform: translateX(-50%) rotate(-10deg) translateY(0); }
-    50% { transform: translateX(-50%) rotate(-10deg) translateY(-20px); }
-    100% { transform: translateX(-50%) rotate(-10deg) translateY(0); }
-}
 
-@keyframes fall {
-    0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-}
+
+
+
 
 .main
 {
@@ -428,14 +470,7 @@
     cursor: pointer;
 }
 
-@keyframes fadeIn {
-    from {
-      scale: 0;
-    }
-    to {
-      scale: 1;
-    }
-}
+
 
 .results_popup
 {
@@ -693,27 +728,9 @@
     margin-bottom: 1.25rem;
 }
 
-@keyframes appearFromLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-200px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0px);
-    }
-}
 
-@keyframes appearFromRight {
-    from {
-        opacity: 0;
-        transform: translateX(200px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0px);
-    }
-}
+
+
 
 .games_list
 {
@@ -1340,4 +1357,5 @@ background: linear-gradient(180deg, rgba(37, 23, 6, 1) 0%, rgba(29, 12, 12, 1) 7
     {
         justify-content: center;
     }
+}
 }

@@ -25,14 +25,24 @@
     --color-dark-green: #305120;
 }
 
-html {
-    scroll-behavior: smooth;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-body {
+
+.season-2026 {
+    min-height: 100vh;
     background-color: var(--color-onyx);
     color: #ffffff;
-}
+    font-family: 'Markazi Text', sans-serif;
 
 .hidden {
     opacity: 0;
@@ -512,17 +522,7 @@ body {
     height: 2.5rem;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .ranking_table .ranking_table_standard {
     height: 6.125rem;
@@ -746,10 +746,7 @@ body {
     color: var(--color-charcoal-blue);
 }
 
-.card_body {
-    position: relative;
-    min-height: 13rem;
-}
+.card_
 
 .content_desc {
     color: var(--gray700);
@@ -928,7 +925,7 @@ body {
         2px -2px 0 #000,
         -2px 2px 0 #000,
         2px 2px 0 #000;
-    border: 2px solid var(#000);
+    border: 2px solid #000;
 }
 
 .gd_card:nth-child(1) {
@@ -1239,4 +1236,5 @@ body {
         width: 85%;
     }
 
+}
 }
