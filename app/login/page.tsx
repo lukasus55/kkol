@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import '../../public/css/dashboard/dashboard.css';
+
 import '../../public/css/login.css';
 
 export default function Login() {

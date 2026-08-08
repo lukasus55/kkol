@@ -60,7 +60,7 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
   };
 
   return (
-    <div className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors group relative first:rounded-t-[5px] last:rounded-b-[5px]">
+    <div className="flex items-center justify-between p-4 hover:bg-dashboard-bg-s2 transition-colors group relative first:rounded-t-[5px] last:rounded-b-[5px]">
       
       <div className="flex items-center gap-4">
         {/* Status Icon */}
@@ -74,7 +74,7 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
 
         {/* Info */}
         <div className="flex flex-col">
-          <div className="text-sm font-semibold text-white">
+          <div className="text-sm font-semibold text-dashboard-text">
             {pageExists ? (
               <Link href={`/${pageUrl}`} className="hover:underline hover:text-dashboard-primary transition-colors">
                 {name}
@@ -98,7 +98,7 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
         {/* More Actions Button */}
         <button 
           onClick={() => setMenuOpen(!menuOpen)}
-          className="text-dashboard-text-s2 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10"
+          className="text-dashboard-text-s2 hover:text-dashboard-text transition-colors p-1 rounded-md hover:bg-dashboard-bg-s3"
         >
           <MoreHorizontal className="w-5 h-5" />
         </button>

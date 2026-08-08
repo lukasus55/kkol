@@ -3,8 +3,6 @@ import Footer from '../components/Footer';
 import { ToastProvider } from '../components/ui/ToastProvider';
 
 import './globals.css';
-import '../public/css/base.css';
-import '../public/css/footer.css';
 
 export const metadata: Metadata = {
   title: 'Olimpiada Karwińska',

@@ -29,7 +29,7 @@ export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, clo
         {canEdit && (
           <button 
             onClick={() => { onEdit(); closeMenu(); }}
-            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-dashboard-text hover:bg-dashboard-bg-s2 hover:text-white transition-colors text-left"
+            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-dashboard-text hover:bg-dashboard-bg-s2 hover:text-dashboard-text transition-colors text-left"
           >
             <Edit className="w-4 h-4 text-dashboard-text-s2" />
             Edytuj turniej
@@ -38,7 +38,7 @@ export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, clo
 
         <button 
           onClick={() => { onEvents(); closeMenu(); }}
-          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-dashboard-text hover:bg-dashboard-bg-s2 hover:text-white transition-colors text-left"
+          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-dashboard-text hover:bg-dashboard-bg-s2 hover:text-dashboard-text transition-colors text-left"
         >
           <CalendarDays className="w-4 h-4 text-dashboard-text-s2" />
           Wydarzenia

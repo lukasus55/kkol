@@ -1,3 +1,85 @@
+/* ====================================================================================================== */
+/* !!!!! THIS IS TEMPORARY COPY OF globals.css THAT WILL BE REMOVED AFTER THE MIGRATION IS FINISHED !!!!! */
+/* ====================================================================================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-100: #ffffff;
+    --color-bg-200: #f8fafc;
+    --color-bg-300: #f1f5f9;
+    --color-bg-400: #e2e8f0;
+    --color-bg-500: #cbd5e1;
+    --color-bg-600: #94a3b8;
+
+    --color-text-900: #0f172a;
+    --color-text-700: #334155;
+    --color-text-500: #64748b;
+
+    --color-accent-400: #2dd4bf;
+    --color-accent-500: #14b8a6;
+    --color-accent-600: #0d9488;
+
+    --color-danger-500: #ef4444;
+    --color-danger-600: #dc2626;
+
+    --color-warning-red: #b42525;
+    --color-overlay: rgba(0, 0, 0, 0.7);
+  }
+
+  h1 {
+    @apply text-2xl font-bold text-dashboard-text;
+  }
+
+  h2 {
+    @apply text-xl font-semibold text-dashboard-text;
+  }
+
+  h3 {
+    @apply text-lg font-normal text-dashboard-text;
+  }
+
+  h4 {
+    @apply text-base font-normal text-dashboard-text;
+  }
+
+  h5 {
+    @apply text-sm font-normal text-dashboard-text-s2;
+  }
+
+  h6 {
+    @apply text-xs font-normal text-dashboard-text-s3;
+  }
+
+  input {
+    @apply flex-1 min-w-0 bg-dashboard-bg-s2 border border-dashboard-stroke text-dashboard-text-s2 px-3 rounded text-base h-10 transition-colors outline-none focus:border-dashboard-text;
+  }
+}
+
+@keyframes toast-progress {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
+
+/* Hide number input spinners when not focused */
+input[type="number"]:not(:focus)::-webkit-inner-spin-button,
+input[type="number"]:not(:focus)::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]:not(:focus) {
+  -moz-appearance: textfield;
+}
+
 @font-face {
   font-family: "Lexend";
   src: url("/fonts/Lexend/Lexend-VariableFont_wght.ttf");
@@ -9,27 +91,6 @@
   box-sizing: border-box;
 }
 
-:root {
-  --footer700: #ce6c6c;
-  --footer50: #141212;
-  --footer100: #242020;
-
-  /* Website background */
-  --color-onyx: oklch(0.04 0 360);
-
-  /* Cards/widgets backgorund */
-  --color-charcoal-blue: #303238;
-
-  /* Primary */
-  --color-lavender-mist: #f3eff5;
-
-  /* Accent */
-  --color-lime-moss: #72b01d;
-  
-  --color-green: #3f7d20;
-  --color-dark-green: #305120;
-}
-
 html {
   font-size: 16px;
   font-family: "Lexend", serif;
@@ -38,8 +99,8 @@ html {
 }
 
 body {
-  background: var(--color-onyx);
-  color: var(--color-lavender-mist);
+  background: var(--color-bg-100);
+  color: var(--color-text-900);
   padding-bottom: 60px;
 }
 
@@ -70,7 +131,7 @@ a {
   }
 }
 
-.hidden {
+.anim-hidden {
   opacity: 0;
   transition: 1s;
   filter: blur(3px);
@@ -141,8 +202,8 @@ a {
 
 .loader_spinner {
   display: flex;
-  border: 4px solid var(--color-lavender-mist);
-  border-top: 4px solid var(--color-lime-moss);
+  border: 4px solid var(--color-bg-300);
+  border-top: 4px solid var(--color-accent-500);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -152,15 +213,14 @@ a {
   align-self: center;
 }
 
-.loader-global
-{
+.loader-global {
   position: fixed;
   inset: 0px;
   width: 100%;
   height: 100%;
   top: 0%;
   left: 0%;
-  background-color: var(--color-onyx);
+  background-color: var(--color-bg-100);
   margin: auto;
   display: flex;
   justify-content: center;
@@ -175,85 +235,76 @@ a {
   height: 100%;
   top: 0%;
   left: 0%;
-  background-color: #242424d2;
+  background-color: rgba(255, 255, 255, 0.8);
   margin: auto;
   z-index: 100;
 }
 
-ul
-{
+ul {
   list-style: none;
 }
 
 /* --- PLAYER SEARCH BAR COMPONENT --- */
-.search_bar_wrapper
-{
+.search_bar_wrapper {
   position: relative;
   width: 100%;
   max-width: 400px;
   font-family: inherit;
 }
 
-.search_bar_input
-{
+.search_bar_input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: #000;
-  color: #fff;
-  border: 1px solid #444;
+  background-color: var(--color-bg-100);
+  color: var(--color-text-900);
+  border: 1px solid var(--color-bg-400);
   border-radius: 4px;
   outline: none;
   transition: border-color 0.2s ease;
   box-sizing: border-box;
 }
 
-.search_bar_input:focus
-{
-  border-color: #fff;
+.search_bar_input:focus {
+  border-color: var(--color-accent-500);
 }
 
-.search_bar_dropdown
-{
+.search_bar_dropdown {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
   width: 100%;
-  background-color: #000;
-  border: 1px solid #fff;
+  background-color: var(--color-bg-100);
+  border: 1px solid var(--color-bg-400);
   border-radius: 4px;
   z-index: 1000;
   max-height: 250px;
   overflow-y: auto;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.search_bar_dropdown.hidden
-{
+.search_bar_dropdown.hidden {
   display: none;
 }
 
-.search_bar_item
-{
+.search_bar_item {
   display: flex;
   align-items: center;
   padding: 0.6rem 1rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid var(--color-bg-300);
 }
 
-.search_bar_item:last-child
-{
+.search_bar_item:last-child {
   border-bottom: none;
 }
 
-.search_bar_item:hover
-{
-  background-color: #1a1a1a;
+.search_bar_item:hover {
+  background-color: var(--color-bg-200);
 }
 
-.search_bar_pfp, .search_bar_pfp_placeholder
-{
+.search_bar_pfp,
+.search_bar_pfp_placeholder {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -261,35 +312,30 @@ ul
   object-fit: cover;
 }
 
-.search_bar_pfp_placeholder
-{
-  background-color: #444;
+.search_bar_pfp_placeholder {
+  background-color: var(--color-bg-400);
 }
 
-.search_bar_info
-{
+.search_bar_info {
   display: flex;
   flex-direction: column;
 }
 
-.search_bar_name
-{
-  color: #fff;
+.search_bar_name {
+  color: var(--color-text-900);
   font-weight: bold;
   font-size: 0.9rem;
 }
 
-.search_bar_id
-{
-  color: #888;
+.search_bar_id {
+  color: var(--color-text-500);
   font-size: 0.75rem;
   text-align: left;
 }
 
-.search_bar_empty
-{
+.search_bar_empty {
   padding: 1rem;
-  color: #888;
+  color: var(--color-text-500);
   text-align: center;
   font-size: 0.9rem;
 }
@@ -312,8 +358,7 @@ ul
   opacity: 1;
 }
 
-button
-{
+button {
   outline: inherit;
   border: none;
   cursor: pointer;
@@ -322,22 +367,99 @@ button
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+  width: 10px;
+  height: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-    background: transparent; 
+  background: transparent;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888; 
-    border-radius: 5px;
+  background: var(--color-bg-400);
+  border-radius: 5px;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+  background: var(--color-bg-600);
+}
+
+/* Footer styles */
+.footer_container {
+  display: flex;
+  position: fixed;
+  flex-direction: row;
+  bottom: 0%;
+  left: 0%;
+  width: 100%;
+  z-index: 200;
+  font-size: 25px;
+  justify-content: center;
+  align-self: center;
+  flex-wrap: wrap;
+  color: var(--color-text-900);
+}
+
+.footer_bar {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  padding: 0px;
+  align-items: center;
+  background-color: var(--color-bg-200);
+  color: var(--color-text-900);
+  font-size: 25px;
+  width: 100%;
+  height: 2.4em;
+  z-index: 290;
+}
+
+.footer_bar_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 5pt;
+  transition: background-color 0.3s, opacity 0.3s;
+  opacity: 80%;
+  margin: 0px 2px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.footer_bar_button img {
+  width: 1em;
+  height: 1em;
+}
+
+.footer_bar_button:hover {
+  background-color: var(--color-bg-300);
+  opacity: 100%;
+}
+
+.footer_bar_button.active {
+  background-color: var(--color-bg-300);
+  opacity: 100%;
+}
+
+.footer_container_vertical {
+  top: 0%;
+  height: 100%;
+  width: 2.4em;
+  flex-direction: column;
+}
+
+.footer_bar_vertical {
+  width: 2.4em;
+  height: 100%;
+  padding: 20px 0px;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+@media (max-width:768px) {
+  .footer_bar {
+    justify-content: space-around;
+  }
 }

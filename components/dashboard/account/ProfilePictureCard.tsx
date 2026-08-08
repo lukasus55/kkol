@@ -77,7 +77,7 @@ export default function ProfilePictureCard({ currentPfpBase64 }: { currentPfpBas
           
           <div className="flex items-center gap-3">
             <label className="cursor-pointer">
-              <span className="inline-flex items-center justify-center font-semibold rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-dashboard-bg text-white border border-dashboard-stroke px-4 py-1.5 text-sm hover:bg-dashboard-bg-s2 transition-colors">
+              <span className="inline-flex items-center justify-center font-semibold rounded-md disabled:opacity-50 disabled:cursor-not-allowed bg-dashboard-bg text-dashboard-text border border-dashboard-stroke px-4 py-1.5 text-sm hover:bg-dashboard-bg-s2 transition-colors">
                 Wybierz plik
               </span>
               <input 

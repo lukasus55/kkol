@@ -8,11 +8,6 @@ import CalendarTab from '../../components/dashboard/CalendarTab';
 import PollsTab from '../../components/dashboard/PollsTab';
 import AccountTab from '../../components/dashboard/AccountTab';
 
-import '../../public/css/dashboard/dashboard.css';
-import '../../public/css/dashboard/account.css';
-import '../../public/css/dashboard/tournaments.css';
-import '../../public/css/dashboard/calendar.css';
-import '../../public/css/dashboard/polls.css';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -51,18 +46,18 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <main className="main">
-      <div className="dashboard">
+    <main className="w-full flex justify-center flex-wrap">
+      <div className="w-full grid grid-rows-[auto_1fr] md:grid-rows-1 grid-cols-1 md:grid-cols-[20rem_1fr] fixed">
         <DashboardNav activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
-        
-        <div className="content">
+
+        <div className="w-full overflow-auto h-[calc(100vh-104px)] md:h-[calc(100vh-60px)]" style={{ scrollbarWidth: 'auto' }}>
           {activeTab === 'account' && <AccountTab user={user} />}
           {activeTab === 'tournaments' && <TournamentsTab user={user} />}
           {activeTab === 'calendar' && <CalendarTab user={user} />}
           {activeTab === 'polls' && <PollsTab user={user} />}
         </div>
       </div>
-      
+
       {/* TODO: Add Popups / Modals here later */}
     </main>
   );

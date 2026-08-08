@@ -259,7 +259,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
             
             <button 
               onClick={() => setInfo({ ...info, finished: !info.finished })}
-              className="flex items-center justify-center gap-2 w-[130px] py-1.5 rounded-md border transition-all duration-300 ml-4 border-dashboard-stroke bg-dashboard-bg-s3 hover:bg-white/5"
+              className="flex items-center justify-center gap-2 w-[130px] py-1.5 rounded-md border transition-all duration-300 ml-4 border-dashboard-stroke bg-dashboard-bg-s3 hover:bg-dashboard-bg-s2"
             >
               <div className="relative w-4 h-4 flex items-center justify-center">
                 <CheckCircle2 className={`absolute transition-all duration-500 text-dashboard-primary w-4 h-4 ${info.finished ? 'opacity-0 scale-50 rotate-90' : 'opacity-100 scale-100 rotate-0'}`} />
@@ -272,13 +272,13 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
 
             <div className="flex bg-dashboard-bg border border-dashboard-stroke rounded-md p-1 ml-auto text-sm font-normal">
               <button
-                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'players' ? 'bg-white/10 text-white' : 'text-dashboard-text-s2 hover:text-white'}`}
+                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'players' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text-s2 hover:text-dashboard-text'}`}
                 onClick={() => setActiveTab('players')}
               >
                 Uczestnicy
               </button>
               <button
-                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'settings' ? 'bg-white/10 text-white' : 'text-dashboard-text-s2 hover:text-white'}`}
+                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'settings' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text-s2 hover:text-dashboard-text'}`}
                 onClick={() => setActiveTab('settings')}
               >
                 Ustawienia

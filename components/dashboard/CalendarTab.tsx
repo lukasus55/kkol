@@ -170,21 +170,21 @@ export default function CalendarTab({ user }: { user: any }) {
       <div className="flex items-center justify-between px-6 py-4 bg-dashboard-bg flex-shrink-0">
         <button 
           onClick={handleToday}
-          className="px-4 py-1.5 rounded-md bg-dashboard-bg-s3 border border-dashboard-stroke text-sm font-medium text-dashboard-text hover:text-white hover:bg-white/5 transition-colors"
+          className="px-4 py-1.5 rounded-md bg-dashboard-bg-s3 border border-dashboard-stroke text-sm font-medium text-dashboard-text hover:text-dashboard-text hover:bg-dashboard-bg-s2 transition-colors"
         >
           Dzisiaj
         </button>
 
         <div className="flex items-center gap-6">
-          <button onClick={handlePrevMonth} className="p-1.5 rounded-full text-dashboard-text-s2 hover:text-white hover:bg-white/5 transition-colors">
+          <button onClick={handlePrevMonth} className="p-1.5 rounded-full text-dashboard-text-s2 hover:text-dashboard-text hover:bg-dashboard-bg-s2 transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </button>
           
-          <h2 className="text-xl font-bold w-48 text-center text-white capitalize tracking-wide">
+          <h2 className="text-xl font-bold w-48 text-center text-dashboard-text capitalize tracking-wide">
             {MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
           
-          <button onClick={handleNextMonth} className="p-1.5 rounded-full text-dashboard-text-s2 hover:text-white hover:bg-white/5 transition-colors">
+          <button onClick={handleNextMonth} className="p-1.5 rounded-full text-dashboard-text-s2 hover:text-dashboard-text hover:bg-dashboard-bg-s2 transition-colors">
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>
@@ -199,7 +199,7 @@ export default function CalendarTab({ user }: { user: any }) {
           {/* Day Names Header */}
           <div className="grid grid-cols-7 border-b border-dashboard-stroke bg-dashboard-bg-s3/50 flex-shrink-0">
             {DAY_NAMES.map((day, idx) => (
-              <div key={idx} className="py-2.5 text-center text-xs font-bold text-white uppercase tracking-wider">
+              <div key={idx} className="py-2.5 text-center text-xs font-bold text-dashboard-text uppercase tracking-wider">
                 {day}
               </div>
             ))}
@@ -253,7 +253,7 @@ export default function CalendarTab({ user }: { user: any }) {
                           ? 'opacity-0'
                           : isMajor 
                             ? 'bg-[#151c0d] border-dashboard-stroke hover:bg-[#1a2410] hover:border-dashboard-primary/40' 
-                            : 'bg-dashboard-bg-s3 border-dashboard-stroke hover:bg-dashboard-bg-s4 hover:border-white/20'
+                            : 'bg-dashboard-bg-s3 border-dashboard-stroke hover:bg-dashboard-bg-s4 hover:border-dashboard-stroke'
                       } ${isClone ? 'opacity-80 shadow-lg border-dashboard-primary/50' : !isFadedOriginal ? 'hover:brightness-125' : ''}`}
                     >
                       {isFadedOriginal ? (
@@ -267,7 +267,7 @@ export default function CalendarTab({ user }: { user: any }) {
                           <span className={`font-semibold flex-shrink-0 ${isMajor ? 'text-dashboard-primary' : 'text-dashboard-text-s2'}`}>
                             {timeStr}
                           </span>
-                          <span className="text-white truncate font-medium ml-0.5 flex-1 text-left">
+                          <span className="text-dashboard-text truncate font-medium ml-0.5 flex-1 text-left">
                             {evt.title}
                           </span>
                         </>
@@ -295,7 +295,7 @@ export default function CalendarTab({ user }: { user: any }) {
                   className={`min-h-0 h-full p-1.5 border-r border-b border-dashboard-stroke transition-colors [&:nth-child(7n)]:border-r-0 [&:nth-last-child(-n+7)]:border-b-0 cursor-pointer overflow-hidden
                     ${!cell.isCurrentMonth ? 'bg-dashboard-bg-s3/30' : 'bg-dashboard-bg'} 
                     ${isToday ? 'bg-dashboard-primary/5' : ''} 
-                    ${dragState.hoveredDate?.getTime() === cell.date.getTime() ? 'bg-white/5 ring-1 ring-inset ring-dashboard-primary/30' : ''}
+                    ${dragState.hoveredDate?.getTime() === cell.date.getTime() ? 'bg-dashboard-bg-s2 ring-1 ring-inset ring-dashboard-primary/30' : ''}
                     hover:bg-dashboard-bg-s3/50 group flex flex-col`}
                 >
                   <div className="flex justify-end mb-1 flex-shrink-0">
@@ -303,7 +303,7 @@ export default function CalendarTab({ user }: { user: any }) {
                       isToday 
                         ? 'bg-dashboard-primary text-black' 
                         : cell.isCurrentMonth 
-                          ? 'text-dashboard-text group-hover:text-white' 
+                          ? 'text-dashboard-text group-hover:text-dashboard-text' 
                           : 'text-dashboard-stroke'
                     }`}>
                       {cell.date.getDate()}
