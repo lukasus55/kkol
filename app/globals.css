@@ -55,8 +55,8 @@ input[type="number"]:not(:focus) {
 }
 
 @font-face {
-  font-family: "Lexend";
-  src: url("/fonts/Lexend/Lexend-VariableFont_wght.ttf");
+  font-family: "Outfit";
+  src: url("/fonts/Outfit/Outfit-VariableFont_wght.ttf");
 }
 
 * {
@@ -67,7 +67,7 @@ input[type="number"]:not(:focus) {
 
 html {
   font-size: 16px;
-  font-family: "Lexend", serif;
+  font-family: "Outfit", sans-serif;
   font-weight: normal;
   scroll-behavior: smooth;
 }
