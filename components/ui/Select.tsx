@@ -31,7 +31,7 @@ export function Select({ value, onChange, options, disabled, className = '' }: S
         className={`bg-dashboard-bg-s3 border ${isOpen ? 'border-dashboard-primary' : 'border-dashboard-stroke'} rounded p-2 flex items-center justify-between transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-dashboard-primary/50'}`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
-        <span className="text-white text-sm truncate">
+        <span className="text-dashboard-text text-sm truncate">
           {selectedOption ? selectedOption.label : 'Wybierz...'}
         </span>
         <ChevronDown className={`w-4 h-4 text-dashboard-text-s2 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -45,7 +45,7 @@ export function Select({ value, onChange, options, disabled, className = '' }: S
             options.map(opt => (
               <div 
                 key={opt.value}
-                className={`p-2.5 text-sm cursor-pointer transition-colors ${opt.value === value ? 'bg-dashboard-primary/20 text-dashboard-primary font-medium' : 'text-white hover:bg-white/10'}`}
+                className={`p-2.5 text-sm cursor-pointer transition-colors ${opt.value === value ? 'bg-dashboard-primary/20 text-dashboard-primary font-medium' : 'text-dashboard-text hover:bg-dashboard-bg-s3'}`}
                 onClick={() => {
                   onChange(opt.value);
                   setIsOpen(false);

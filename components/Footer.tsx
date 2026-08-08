@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Home, Trophy, BarChart2, User } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -6,12 +7,12 @@ export default function Footer() {
       <div className="footer_bar">
         <Link href="/">
           <div className="footer_bar_button" title="Strona Główna">
-            <img src="/img/home_icon.webp" alt="Strona Główna" />
+            <Home className="w-[1em] h-[1em] text-dashboard-text" />
           </div>
         </Link>
         <Link href="/events">
           <div className="footer_bar_button" title="Wydarzenia">
-            <img src="/img/trophy_icon.webp" alt="Wydarzenia" />
+            <Trophy className="w-[1em] h-[1em] text-dashboard-text" />
           </div>
         </Link>
         <Link href="/2026">
@@ -21,12 +22,12 @@ export default function Footer() {
         </Link>
         <Link href="/ranking">
           <div className="footer_bar_button" title="Ranking">
-            <img src="/img/graph_icon.webp" alt="Ranking" />
+            <BarChart2 className="w-[1em] h-[1em] text-dashboard-text" />
           </div>
         </Link>
         <Link href="/dashboard">
           <div className="footer_bar_button" title="Profil">
-            <img src="/img/profile_icon.webp" alt="Profil" />
+            <User className="w-[1em] h-[1em] text-dashboard-text" />
           </div>
         </Link>
       </div>

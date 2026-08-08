@@ -54,7 +54,7 @@ export function ConfirmationPopup({
             <AlertTriangle className="w-8 h-8 text-yellow-500" />
           </div>
           <div className="flex-1 mt-1">
-            <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+            <h3 className="text-lg font-bold text-dashboard-text mb-2">{title}</h3>
             <p className="text-dashboard-text-s2 text-sm leading-relaxed" dangerouslySetInnerHTML={{__html: message}}></p>
           </div>
         </div>

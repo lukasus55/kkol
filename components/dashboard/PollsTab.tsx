@@ -120,7 +120,7 @@ export default function PollsTab({ user }: { user: any }) {
             className="flex items-center justify-between bg-dashboard-bg-s3 border border-dashboard-stroke rounded-lg p-5 hover:bg-dashboard-bg-s4 transition-colors cursor-pointer group"
           >
             <div className="flex flex-col gap-1.5">
-              <span className="font-bold text-white text-[15px] group-hover:text-dashboard-primary transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>
+              <span className="font-bold text-dashboard-text text-[15px] group-hover:text-dashboard-primary transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>
               <span className="text-dashboard-text-s2 text-[13px]">{poll.tournament_id}</span>
             </div>
             <div className="text-dashboard-text-s3 text-sm font-medium">

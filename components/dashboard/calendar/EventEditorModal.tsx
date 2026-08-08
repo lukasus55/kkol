@@ -238,14 +238,14 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
       <div className="flex gap-2 mb-6 border-b border-dashboard-stroke pb-4">
         <button
           onClick={() => setActiveTab('details')}
-          className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'details' ? 'bg-dashboard-bg-s3 text-white' : 'text-dashboard-text hover:bg-white/5'}`}
+          className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'details' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text hover:bg-dashboard-bg-s2'}`}
         >
           Szczegóły
         </button>
         {mode === 'edit' && (
           <button
             onClick={() => setActiveTab('results')}
-            className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'results' ? 'bg-dashboard-bg-s3 text-white' : 'text-dashboard-text hover:bg-white/5'}`}
+            className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'results' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text hover:bg-dashboard-bg-s2'}`}
           >
             Wyniki
           </button>
@@ -296,7 +296,7 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
                   type="datetime-local" 
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
-                  className="bg-dashboard-bg-s3 border border-dashboard-stroke rounded p-2 text-center text-white outline-none focus:border-dashboard-primary transition-colors"
+                  className="bg-dashboard-bg-s3 border border-dashboard-stroke rounded p-2 text-center text-dashboard-text outline-none focus:border-dashboard-primary transition-colors"
                 />
               </div>
 
@@ -306,7 +306,7 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
                   type="datetime-local" 
                   value={endDate}
                   onChange={e => setEndDate(e.target.value)}
-                  className="bg-dashboard-bg-s3 border border-dashboard-stroke rounded p-2 text-center text-white outline-none focus:border-dashboard-primary transition-colors"
+                  className="bg-dashboard-bg-s3 border border-dashboard-stroke rounded p-2 text-center text-dashboard-text outline-none focus:border-dashboard-primary transition-colors"
                 />
               </div>
             </div>
@@ -326,8 +326,8 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
                   <tr><td colSpan={3} className="p-4 text-center text-dashboard-text-s3">Brak graczy przypisanych do tego turnieju.</td></tr>
                 ) : (
                   results.map((r, idx) => (
-                    <tr key={r.player_id} className="border-b border-dashboard-stroke/50 hover:bg-white/5 transition-colors">
-                      <td className="p-3 font-semibold text-white">{r.displayed_name}</td>
+                    <tr key={r.player_id} className="border-b border-dashboard-stroke/50 hover:bg-dashboard-bg-s2 transition-colors">
+                      <td className="p-3 font-semibold text-dashboard-text">{r.displayed_name}</td>
                       <td className="p-3 text-center">
                         <NumberInput 
                           value={r.position ?? ''} 

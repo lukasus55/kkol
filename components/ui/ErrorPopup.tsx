@@ -21,7 +21,7 @@ export function ErrorPopup({ isOpen, message, onClose }: ErrorPopupProps) {
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
           <div className="flex-1 mt-1">
-            <h3 className="text-lg font-bold text-white mb-2">Błąd</h3>
+            <h3 className="text-lg font-bold text-dashboard-text mb-2">Błąd</h3>
             <p className="text-dashboard-text-s2 text-sm leading-relaxed">
               {message}
             </p>

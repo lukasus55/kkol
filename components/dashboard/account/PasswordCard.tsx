@@ -119,19 +119,19 @@ export default function PasswordCard({ username }: { username: string }) {
         <div className="flex flex-col gap-2 mt-2 border-t border-dashboard-stroke pt-4 relative">
           <div className={`absolute top-0 left-0 h-0.5 transition-all duration-300 ${barColor}`} style={{ width: `${barWidth}%` }}></div>
           
-          <div className="flex items-center gap-2 text-xs text-white">
+          <div className="flex items-center gap-2 text-xs text-dashboard-text">
             <span className={req.correctLenght ? "text-dashboard-primary" : "text-dashboard-danger"}>
               {req.correctLenght ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <X className="w-3.5 h-3.5 stroke-[3]" />}
             </span>
             Od 14 do 128 znaków włącznie.
           </div>
-          <div className="flex items-center gap-2 text-xs text-white">
+          <div className="flex items-center gap-2 text-xs text-dashboard-text">
             <span className={req.notNumbersOnly ? "text-dashboard-primary" : "text-dashboard-danger"}>
               {req.notNumbersOnly ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <X className="w-3.5 h-3.5 stroke-[3]" />}
             </span>
             Nie składa się wyłącznie z cyfr.
           </div>
-          <div className="flex items-center gap-2 text-xs text-white">
+          <div className="flex items-center gap-2 text-xs text-dashboard-text">
             <span className={req.notOnList ? "text-dashboard-primary" : "text-dashboard-danger"}>
               {req.notOnList ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <X className="w-3.5 h-3.5 stroke-[3]" />}
             </span>

@@ -74,7 +74,7 @@ export function TournamentEventsModal({ isOpen, onClose, tournament }: Tournamen
                 }`}
               >
                 <div className="flex flex-col gap-1">
-                  <span className="font-bold text-white text-sm">{event.name}</span>
+                  <span className="font-bold text-dashboard-text text-sm">{event.name}</span>
                   <span className="text-dashboard-text-s2 text-xs">
                     {new Date(event.event_date).toLocaleDateString('pl-PL')}
                   </span>

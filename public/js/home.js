@@ -9,7 +9,7 @@ const observer = new IntersectionObserver((entries) => {
     })
 })
 
-const hiddenElements = document.querySelectorAll('.hidden')
+const hiddenElements = document.querySelectorAll('.anim-hidden')
 hiddenElements.forEach((el) => observer.observe(el));
 
 const listObserver = new IntersectionObserver((entries) => {

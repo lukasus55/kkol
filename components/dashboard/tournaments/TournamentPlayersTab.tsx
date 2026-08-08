@@ -50,10 +50,10 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
               </tr>
             ) : (
               players.map((p, idx) => (
-                <tr key={p.id} className="hover:bg-white/5 transition-colors">
+                <tr key={p.id} className="hover:bg-dashboard-bg-s2 transition-colors">
                   <td className="p-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-white">{p.displayed_name}</span>
+                      <span className="font-medium text-dashboard-text">{p.displayed_name}</span>
                       <span className="text-dashboard-text-s2 text-xs">({p.id})</span>
                       {p.organizer_role === 'manager' && (
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 uppercase">Manager</span>
@@ -100,7 +100,7 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
                           <Tooltip content={p.organizer_role === 'manager' ? "Zdegraduj managera" : "Awansuj na managera"}>
                             <button 
                               onClick={() => onRoleChange(p.id, p.organizer_role)}
-                              className="p-1.5 rounded transition-colors hover:bg-white/10"
+                              className="p-1.5 rounded transition-colors hover:bg-dashboard-bg-s3"
                             >
                               {p.organizer_role === 'manager' ? (
                                 <div className="relative text-orange-400">

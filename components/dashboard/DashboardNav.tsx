@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { User, Trophy, Calendar, PieChart, LogOut } from 'lucide-react';
 
 interface DashboardNavProps {
   activeTab: string;
@@ -35,58 +36,54 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
     : '/img/default_pfp.webp';
 
   return (
-    <nav className="dashboard_navbar">
-      <div className="title_section">
-        <Link href="/">
-          <img src="/img/logos/olympic-logo-transparent.svg" style={{ width: '4rem', height: '4rem' }} alt="Logo" />
+    <nav className="bg-dashboard-bg-s2 w-full h-auto md:h-[calc(100vh-60px)] flex flex-row-reverse justify-center md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 border-r border-dashboard-stroke">
+      <div className="hidden md:flex justify-center items-center h-fit mx-4 mt-8 mb-4 pb-4 border-b border-dashboard-stroke px-2">
+        <Link href="/" className="w-full flex justify-center">
+          <img src="/img/logos/kol-logo-horizontal.svg" className="w-full h-auto max-h-16 object-contain" alt="Karwińska Olimpiada Logo" />
         </Link>
-        <div className="title_text">
-          <div className="title_line">Karwińska</div>
-          <div className="title_line">Olimpiada</div>
-        </div>
       </div>
 
-      <div className="selector">
-        <ul>
-          <li className={activeTab === 'account' ? 'active' : ''} onClick={() => setActiveTab('account')} title="Konto">
-            <img src="/img/dashboard/profile_icon.webp" alt="Konto" />
-            <span className="selector-text">Konto</span>
+      <div className="p-4 md:px-8 md:py-0 w-auto h-full">
+        <ul className="flex flex-wrap list-none gap-2">
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-dashboard-bg-s4 ${activeTab === 'account' ? 'bg-dashboard-bg-s4' : ''}`} onClick={() => setActiveTab('account')} title="Konto">
+            <User className="w-5 h-5 text-dashboard-text" />
+            <span className="text-dashboard-text md:block">Konto</span>
           </li>
-          <li className={activeTab === 'tournaments' ? 'active' : ''} onClick={() => setActiveTab('tournaments')} title="Turnieje">
-            <img src="/img/dashboard/trophy_icon.webp" alt="Turnieje" />
-            <span className="selector-text">Turnieje</span>
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-dashboard-bg-s4 ${activeTab === 'tournaments' ? 'bg-dashboard-bg-s4' : ''}`} onClick={() => setActiveTab('tournaments')} title="Turnieje">
+            <Trophy className="w-5 h-5 text-dashboard-text" />
+            <span className="text-dashboard-text md:block">Turnieje</span>
           </li>
-          <li className={activeTab === 'calendar' ? 'active' : ''} onClick={() => setActiveTab('calendar')} title="Kalendarz">
-            <img src="/img/dashboard/calendar_icon.webp" alt="Kalendarz" />
-            <span className="selector-text">Kalendarz</span>
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-dashboard-bg-s4 ${activeTab === 'calendar' ? 'bg-dashboard-bg-s4' : ''}`} onClick={() => setActiveTab('calendar')} title="Kalendarz">
+            <Calendar className="w-5 h-5 text-dashboard-text" />
+            <span className="text-dashboard-text md:block">Kalendarz</span>
           </li>
-          <li className={activeTab === 'polls' ? 'active' : ''} onClick={() => setActiveTab('polls')} title="Głosowania">
-            <img src="/img/dashboard/poll_icon.svg" alt="Głosowania" />
-            <span className="selector-text">Głosowania</span>
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-dashboard-bg-s4 ${activeTab === 'polls' ? 'bg-dashboard-bg-s4' : ''}`} onClick={() => setActiveTab('polls')} title="Głosowania">
+            <PieChart className="w-5 h-5 text-dashboard-text" />
+            <span className="text-dashboard-text md:block">Głosowania</span>
           </li>
-          <li id="logout_li" title="Wyloguj się" onClick={handleLogout}>
-            <div className="mobile_logout_btn">
-              <img src="/img/dashboard/leave_icon.webp" alt="Wyloguj" />
-              <span className="selector-text">Wyloguj się</span>
+          <li className="block md:hidden flex items-center w-auto h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-dashboard-bg-s4" title="Wyloguj się" onClick={handleLogout}>
+            <div className="flex justify-center items-center w-full h-full gap-3 text-red-500">
+              <LogOut className="w-5 h-5" />
+              <span className="text-red-500 md:block">Wyloguj się</span>
             </div>
           </li>
         </ul>
       </div>
 
-      <div className="user_card_container">
-        <div className="user_card">
-          <div className="picture">
-            <img src={pfpSrc} id="player_pfp" alt="Profilowe" />
+      <div className="hidden md:flex h-full">
+        <div className="grid p-4 w-full bg-dashboard-bg-s3 h-24 grid-cols-[auto_1fr_auto] grid-rows-1 gap-x-4 items-center">
+          <div className="flex justify-center items-center">
+            <img src={pfpSrc} id="player_pfp" alt="Profilowe" className="w-12 h-12 rounded-full" />
           </div>
 
-          <div className="details">
+          <div className="flex flex-wrap items-center">
             <Link href={`/player?id=${user?.id}`} id="player_link">
               <div className="details_container">
-                <h3>
-                  <div className="name">{user?.displayed_name}</div>
+                <h3 className="text-lg font-normal text-dashboard-text truncate">
+                  {user?.displayed_name}
                 </h3>
                 <div className="role_container">
-                  <h5>
+                  <h5 className="text-sm text-dashboard-text-s2">
                     <div className={`role_badge role_badge-${user?.role}`}>
                       {getRoleInfo(user?.role).name}
                     </div>
@@ -96,8 +93,8 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
             </Link>
           </div>
 
-          <div className="more_icon relative">
-            <button className="more_button hover:text-white transition-colors" onClick={() => setShowUserMenu(!showUserMenu)}>
+          <div className="flex items-center relative h-full">
+            <button className="text-dashboard-text-s2 cursor-pointer transition-colors hover:text-dashboard-text" onClick={() => setShowUserMenu(!showUserMenu)}>
               <svg fill="currentColor" width="2rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="17.5" cy="12" r="1.5" />
                 <circle cx="12" cy="12" r="1.5" />
@@ -112,7 +109,7 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
                   onClick={() => setShowUserMenu(false)}
                 />
                 <div className="absolute bottom-full left-0 mb-3 w-52 bg-dashboard-bg-s3 border border-dashboard-stroke rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-in slide-in-from-bottom-2 fade-in duration-200">
-                  <div className="px-3.5 py-2 text-[11px] font-bold text-dashboard-text-s3 uppercase tracking-wider border-b border-white/5 mb-1">
+                  <div className="px-3.5 py-2 text-[11px] font-bold text-dashboard-text-s3 uppercase tracking-wider border-b border-dashboard-stroke mb-1">
                     Akcje konta
                   </div>
                   
@@ -120,7 +117,7 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
                   
                   <button 
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-dashboard-bg-s2 transition-colors text-left"
                   >
                     <svg width="16" height="16" viewBox="0 0 12 12" className="flex-shrink-0">
                       <polygon fill="currentColor" points="9,2 9,0 1,0 1,12 9,12 9,10 8,10 8,11 2,11 2,1 8,1 8,2 " />

@@ -94,7 +94,7 @@ export function PlayerSearchBar({ onSelect, placeholder = "Wyszukaj gracza..." }
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium text-white">{player.displayed_name}</span>
+                  <span className="text-sm font-medium text-dashboard-text">{player.displayed_name}</span>
                   <span className="text-[10px] text-dashboard-text-s2">@{player.id}</span>
                 </div>
               </button>
