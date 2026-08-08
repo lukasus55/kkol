@@ -67,12 +67,12 @@ export default async function handler(request, response) {
         results.forEach((r) => {
             const tournament = dataMap[r.tournament_id];
 
-            if (tournament && r.position && r.attended) {
+            if (tournament && r.attended) {
                 tournament.standings.push({
                     id: r.player_id,
                     displayed_name: r.player_name,
-                    position: r.position,
-                    total_points: r.total_points
+                    position: r.position || '-',
+                    total_points: r.total_points || 0
                 });
             }
         });

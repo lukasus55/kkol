@@ -206,6 +206,7 @@ export default function Page2026() {
           <Link href="#schedule">
             <div className="single_button">
               <img src="/img/2026/ScheduleIcon.svg" alt="Kalendarz" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/ScheduleIcon.svg')" } as React.CSSProperties}></div>
               <span className="label"> Kalendarz </span>
             </div>
           </Link>
@@ -213,6 +214,7 @@ export default function Page2026() {
           <Link href="#ranking">
             <div className="single_button">
               <img src="/img/2026/RankingIcon.svg" alt="Ranking" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/RankingIcon.svg')" } as React.CSSProperties}></div>
               <span className="label"> Ranking </span>
             </div>
           </Link>
@@ -220,6 +222,7 @@ export default function Page2026() {
           <Link href="#games">
             <div className="single_button">
               <img src="/img/2026/GamesIcon.svg" alt="Gry" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GamesIcon.svg')" } as React.CSSProperties}></div>
               <span className="label"> Gry </span>
             </div>
           </Link>
@@ -257,6 +260,7 @@ export default function Page2026() {
                 <Link href="#gd" className="hiddenSingle">
                   <div className="single_wide_button">
                     <img src="/img/2026/GeometryIcon.webp" alt="GD" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GeometryIcon.webp')" } as React.CSSProperties}></div>
                     <span className="label"> GD </span>
                   </div>
                 </Link>
@@ -264,6 +268,7 @@ export default function Page2026() {
                 <Link href="#golf" className="hiddenSingle">
                   <div className="single_wide_button">
                     <img src="/img/2026/GolfIcon.webp" alt="Golf" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GolfIcon.webp')" } as React.CSSProperties}></div>
                     <span className="label"> Golf </span>
                   </div>
                 </Link>
@@ -271,6 +276,7 @@ export default function Page2026() {
                 <Link href="#pociag" className="hiddenSingle">
                   <div className="single_wide_button">
                     <img src="/img/2026/TrainIcon.webp" alt="Pociągi" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/TrainIcon.webp')" } as React.CSSProperties}></div>
                     <span className="label"> Pociągi </span>
                   </div>
                 </Link>
@@ -278,6 +284,7 @@ export default function Page2026() {
                 <Link href="#pummel" className="hiddenSingle">
                   <div className="single_wide_button">
                     <img src="/img/2026/PummelIcon.webp" alt="Pummel" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/PummelIcon.webp')" } as React.CSSProperties}></div>
                     <span className="label"> Pummel </span>
                   </div>
                 </Link>
@@ -285,6 +292,7 @@ export default function Page2026() {
                 <Link href="#splendor" className="hiddenSingle">
                   <div className="single_wide_button">
                     <img src="/img/2026/SplendorIcon.webp" alt="Splendor" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/SplendorIcon.webp')" } as React.CSSProperties}></div>
                     <span className="label"> Splendor </span>
                   </div>
                 </Link>
@@ -292,6 +300,7 @@ export default function Page2026() {
                 <Link href="#dart" className="hiddenSingle">
                   <div className="single_wide_button">
                     <img src="/img/2026/DartIcon.webp" alt="Dart" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/DartIcon.webp')" } as React.CSSProperties}></div>
                     <span className="label"> Dart </span>
                   </div>
                 </Link>
@@ -303,7 +312,12 @@ export default function Page2026() {
 
       <main className="main" id="main">
         <section className="schedule section_shadow" id="schedule">
-          <CompactCalendar tournamentId="kol2026" />
+          <CompactCalendar 
+                tournamentId="kol2026" 
+                primaryColorClass="text-[#72b01d]" 
+                textColorClass="text-white" 
+                secondaryTextColorClass="text-gray-400" 
+              />
         </section>
 
         <section className="ranking section_shadow" id="ranking">
@@ -320,31 +334,37 @@ export default function Page2026() {
                   <th className="ranking_game ranking_game1_td">
                     <div className="ranking_game1" title="Geometry Dash">
                       <img src="/img/2026/GeometryIcon.webp" alt="Geometry Dash" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GeometryIcon.webp')" } as React.CSSProperties}></div>
                     </div>
                   </th>
                   <th className="ranking_game ranking_game2_td">
                     <div className="ranking_game2" title="Golf With Your Friends">
                       <img src="/img/2026/GolfIcon.webp" alt="Golf" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GolfIcon.webp')" } as React.CSSProperties}></div>
                     </div>
                   </th>
                   <th className="ranking_game ranking_game3_td">
                     <div className="ranking_game3" title="Wsiąść do Pociągu: Europa">
                       <img src="/img/2026/TrainIcon.webp" alt="Pociągi" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/TrainIcon.webp')" } as React.CSSProperties}></div>
                     </div>
                   </th>
                   <th className="ranking_game ranking_game4_td">
                     <div className="ranking_game4" title="Pummel Party">
                       <img src="/img/2026/PummelIcon.webp" alt="Pummel Party" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/PummelIcon.webp')" } as React.CSSProperties}></div>
                     </div>
                   </th>
                   <th className="ranking_game ranking_game5_td">
                     <div className="ranking_game5" title="Splendor">
                       <img src="/img/2026/SplendorIcon.webp" alt="Splendor" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/SplendorIcon.webp')" } as React.CSSProperties}></div>
                     </div>
                   </th>
                   <th className="ranking_game ranking_game6_td">
                     <div className="ranking_game6" title="Dart">
                       <img src="/img/2026/DartIcon.webp" alt="Dart" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/DartIcon.webp')" } as React.CSSProperties}></div>
                     </div>
                   </th>
                   <th className="ranking_total_header">Total</th>
@@ -368,6 +388,7 @@ export default function Page2026() {
                 <div className="header_left">
                   <div className="card_icon">
                     <img src="/img/2026/GeometryIcon.webp" alt="GD Icon" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GeometryIcon.webp')" } as React.CSSProperties}></div>
                   </div>
                   <div className="card_title">
                     <h3>Geometry Dash</h3>
@@ -433,6 +454,7 @@ export default function Page2026() {
                 <div className="header_left">
                   <div className="card_icon">
                     <img src="/img/2026/GolfIcon.webp" alt="Golf Icon" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GolfIcon.webp')" } as React.CSSProperties}></div>
                   </div>
                   <div className="card_title">
                     <h3>Golf With Friends</h3>
@@ -500,6 +522,7 @@ export default function Page2026() {
                 <div className="header_left">
                   <div className="card_icon">
                     <img src="/img/2026/TrainIcon.webp" alt="Train Icon" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/TrainIcon.webp')" } as React.CSSProperties}></div>
                   </div>
                   <div className="card_title">
                     <h3>Wsiąść do Pociągu</h3>
@@ -567,6 +590,7 @@ export default function Page2026() {
                 <div className="header_left">
                   <div className="card_icon">
                     <img src="/img/2026/PummelIcon.webp" alt="Pummel Icon" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/PummelIcon.webp')" } as React.CSSProperties}></div>
                   </div>
                   <div className="card_title">
                     <h3>Pummel Party</h3>
@@ -639,6 +663,7 @@ export default function Page2026() {
                 <div className="header_left">
                   <div className="card_icon">
                     <img src="/img/2026/SplendorIcon.webp" alt="Splendor Icon" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/SplendorIcon.webp')" } as React.CSSProperties}></div>
                   </div>
                   <div className="card_title">
                     <h3>Splendor</h3>
@@ -710,6 +735,7 @@ export default function Page2026() {
                 <div className="header_left">
                   <div className="card_icon">
                     <img src="/img/2026/DartIcon.webp" alt="Dart Icon" />
+              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/DartIcon.webp')" } as React.CSSProperties}></div>
                   </div>
                   <div className="card_title">
                     <h3>Dart</h3>
