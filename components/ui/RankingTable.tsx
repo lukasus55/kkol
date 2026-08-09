@@ -35,7 +35,7 @@ export default function RankingTable({ tournamentId, children }: RankingTablePro
   if (loading) {
     return (
       <div className="w-full flex justify-center py-8">
-        <Loader2 className="w-12 h-12 text-dashboard-primary animate-spin" />
+        <Loader2 className="w-12 h-12 text-accent-500 animate-spin" />
       </div>
     );
   }
@@ -54,8 +54,8 @@ export default function RankingTable({ tournamentId, children }: RankingTablePro
               <td className="ranking_player">{player.displayed_name}</td>
               {events.map((event: any, idx: number) => {
                 const pEvent = event.results?.find((p: any) => p.player_id === player.id);
-                const score = (pEvent?.points === null || pEvent?.points === undefined) 
-                  ? '-' 
+                const score = (pEvent?.points === null || pEvent?.points === undefined)
+                  ? '-'
                   : Number.parseFloat(pEvent.points).toFixed(0);
                 return <td key={idx} className="ranking_game_result">{score}</td>;
               })}

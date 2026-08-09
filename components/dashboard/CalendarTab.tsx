@@ -16,7 +16,7 @@ export default function CalendarTab({ user }: { user: any }) {
   const [view, setView] = useState<'month' | 'week'>('month');
   const { addToast } = useToast();
 
-  const [modalState, setModalState] = useState<{isOpen: boolean, mode: 'create'|'edit', initialData: any}>({
+  const [modalState, setModalState] = useState<{ isOpen: boolean, mode: 'create' | 'edit', initialData: any }>({
     isOpen: false,
     mode: 'create',
     initialData: null
@@ -45,7 +45,7 @@ export default function CalendarTab({ user }: { user: any }) {
   const handlePrevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   };
-  
+
   const handleNextMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
@@ -59,27 +59,27 @@ export default function CalendarTab({ user }: { user: any }) {
     const month = currentDate.getMonth();
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-    
+
     // 0 = Sun, 1 = Mon. Convert to Mon=0, Sun=6
     let startingDayOfWeek = firstDay.getDay() - 1;
     if (startingDayOfWeek === -1) startingDayOfWeek = 6;
-    
+
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     const grid = [];
-    
+
     for (let i = startingDayOfWeek - 1; i >= 0; i--) {
       grid.push({ date: new Date(year, month - 1, prevMonthLastDay - i), isCurrentMonth: false });
     }
-    
+
     for (let i = 1; i <= lastDay.getDate(); i++) {
       grid.push({ date: new Date(year, month, i), isCurrentMonth: true });
     }
-    
+
     const remaining = 42 - grid.length;
     for (let i = 1; i <= remaining; i++) {
       grid.push({ date: new Date(year, month + 1, i), isCurrentMonth: false });
     }
-    
+
     return grid;
   };
 
@@ -97,30 +97,30 @@ export default function CalendarTab({ user }: { user: any }) {
   const handleDrop = async (e: React.DragEvent, targetDate: Date) => {
     e.preventDefault();
     setDragState({ eventId: null, hoveredDate: null });
-    
+
     try {
       const dataStr = e.dataTransfer.getData('text/plain');
       if (!dataStr) return;
-      
+
       const data = JSON.parse(dataStr);
       const eventId = data.id;
       const originalDateString = data.start;
-      
+
       if (!eventId || !originalDateString) return;
 
       const originalDate = new Date(originalDateString);
-      
+
       // Normalize targetDate to midnight
       const targetMidnight = new Date(targetDate);
       targetMidnight.setHours(0, 0, 0, 0);
-      
+
       // Normalize originalDate to midnight
       const originalMidnight = new Date(originalDate);
       originalMidnight.setHours(0, 0, 0, 0);
-      
+
       const diffTime = targetMidnight.getTime() - originalMidnight.getTime();
       const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-      
+
       if (diffDays === 0) return;
 
       const evt = events.find(ev => ev.id === eventId);
@@ -130,8 +130,8 @@ export default function CalendarTab({ user }: { user: any }) {
       const newEnd = evt.end ? new Date(new Date(evt.end).getTime() + diffDays * 24 * 60 * 60 * 1000) : null;
 
       // Optimistic update
-      setEvents(prev => prev.map(ev => 
-        ev.id === eventId 
+      setEvents(prev => prev.map(ev =>
+        ev.id === eventId
           ? { ...ev, start: newStart.toISOString(), end: newEnd ? newEnd.toISOString() : null }
           : ev
       ));
@@ -165,26 +165,26 @@ export default function CalendarTab({ user }: { user: any }) {
 
   return (
     <div className="flex flex-col w-full h-[calc(100vh-80px)] pb-6">
-      
+
       {/* Header Toolbar */}
-      <div className="flex items-center justify-between px-6 py-4 bg-dashboard-bg flex-shrink-0">
-        <button 
+      <div className="flex items-center justify-between px-6 py-4 bg-bg-100 flex-shrink-0">
+        <button
           onClick={handleToday}
-          className="px-4 py-1.5 rounded-md bg-dashboard-bg-s3 border border-dashboard-stroke text-sm font-medium text-dashboard-text hover:text-dashboard-text hover:bg-dashboard-bg-s2 transition-colors"
+          className="px-4 py-1.5 rounded-md bg-bg-300 border border-bg-400 text-sm font-medium text-text-900 hover:text-text-900 hover:bg-bg-200 transition-colors"
         >
           Dzisiaj
         </button>
 
         <div className="flex items-center gap-6">
-          <button onClick={handlePrevMonth} className="p-1.5 rounded-full text-dashboard-text-s2 hover:text-dashboard-text hover:bg-dashboard-bg-s2 transition-colors">
+          <button onClick={handlePrevMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-200 transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          
-          <h2 className="text-xl font-bold w-48 text-center text-dashboard-text capitalize tracking-wide">
+
+          <h2 className="text-xl font-bold w-48 text-center text-text-900 capitalize tracking-wide">
             {MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
-          
-          <button onClick={handleNextMonth} className="p-1.5 rounded-full text-dashboard-text-s2 hover:text-dashboard-text hover:bg-dashboard-bg-s2 transition-colors">
+
+          <button onClick={handleNextMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-200 transition-colors">
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>
@@ -194,12 +194,12 @@ export default function CalendarTab({ user }: { user: any }) {
 
       {/* Calendar Grid */}
       <div className="flex-1 px-6 overflow-hidden min-h-0">
-        <div className="w-full h-full border border-dashboard-stroke rounded-lg overflow-hidden bg-dashboard-bg shadow-lg flex flex-col">
-          
+        <div className="w-full h-full border border-bg-400 rounded-lg overflow-hidden bg-bg-100 shadow-lg flex flex-col">
+
           {/* Day Names Header */}
-          <div className="grid grid-cols-7 border-b border-dashboard-stroke bg-dashboard-bg-s3/50 flex-shrink-0">
+          <div className="grid grid-cols-7 border-b border-bg-400 bg-bg-300/50 flex-shrink-0">
             {DAY_NAMES.map((day, idx) => (
-              <div key={idx} className="py-2.5 text-center text-xs font-bold text-dashboard-text uppercase tracking-wider">
+              <div key={idx} className="py-2.5 text-center text-xs font-bold text-text-900 uppercase tracking-wider">
                 {day}
               </div>
             ))}
@@ -208,12 +208,12 @@ export default function CalendarTab({ user }: { user: any }) {
           {/* Days Grid */}
           <div className="grid grid-cols-7 grid-rows-6 relative flex-1 min-h-0">
             {loading && grid.length === 42 && (
-              <div className="absolute inset-0 bg-dashboard-bg/40 backdrop-blur-[1px] z-10 flex items-center justify-center pointer-events-none"></div>
+              <div className="absolute inset-0 bg-bg-100/40 backdrop-blur-[1px] z-10 flex items-center justify-center pointer-events-none"></div>
             )}
-            
+
             {grid.map((cell, idx) => {
               const isToday = cell.date.toDateString() === today.toDateString();
-              
+
               const dayEvents = events.filter(e => {
                 const eventDate = new Date(e.start);
                 return eventDate.toDateString() === cell.date.toDateString();
@@ -224,12 +224,12 @@ export default function CalendarTab({ user }: { user: any }) {
                 const timeStr = eventDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
                 const isMajor = evt.extendedProps?.is_major;
                 const isBeingDragged = dragState.eventId === evt.id;
-                
+
                 const isFadedOriginal = isBeingDragged && !isClone;
 
                 return (
                   <Tooltip key={isClone ? `clone-${evt.id}` : evt.id} content={`${timeStr} - ${evt.title}`} position="top" forceHidden={isBeingDragged}>
-                    <div 
+                    <div
                       draggable={!isClone}
                       onDragStart={(e) => {
                         e.stopPropagation();
@@ -248,26 +248,25 @@ export default function CalendarTab({ user }: { user: any }) {
                           setModalState({ isOpen: true, mode: 'edit', initialData: evt });
                         }
                       }}
-                      className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded border text-[11px] cursor-grab active:cursor-grabbing transition-all overflow-hidden ${
-                        isFadedOriginal 
-                          ? 'opacity-0'
-                          : isMajor 
-                            ? 'bg-[#151c0d] border-dashboard-stroke hover:bg-[#1a2410] hover:border-dashboard-primary/40' 
-                            : 'bg-dashboard-bg-s3 border-dashboard-stroke hover:bg-dashboard-bg-s4 hover:border-dashboard-stroke'
-                      } ${isClone ? 'opacity-80 shadow-lg border-dashboard-primary/50' : !isFadedOriginal ? 'hover:brightness-125' : ''}`}
+                      className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded border text-[11px] cursor-grab active:cursor-grabbing transition-all overflow-hidden ${isFadedOriginal
+                        ? 'opacity-0'
+                        : isMajor
+                          ? 'bg-[#151c0d] border-bg-400 hover:bg-[#1a2410] hover:border-accent-500/40'
+                          : 'bg-bg-300 border-bg-400 hover:bg-bg-400 hover:border-bg-400'
+                        } ${isClone ? 'opacity-80 shadow-lg border-accent-500/50' : !isFadedOriginal ? 'hover:brightness-125' : ''}`}
                     >
                       {isFadedOriginal ? (
                         <>
-                          <span className="font-semibold flex-shrink-0 text-dashboard-text-s2">{timeStr}</span>
-                          <span className="text-dashboard-text-s2 truncate font-medium ml-0.5 flex-1 text-left">{evt.title}</span>
+                          <span className="font-semibold flex-shrink-0 text-text-700">{timeStr}</span>
+                          <span className="text-text-700 truncate font-medium ml-0.5 flex-1 text-left">{evt.title}</span>
                         </>
                       ) : (
                         <>
-                          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-sm ${isMajor ? 'bg-dashboard-primary' : 'bg-dashboard-text-s3'}`} />
-                          <span className={`font-semibold flex-shrink-0 ${isMajor ? 'text-dashboard-primary' : 'text-dashboard-text-s2'}`}>
+                          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-sm ${isMajor ? 'bg-accent-500' : 'bg-text-500'}`} />
+                          <span className={`font-semibold flex-shrink-0 ${isMajor ? 'text-accent-500' : 'text-text-700'}`}>
                             {timeStr}
                           </span>
-                          <span className="text-dashboard-text truncate font-medium ml-0.5 flex-1 text-left">
+                          <span className="text-text-900 truncate font-medium ml-0.5 flex-1 text-left">
                             {evt.title}
                           </span>
                         </>
@@ -278,8 +277,8 @@ export default function CalendarTab({ user }: { user: any }) {
               };
 
               return (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   onClick={() => {
                     const dateObj = new Date(cell.date);
                     dateObj.setHours(12, 0, 0, 0);
@@ -292,27 +291,26 @@ export default function CalendarTab({ user }: { user: any }) {
                     }
                   }}
                   onDrop={(e) => handleDrop(e, cell.date)}
-                  className={`min-h-0 h-full p-1.5 border-r border-b border-dashboard-stroke transition-colors [&:nth-child(7n)]:border-r-0 [&:nth-last-child(-n+7)]:border-b-0 cursor-pointer overflow-hidden
-                    ${!cell.isCurrentMonth ? 'bg-dashboard-bg-s3/30' : 'bg-dashboard-bg'} 
-                    ${isToday ? 'bg-dashboard-primary/5' : ''} 
-                    ${dragState.hoveredDate?.getTime() === cell.date.getTime() ? 'bg-dashboard-bg-s2 ring-1 ring-inset ring-dashboard-primary/30' : ''}
-                    hover:bg-dashboard-bg-s3/50 group flex flex-col`}
+                  className={`min-h-0 h-full p-1.5 border-r border-b border-bg-400 transition-colors [&:nth-child(7n)]:border-r-0 [&:nth-last-child(-n+7)]:border-b-0 cursor-pointer overflow-hidden
+                    ${!cell.isCurrentMonth ? 'bg-bg-300/30' : 'bg-bg-100'} 
+                    ${isToday ? 'bg-accent-500/5' : ''} 
+                    ${dragState.hoveredDate?.getTime() === cell.date.getTime() ? 'bg-bg-200 ring-1 ring-inset ring-accent-500/30' : ''}
+                    hover:bg-bg-300/50 group flex flex-col`}
                 >
                   <div className="flex justify-end mb-1 flex-shrink-0">
-                    <span className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full transition-colors ${
-                      isToday 
-                        ? 'bg-dashboard-primary text-black' 
-                        : cell.isCurrentMonth 
-                          ? 'text-dashboard-text group-hover:text-dashboard-text' 
-                          : 'text-dashboard-stroke'
-                    }`}>
+                    <span className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full transition-colors ${isToday
+                      ? 'bg-accent-500 text-black'
+                      : cell.isCurrentMonth
+                        ? 'text-text-900 group-hover:text-text-900'
+                        : 'text-bg-400'
+                      }`}>
                       {cell.date.getDate()}
                     </span>
                   </div>
 
                   <div className="flex flex-col gap-1 overflow-y-auto custom-scrollbar flex-1 pr-0.5">
                     {dayEvents.map(evt => renderEventCard(evt, false))}
-                    
+
                     {/* Render ghost clone if this cell is hovered and the event isn't already from this cell */}
                     {dragState.hoveredDate?.toDateString() === cell.date.toDateString() && dragState.eventId && (() => {
                       const draggedEvt = events.find(e => e.id === dragState.eventId);
@@ -330,7 +328,7 @@ export default function CalendarTab({ user }: { user: any }) {
 
       <EventEditorModal
         isOpen={modalState.isOpen}
-        onClose={() => setModalState(prev => ({...prev, isOpen: false}))}
+        onClose={() => setModalState(prev => ({ ...prev, isOpen: false }))}
         mode={modalState.mode}
         initialData={modalState.initialData}
         onSuccess={() => fetchEvents()}

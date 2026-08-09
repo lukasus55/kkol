@@ -117,19 +117,19 @@ export default function PollsTab({ user }: { user: any }) {
           <div
             key={poll.id}
             onClick={() => router.push(`/poll/${poll.id}`)}
-            className="flex items-center justify-between bg-dashboard-bg-s3 border border-dashboard-stroke rounded-lg p-5 hover:bg-dashboard-bg-s4 transition-colors cursor-pointer group"
+            className="flex items-center justify-between bg-bg-300 border border-bg-400 rounded-lg p-5 hover:bg-bg-400 transition-colors cursor-pointer group"
           >
             <div className="flex flex-col gap-1.5">
-              <span className="font-bold text-dashboard-text text-[15px] group-hover:text-dashboard-primary transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>
-              <span className="text-dashboard-text-s2 text-[13px]">{poll.tournament_id}</span>
+              <span className="font-bold text-text-900 text-[15px] group-hover:text-accent-500 transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>
+              <span className="text-text-700 text-[13px]">{poll.tournament_id}</span>
             </div>
-            <div className="text-dashboard-text-s3 text-sm font-medium">
+            <div className="text-text-500 text-sm font-medium">
               {poll.end_date ? getRelativeTime(poll.end_date) : 'Bez terminu'}
             </div>
           </div>
         ))}
         {polls.length === 0 && (
-          <div className="text-center text-dashboard-text-s3 py-10 font-medium">Brak ankiet do wyświetlenia.</div>
+          <div className="text-center text-text-500 py-10 font-medium">Brak ankiet do wyświetlenia.</div>
         )}
       </div>
 

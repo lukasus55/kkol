@@ -30,7 +30,7 @@ const formatForInput = (dateObj: Date) => {
 export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess, user }: EventEditorModalProps) {
   const [activeTab, setActiveTab] = useState<'details' | 'results'>('details');
   const { addToast } = useToast();
-  
+
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -116,7 +116,7 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
     setLoading(true);
     try {
       const endpoint = mode === 'create' ? '/api/event_create' : '/api/event_update';
-      const payload = mode === 'create' 
+      const payload = mode === 'create'
         ? { name, tournament_id: tournamentId, is_major: isMajor, start_date: new Date(startDate).toISOString(), end_date: endDate ? new Date(endDate).toISOString() : null }
         : { id: initialData.id, name, is_major: isMajor, start_date: new Date(startDate).toISOString(), end_date: endDate ? new Date(endDate).toISOString() : null };
 
@@ -186,7 +186,7 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
       const data = await res.json();
       if (res.ok) {
         addToast({ type: 'success', message: 'Zapisano wyniki!' });
-        onSuccess(); 
+        onSuccess();
       } else {
         addToast({ type: 'error', message: data.error || 'Wystąpił błąd.' });
       }
@@ -233,126 +233,126 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
         onClose={() => setConfirmOpen(false)}
       />
       <Modal isOpen={isOpen} onClose={onClose} title={mode === 'create' ? 'Utwórz Nowe Wydarzenie' : 'Edytuj Wydarzenie'} footer={footer}>
-      
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-dashboard-stroke pb-4">
-        <button
-          onClick={() => setActiveTab('details')}
-          className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'details' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text hover:bg-dashboard-bg-s2'}`}
-        >
-          Szczegóły
-        </button>
-        {mode === 'edit' && (
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6 border-b border-bg-400 pb-4">
           <button
-            onClick={() => setActiveTab('results')}
-            className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'results' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text hover:bg-dashboard-bg-s2'}`}
+            onClick={() => setActiveTab('details')}
+            className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'details' ? 'bg-bg-300 text-text-900' : 'text-text-900 hover:bg-bg-200'}`}
           >
-            Wyniki
+            Szczegóły
           </button>
-        )}
-      </div>
+          {mode === 'edit' && (
+            <button
+              onClick={() => setActiveTab('results')}
+              className={`px-4 py-1.5 rounded-md text-sm font-semibold transition-colors ${activeTab === 'results' ? 'bg-bg-300 text-text-900' : 'text-text-900 hover:bg-bg-200'}`}
+            >
+              Wyniki
+            </button>
+          )}
+        </div>
 
-      <div className="flex-1 pr-2 custom-scrollbar min-h-[300px]">
-        {activeTab === 'details' ? (
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-dashboard-text-s2 text-center">Nazwa Wydarzenia:</label>
-              <Input value={name} onChange={e => setName(e.target.value)} placeholder="Wprowadź nazwę..." className="text-center" />
+        <div className="flex-1 pr-2 custom-scrollbar min-h-[300px]">
+          {activeTab === 'details' ? (
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-text-700 text-center">Nazwa Wydarzenia:</label>
+                <Input value={name} onChange={e => setName(e.target.value)} placeholder="Wprowadź nazwę..." className="text-center" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-semibold text-text-700 text-center">ID Turnieju:</label>
+                  <Select
+                    value={tournamentId}
+                    onChange={setTournamentId}
+                    disabled={mode === 'edit' || fetching}
+                    options={fetching
+                      ? [{ value: '', label: 'Ładowanie...' }]
+                      : tournaments.length === 0
+                        ? [{ value: '', label: 'Brak dostępnych turniejów' }]
+                        : tournaments.map(t => ({ value: t.id, label: `${t.displayed_name} (${t.id})` }))
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-semibold text-text-700 text-center">Ważność:</label>
+                  <Select
+                    value={isMajor ? 'true' : 'false'}
+                    onChange={val => setIsMajor(val === 'true')}
+                    options={[
+                      { value: 'false', label: 'Małe wydarzenie' },
+                      { value: 'true', label: 'Główne wydarzenie' }
+                    ]}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-semibold text-text-700 text-center">Początek:</label>
+                  <input
+                    type="datetime-local"
+                    value={startDate}
+                    onChange={e => setStartDate(e.target.value)}
+                    className="bg-bg-300 border border-bg-400 rounded p-2 text-center text-text-900 outline-none focus:border-accent-500 transition-colors"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-semibold text-text-700 text-center">Koniec (Opcjonalne):</label>
+                  <input
+                    type="datetime-local"
+                    value={endDate}
+                    onChange={e => setEndDate(e.target.value)}
+                    className="bg-bg-300 border border-bg-400 rounded p-2 text-center text-text-900 outline-none focus:border-accent-500 transition-colors"
+                  />
+                </div>
+              </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-dashboard-text-s2 text-center">ID Turnieju:</label>
-                <Select
-                  value={tournamentId}
-                  onChange={setTournamentId}
-                  disabled={mode === 'edit' || fetching}
-                  options={fetching 
-                    ? [{ value: '', label: 'Ładowanie...' }]
-                    : tournaments.length === 0
-                      ? [{ value: '', label: 'Brak dostępnych turniejów' }]
-                      : tournaments.map(t => ({ value: t.id, label: `${t.displayed_name} (${t.id})` }))
-                  }
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-dashboard-text-s2 text-center">Ważność:</label>
-                <Select
-                  value={isMajor ? 'true' : 'false'}
-                  onChange={val => setIsMajor(val === 'true')}
-                  options={[
-                    { value: 'false', label: 'Małe wydarzenie' },
-                    { value: 'true', label: 'Główne wydarzenie' }
-                  ]}
-                />
-              </div>
+          ) : (
+            <div className="flex flex-col">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-bg-400">
+                    <th className="p-3 text-text-700 font-semibold">Gracz</th>
+                    <th className="p-3 text-text-700 font-semibold text-center w-24">Pozycja</th>
+                    <th className="p-3 text-text-700 font-semibold text-center w-24">Punkty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.length === 0 ? (
+                    <tr><td colSpan={3} className="p-4 text-center text-text-500">Brak graczy przypisanych do tego turnieju.</td></tr>
+                  ) : (
+                    results.map((r, idx) => (
+                      <tr key={r.player_id} className="border-b border-bg-400/50 hover:bg-bg-200 transition-colors">
+                        <td className="p-3 font-semibold text-text-900">{r.displayed_name}</td>
+                        <td className="p-3 text-center">
+                          <NumberInput
+                            value={r.position ?? ''}
+                            onChange={e => updateResult(idx, 'position', e.target.value)}
+                            placeholder="-"
+                            className="w-16 mx-auto"
+                          />
+                        </td>
+                        <td className="p-3 text-center">
+                          <NumberInput
+                            value={r.points ?? ''}
+                            onChange={e => updateResult(idx, 'points', e.target.value)}
+                            placeholder="-"
+                            className="w-16 mx-auto"
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-dashboard-text-s2 text-center">Początek:</label>
-                <input 
-                  type="datetime-local" 
-                  value={startDate}
-                  onChange={e => setStartDate(e.target.value)}
-                  className="bg-dashboard-bg-s3 border border-dashboard-stroke rounded p-2 text-center text-dashboard-text outline-none focus:border-dashboard-primary transition-colors"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-dashboard-text-s2 text-center">Koniec (Opcjonalne):</label>
-                <input 
-                  type="datetime-local" 
-                  value={endDate}
-                  onChange={e => setEndDate(e.target.value)}
-                  className="bg-dashboard-bg-s3 border border-dashboard-stroke rounded p-2 text-center text-dashboard-text outline-none focus:border-dashboard-primary transition-colors"
-                />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-dashboard-stroke">
-                  <th className="p-3 text-dashboard-text-s2 font-semibold">Gracz</th>
-                  <th className="p-3 text-dashboard-text-s2 font-semibold text-center w-24">Pozycja</th>
-                  <th className="p-3 text-dashboard-text-s2 font-semibold text-center w-24">Punkty</th>
-                </tr>
-              </thead>
-              <tbody>
-                {results.length === 0 ? (
-                  <tr><td colSpan={3} className="p-4 text-center text-dashboard-text-s3">Brak graczy przypisanych do tego turnieju.</td></tr>
-                ) : (
-                  results.map((r, idx) => (
-                    <tr key={r.player_id} className="border-b border-dashboard-stroke/50 hover:bg-dashboard-bg-s2 transition-colors">
-                      <td className="p-3 font-semibold text-dashboard-text">{r.displayed_name}</td>
-                      <td className="p-3 text-center">
-                        <NumberInput 
-                          value={r.position ?? ''} 
-                          onChange={e => updateResult(idx, 'position', e.target.value)}
-                          placeholder="-"
-                          className="w-16 mx-auto"
-                        />
-                      </td>
-                      <td className="p-3 text-center">
-                        <NumberInput 
-                          value={r.points ?? ''} 
-                          onChange={e => updateResult(idx, 'points', e.target.value)}
-                          placeholder="-"
-                          className="w-16 mx-auto"
-                        />
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </Modal>
+          )}
+        </div>
+      </Modal>
     </>
   );
 }

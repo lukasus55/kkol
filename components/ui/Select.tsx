@@ -27,25 +27,25 @@ export function Select({ value, onChange, options, disabled, className = '' }: S
 
   return (
     <div className={`relative ${className}`} ref={containerRef}>
-      <div 
-        className={`bg-dashboard-bg-s3 border ${isOpen ? 'border-dashboard-primary' : 'border-dashboard-stroke'} rounded p-2 flex items-center justify-between transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-dashboard-primary/50'}`}
+      <div
+        className={`bg-bg-300 border ${isOpen ? 'border-accent-500' : 'border-bg-400'} rounded p-2 flex items-center justify-between transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-accent-500/50'}`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
-        <span className="text-dashboard-text text-sm truncate">
+        <span className="text-text-900 text-sm truncate">
           {selectedOption ? selectedOption.label : 'Wybierz...'}
         </span>
-        <ChevronDown className={`w-4 h-4 text-dashboard-text-s2 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-text-700 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </div>
 
       {isOpen && !disabled && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-dashboard-bg-s4 border border-dashboard-stroke rounded shadow-xl z-[100] max-h-60 overflow-y-auto custom-scrollbar">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-bg-400 border border-bg-400 rounded shadow-xl z-[100] max-h-60 overflow-y-auto custom-scrollbar">
           {options.length === 0 ? (
-            <div className="p-3 text-sm text-dashboard-text-s2 text-center">Brak opcji</div>
+            <div className="p-3 text-sm text-text-700 text-center">Brak opcji</div>
           ) : (
             options.map(opt => (
-              <div 
+              <div
                 key={opt.value}
-                className={`p-2.5 text-sm cursor-pointer transition-colors ${opt.value === value ? 'bg-dashboard-primary/20 text-dashboard-primary font-medium' : 'text-dashboard-text hover:bg-dashboard-bg-s3'}`}
+                className={`p-2.5 text-sm cursor-pointer transition-colors ${opt.value === value ? 'bg-accent-500/20 text-accent-500 font-medium' : 'text-text-900 hover:bg-bg-300'}`}
                 onClick={() => {
                   onChange(opt.value);
                   setIsOpen(false);

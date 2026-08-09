@@ -31,31 +31,31 @@
   }
 
   h1 {
-    @apply text-2xl font-bold text-dashboard-text;
+    @apply text-2xl font-bold text-text-900;
   }
 
   h2 {
-    @apply text-xl font-semibold text-dashboard-text;
+    @apply text-xl font-semibold text-text-900;
   }
 
   h3 {
-    @apply text-lg font-normal text-dashboard-text;
+    @apply text-lg font-normal text-text-900;
   }
 
   h4 {
-    @apply text-base font-normal text-dashboard-text;
+    @apply text-base font-normal text-text-900;
   }
 
   h5 {
-    @apply text-sm font-normal text-dashboard-text-s2;
+    @apply text-sm font-normal text-text-700;
   }
 
   h6 {
-    @apply text-xs font-normal text-dashboard-text-s3;
+    @apply text-xs font-normal text-text-500;
   }
 
   input {
-    @apply flex-1 min-w-0 bg-dashboard-bg-s2 border border-dashboard-stroke text-dashboard-text-s2 px-3 rounded text-base h-10 transition-colors outline-none focus:border-dashboard-text;
+    @apply flex-1 min-w-0 bg-bg-200 border border-bg-400 text-text-700 px-3 rounded text-base h-10 transition-colors outline-none focus:border-text-900;
   }
 }
 

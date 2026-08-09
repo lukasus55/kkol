@@ -28,7 +28,7 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       ref={modalRef}
       tabIndex={-1}
       onKeyDown={(e) => {
@@ -42,25 +42,25 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
       }}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 outline-none"
     >
-      <div 
-        className={`bg-dashboard-bg border border-dashboard-stroke rounded-xl shadow-2xl w-full flex flex-col h-[650px] max-h-[95vh] sm:max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200 ${maxWidth}`}
+      <div
+        className={`bg-bg-100 border border-bg-400 rounded-xl shadow-2xl w-full flex flex-col h-[650px] max-h-[95vh] sm:max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200 ${maxWidth}`}
       >
-        <div className="p-5 border-b border-dashboard-stroke flex justify-between items-center bg-dashboard-bg-s2 flex-shrink-0">
-          <h2 className="text-xl font-bold text-dashboard-text">{title}</h2>
-          <button 
+        <div className="p-5 border-b border-bg-400 flex justify-between items-center bg-bg-200 flex-shrink-0">
+          <h2 className="text-xl font-bold text-text-900">{title}</h2>
+          <button
             onClick={onClose}
-            className="text-gray-400 hover:text-dashboard-text transition-colors p-1 rounded-md hover:bg-dashboard-bg-s3"
+            className="text-gray-400 hover:text-text-900 transition-colors p-1 rounded-md hover:bg-bg-300"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        
-        <div className="p-6 overflow-y-auto bg-dashboard-bg flex-1 custom-scrollbar">
+
+        <div className="p-6 overflow-y-auto bg-bg-100 flex-1 custom-scrollbar">
           {children}
         </div>
 
         {footer && (
-          <div className="p-5 border-t border-dashboard-stroke bg-dashboard-bg-s2 flex-shrink-0">
+          <div className="p-5 border-t border-bg-400 bg-bg-200 flex-shrink-0">
             {footer}
           </div>
         )}

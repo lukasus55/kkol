@@ -29,7 +29,7 @@ export default function CompactCalendar({ tournamentId, primaryColorClass, textC
       try {
         const response = await fetch(`/api/events?tournament=${tournamentId}`);
         const data = await response.json();
-        
+
         // Sort chronologically
         const sortedData = data.sort((a: Event, b: Event) => new Date(a.start).getTime() - new Date(b.start).getTime());
         setEvents(sortedData);
@@ -46,7 +46,7 @@ export default function CompactCalendar({ tournamentId, primaryColorClass, textC
   if (loading) {
     return (
       <div className="w-full flex justify-center py-8">
-        <Loader2 className="w-12 h-12 text-dashboard-primary animate-spin" />
+        <Loader2 className="w-12 h-12 text-accent-500 animate-spin" />
       </div>
     );
   }
@@ -60,19 +60,18 @@ export default function CompactCalendar({ tournamentId, primaryColorClass, textC
         const month = dateObj.toLocaleString("pl-PL", { month: "short" }).toUpperCase();
         const day = ("0" + dateObj.getDate()).slice(-2);
         const formattedDate = `${day} ${month}`;
-        const primaryColor = primaryColorClass || "text-dashboard-primary";
-        const txtColor = textColorClass || "text-dashboard-text";
-        const secondaryColor = secondaryTextColorClass || "text-dashboard-text-s3";
+        const primaryColor = primaryColorClass || "text-accent-500";
+        const txtColor = textColorClass || "text-text-900";
+        const secondaryColor = secondaryTextColorClass || "text-text-500";
         const isMajor = e.extendedProps?.is_major !== false; // Default to true if undefined? actually the old code said e.extendedProps.is_major ? '' : 'minor'
 
         return (
           <div
             key={idx}
-            className={`flex w-full gap-8 justify-center ${
-              isMajor
-                ? "text-[2.5rem] font-black leading-none md:text-[4rem]" // Main event
-                : "text-[1.25rem] font-bold leading-none md:text-[1.75rem]" // Minor event
-            }`}
+            className={`flex w-full gap-8 justify-center ${isMajor
+              ? "text-[2.5rem] font-black leading-none md:text-[4rem]" // Main event
+              : "text-[1.25rem] font-bold leading-none md:text-[1.75rem]" // Minor event
+              }`}
           >
             <div className={`flex w-1/4 justify-end min-w-max whitespace-nowrap ${primaryColor}`}>
               {formattedDate}
