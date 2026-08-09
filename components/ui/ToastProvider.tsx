@@ -62,22 +62,22 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
 
   const variants = {
     success: {
-      bg: 'bg-dashboard-bg-s3 border-dashboard-stroke',
+      bg: 'bg-bg-300 border-bg-400',
       icon: <CheckCircle2 className="w-5 h-5 text-green-500" />,
       progress: 'bg-green-500'
     },
     error: {
-      bg: 'bg-dashboard-bg-s3 border-dashboard-stroke',
+      bg: 'bg-bg-300 border-bg-400',
       icon: <AlertCircle className="w-5 h-5 text-red-500" />,
       progress: 'bg-red-500'
     },
     warning: {
-      bg: 'bg-dashboard-bg-s3 border-dashboard-stroke',
+      bg: 'bg-bg-300 border-bg-400',
       icon: <AlertTriangle className="w-5 h-5 text-yellow-500" />,
       progress: 'bg-yellow-500'
     },
     info: {
-      bg: 'bg-dashboard-bg-s3 border-dashboard-stroke',
+      bg: 'bg-bg-300 border-bg-400',
       icon: <Info className="w-5 h-5 text-blue-500" />,
       progress: 'bg-blue-500'
     }
@@ -89,22 +89,22 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
     <div className={`relative flex flex-col overflow-hidden border rounded-md shadow-lg pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-300 ${current.bg}`}>
       <div className="flex items-start gap-3 p-4">
         <div className="flex-shrink-0 mt-0.5">{current.icon}</div>
-        <div className="flex-1 text-sm font-medium text-white break-words">
+        <div className="flex-1 text-sm font-medium text-text-900 break-words">
           {toast.message}
         </div>
-        <button 
+        <button
           onClick={onRemove}
-          className="flex-shrink-0 text-gray-400 hover:text-white transition-colors"
+          className="flex-shrink-0 text-gray-400 hover:text-text-900 transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
       <div className="w-full h-1 bg-black/40">
-        <div 
-          className={`h-full ${current.progress}`} 
-          style={{ 
-            animation: `toast-progress ${duration}ms linear forwards` 
-          }} 
+        <div
+          className={`h-full ${current.progress}`}
+          style={{
+            animation: `toast-progress ${duration}ms linear forwards`
+          }}
         />
       </div>
     </div>

@@ -33,9 +33,9 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
         <PlayerSearchBar onSelect={onAddPlayer} />
       </div>
 
-      <div className="border border-dashboard-stroke rounded-md bg-dashboard-bg overflow-x-auto flex-1 custom-scrollbar">
+      <div className="border border-bg-400 rounded-md bg-bg-100 overflow-x-auto flex-1 custom-scrollbar">
         <table className="w-full text-left text-sm whitespace-nowrap">
-          <thead className="bg-dashboard-bg-s3 border-b border-dashboard-stroke text-dashboard-text-s2">
+          <thead className="bg-bg-300 border-b border-bg-400 text-text-700">
             <tr>
               <th className="p-3 font-semibold w-full">Gracz</th>
               <th className="p-3 font-semibold text-center w-24">Miejsce</th>
@@ -43,18 +43,18 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
               <th className="p-3 font-semibold text-right w-44">Akcje</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-dashboard-stroke">
+          <tbody className="divide-y divide-bg-400">
             {players.length === 0 ? (
               <tr>
-                <td colSpan={4} className="p-8 text-center text-dashboard-text-s2">Brak graczy w tym turnieju.</td>
+                <td colSpan={4} className="p-8 text-center text-text-700">Brak graczy w tym turnieju.</td>
               </tr>
             ) : (
               players.map((p, idx) => (
-                <tr key={p.id} className="hover:bg-dashboard-bg-s2 transition-colors">
+                <tr key={p.id} className="hover:bg-bg-200 transition-colors">
                   <td className="p-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-dashboard-text">{p.displayed_name}</span>
-                      <span className="text-dashboard-text-s2 text-xs">({p.id})</span>
+                      <span className="font-medium text-text-900">{p.displayed_name}</span>
+                      <span className="text-text-700 text-xs">({p.id})</span>
                       {p.organizer_role === 'manager' && (
                         <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 uppercase">Manager</span>
                       )}
@@ -83,10 +83,10 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
                   </td>
                   <td className="p-3 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      
+
                       <div className="w-8 flex justify-center">
                         <Tooltip content={p.attended ? "Oznacz jako nieobecnego" : "Oznacz jako obecnego"}>
-                          <button 
+                          <button
                             onClick={() => onAttendanceChange(p.id)}
                             className={`p-1.5 rounded transition-colors ${p.attended ? 'text-red-500 hover:bg-red-500/10' : 'text-green-500 hover:bg-green-500/10'}`}
                           >
@@ -98,19 +98,19 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
                       <div className="w-8 flex justify-center">
                         {isOwner && p.organizer_role !== 'owner' && (
                           <Tooltip content={p.organizer_role === 'manager' ? "Zdegraduj managera" : "Awansuj na managera"}>
-                            <button 
+                            <button
                               onClick={() => onRoleChange(p.id, p.organizer_role)}
-                              className="p-1.5 rounded transition-colors hover:bg-dashboard-bg-s3"
+                              className="p-1.5 rounded transition-colors hover:bg-bg-300"
                             >
                               {p.organizer_role === 'manager' ? (
                                 <div className="relative text-orange-400">
                                   <Shield className="w-5 h-5" />
-                                  <ArrowDown className="w-3 h-3 absolute -bottom-1 -right-1 text-orange-300 bg-dashboard-bg rounded-full" strokeWidth={3} />
+                                  <ArrowDown className="w-3 h-3 absolute -bottom-1 -right-1 text-orange-300 bg-bg-100 rounded-full" strokeWidth={3} />
                                 </div>
                               ) : (
                                 <div className="relative text-blue-400">
                                   <Shield className="w-5 h-5" />
-                                  <ArrowUp className="w-3 h-3 absolute -bottom-1 -right-1 text-blue-300 bg-dashboard-bg rounded-full" strokeWidth={3} />
+                                  <ArrowUp className="w-3 h-3 absolute -bottom-1 -right-1 text-blue-300 bg-bg-100 rounded-full" strokeWidth={3} />
                                 </div>
                               )}
                             </button>
@@ -121,7 +121,7 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
                       <div className="w-8 flex justify-center">
                         {(isOwner || (p.organizer_role !== 'owner' && p.organizer_role !== 'manager')) && p.id !== currentUserId && (
                           <Tooltip content="Wyrzuć gracza z turnieju">
-                            <button 
+                            <button
                               onClick={() => onKick(p.id)}
                               className="p-1.5 rounded transition-colors text-red-500 hover:bg-red-500/10"
                             >

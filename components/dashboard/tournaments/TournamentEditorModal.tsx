@@ -23,8 +23,8 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
   const [saving, setSaving] = useState(false);
   const { addToast } = useToast();
 
-  const [confirmConfig, setConfirmConfig] = useState<{isOpen: boolean, title: string, message: string, onConfirm: () => void, confirmText?: string}>({
-    isOpen: false, title: '', message: '', onConfirm: () => {}
+  const [confirmConfig, setConfirmConfig] = useState<{ isOpen: boolean, title: string, message: string, onConfirm: () => void, confirmText?: string }>({
+    isOpen: false, title: '', message: '', onConfirm: () => { }
   });
 
   const [players, setPlayers] = useState<any[]>([]);
@@ -126,7 +126,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
           } else {
             addToast({ type: 'error', message: 'Błąd podczas wyrzucania gracza.' });
           }
-        } catch (e) {}
+        } catch (e) { }
       },
       "Wyrzuć"
     );
@@ -151,7 +151,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
           } else {
             addToast({ type: 'error', message: 'Błąd podczas zmiany uprawnień.' });
           }
-        } catch (e) {}
+        } catch (e) { }
       }
     );
   };
@@ -169,7 +169,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
       } else {
         addToast({ type: 'error', message: 'Błąd podczas zmiany statusu obecności.' });
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const handleAddPlayer = async (playerId: string) => {
@@ -221,7 +221,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
           } else {
             addToast({ type: 'error', message: 'Błąd podczas usuwania turnieju.' });
           }
-        } catch (e) {}
+        } catch (e) { }
       },
       "Usuń trwale"
     );
@@ -229,7 +229,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
 
   const Footer = (
     <div className="flex justify-between items-center w-full">
-      <div className="text-sm text-dashboard-text-s2">
+      <div className="text-sm text-text-700">
         {activeTab === 'players' ? `${players.length} uczestników` : ''}
       </div>
       <div className="flex gap-3">
@@ -241,7 +241,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
 
   return (
     <>
-      <ConfirmationPopup 
+      <ConfirmationPopup
         isOpen={confirmConfig.isOpen}
         title={confirmConfig.title}
         message={confirmConfig.message}
@@ -249,36 +249,36 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
         confirmText={confirmConfig.confirmText}
         onClose={() => setConfirmConfig({ ...confirmConfig, isOpen: false })}
       />
-      
+
       <Modal
         isOpen={isOpen}
         onClose={onClose}
         title={
           <div className="flex gap-4 items-center">
             <span>Edytuj: {tournament.displayed_name}</span>
-            
-            <button 
+
+            <button
               onClick={() => setInfo({ ...info, finished: !info.finished })}
-              className="flex items-center justify-center gap-2 w-[130px] py-1.5 rounded-md border transition-all duration-300 ml-4 border-dashboard-stroke bg-dashboard-bg-s3 hover:bg-dashboard-bg-s2"
+              className="flex items-center justify-center gap-2 w-[130px] py-1.5 rounded-md border transition-all duration-300 ml-4 border-bg-400 bg-bg-300 hover:bg-bg-200"
             >
               <div className="relative w-4 h-4 flex items-center justify-center">
-                <CheckCircle2 className={`absolute transition-all duration-500 text-dashboard-primary w-4 h-4 ${info.finished ? 'opacity-0 scale-50 rotate-90' : 'opacity-100 scale-100 rotate-0'}`} />
+                <CheckCircle2 className={`absolute transition-all duration-500 text-accent-500 w-4 h-4 ${info.finished ? 'opacity-0 scale-50 rotate-90' : 'opacity-100 scale-100 rotate-0'}`} />
                 <MinusCircle className={`absolute transition-all duration-500 text-gray-500 w-4 h-4 ${info.finished ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90'}`} />
               </div>
-              <span className="text-[11px] font-semibold uppercase tracking-wide text-dashboard-text-s2">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-text-700">
                 {info.finished ? "Zakończony" : "W trakcie"}
               </span>
             </button>
 
-            <div className="flex bg-dashboard-bg border border-dashboard-stroke rounded-md p-1 ml-auto text-sm font-normal">
+            <div className="flex bg-bg-100 border border-bg-400 rounded-md p-1 ml-auto text-sm font-normal">
               <button
-                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'players' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text-s2 hover:text-dashboard-text'}`}
+                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'players' ? 'bg-bg-300 text-text-900' : 'text-text-700 hover:text-text-900'}`}
                 onClick={() => setActiveTab('players')}
               >
                 Uczestnicy
               </button>
               <button
-                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'settings' ? 'bg-dashboard-bg-s3 text-dashboard-text' : 'text-dashboard-text-s2 hover:text-dashboard-text'}`}
+                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'settings' ? 'bg-bg-300 text-text-900' : 'text-text-700 hover:text-text-900'}`}
                 onClick={() => setActiveTab('settings')}
               >
                 Ustawienia
@@ -289,7 +289,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
         footer={Footer}
       >
         {loading ? (
-          <div className="flex justify-center py-12 text-dashboard-text-s2">Wczytywanie...</div>
+          <div className="flex justify-center py-12 text-text-700">Wczytywanie...</div>
         ) : (
           <div className="pt-2 h-full">
             {activeTab === 'players' ? (

@@ -18,7 +18,7 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
   const [editorOpen, setEditorOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
-  
+
   const { addToast } = useToast();
 
   const isFinished = tournament.finished;
@@ -60,30 +60,30 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
   };
 
   return (
-    <div className="flex items-center justify-between p-4 hover:bg-dashboard-bg-s2 transition-colors group relative first:rounded-t-[5px] last:rounded-b-[5px]">
-      
+    <div className="flex items-center justify-between p-4 hover:bg-bg-200 transition-colors group relative first:rounded-t-[5px] last:rounded-b-[5px]">
+
       <div className="flex items-center gap-4">
         {/* Status Icon */}
         <div className="flex-shrink-0" title={isFinished ? 'Zakończony' : 'W trakcie'}>
           {isFinished ? (
             <MinusCircle className="w-5 h-5 text-gray-500" />
           ) : (
-            <CheckCircle2 className="w-5 h-5 text-dashboard-primary" />
+            <CheckCircle2 className="w-5 h-5 text-accent-500" />
           )}
         </div>
 
         {/* Info */}
         <div className="flex flex-col">
-          <div className="text-sm font-semibold text-dashboard-text">
+          <div className="text-sm font-semibold text-text-900">
             {pageExists ? (
-              <Link href={`/${pageUrl}`} className="hover:underline hover:text-dashboard-primary transition-colors">
+              <Link href={`/${pageUrl}`} className="hover:underline hover:text-accent-500 transition-colors">
                 {name}
               </Link>
             ) : (
               <span>{name}</span>
             )}
           </div>
-          <div className="text-[11px] text-dashboard-text-s2 font-medium tracking-wide">
+          <div className="text-[11px] text-text-700 font-medium tracking-wide">
             {tier}-Tier
           </div>
         </div>
@@ -91,20 +91,20 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
 
       <div className="flex items-center gap-4 relative">
         {/* User Role */}
-        <div className="text-[11px] text-dashboard-text-s2 font-medium tracking-wide uppercase">
+        <div className="text-[11px] text-text-700 font-medium tracking-wide uppercase">
           {userRole}
         </div>
 
         {/* More Actions Button */}
-        <button 
+        <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="text-dashboard-text-s2 hover:text-dashboard-text transition-colors p-1 rounded-md hover:bg-dashboard-bg-s3"
+          className="text-text-700 hover:text-text-900 transition-colors p-1 rounded-md hover:bg-bg-300"
         >
           <MoreHorizontal className="w-5 h-5" />
         </button>
 
         {menuOpen && (
-          <TournamentActionsMenu 
+          <TournamentActionsMenu
             userRole={userRole}
             onEdit={handleEdit}
             onEvents={handleEvents}
@@ -114,7 +114,7 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
         )}
       </div>
 
-      <TournamentEditorModal 
+      <TournamentEditorModal
         isOpen={editorOpen}
         onClose={() => setEditorOpen(false)}
         tournament={tournament}

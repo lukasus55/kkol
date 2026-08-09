@@ -7,12 +7,12 @@ export default function Footer() {
       <div className="footer_bar">
         <Link href="/">
           <div className="footer_bar_button" title="Strona Główna">
-            <Home className="w-[1em] h-[1em] text-dashboard-text" />
+            <Home className="w-[1em] h-[1em] text-text-900" />
           </div>
         </Link>
         <Link href="/events">
           <div className="footer_bar_button" title="Wydarzenia">
-            <Trophy className="w-[1em] h-[1em] text-dashboard-text" />
+            <Trophy className="w-[1em] h-[1em] text-text-900" />
           </div>
         </Link>
         <Link href="/2026">
@@ -22,12 +22,12 @@ export default function Footer() {
         </Link>
         <Link href="/ranking">
           <div className="footer_bar_button" title="Ranking">
-            <BarChart2 className="w-[1em] h-[1em] text-dashboard-text" />
+            <BarChart2 className="w-[1em] h-[1em] text-text-900" />
           </div>
         </Link>
         <Link href="/dashboard">
           <div className="footer_bar_button" title="Profil">
-            <User className="w-[1em] h-[1em] text-dashboard-text" />
+            <User className="w-[1em] h-[1em] text-text-900" />
           </div>
         </Link>
       </div>

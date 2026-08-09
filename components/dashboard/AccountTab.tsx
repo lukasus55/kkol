@@ -10,16 +10,16 @@ export default function AccountTab({ user }: { user: any }) {
   return (
     <div className="w-full flex justify-center py-12 px-6">
       <div className="flex flex-col gap-6 w-full max-w-[700px]">
-        
-        <h2 className="text-2xl font-bold text-dashboard-text mb-2">Moje Konto</h2>
-        
+
+        <h2 className="text-2xl font-bold text-text-900 mb-2">Moje Konto</h2>
+
         <ProfilePictureCard currentPfpBase64={user.pfp_base64} />
         <DisplayNameCard currentName={user.displayed_name} />
-        
-        <h2 className="text-2xl font-bold text-dashboard-text mt-12 mb-2">Bezpieczeństwo i Hasło</h2>
-        
+
+        <h2 className="text-2xl font-bold text-text-900 mt-12 mb-2">Bezpieczeństwo i Hasło</h2>
+
         <PasswordCard username={user.id} />
-        
+
       </div>
     </div>
   );

@@ -71,57 +71,57 @@ export default function TournamentsTab({ user }: { user: any }) {
 
   return (
     <>
-      <ErrorPopup 
-        isOpen={!!errorModal} 
-        message={errorModal} 
-        onClose={() => setErrorModal('')} 
+      <ErrorPopup
+        isOpen={!!errorModal}
+        message={errorModal}
+        onClose={() => setErrorModal('')}
       />
       <div className="w-full flex justify-center py-12 px-6">
-      <div className="flex flex-col gap-6 w-full max-w-[700px]">
-        
-        {canAdd && (
-          <div className="flex items-center gap-4 bg-dashboard-bg-s3 p-4 border border-dashboard-stroke rounded-md">
-            <div className="flex-1">
-              <Input 
-                placeholder="ID nowego turnieju..." 
-                value={newTournamentId}
-                onChange={(e) => setNewTournamentId(e.target.value)}
-              />
-            </div>
-            <Button variant="primary" onClick={handleCreate} isLoading={creating}>
-              Stwórz turniej
-            </Button>
-          </div>
-        )}
+        <div className="flex flex-col gap-6 w-full max-w-[700px]">
 
-        {loading && tournaments.length === 0 ? (
-          <div className="text-center text-dashboard-text-s2 py-8">Ładowanie turniejów...</div>
-        ) : (
-          <div className={`border border-dashboard-stroke rounded-md divide-y divide-dashboard-stroke bg-dashboard-bg-s3 transition-opacity ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-            {tournaments.length === 0 ? (
-              <div className="p-8 text-center text-dashboard-text-s2">
-                Brak przypisanych turniejów.
+          {canAdd && (
+            <div className="flex items-center gap-4 bg-bg-300 p-4 border border-bg-400 rounded-md">
+              <div className="flex-1">
+                <Input
+                  placeholder="ID nowego turnieju..."
+                  value={newTournamentId}
+                  onChange={(e) => setNewTournamentId(e.target.value)}
+                />
               </div>
-            ) : (
-              tournaments.map((t: any) => {
-                const rawRole = organizerRoles[t.id];
-                const userRole = (rawRole === 'owner' || rawRole === 'manager') ? rawRole : 'gracz';
-                
-                return (
-                  <TournamentRow 
-                    key={t.id} 
-                    tournament={t} 
-                    userRole={userRole} 
-                    onRefresh={fetchTournaments}
-                  />
-                );
-              })
-            )}
-          </div>
-        )}
+              <Button variant="primary" onClick={handleCreate} isLoading={creating}>
+                Stwórz turniej
+              </Button>
+            </div>
+          )}
 
+          {loading && tournaments.length === 0 ? (
+            <div className="text-center text-text-700 py-8">Ładowanie turniejów...</div>
+          ) : (
+            <div className={`border border-bg-400 rounded-md divide-y divide-bg-400 bg-bg-300 transition-opacity ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+              {tournaments.length === 0 ? (
+                <div className="p-8 text-center text-text-700">
+                  Brak przypisanych turniejów.
+                </div>
+              ) : (
+                tournaments.map((t: any) => {
+                  const rawRole = organizerRoles[t.id];
+                  const userRole = (rawRole === 'owner' || rawRole === 'manager') ? rawRole : 'gracz';
+
+                  return (
+                    <TournamentRow
+                      key={t.id}
+                      tournament={t}
+                      userRole={userRole}
+                      onRefresh={fetchTournaments}
+                    />
+                  );
+                })
+              )}
+            </div>
+          )}
+
+        </div>
       </div>
-    </div>
     </>
   );
 }
