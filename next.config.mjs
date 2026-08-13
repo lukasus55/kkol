@@ -24,16 +24,8 @@ const nextConfig = {
         destination: '/2026.html',
       },
       {
-        source: '/contact',
-        destination: '/contact.html',
-      },
-      {
         source: '/events',
         destination: '/events.html',
-      },
-      {
-        source: '/privacy',
-        destination: '/privacy.html',
       },
       {
         source: '/ranking',
