@@ -60,11 +60,9 @@ export function PlayerSearchBar({ onSelect, placeholder = "Wyszukaj gracza..." }
   };
 
   return (
-    <div className="relative w-full max-w-sm" ref={containerRef}>
+    <div className="relative w-full max-w-sm mx-auto" ref={containerRef}>
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-700 pointer-events-none" />
         <Input
-          className="pl-9"
           placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -83,7 +81,7 @@ export function PlayerSearchBar({ onSelect, placeholder = "Wyszukaj gracza..." }
               <button
                 key={player.id}
                 onClick={() => handleSelect(player.id)}
-                className="w-full flex items-center gap-3 p-3 hover:bg-bg-200 transition-colors text-left border-b border-bg-400 last:border-0"
+                className="w-full flex items-center gap-3 p-3 hover:bg-bg-300 transition-colors text-left border-b border-bg-400 last:border-0"
               >
                 <div className="w-8 h-8 rounded-full bg-bg-100 border border-bg-400 overflow-hidden flex-shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
