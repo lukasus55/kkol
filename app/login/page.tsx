@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
-
-import '../../public/css/login.css';
+import Link from 'next/link';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 
 export default function Login() {
   const router = useRouter();
@@ -18,6 +19,20 @@ export default function Login() {
   const [answerTitle, setAnswerTitle] = useState('');
   const [answerContent, setAnswerContent] = useState('');
   const [showAnswer, setShowAnswer] = useState(false);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowAnswer(false);
+      }
+    };
+    if (showAnswer) {
+      window.addEventListener('keydown', handleEsc);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [showAnswer]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -73,74 +88,88 @@ export default function Login() {
   };
 
   return (
-    <>
-      <header className="login_header">
-          <div className="title_section">
-              <img src="/img/logos/olympic-logo-transparent.svg" style={{ width: '4rem', height: '4rem' }} alt="Logo" />
-              <div className="title_text">
-                  <div className="title_line">Karwińska</div>
-                  <div className="title_line">Olimpiada</div>
-              </div>
-          </div>
+    <div className="min-h-[calc(100vh-60px)] bg-bg-200 flex flex-col relative font-sans">
+      <header className="absolute top-0 left-0 p-8">
+        <div className="flex items-center gap-4">
+          <Link href="/">
+            <img 
+              src="/img/logos/kol-logo-horizontal.svg" 
+              alt="Karwińska Olimpiada Logo" 
+              className="h-16 w-auto cursor-pointer"
+            />
+          </Link>
+        </div>
       </header>
 
-      <main className="login_main">
-          <div className="login_container">
+      <main className="flex-1 flex items-center justify-center p-4">
+        <Card className="max-w-[480px] shadow-xl pt-10 !rounded-xl border-bg-400">
+          <h1 className="text-2xl font-bold mb-8 text-text-900">Zaloguj się</h1>
+          
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <Input 
+              label="Nazwa użytkownika"
+              id="username"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              autoComplete="username"
+            />
 
-              <div className="login_card">
-                  <h1> Zaloguj się </h1>
-                  <form onSubmit={handleSubmit} className="login_form" id="login_form">
-                      
-                      <div className="input_group">
-                          <label htmlFor="username">Nazwa użytkownika</label>
-                          <input 
-                            type="text" 
-                            id="username" 
-                            name="username" 
-                            placeholder="Wprowadź nazwę użytkownika" 
-                            required 
-                            autoComplete="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                          />
-                      </div>
+            <Input 
+              label="Hasło"
+              id="password"
+              name="current_password"
+              type="password"
+              isPassword={true}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
 
-                      <div className="input_group">
-                          <label htmlFor="password">Hasło</label>
-                          <input 
-                            type="password" 
-                            id="password" 
-                            name="current_password" 
-                            placeholder="Wprowadź swoje hasło" 
-                            required 
-                            autoComplete="current-password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                      </div>
+            <div className={`text-danger-500 text-sm font-medium transition-opacity ${!error ? 'opacity-0 h-0' : 'opacity-100 h-auto'}`}>
+              Niepoprawna nazwa użytkownika lub hasło
+            </div>
 
-                      <div className={`login_failed ${!error ? 'hiddenInstant' : ''}`}> Niepoprawna nazwa użytkownika lub hasło </div>
-
-                      <div className="card_footer">
-                          <div className="disclaimer">
-                              <button type="button" className="btn_question" id="question-acc" onClick={handleNoAccount}> Nie masz konta? </button>
-                              <button type="button" className="btn_question" id="question-forgot" onClick={handleForgot}> Zapomniałeś hasła? </button>
-                          </div>
-
-                          <button type="submit" className="btn_primary" disabled={loading}>
-                            {loading ? 'Logowanie...' : 'Zaloguj się'}
-                          </button>
-                      </div>
-                  </form>
+            <div className="flex items-center justify-between mt-2">
+              <div className="flex flex-col gap-1 text-[13px] text-accent-500 font-medium">
+                <button type="button" onClick={handleNoAccount} className="text-left hover:text-accent-600 transition-colors">Nie masz konta?</button>
+                <button type="button" onClick={handleForgot} className="text-left hover:text-accent-600 transition-colors">Zapomniałeś hasła?</button>
               </div>
+              
+              <Button 
+                type="submit" 
+                variant="primary"
+                isLoading={loading} 
+                className="!px-6 !py-2.5 !rounded-lg"
+              >
+                Zaloguj się
+              </Button>
+            </div>
+          </form>
+        </Card>
 
-              <div className={`login_card answer_card ${!showAnswer ? 'hidden' : ''}`} id="answer">
-                  <div className="answer_title">{answerTitle}</div>
-                  <span className="answer_content">{answerContent}</span>
-              </div>
-
+        {showAnswer && (
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowAnswer(false);
+            }}
+          >
+            <Card className="max-w-[500px] shadow-2xl p-8 relative !rounded-xl">
+              <button 
+                onClick={() => setShowAnswer(false)} 
+                className="absolute top-4 right-4 text-text-500 hover:text-text-900 transition-colors text-xl font-bold"
+              >
+                ✕
+              </button>
+              <h3 className="text-xl font-bold mb-4 text-text-900">{answerTitle}</h3>
+              <p className="text-text-700 leading-relaxed">{answerContent}</p>
+            </Card>
           </div>
+        )}
       </main>
-    </>
+    </div>
   );
 }

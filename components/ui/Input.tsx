@@ -4,11 +4,13 @@ import { Eye, EyeOff } from 'lucide-react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  labelClassName?: string;
   isPassword?: boolean;
 }
 
 export function Input({
   label,
+  labelClassName = '',
   isPassword = false,
   className = '',
   ...props
@@ -20,7 +22,7 @@ export function Input({
   return (
     <div className="flex flex-col w-full gap-1">
       {label && (
-        <label className="text-[13px] font-normal text-text-700">
+        <label className={`text-[13px] font-normal text-text-700 ${labelClassName}`}>
           {label}
         </label>
       )}
