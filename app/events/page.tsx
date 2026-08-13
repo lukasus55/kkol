@@ -145,7 +145,7 @@ export default function EventsPage() {
                                 return (
                                   <Link 
                                     key={winner.id}
-                                    href={`/player?id=${winner.id}`}
+                                    href={`/player/${winner.id}`}
                                     className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                                   >
                                     <img 
