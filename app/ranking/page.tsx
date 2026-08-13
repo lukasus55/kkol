@@ -80,7 +80,7 @@ export default function RankingPage() {
                     >
                       <td className="py-4 px-6 text-sm font-medium text-text-900">
                         <Link 
-                          href={`/player?id=${player.id}`}
+                          href={`/player/${player.id}`}
                           className="flex items-center gap-3 hover:text-accent-600 transition-colors font-bold group-hover:underline w-max"
                         >
                           <img 
