@@ -36,7 +36,7 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
     : '/img/default_pfp.webp';
 
   return (
-    <nav className="bg-bg-200 w-full h-auto md:h-[calc(100vh-60px)] flex flex-row-reverse justify-center md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 border-r border-bg-400">
+    <nav className="bg-bg-200 w-full h-auto md:h-[calc(100vh-60px)] md:sticky md:top-0 flex flex-row-reverse justify-center md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 border-r border-bg-400 z-10">
       <div className="hidden md:flex justify-center items-center h-fit mx-4 mt-8 mb-4 pb-4 border-b border-bg-400 px-2">
         <Link href="/" className="w-full flex justify-center">
           <img src="/img/logos/kol-logo-horizontal.svg" className="w-full h-auto max-h-16 object-contain" alt="Karwińska Olimpiada Logo" />

@@ -46,11 +46,11 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <main className="w-full flex justify-center flex-wrap">
-      <div className="w-full grid grid-rows-[auto_1fr] md:grid-rows-1 grid-cols-1 md:grid-cols-[20rem_1fr] fixed">
+    <main className="w-full bg-bg-100 flex justify-center">
+      <div className="w-full grid grid-rows-[auto_1fr] md:grid-rows-1 grid-cols-1 md:grid-cols-[20rem_1fr] min-h-[calc(100vh-60px)]">
         <DashboardNav activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
 
-        <div className="w-full overflow-auto h-[calc(100vh-104px)] md:h-[calc(100vh-60px)]" style={{ scrollbarWidth: 'auto' }}>
+        <div className="w-full flex flex-col pb-10 overflow-hidden">
           {activeTab === 'account' && <AccountTab user={user} />}
           {activeTab === 'tournaments' && <TournamentsTab user={user} />}
           {activeTab === 'calendar' && <CalendarTab user={user} />}
