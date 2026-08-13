@@ -41,7 +41,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
     setActiveTier(activeTier === tier ? null : tier);
   };
 
-  const pfpSrc = player.pfp_base64 
+  const pfpSrc = player.pfp_base64
     ? (player.pfp_base64.startsWith('data:image') ? player.pfp_base64 : `data:image/webp;base64,${player.pfp_base64}`)
     : '/img/default_pfp.webp';
 
@@ -89,8 +89,8 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
       `}</style>
 
       {/* Banner */}
-      <div 
-        className="w-full h-72 rounded-xl flex flex-col justify-center items-center relative overflow-hidden shadow-lg border border-bg-400"
+      <div
+        className="w-full h-72 rounded-md flex flex-col justify-center items-center relative overflow-hidden shadow-lg border border-bg-400"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${pfpSrc})`,
           backgroundSize: 'cover',
@@ -101,14 +101,14 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
           <h1 className="text-5xl font-bold text-white mb-4 relative z-10 drop-shadow-lg">
             {player.displayed_name}
           </h1>
-          
+
           <div className="flex gap-4 relative z-10">
             {(['s', 'a', 'b', 'c'] as const).map(tier => {
               const count = wonTournamentsByTier[tier].length;
               if (count === 0) return null;
 
               return (
-                <button 
+                <button
                   key={tier}
                   onClick={() => handleBadgeClick(tier)}
                   className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all hover:scale-105 ${tierStyles[tier].badge} ${activeTier === tier ? 'opacity-100 scale-105' : 'opacity-90'}`}
@@ -121,7 +121,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
         </div>
 
         {/* Animated Bar attached to bottom */}
-        <div 
+        <div
           className={`absolute bottom-0 left-0 w-full transition-all duration-500 ease-in-out flex items-center justify-center overflow-hidden
             ${activeTier ? 'h-12 translate-y-0' : 'h-0 translate-y-full'}
           `}
@@ -134,7 +134,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
           <div className={`w-full h-full flex items-center px-4 relative z-10 transition-opacity duration-300 ${activeTier ? 'opacity-100' : 'opacity-0'}`} ref={scrollerRef}>
             {displayedTier && (
-              <div 
+              <div
                 ref={innerRef}
                 className={`flex items-center gap-8 whitespace-nowrap font-bold text-lg tracking-wider mx-auto text-white ${scrollDist > 0 ? 'animate-ping-pong' : ''}`}
                 style={{ '--scroll-dist': scrollDist } as React.CSSProperties}
@@ -154,10 +154,10 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
       {/* Grid: Tournaments & Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
+
         {/* Tournaments List */}
         <div className="md:col-span-2 space-y-4">
-          <div className="w-full overflow-hidden rounded-xl border border-bg-400">
+          <div className="w-full overflow-hidden rounded-md border border-bg-400">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse bg-bg-100">
                 <thead>
@@ -178,10 +178,10 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
                       const standings = t.standings || [];
                       const playerStanding = standings.find((s: any) => s.id === player.id);
                       const position = playerStanding?.position;
-                      
+
                       const tTierKey = (t.details?.tier || '').toLowerCase();
                       const smallBadgeClass = tierStyles[tTierKey]?.tableBadge || 'bg-bg-300 text-text-600 border-bg-400';
-                      
+
                       return (
                         <tr key={t.id || i} className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
                           <td className="py-4 px-6 text-sm font-medium text-text-900">
@@ -217,7 +217,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
         {/* Stats Card */}
         <div className="md:col-span-1">
-          <div className="w-full overflow-hidden rounded-xl border border-bg-400 h-fit">
+          <div className="w-full overflow-hidden rounded-md border border-bg-400 h-fit">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
                 <tr className="bg-accent-500 text-white uppercase text-xs md:text-sm tracking-wide">

@@ -5,7 +5,7 @@ import { PlayerProfileClient } from './PlayerProfileClient';
 export default async function PlayerProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
-  
+
   const headersList = await headers();
   const host = headersList.get('host') || 'localhost:3000';
   const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
@@ -27,13 +27,13 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
     const rankingData = await rankingRes.json();
 
     const player = playerData[id];
-    
+
     if (!player) {
       notFound();
     }
 
     const tournaments = Object.keys(tournamentsData).map(key => tournamentsData[key]);
-    
+
     // Sort tournaments descending
     tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
 
@@ -55,11 +55,11 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
     const playerRanking = rankingData[0] || { majorRanking: 0, minorRanking: 0, ranking: 0 };
 
     return (
-      <PlayerProfileClient 
-        player={player} 
-        tournaments={tournaments} 
-        ranking={playerRanking} 
-        wonTournamentsByTier={wonTournamentsByTier} 
+      <PlayerProfileClient
+        player={player}
+        tournaments={tournaments}
+        ranking={playerRanking}
+        wonTournamentsByTier={wonTournamentsByTier}
       />
     );
   } catch (error) {

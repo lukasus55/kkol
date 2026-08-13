@@ -22,7 +22,7 @@ export default function RankingPage() {
       try {
         const res = await fetch('/api/ranking');
         const data = await res.json();
-        
+
         const sortedLeaderboard = Object.values(data)
           .map((p: any) => ({
             id: p.id,
@@ -33,7 +33,7 @@ export default function RankingPage() {
             pfpSrc: p.pfpSrc || '/img/default_pfp.webp'
           }))
           .sort((a, b) => b.ranking - a.ranking);
-          
+
         setLeaderboard(sortedLeaderboard);
       } catch (err) {
         console.error("Failed to load ranking data:", err);
@@ -41,7 +41,7 @@ export default function RankingPage() {
         setLoading(false);
       }
     }
-    
+
     loadRankingData();
   }, []);
 
@@ -52,7 +52,7 @@ export default function RankingPage() {
       </h1>
 
       <div className="w-full max-w-5xl">
-        <div className="w-full overflow-hidden rounded-xl border border-bg-400">
+        <div className="w-full overflow-hidden rounded-md border border-bg-400">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
@@ -74,32 +74,32 @@ export default function RankingPage() {
                   </tr>
                 ) : (
                   leaderboard.map((player) => (
-                    <tr 
-                      key={player.id} 
+                    <tr
+                      key={player.id}
                       className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100"
                     >
                       <td className="py-4 px-6 text-sm font-medium text-text-900">
-                        <Link 
+                        <Link
                           href={`/player/${player.id}`}
                           className="flex items-center gap-3 hover:text-accent-600 transition-colors font-bold group-hover:underline w-max"
                         >
-                          <img 
-                            src={player.pfpSrc} 
-                            alt={player.name} 
+                          <img
+                            src={player.pfpSrc}
+                            alt={player.name}
                             className="w-8 h-8 rounded-full object-cover border border-bg-400"
                           />
                           {player.name}
                         </Link>
                       </td>
-                      
+
                       <td className="py-4 px-6 text-sm font-semibold text-center text-text-700">
                         {player.majorRanking.toFixed(2)}
                       </td>
-                      
+
                       <td className="py-4 px-6 text-sm font-semibold text-center text-text-700">
                         {player.minorRanking.toFixed(2)}
                       </td>
-                      
+
                       <td className="py-4 px-6 text-sm font-bold text-right text-accent-600">
                         {player.ranking.toFixed(2)}
                       </td>
@@ -117,9 +117,9 @@ export default function RankingPage() {
             </table>
           </div>
         </div>
-        
+
         {/* Explainer section */}
-        <div className="mt-8 p-6 bg-bg-200 rounded-xl border border-bg-400 text-sm text-text-700 leading-relaxed max-w-4xl mx-auto">
+        <div className="mt-8 p-6 bg-bg-200 rounded-md border border-bg-400 text-sm text-text-700 leading-relaxed max-w-4xl mx-auto">
           <p className="font-semibold mb-4 text-text-900">
             Wzór na ranking KKOL to suma następujących elementów:
           </p>
