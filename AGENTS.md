@@ -27,3 +27,8 @@ Aplikacja KKOL bazuje na **płaskim designie**. Unikaj używania głębokich cie
 - Wyraźnych obramowań (`border border-bg-400` lub inne kolory borderów).
 - Subtelnych różnic w odcieniach tła (`bg-bg-100` vs `bg-bg-200`).
 Kieruj się minimalizmem wizualnym bez efektów przestrzennych.
+
+## 5. Maksymalne zaokrąglenie (Border Radius)
+Zgodnie z przyjętą estetyką, unikaj używania dużych zaokrągleń (takich jak `rounded-lg`, `rounded-xl`, `rounded-2xl` czy `rounded-3xl`) w przypadku ogólnych kontenerów, kart, popupów czy przycisków.
+Maksymalna wartość, jakiej powinieneś używać w takich elementach, to **`rounded-md`**.
+Okrągłe elementy (np. `rounded-full` dla zdjęć profilowych) są nadal dozwolone tam, gdzie jest to logicznie uzasadnione, ale nie stosuj ich dla bloków interfejsu (np. przyciski powinny pozostać maksymalnie na poziomie `rounded-md`).
