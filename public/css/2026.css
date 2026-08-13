@@ -745,7 +745,11 @@
         color: var(--color-charcoal-blue);
     }
 
-    .card_ .content_desc {
+    .card_body {
+        position: relative;
+    }
+
+    .card_body .content_desc {
         color: var(--gray700);
         line-height: 1.6;
         font-size: 1rem;
