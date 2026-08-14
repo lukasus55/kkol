@@ -22,7 +22,7 @@ export default async function handler(request, response) {
 
         const {id, name, start_date, end_date, rights_level} = request.body;
 
-        if (!id || !name || !start_date || !end_date || !rights_level) {
+        if (!id || !name || !start_date || !end_date || rights_level === undefined) {
             return response.status(400).json({ error: "Brakujące dane." });
         }
 
