@@ -34,7 +34,13 @@ export default function PollsTab({ user }: { user: any }) {
       }
       if (pRes.ok) {
         const pData = await pRes.json();
-        setPolls(pData);
+        const filteredPolls = pData.filter((poll: any) => {
+           const isPlayer = !!user?.tournaments?.[poll.tournament_id];
+           const isOrganizer = !!user?.organizer_roles?.[poll.tournament_id];
+           const isAdmin = user?.role === 'admin';
+           return isAdmin || isPlayer || isOrganizer;
+        });
+        setPolls(filteredPolls);
       }
     } catch (e) {
       console.error(e);

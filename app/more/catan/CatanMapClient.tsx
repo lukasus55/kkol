@@ -174,7 +174,7 @@ export function CatanMapClient() {
     }
   };
 
-  const renderRound = (roundNumber: number, rows: HexagonData[]) => {
+  const renderRound = (roundNumber: number, rows: HexagonData[][]) => {
     return (
       <section className="w-full py-5 px-2 flex justify-center items-start flex-wrap mb-12" id={`round-${roundNumber}`}>
         <div className="w-full flex justify-center items-center text-5xl font-bold uppercase tracking-wider mb-8">

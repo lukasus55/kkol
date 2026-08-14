@@ -1,4 +1,4 @@
-import sql from "../../db.js";
+import sql from "../../../db.js";
 
 /**
  * Checks if user has permission to edit specific tournament.

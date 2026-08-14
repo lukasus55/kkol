@@ -5,11 +5,11 @@
 @layer base {
   :root {
     --color-bg-100: #ffffff;
-    --color-bg-200: #f8fafc;
-    --color-bg-300: #f1f5f9;
-    --color-bg-400: #e2e8f0;
-    --color-bg-500: #cbd5e1;
-    --color-bg-600: #94a3b8;
+    --color-bg-200: #f1f5f9; /* Slate 100 */
+    --color-bg-300: #e2e8f0; /* Slate 200 */
+    --color-bg-400: #cbd5e1; /* Slate 300 */
+    --color-bg-500: #94a3b8; /* Slate 400 */
+    --color-bg-600: #64748b; /* Slate 500 */
 
     --color-text-900: #0f172a;
     --color-text-700: #334155;
@@ -79,6 +79,31 @@ input[type="number"]:not(:focus) {
 @font-face {
   font-family: "Outfit";
   src: url("/fonts/Outfit/Outfit-VariableFont_wght.ttf");
+}
+
+@keyframes bounce-out-down {
+  0% { transform: translate(-50%, 0); }
+  20% { transform: translate(-50%, -10px); }
+  100% { transform: translate(-50%, 150%); opacity: 0; }
+}
+.animate-bounce-out {
+  animation: bounce-out-down 0.4s ease-in forwards;
+}
+@keyframes bounce-in-up {
+  0% { transform: translate(-50%, 150%); opacity: 0; }
+  60% { transform: translate(-50%, -10px); opacity: 1; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
+}
+.animate-bounce-in {
+  animation: bounce-in-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes shake-modal {
+  0%, 100% { transform: translate(-50%, 0); }
+  25% { transform: translate(calc(-50% - 15px), 0); }
+  75% { transform: translate(calc(-50% + 15px), 0); }
+}
+.animate-shake {
+  animation: shake-modal 0.4s ease-in-out;
 }
 
 * {
