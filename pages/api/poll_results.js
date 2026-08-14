@@ -39,14 +39,24 @@ export default async function handler(request, response) {
         // Aggregated Math Query (returning a nested Dictionary/Map object)
         const resultsData = await sql`
             WITH option_counts AS (
-                -- Count the votes for every specific option
+                -- Count the votes for every specific option and aggregate voters
                 SELECT 
                     o.question_id,
                     o.id AS option_id,
                     o.name AS option_name,
-                    COUNT(ca.option_id)::int AS vote_count
+                    COUNT(ca.option_id)::int AS vote_count,
+                    COALESCE(
+                        json_agg(
+                            json_build_object(
+                                'id', p.id,
+                                'displayed_name', p.displayed_name,
+                                'pfp_base64', p.pfp_base64
+                            )
+                        ) FILTER (WHERE p.id IS NOT NULL), '[]'::json
+                    ) AS voters
                 FROM "options" o
                 LEFT JOIN checked_answers ca ON o.id = ca.option_id
+                LEFT JOIN players p ON ca.player_id = p.id
                 JOIN questions q ON o.question_id = q.id
                 WHERE q.poll_id = ${poll}
                 GROUP BY o.question_id, o.id, o.name
@@ -66,6 +76,7 @@ export default async function handler(request, response) {
                     oc.option_id,
                     oc.option_name,
                     oc.vote_count,
+                    oc.voters,
                     CASE 
                         WHEN qt.total_votes > 0 THEN ROUND((oc.vote_count::numeric / qt.total_votes) * 100, 1)::float
                         ELSE 0.0 
@@ -85,7 +96,8 @@ export default async function handler(request, response) {
                             json_build_object(
                                 'name', co.option_name,
                                 'vote_count', co.vote_count,
-                                'percentage', co.percentage
+                                'percentage', co.percentage,
+                                'voters', co.voters
                             )
                         ) FILTER (WHERE co.option_id IS NOT NULL), '{}'::json
                     ) AS options_map

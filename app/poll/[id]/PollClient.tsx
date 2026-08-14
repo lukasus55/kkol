@@ -5,6 +5,9 @@ import { useSearchParams, useParams, useRouter } from 'next/navigation';
 import PollHeader from '@/components/polls/PollHeader';
 import PollVoteTab from '@/components/polls/PollVoteTab';
 import PollEditTab from '@/components/polls/PollEditTab';
+import PollResultsTab from '@/components/polls/PollResultsTab';
+import PollSettingsModal from '@/components/polls/PollSettingsModal';
+import PollLabelsModal from '@/components/polls/PollLabelsModal';
 // We will import ResultsTab in Stage 3
 
 export default function PollClient() {
@@ -54,6 +57,10 @@ export default function PollClient() {
   };
   const isAnswersDirty = normalizeAnswers(answers) !== normalizeAnswers(originalAnswers);
   const isQuestionsDirty = JSON.stringify(questions) !== JSON.stringify(originalQuestions);
+
+  // Modals
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isLabelsModalOpen, setIsLabelsModalOpen] = useState(false);
 
   // Filters
   const [filterQuery, setFilterQuery] = useState('');
@@ -219,6 +226,8 @@ export default function PollClient() {
         setFilterQuery={setFilterQuery}
         selectedLabels={selectedLabels}
         setSelectedLabels={setSelectedLabels}
+        onOpenSettings={() => setIsSettingsModalOpen(true)}
+        onOpenLabels={() => setIsLabelsModalOpen(true)}
       />
 
       {/* CONTENT */}
@@ -236,7 +245,11 @@ export default function PollClient() {
         )}
 
         {mode === 'results' && (
-          <div className="text-center text-text-500 mt-20">Sekcja Wyników w budowie (Stage 3)</div>
+          <PollResultsTab 
+            pollId={pollId}
+            questions={questions}
+            labels={labels}
+          />
         )}
 
         {mode === 'edit' && (
@@ -312,6 +325,26 @@ export default function PollClient() {
           </div>
         </div>
       )}
+
+      {/* MODALS */}
+      <PollSettingsModal 
+        poll={poll}
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        onSuccess={(updatedPoll) => {
+            setPoll(updatedPoll);
+        }}
+      />
+
+      <PollLabelsModal
+        pollId={pollId}
+        labels={labels}
+        isOpen={isLabelsModalOpen}
+        onClose={() => setIsLabelsModalOpen(false)}
+        onSuccess={(updatedLabels) => {
+            setLabels(updatedLabels);
+        }}
+      />
     </>
   );
 }

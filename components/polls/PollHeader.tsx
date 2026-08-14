@@ -11,11 +11,14 @@ interface PollHeaderProps {
   setFilterQuery: (q: string) => void;
   selectedLabels: string[];
   setSelectedLabels: React.Dispatch<React.SetStateAction<string[]>>;
+  onOpenSettings?: () => void;
+  onOpenLabels?: () => void;
 }
 
 export default function PollHeader({
   poll, mode, setMode, permissions, labels,
-  filterQuery, setFilterQuery, selectedLabels, setSelectedLabels
+  filterQuery, setFilterQuery, selectedLabels, setSelectedLabels,
+  onOpenSettings, onOpenLabels
 }: PollHeaderProps) {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -138,14 +141,14 @@ export default function PollHeader({
           </div>
 
           {permissions.canEditLabels && (
-            <button className="flex items-center gap-2 px-3 py-2 rounded-md border border-bg-400 text-text-700 hover:bg-bg-300 transition-colors">
+            <button onClick={onOpenLabels} className="flex items-center gap-2 px-3 py-2 rounded-md border border-bg-400 text-text-700 hover:bg-bg-300 transition-colors">
               <Tag className="w-4 h-4" />
               <span className="hidden md:inline text-sm font-medium">Etykiety</span>
             </button>
           )}
 
           {permissions.canEditSettings && (
-            <button className="flex items-center gap-2 px-3 py-2 rounded-md border border-bg-400 text-text-700 hover:bg-bg-300 transition-colors">
+            <button onClick={onOpenSettings} className="flex items-center gap-2 px-3 py-2 rounded-md border border-bg-400 text-text-700 hover:bg-bg-300 transition-colors">
               <Settings className="w-4 h-4" />
               <span className="hidden md:inline text-sm font-medium">Ustawienia</span>
             </button>
