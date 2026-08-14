@@ -6,12 +6,11 @@ interface PollEditTabProps {
     questions: any[];
     setQuestions: React.Dispatch<React.SetStateAction<any[]>>;
     labels: any[];
-    setIsQuestionsDirty: (b: boolean) => void;
     permissions: any;
 }
 
 export default function PollEditTab({
-    questions, setQuestions, labels, setIsQuestionsDirty, permissions
+    questions, setQuestions, labels, permissions
 }: PollEditTabProps) {
 
     // Drag & Drop
@@ -54,7 +53,6 @@ export default function PollEditTab({
 
         setDraggedIndex(index);
         setQuestions(newQuestions);
-        setIsQuestionsDirty(true);
     };
 
     const handleDragEnd = (e: React.DragEvent) => {
@@ -66,7 +64,6 @@ export default function PollEditTab({
 
     const handleQuestionChange = (id: string, field: string, value: any) => {
         setQuestions(prev => prev.map(q => q.id === id ? { ...q, [field]: value } : q));
-        setIsQuestionsDirty(true);
     };
 
     const handleOptionChange = (qId: string, optId: string, value: string) => {
@@ -79,7 +76,6 @@ export default function PollEditTab({
             }
             return q;
         }));
-        setIsQuestionsDirty(true);
     };
 
     const handleAddOption = (qId: string) => {
@@ -90,7 +86,6 @@ export default function PollEditTab({
             }
             return q;
         }));
-        setIsQuestionsDirty(true);
     };
 
     const handleRemoveOption = (qId: string, optId: string) => {
@@ -100,7 +95,6 @@ export default function PollEditTab({
             }
             return q;
         }));
-        setIsQuestionsDirty(true);
     };
 
     const handleAddQuestion = () => {
@@ -114,7 +108,6 @@ export default function PollEditTab({
             label_ids: []
         };
         setQuestions(prev => [...prev, newQ]);
-        setIsQuestionsDirty(true);
     };
 
     const handleRemoveQuestion = (id: string) => {
@@ -123,7 +116,6 @@ export default function PollEditTab({
             const filtered = prev.filter(q => q.id !== id);
             return filtered.map((q, idx) => ({ ...q, sort_order: idx }));
         });
-        setIsQuestionsDirty(true);
     };
 
     const sortedQuestions = [...questions].sort((a, b) => a.sort_order - b.sort_order);
@@ -178,10 +170,10 @@ export default function PollEditTab({
                                             className="shrink-0 w-10 h-10 flex items-center justify-center rounded-md hover:bg-bg-300 transition-colors group"
                                         >
                                             <div className={`relative flex items-center justify-center shrink-0 border-[2px] border-text-500 transition-all duration-300 ease-in-out group-hover:border-text-900 ${
-                                                q.multiple_choice ? 'w-[22px] h-[22px] rounded-sm rotate-90' : 'w-[22px] h-[22px] rounded-full rotate-0'
+                                                q.multiple_choice ? 'w-[22px] h-[22px] rounded-[2px] rotate-90' : 'w-[22px] h-[22px] rounded-[11px] rotate-0'
                                             }`}>
                                                 <div className={`transition-all duration-300 ease-in-out bg-text-500 group-hover:bg-text-900 ${
-                                                    q.multiple_choice ? 'w-2.5 h-2.5 rounded-[2px]' : 'w-[10px] h-[10px] rounded-full'
+                                                    q.multiple_choice ? 'w-2.5 h-2.5 rounded-[2px]' : 'w-[10px] h-[10px] rounded-[5px]'
                                                 }`} />
                                             </div>
                                         </button>

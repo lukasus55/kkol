@@ -8,14 +8,13 @@ interface PollVoteTabProps {
     labels: any[];
     answers: Record<string, string[]>;
     setAnswers: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
-    setIsAnswersDirty: (b: boolean) => void;
     filterQuery: string;
     selectedLabels: string[];
     permissions: any;
 }
 
 export default function PollVoteTab({
-    questions, labels, answers, setAnswers, setIsAnswersDirty, filterQuery, selectedLabels, permissions
+    questions, labels, answers, setAnswers, filterQuery, selectedLabels, permissions
 }: PollVoteTabProps) {
 
     // Apply filters
@@ -38,27 +37,29 @@ export default function PollVoteTab({
         return true;
     });
 
-    const handleOptionToggle = (questionId: string, optionId: string, isMultiple: boolean) => {
+    const handleOptionToggle = (questionId: string, optionIdRaw: any, isMultiple: boolean) => {
         if (!permissions.canVote) {
             alert("Nie masz uprawnień do głosowania.");
             return;
         }
 
-        setIsAnswersDirty(true);
+        const optionId = String(optionIdRaw);
 
         setAnswers(prev => {
             const currentSelected = prev[questionId] || [];
+            // Ensure all currentSelected elements are strings for safe comparison
+            const currentSelectedStrings = currentSelected.map(id => String(id));
 
             if (isMultiple) {
                 // Toggle
-                if (currentSelected.includes(optionId)) {
-                    return { ...prev, [questionId]: currentSelected.filter(id => id !== optionId) };
+                if (currentSelectedStrings.includes(optionId)) {
+                    return { ...prev, [questionId]: currentSelectedStrings.filter(id => id !== optionId) };
                 } else {
-                    return { ...prev, [questionId]: [...currentSelected, optionId] };
+                    return { ...prev, [questionId]: [...currentSelectedStrings, optionId] };
                 }
             } else {
                 // Radio behavior
-                if (currentSelected.includes(optionId)) {
+                if (currentSelectedStrings.includes(optionId)) {
                     return { ...prev, [questionId]: [] }; // Deselect if clicking the same radio
                 } else {
                     return { ...prev, [questionId]: [optionId] }; // Select new radio
@@ -137,9 +138,9 @@ export default function PollVoteTab({
                         {/* Options */}
                         <div className="flex flex-col gap-1 mt-1">
                             {q.options?.map((opt: any) => {
-                                const isSelected = selectedOptionIds.includes(opt.id);
+                                const isSelected = selectedOptionIds.some((id: any) => String(id) === String(opt.id));
                                 return (
-                                    <label key={opt.id} className="flex items-center gap-3 py-1.5 cursor-pointer group transition-colors">
+                                    <label key={opt.id} className="flex items-center gap-3 py-2 px-3 -mx-3 rounded-md cursor-pointer group hover:bg-bg-300 transition-colors">
                                         <input
                                             type="checkbox"
                                             name={`q-${q.id}`}

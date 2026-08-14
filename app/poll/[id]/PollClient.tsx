@@ -45,8 +45,15 @@ export default function PollClient() {
   });
 
   // Dirty flags
-  const [isAnswersDirty, setIsAnswersDirty] = useState(false);
-  const [isQuestionsDirty, setIsQuestionsDirty] = useState(false);
+  const normalizeAnswers = (ans: Record<string, string[]>) => {
+    const normalized: Record<string, string[]> = {};
+    Object.keys(ans).sort().forEach(k => {
+      normalized[k] = [...ans[k]].sort();
+    });
+    return JSON.stringify(normalized);
+  };
+  const isAnswersDirty = normalizeAnswers(answers) !== normalizeAnswers(originalAnswers);
+  const isQuestionsDirty = JSON.stringify(questions) !== JSON.stringify(originalQuestions);
 
   // Filters
   const [filterQuery, setFilterQuery] = useState('');
@@ -131,12 +138,39 @@ export default function PollClient() {
 
   const [isClosingModal, setIsClosingModal] = useState(false);
   const [shakeModal, setShakeModal] = useState(false);
+  const [shakeScreen, setShakeScreen] = useState(false);
+
+  // Intercept all link clicks when there are unsaved changes
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (isAnswersDirty || isQuestionsDirty) {
+        const target = e.target as HTMLElement;
+        const link = target.closest('a');
+        if (link && link.href && !link.href.includes(window.location.pathname) && link.target !== '_blank') {
+            e.preventDefault();
+            e.stopPropagation();
+            setShakeModal(true);
+            setShakeScreen(true);
+            setTimeout(() => {
+                setShakeModal(false);
+                setShakeScreen(false);
+            }, 500);
+        }
+      }
+    };
+    document.addEventListener('click', handleClick, { capture: true });
+    return () => document.removeEventListener('click', handleClick, { capture: true });
+  }, [isAnswersDirty, isQuestionsDirty]);
 
   const handleModeChange = (newMode: 'vote' | 'results' | 'edit') => {
     if (newMode === mode) return;
     if (isAnswersDirty || isQuestionsDirty) {
       setShakeModal(true);
-      setTimeout(() => setShakeModal(false), 500);
+      setShakeScreen(true);
+      setTimeout(() => {
+        setShakeModal(false);
+        setShakeScreen(false);
+      }, 500);
       return;
     }
     setMode(newMode);
@@ -171,7 +205,8 @@ export default function PollClient() {
   }
 
   return (
-    <div className="w-full max-w-[800px] px-4 py-8 flex flex-col relative min-h-screen">
+    <>
+      <div className={`w-full max-w-[800px] px-4 py-8 flex flex-col relative min-h-screen ${shakeScreen ? 'animate-shake' : ''}`}>
 
       {/* HEADER */}
       <PollHeader
@@ -194,7 +229,6 @@ export default function PollClient() {
             labels={labels}
             answers={answers}
             setAnswers={setAnswers}
-            setIsAnswersDirty={setIsAnswersDirty}
             filterQuery={filterQuery}
             selectedLabels={selectedLabels}
             permissions={permissions}
@@ -210,10 +244,10 @@ export default function PollClient() {
             questions={questions}
             setQuestions={setQuestions}
             labels={labels}
-            setIsQuestionsDirty={setIsQuestionsDirty}
             permissions={permissions}
           />
         )}
+      </div>
       </div>
 
       {/* UNSAVED CHANGES BAR (Floating) */}
@@ -229,10 +263,8 @@ export default function PollClient() {
                   closeModal(() => {
                       if (mode === 'vote') {
                           setAnswers(JSON.parse(JSON.stringify(originalAnswers)));
-                          setIsAnswersDirty(false);
                       } else if (mode === 'edit') {
                           setQuestions(JSON.parse(JSON.stringify(originalQuestions)));
-                          setIsQuestionsDirty(false);
                       }
                   });
                 }}
@@ -253,7 +285,6 @@ export default function PollClient() {
                           if (!res.ok) throw new Error("Błąd podczas zapisywania odpowiedzi");
                           closeModal(() => {
                               setOriginalAnswers(JSON.parse(JSON.stringify(answers)));
-                              setIsAnswersDirty(false);
                           });
                       } catch (err) {
                           alert(err);
@@ -269,7 +300,6 @@ export default function PollClient() {
                           if (!res.ok) throw new Error("Błąd podczas zapisywania pytań");
                           closeModal(() => {
                               setOriginalQuestions(JSON.parse(JSON.stringify(questions)));
-                              setIsQuestionsDirty(false);
                           });
                       } catch (err) {
                           alert(err);
@@ -282,7 +312,6 @@ export default function PollClient() {
           </div>
         </div>
       )}
-
-    </div>
+    </>
   );
 }

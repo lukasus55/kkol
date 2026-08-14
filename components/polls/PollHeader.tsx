@@ -33,10 +33,9 @@ export default function PollHeader({
   }).format(new Date(poll.end_date));
 
   return (
-    <div className="w-full bg-bg-200 border border-bg-400 rounded-md p-4 md:p-6 flex flex-col gap-6 shadow-sm">
-
+    <div className="flex flex-col gap-6 w-full">
       {/* TOP ROW: Name & Dates */}
-      <div className="flex flex-col gap-1">
+      <div className="w-full bg-bg-200 border border-bg-400 rounded-md p-4 md:p-6 flex flex-col gap-1 shadow-sm">
         <h1 className="text-2xl md:text-3xl font-bold text-text-900 font-markazi break-words">
           {poll.name}
         </h1>
@@ -47,7 +46,7 @@ export default function PollHeader({
       </div>
 
       {/* BOTTOM ROW: Modes & Tools */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-t border-bg-300 pt-4">
+      <div className="w-full bg-bg-200 border border-bg-400 rounded-md p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm sticky top-4 z-[60]">
 
         {/* MODES */}
         <div className="flex items-center gap-2 bg-bg-100 p-1 rounded-md border border-bg-300 w-full md:w-auto overflow-x-auto">
