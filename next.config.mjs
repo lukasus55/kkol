@@ -34,10 +34,6 @@ const nextConfig = {
       {
         source: '/dashboard',
         destination: '/dashboard.html',
-      },
-      {
-        source: '/poll',
-        destination: '/poll.html',
       }
     ];
   },

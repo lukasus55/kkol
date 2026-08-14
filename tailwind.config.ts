@@ -19,7 +19,6 @@ const config: Config = {
         'bg-400': 'var(--color-bg-400)',
         'bg-500': 'var(--color-bg-500)',
         'bg-600': 'var(--color-bg-600)',
-        'bg-400': 'var(--color-bg-400)',
         'text-900': 'var(--color-text-900)',
         'text-700': 'var(--color-text-700)',
         'text-500': 'var(--color-text-500)',
