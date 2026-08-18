@@ -9,10 +9,13 @@ import PollEditTab from '@/components/polls/PollEditTab';
 import PollResultsTab from '@/components/polls/PollResultsTab';
 import PollSettingsModal from '@/components/polls/PollSettingsModal';
 import PollLabelsModal from '@/components/polls/PollLabelsModal';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { useToast } from '@/components/ui/ToastProvider';
 // We will import ResultsTab in Stage 3
 
 export default function PollClient() {
   const router = useRouter();
+  const { addToast } = useToast();
   const searchParams = useSearchParams();
   const params = useParams();
   const pollId = params?.id as string;
@@ -290,34 +293,50 @@ export default function PollClient() {
                 className="btn_primary px-6 py-2.5 bg-accent-500 text-bg-100 hover:bg-accent-600 font-bold rounded-md flex items-center gap-2"
                 onClick={async () => {
                   if (mode === 'vote') {
-                      // Bulk save answers
+                      addToast({ message: "Odpowiedzi zostały pomyślnie zapisane", type: "success" });
+                      closeModal(() => {
+                          setOriginalAnswers(JSON.parse(JSON.stringify(answers)));
+                      });
                       try {
                           const res = await fetch('/api/poll_players_answers_update', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ poll_id: pollId, answers })
                           });
-                          if (!res.ok) throw new Error("Błąd podczas zapisywania odpowiedzi");
-                          closeModal(() => {
-                              setOriginalAnswers(JSON.parse(JSON.stringify(answers)));
-                          });
-                      } catch (err) {
-                          alert(err);
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.error || "Błąd podczas zapisywania odpowiedzi");
+                      } catch (err: any) {
+                          addToast({ message: err.message || "Wystąpił nieznany błąd", type: "error" });
                       }
                   } else if (mode === 'edit') {
-                      // Bulk save questions
+                      const invalidQuestion = questions.find((q: any) => !q.name || !q.name.trim() || q.name.length < 3);
+                      if (invalidQuestion) {
+                          addToast({ message: "Każde pytanie musi posiadać treść (min. 3 znaki)", type: "error" });
+                          return;
+                      }
+                      for (const q of questions) {
+                          const invalidOption = q.options.find((o: any) => !o.name || !o.name.trim());
+                          if (invalidOption) {
+                              addToast({ message: `Opcje odpowiedzi w pytaniu "${q.name}" nie mogą być puste`, type: "error" });
+                              return;
+                          }
+                      }
+
+                      addToast({ message: "Zmiany w ankiecie zostały pomyślnie zapisane", type: "success" });
+                      closeModal(() => {
+                          setOriginalQuestions(JSON.parse(JSON.stringify(questions)));
+                      });
+
                       try {
                           const res = await fetch('/api/poll_question_update', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ poll_id: pollId, questions })
                           });
-                          if (!res.ok) throw new Error("Błąd podczas zapisywania pytań");
-                          closeModal(() => {
-                              setOriginalQuestions(JSON.parse(JSON.stringify(questions)));
-                          });
-                      } catch (err) {
-                          alert(err);
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.error || "Błąd podczas zapisywania pytań");
+                      } catch (err: any) {
+                          addToast({ message: err.message || "Wystąpił nieznany błąd", type: "error" });
                       }
                   }
                 }}

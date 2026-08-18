@@ -4,6 +4,7 @@ import { HexColorPicker } from 'react-colorful';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { ConfirmationPopup } from '../ui/ConfirmationPopup';
+import { useToast } from '../ui/ToastProvider';
 
 interface PollLabelsModalProps {
     pollId: string;
@@ -14,6 +15,7 @@ interface PollLabelsModalProps {
 }
 
 export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuccess }: PollLabelsModalProps) {
+    const { addToast } = useToast();
     const [localLabels, setLocalLabels] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -68,7 +70,12 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
         if (!labelToDelete) return;
         const id = labelToDelete;
         
-        setLoading(true);
+        const newLabels = localLabels.filter(l => l.id !== id);
+        setLocalLabels(newLabels);
+        onSuccess(newLabels);
+        setLabelToDelete(null);
+        addToast({ message: "Etykieta została pomyślnie usunięta", type: "success" });
+
         try {
             const res = await fetch('/api/poll_label_delete', {
                 method: 'POST',
@@ -76,30 +83,21 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
                 body: JSON.stringify({ id })
             });
             if (!res.ok) throw new Error("Błąd podczas usuwania etykiety");
-            
-            const newLabels = localLabels.filter(l => l.id !== id);
-            setLocalLabels(newLabels);
-            onSuccess(newLabels);
-            setLabelToDelete(null);
         } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+            addToast({ message: err.message || "Błąd podczas usuwania etykiety", type: "error" });
         }
     };
 
     const handleSave = async () => {
         if (!editForm.name.trim()) {
-            setError('Nazwa etykiety nie może być pusta.');
+            addToast({ message: "Nazwa etykiety nie może być pusta.", type: "error" });
             return;
         }
 
-        setLoading(true);
-        setError('');
-
         try {
             if (editingId === 'NEW') {
-                // Create
+                addToast({ message: "Nowa etykieta została utworzona", type: "success" });
+                // We cannot optimistically update UI for creation because we need the real ID
                 const res = await fetch('/api/poll_label_create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -117,7 +115,11 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
                 setLocalLabels(newLabels);
                 onSuccess(newLabels);
             } else {
-                // Update
+                const newLabels = localLabels.map(l => l.id === editingId ? { ...l, ...editForm } : l);
+                setLocalLabels(newLabels);
+                onSuccess(newLabels);
+                addToast({ message: "Zmiany w etykiecie zostały zapisane", type: "success" });
+
                 const res = await fetch('/api/poll_label_update', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -130,16 +132,10 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
                 });
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'Błąd aktualizacji etykiety');
-                
-                const newLabels = localLabels.map(l => l.id === editingId ? { ...l, ...editForm } : l);
-                setLocalLabels(newLabels);
-                onSuccess(newLabels);
             }
             resetForm();
         } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+            addToast({ message: err.message || "Wystąpił nieznany błąd", type: "error" });
         }
     };
 

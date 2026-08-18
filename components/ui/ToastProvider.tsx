@@ -43,22 +43,31 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       <div className="fixed bottom-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none max-w-sm w-full">
         {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onRemove={() => removeToast(toast.id)} />
+          <ToastItem key={toast.id} toast={toast} />
         ))}
       </div>
     </ToastContext.Provider>
   );
 }
 
-function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) {
+function ToastItem({ toast }: { toast: Toast }) {
+  const { removeToast } = useToast();
+  const [isLeaving, setIsLeaving] = useState(false);
   const duration = toast.duration || 5000;
+
+  const handleRemove = useCallback(() => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      removeToast(toast.id);
+    }, 300);
+  }, [removeToast, toast.id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      onRemove();
+      handleRemove();
     }, duration);
     return () => clearTimeout(timer);
-  }, [duration, onRemove]);
+  }, [duration, handleRemove]);
 
   const variants = {
     success: {
@@ -86,14 +95,14 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
   const current = variants[toast.type];
 
   return (
-    <div className={`relative flex flex-col overflow-hidden border rounded-md shadow-lg pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-300 ${current.bg}`}>
+    <div className={`relative flex flex-col overflow-hidden border rounded-md shadow-lg pointer-events-auto transition-all duration-300 ease-in-out ${isLeaving ? 'opacity-0 -translate-x-full' : 'animate-toast-in'} ${current.bg}`}>
       <div className="flex items-start gap-3 p-4">
         <div className="flex-shrink-0 mt-0.5">{current.icon}</div>
         <div className="flex-1 text-sm font-medium text-text-900 break-words">
           {toast.message}
         </div>
         <button
-          onClick={onRemove}
+          onClick={handleRemove}
           className="flex-shrink-0 text-gray-400 hover:text-text-900 transition-colors"
         >
           <X className="w-4 h-4" />
