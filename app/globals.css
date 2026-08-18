@@ -5,19 +5,19 @@
 @layer base {
   :root {
     --color-bg-100: #ffffff;
-    --color-bg-200: #f1f5f9; /* Slate 100 */
-    --color-bg-300: #e2e8f0; /* Slate 200 */
-    --color-bg-400: #cbd5e1; /* Slate 300 */
-    --color-bg-500: #94a3b8; /* Slate 400 */
-    --color-bg-600: #64748b; /* Slate 500 */
+    --color-bg-200: #f1f5f9; /* around Slate 100 */
+    --color-bg-300: #e3e8ee; /* around Slate 200 */
+    --color-bg-400: #dae1e9; /* around Slate 300 */
+    --color-bg-500: #b4bfcf; /* around Slate 400 */
+    --color-bg-600: #8b97a8; /* around Slate 500 */
 
     --color-text-900: #0f172a;
     --color-text-700: #334155;
     --color-text-500: #64748b;
 
-    --color-accent-400: #2dd4bf;
-    --color-accent-500: #14b8a6;
-    --color-accent-600: #0d9488;
+    --color-accent-400: #2db3d4;
+    --color-accent-500: #1497b8;
+    --color-accent-600: #0d7494;
 
     --color-danger-500: #ef4444;
     --color-danger-600: #dc2626;
