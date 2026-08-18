@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { GripVertical, Trash2, Plus, ExternalLink, Link2, Tag } from 'lucide-react';
 import { Tooltip } from '@/components/ui/Tooltip';
 
@@ -17,6 +17,54 @@ export default function PollEditTab({
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [dragEnabledId, setDragEnabledId] = useState<string | null>(null);
 
+    // Label assignment
+    const [openLabelEditorId, setOpenLabelEditorId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && openLabelEditorId) {
+                setOpenLabelEditorId(null);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [openLabelEditorId]);
+
+    // Robust auto-scroll during drag
+    useEffect(() => {
+        if (draggedIndex === null) return;
+
+        let lastY = -1;
+        let animationFrameId: number;
+
+        const handleDragOver = (e: DragEvent) => {
+            lastY = e.clientY;
+        };
+
+        const scrollLoop = () => {
+            if (lastY > 0) {
+                const topThreshold = 100;
+                const bottomThreshold = 150;
+                const speed = 75;
+
+                if (lastY > window.innerHeight - bottomThreshold) {
+                    window.scrollBy({ top: speed });
+                } else if (lastY < topThreshold) {
+                    window.scrollBy({ top: -speed });
+                }
+            }
+            animationFrameId = requestAnimationFrame(scrollLoop);
+        };
+
+        document.addEventListener('dragover', handleDragOver);
+        animationFrameId = requestAnimationFrame(scrollLoop);
+
+        return () => {
+            document.removeEventListener('dragover', handleDragOver);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, [draggedIndex]);
+
     if (!permissions.canEditQuestions) {
         return (
             <div className="w-full text-center mt-12 text-text-500 bg-bg-200 p-8 rounded-md border border-bg-300">
@@ -28,13 +76,9 @@ export default function PollEditTab({
 
     const handleDragStart = (e: React.DragEvent, index: number) => {
         setDraggedIndex(index);
-        e.dataTransfer.effectAllowed = 'move';
-        // Slight delay so the element being dragged isn't instantly hidden by opacity
-        setTimeout(() => {
-            if (e.target instanceof HTMLElement) {
-                e.target.style.opacity = '0.5';
-            }
-        }, 0);
+        if (e.target instanceof HTMLElement) {
+            e.target.style.opacity = '0.5';
+        }
     };
 
     const handleDragEnter = (e: React.DragEvent, index: number) => {
@@ -42,10 +86,10 @@ export default function PollEditTab({
         if (draggedIndex === null || draggedIndex === index) return;
 
         const newQuestions = [...questions];
-        const draggedItem = newQuestions[draggedIndex];
+        const draggedQuestion = newQuestions[draggedIndex];
         newQuestions.splice(draggedIndex, 1);
-        newQuestions.splice(index, 0, draggedItem);
-
+        newQuestions.splice(index, 0, draggedQuestion);
+        
         // Update sort orders
         newQuestions.forEach((q, idx) => {
             q.sort_order = idx;
@@ -98,16 +142,17 @@ export default function PollEditTab({
     };
 
     const handleAddQuestion = () => {
-        const newQ = {
-            id: `temp-q-${Date.now()}`,
+        const newQuestion = {
+            id: `new-${Date.now()}`,
             name: '',
-            page_url: '',
             multiple_choice: false,
-            sort_order: questions.length,
-            options: [],
-            label_ids: []
+            options: [
+                { id: `opt-${Date.now()}-1`, name: '' },
+                { id: `opt-${Date.now()}-2`, name: '' }
+            ],
+            labels: []
         };
-        setQuestions(prev => [...prev, newQ]);
+        setQuestions([...questions, newQuestion]);
     };
 
     const handleRemoveQuestion = (id: string) => {
@@ -186,18 +231,68 @@ export default function PollEditTab({
                         </div>
 
                         {/* Meta Row: Labels */}
-                        <div className="flex flex-wrap items-center gap-4 pl-9">
+                        <div className="flex flex-wrap items-center gap-3 pl-9 mt-1">
                             {/* Selected Labels render */}
-                            <div className="flex gap-1.5 flex-wrap">
-                                {q.label_ids?.map((lblId: string) => {
-                                    const lbl = labels.find(l => l.id === lblId);
-                                    if (!lbl) return null;
-                                    return (
-                                        <div key={lbl.id} className="px-2 py-0.5 rounded-full border text-xs font-medium flex items-center gap-1" style={{ borderColor: lbl.hex, color: lbl.hex, backgroundColor: `${lbl.hex}15` }}>
-                                            {lbl.name}
+                            {q.labels?.length > 0 && (
+                                <div className="flex gap-1.5 flex-wrap">
+                                    {q.labels.map((lbl: any) => {
+                                        if (!lbl) return null;
+                                        return (
+                                            <Tooltip key={lbl.id} content={
+                                                <div className="flex flex-col gap-0.5">
+                                                    <span className="font-bold">{lbl.name}</span>
+                                                    {lbl.description && <span className="text-text-500 font-normal">{lbl.description}</span>}
+                                                </div>
+                                            }>
+                                                <div className="px-2.5 py-1 rounded-full border text-xs font-semibold flex items-center gap-1 cursor-help" style={{ borderColor: lbl.hex, color: lbl.hex, backgroundColor: `${lbl.hex}15` }}>
+                                                    {lbl.name}
+                                                </div>
+                                            </Tooltip>
+                                        )
+                                    })}
+                                </div>
+                            )}
+
+                            <div className="relative">
+                                <button 
+                                    onClick={() => setOpenLabelEditorId(openLabelEditorId === q.id ? null : q.id)} 
+                                    className="text-xs flex items-center gap-1 text-text-500 hover:text-accent-500 cursor-pointer transition-colors"
+                                    title="Zarządzaj etykietami"
+                                >
+                                    <Tag className="w-3.5 h-3.5" />
+                                    {q.labels?.length ? 'Zmień' : 'Dodaj etykietę'}
+                                </button>
+                                
+                                {openLabelEditorId === q.id && (
+                                    <>
+                                        <div className="fixed inset-0 z-10" onClick={() => setOpenLabelEditorId(null)} />
+                                        <div className="absolute left-0 top-8 z-20 w-48 bg-bg-100 border border-bg-300 rounded-md shadow-xl p-2 flex flex-col gap-1">
+                                            {labels.length === 0 ? (
+                                                <span className="text-xs text-text-500 p-2 text-center">Brak etykiet w ankiecie. Utwórz je w opcjach ankiety.</span>
+                                            ) : (
+                                                labels.map(l => {
+                                                    const isSelected = q.labels?.some((lbl: any) => lbl.id == l.id);
+                                                    return (
+                                                        <button 
+                                                            key={l.id} 
+                                                            onClick={() => {
+                                                                const newLabels = isSelected 
+                                                                    ? q.labels.filter((lbl: any) => lbl.id != l.id) 
+                                                                    : [...(q.labels || []), l];
+                                                                handleQuestionChange(q.id, 'labels', newLabels);
+                                                            }}
+                                                            className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-sm text-left transition-colors cursor-pointer ${isSelected ? 'bg-bg-200' : 'hover:bg-bg-200'}`}
+                                                        >
+                                                            <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: l.hex }} />
+                                                            <span className="truncate flex-1 font-medium text-text-900">{l.name}</span>
+                                                            {isSelected && <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: l.hex }} />}
+                                                        </button>
+                                                    )
+                                                })
+                                            )}
                                         </div>
-                                    )
-                                })}
+                                    </>
+                                )}
                             </div>
                         </div>
 

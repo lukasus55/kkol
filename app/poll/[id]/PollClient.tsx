@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
+import { Save } from 'lucide-react';
 import PollHeader from '@/components/polls/PollHeader';
 import PollVoteTab from '@/components/polls/PollVoteTab';
 import PollEditTab from '@/components/polls/PollEditTab';
@@ -265,9 +266,10 @@ export default function PollClient() {
 
       {/* UNSAVED CHANGES BAR (Floating) */}
       {(isAnswersDirty || isQuestionsDirty || isClosingModal) && (
-        <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 p-4 md:px-6 md:py-5 rounded-xl shadow-2xl flex items-center gap-6 z-[100] transition-colors duration-300 ${isClosingModal ? 'animate-bounce-out' : 'animate-bounce-in'} ${shakeModal ? 'bg-danger-500 border border-danger-600' : 'bg-bg-200 border border-bg-400'}`}>
-          <span className={`font-medium transition-colors duration-300 ${shakeModal ? 'text-bg-100' : 'text-text-700'}`}>
-            Uważaj - masz niezapisane zmiany!
+        <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 p-4 md:px-6 md:py-5 w-[90vw] md:w-auto max-w-[600px] rounded-xl shadow-2xl flex items-center justify-between gap-4 md:gap-6 z-[100] transition-colors duration-300 ${isClosingModal ? 'animate-bounce-out' : 'animate-bounce-in'} ${shakeModal ? 'bg-danger-500 border border-danger-600' : 'bg-bg-200 border border-bg-400'}`}>
+          <span className={`font-medium transition-colors duration-300 text-sm md:text-base ${shakeModal ? 'text-bg-100' : 'text-text-700'}`}>
+            <span className="md:hidden">Niezapisane zmiany</span>
+            <span className="hidden md:inline">Uważaj - masz niezapisane zmiany!</span>
           </span>
           <div className="flex gap-3">
             <button 
@@ -285,7 +287,7 @@ export default function PollClient() {
                 Resetuj
             </button>
             <button 
-                className="btn_primary px-8 py-2.5 bg-accent-500 text-bg-100 hover:bg-accent-600 font-bold"
+                className="btn_primary px-6 py-2.5 bg-accent-500 text-bg-100 hover:bg-accent-600 font-bold rounded-md flex items-center gap-2"
                 onClick={async () => {
                   if (mode === 'vote') {
                       // Bulk save answers
@@ -320,7 +322,7 @@ export default function PollClient() {
                   }
                 }}
             >
-                Zapisz
+                <Save className="w-4 h-4" /> Zapisz
             </button>
           </div>
         </div>

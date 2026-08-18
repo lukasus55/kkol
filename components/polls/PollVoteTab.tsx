@@ -1,5 +1,6 @@
-import { ExternalLink, Circle, CheckCircle2, Square, CheckSquare } from 'lucide-react';
+import { ExternalLink, Info, Circle, CheckCircle2, Square, CheckSquare } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useMemo } from 'react';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { ensureAbsoluteUrl } from '@/lib/utils';
 
@@ -125,12 +126,19 @@ export default function PollVoteTab({
                         </div>
 
                         {/* Labels */}
-                        {questionLabels.length > 0 && (
+                        {q.labels && q.labels.length > 0 && (
                             <div className="flex gap-1.5 flex-wrap">
-                                {questionLabels.map((l: any) => (
-                                    <span key={l.id} className="text-xs px-2 py-0.5 rounded-md font-medium border" style={{ backgroundColor: `${l.hex}20`, color: l.hex, borderColor: `${l.hex}40` }}>
-                                        {l.name}
-                                    </span>
+                                {q.labels.map((l: any) => (
+                                    <Tooltip key={l.id} content={
+                                        <div className="flex flex-col gap-0.5">
+                                            <span className="font-bold">{l.name}</span>
+                                            {l.description && <span className="text-text-500 font-normal">{l.description}</span>}
+                                        </div>
+                                    }>
+                                        <span className="text-xs px-2.5 py-1 rounded-full font-semibold border flex items-center gap-1 cursor-help" style={{ backgroundColor: `${l.hex}15`, color: l.hex, borderColor: l.hex }}>
+                                            {l.name}
+                                        </span>
+                                    </Tooltip>
                                 ))}
                             </div>
                         )}

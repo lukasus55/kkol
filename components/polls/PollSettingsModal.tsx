@@ -113,7 +113,7 @@ export default function PollSettingsModal({ poll, isOpen, onClose, onSuccess }: 
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="input_base"
+                        className="input_base py-2.5 cursor-text"
                         placeholder="Wprowadź nazwę ankiety..."
                     />
                 </div>
@@ -125,7 +125,7 @@ export default function PollSettingsModal({ poll, isOpen, onClose, onSuccess }: 
                             type="datetime-local"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
-                            className="input_base"
+                            className="input_base py-2.5 cursor-text"
                         />
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -134,23 +134,32 @@ export default function PollSettingsModal({ poll, isOpen, onClose, onSuccess }: 
                             type="datetime-local"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
-                            className="input_base"
+                            className="input_base py-2.5 cursor-text"
                         />
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-semibold text-text-700">Kto może głosować?</label>
-                    <select 
-                        value={rightsLevel}
-                        onChange={(e) => setRightsLevel(Number(e.target.value))}
-                        className="input_base"
-                    >
-                        <option value={0}>Wszyscy zarejestrowani</option>
-                        <option value={2}>Zapisani gracze turnieju (Min. Oczekujący)</option>
-                        <option value={1}>Tylko organizatorzy turnieju</option>
-                    </select>
-                    <p className="text-xs text-text-500 mt-1">Poziom dostępu definiuje kto ma dostęp do oddawania głosów i podglądu ankiety.</p>
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold text-text-700">Uczestnicy mogą:</label>
+                    <div className="flex flex-col gap-2">
+                        {[
+                            { val: 1, label: 'I - odpowiadać na pytania' },
+                            { val: 2, label: 'II - zarządzać pytaniami' },
+                            { val: 3, label: 'III - zarządzać pytaniami i etykietami' }
+                        ].map((opt) => (
+                            <div 
+                                key={opt.val}
+                                onClick={() => setRightsLevel(opt.val)}
+                                className={`flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-colors ${rightsLevel === opt.val ? 'bg-bg-200 border-accent-500' : 'bg-bg-100 border-bg-300 hover:border-bg-400'}`}
+                            >
+                                <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${rightsLevel === opt.val ? 'border-accent-500' : 'border-bg-400'}`}>
+                                    {rightsLevel === opt.val && <div className="w-2 h-2 rounded-full bg-accent-500" />}
+                                </div>
+                                <span className="text-sm text-text-900">{opt.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <p className="text-xs text-text-500 mt-1">Poziom dostępu definiuje do jakich akcji mają dostęp uczestnicy turnieju (z wykluczeniem organizatorów, którzy mogą wszystko).</p>
                 </div>
             </div>
         </Modal>

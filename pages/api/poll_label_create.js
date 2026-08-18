@@ -65,9 +65,10 @@ export default async function handler(request, response) {
         const result = await sql`
             INSERT INTO poll_labels (poll_id, name, hex, description)
             VALUES (${poll}, ${clean_name}, ${hex}, ${clean_description || null})
+            RETURNING *
         `;
 
-        return response.status(200).json({ success: true });
+        return response.status(200).json({ success: true, label: result[0] });
 
     } catch (error) {
         console.error("Create Label Error:", error);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Clock, Filter, Tag, Settings, BarChart2, Pencil, CheckSquare, Search } from 'lucide-react';
 
 interface PollHeaderProps {
@@ -23,6 +23,16 @@ export default function PollHeader({
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFilterOpen) {
+        setIsFilterOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isFilterOpen]);
+
   const toggleLabelFilter = (id: string) => {
     setSelectedLabels(prev =>
       prev.includes(id) ? prev.filter(l => l !== id) : [...prev, id]
@@ -36,9 +46,9 @@ export default function PollHeader({
   }).format(new Date(poll.end_date));
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <>
       {/* TOP ROW: Name & Dates */}
-      <div className="w-full bg-bg-200 border border-bg-400 rounded-md p-4 md:p-6 flex flex-col gap-1 shadow-sm">
+      <div className="w-full bg-bg-200 border border-bg-400 rounded-md p-4 md:p-6 flex flex-col gap-1 shadow-sm mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-text-900 font-markazi break-words">
           {poll.name}
         </h1>
@@ -120,7 +130,7 @@ export default function PollHeader({
                             <button
                               key={lbl.id}
                               onClick={() => toggleLabelFilter(lbl.id)}
-                              className={`px-2 py-1 rounded-md text-xs font-medium border flex items-center gap-1.5 transition-colors`}
+                              className={`px-2 py-1 rounded-md text-xs font-medium border flex items-center gap-1.5 transition-opacity cursor-pointer hover:opacity-75`}
                               style={{
                                 borderColor: isSelected ? lbl.hex : 'var(--color-bg-400)',
                                 backgroundColor: isSelected ? `${lbl.hex}20` : 'transparent',
@@ -157,6 +167,6 @@ export default function PollHeader({
         </div>
 
       </div>
-    </div>
+    </>
   );
 }
