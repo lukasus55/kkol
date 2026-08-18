@@ -90,7 +90,11 @@ export default async function handler(request, response) {
             }
 
             // Process Labels (we only need their IDs for the junction table)
-            if (Array.isArray(q.labels)) {
+            if (Array.isArray(q.label_ids)) {
+                for (const lblId of q.label_ids) {
+                    if (lblId) processedQuestion.label_ids.push(lblId);
+                }
+            } else if (Array.isArray(q.labels)) {
                 for (const lbl of q.labels) {
                     if (lbl.id) processedQuestion.label_ids.push(lbl.id);
                 }

@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Tag, Plus, Edit2, Trash2, AlertCircle, Save } from 'lucide-react';
+import { HexColorPicker } from 'react-colorful';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { ConfirmationPopup } from '../ui/ConfirmationPopup';
 
 interface PollLabelsModalProps {
     pollId: string;
@@ -18,6 +20,9 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
     
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editForm, setEditForm] = useState({ name: '', description: '', hex: '#6366f1' });
+    const [showColorPicker, setShowColorPicker] = useState(false);
+    
+    const [labelToDelete, setLabelToDelete] = useState<string | null>(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -43,6 +48,7 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
     const resetForm = () => {
         setEditForm({ name: '', description: '', hex: '#6366f1' });
         setEditingId(null);
+        setShowColorPicker(false);
     };
 
     const startEditing = (label: any) => {
@@ -54,8 +60,13 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
         });
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Czy na pewno chcesz usunąć tę etykietę? Zostanie ona usunięta ze wszystkich pytań.")) return;
+    const handleDeleteRequest = (id: string) => {
+        setLabelToDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!labelToDelete) return;
+        const id = labelToDelete;
         
         setLoading(true);
         try {
@@ -69,6 +80,7 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
             const newLabels = localLabels.filter(l => l.id !== id);
             setLocalLabels(newLabels);
             onSuccess(newLabels);
+            setLabelToDelete(null);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -160,15 +172,17 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
                 <div className="flex flex-col gap-3">
                     <div className="flex justify-between items-center">
                         <h3 className="font-semibold text-text-900">Etykiety w tej ankiecie</h3>
-                        {!editingId && (
-                            <Button 
-                                variant="secondary"
-                                onClick={() => setEditingId('NEW')}
-                                className="!py-1.5 !px-3 !text-sm flex items-center gap-1.5"
-                            >
-                                <Plus className="w-4 h-4" /> Nowa etykieta
-                            </Button>
-                        )}
+                        <Button 
+                            variant="secondary"
+                            onClick={() => {
+                                setEditingId('NEW');
+                                setEditForm({ name: '', description: '', hex: '#6366f1' });
+                            }}
+                            disabled={editingId === 'NEW'}
+                            className="!py-1.5 !px-3 !text-sm flex items-center gap-1.5 disabled:opacity-50"
+                        >
+                            <Plus className="w-4 h-4" /> Nowa etykieta
+                        </Button>
                     </div>
 
                     {localLabels.length === 0 && !editingId && (
@@ -181,39 +195,65 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
                         {localLabels.map(label => (
                             <div key={label.id} className={`flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 rounded-md border transition-colors ${editingId === label.id ? 'bg-bg-200 border-accent-500' : 'bg-bg-100 border-bg-300 hover:border-bg-400'}`}>
                                 
-                                {/* LABEL PREVIEW */}
-                                <div className="flex flex-col gap-1 flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: label.hex }} />
-                                        <span className="font-medium text-text-900 truncate">{label.name}</span>
-                                    </div>
-                                    {label.description && (
-                                        <p className="text-xs text-text-500 truncate pl-5">{label.description}</p>
-                                    )}
-                                </div>
-
-                                {/* ACTIONS OR EDITOR */}
                                 {editingId === label.id ? (
-                                    <div className="flex flex-col gap-3 w-full md:w-auto bg-bg-200 p-3 rounded-md border border-bg-300">
-                                        <div className="flex gap-2 items-center">
-                                            <input type="color" value={editForm.hex} onChange={e => setEditForm({...editForm, hex: e.target.value})} className="w-8 h-8 rounded cursor-pointer border-none p-0 bg-transparent shrink-0" />
-                                            <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} placeholder="Nazwa" className="input_base text-sm py-1.5" />
+                                    /* EDITOR */
+                                    <div className="flex flex-col gap-3 w-full">
+                                        <h4 className="font-semibold text-sm text-text-900 mb-1">Edycja etykiety</h4>
+                                        <div className="flex gap-3 items-center">
+                                            <div className="flex flex-col gap-1 shrink-0 relative">
+                                                <label className="text-xs font-semibold text-text-500">Kolor</label>
+                                                <button 
+                                                    type="button" 
+                                                    onClick={() => setShowColorPicker(!showColorPicker)} 
+                                                    className="w-[42px] h-[42px] rounded cursor-pointer border border-bg-400 focus:outline-none shrink-0" 
+                                                    style={{ backgroundColor: editForm.hex }}
+                                                />
+                                                {showColorPicker && (
+                                                    <div className="absolute z-10 top-16 left-0">
+                                                        <div className="fixed inset-0" onClick={() => setShowColorPicker(false)} />
+                                                        <div className="relative bg-bg-100 p-2 rounded-md shadow-xl border border-bg-300">
+                                                            <HexColorPicker color={editForm.hex} onChange={(c) => setEditForm({...editForm, hex: c})} />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col gap-1 flex-1">
+                                                <label className="text-xs font-semibold text-text-500">Nazwa</label>
+                                                <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} placeholder="Np. Frontend" className="input_base text-sm py-2.5 cursor-text" />
+                                            </div>
                                         </div>
-                                        <input type="text" value={editForm.description} onChange={e => setEditForm({...editForm, description: e.target.value})} placeholder="Opis (opcjonalnie)" className="input_base text-sm py-1.5" />
-                                        <div className="flex gap-2 justify-end mt-1">
-                                            <Button variant="secondary" onClick={resetForm} className="!py-1.5 !px-3 !text-xs">Anuluj</Button>
-                                            <Button variant="primary" onClick={handleSave} isLoading={loading} className="!py-1.5 !px-3 !text-xs flex items-center gap-1">Zapisz</Button>
+                                        <div className="flex flex-col gap-1">
+                                            <label className="text-xs font-semibold text-text-500">Opis (opcjonalnie)</label>
+                                            <input type="text" value={editForm.description} onChange={e => setEditForm({...editForm, description: e.target.value})} placeholder="Krótki opis do czego służy etykieta..." className="input_base text-sm py-2.5 cursor-text" />
+                                        </div>
+                                        <div className="flex gap-2 justify-end mt-2">
+                                            <Button variant="secondary" onClick={resetForm} className="!py-2 !px-4 !text-sm cursor-pointer">Anuluj</Button>
+                                            <Button variant="primary" onClick={handleSave} isLoading={loading} className="!py-2 !px-4 !text-sm flex items-center gap-1.5 cursor-pointer"><Save className="w-4 h-4"/> Zapisz</Button>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex gap-1 shrink-0 pl-5 md:pl-0">
-                                        <button onClick={() => startEditing(label)} disabled={!!editingId} className="p-1.5 text-text-500 hover:text-accent-500 hover:bg-bg-200 rounded transition-colors disabled:opacity-50">
-                                            <Edit2 className="w-4 h-4" />
-                                        </button>
-                                        <button onClick={() => handleDelete(label.id)} disabled={!!editingId || loading} className="p-1.5 text-text-500 hover:text-danger-500 hover:bg-bg-200 rounded transition-colors disabled:opacity-50">
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
+                                    <>
+                                        {/* LABEL PREVIEW */}
+                                        <div className="flex flex-col gap-1 flex-1 min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: label.hex }} />
+                                                <span className="font-medium text-text-900 truncate">{label.name}</span>
+                                            </div>
+                                            {label.description && (
+                                                <p className="text-xs text-text-500 truncate pl-5">{label.description}</p>
+                                            )}
+                                        </div>
+
+                                        {/* ACTIONS */}
+                                        <div className="flex gap-1 shrink-0 pl-5 md:pl-0">
+                                            <button onClick={() => startEditing(label)} className="p-1.5 text-text-500 hover:text-accent-500 hover:bg-bg-200 rounded transition-colors cursor-pointer">
+                                                <Edit2 className="w-4 h-4" />
+                                            </button>
+                                            <button onClick={() => handleDeleteRequest(label.id)} className="p-1.5 text-text-500 hover:text-danger-500 hover:bg-danger-500/10 rounded transition-colors cursor-pointer">
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </>
                                 )}
                             </div>
                         ))}
@@ -223,28 +263,50 @@ export default function PollLabelsModal({ pollId, labels, isOpen, onClose, onSuc
                             <div className="flex flex-col gap-3 p-4 rounded-md border border-accent-500 bg-bg-200 mt-2">
                                 <h4 className="font-semibold text-sm text-text-900 mb-1">Tworzenie nowej etykiety</h4>
                                 <div className="flex gap-3 items-center">
-                                    <div className="flex flex-col gap-1 shrink-0">
+                                    <div className="flex flex-col gap-1 shrink-0 relative">
                                         <label className="text-xs font-semibold text-text-500">Kolor</label>
-                                        <input type="color" value={editForm.hex} onChange={e => setEditForm({...editForm, hex: e.target.value})} className="w-10 h-10 rounded cursor-pointer border-none p-0 bg-transparent" />
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setShowColorPicker(!showColorPicker)} 
+                                            className="w-[42px] h-[42px] rounded cursor-pointer border border-bg-400 focus:outline-none shrink-0" 
+                                            style={{ backgroundColor: editForm.hex }}
+                                        />
+                                        {showColorPicker && (
+                                            <div className="absolute z-10 top-16 left-0">
+                                                <div className="fixed inset-0" onClick={() => setShowColorPicker(false)} />
+                                                <div className="relative bg-bg-100 p-2 rounded-md shadow-xl border border-bg-300">
+                                                    <HexColorPicker color={editForm.hex} onChange={(c) => setEditForm({...editForm, hex: c})} />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex flex-col gap-1 flex-1">
                                         <label className="text-xs font-semibold text-text-500">Nazwa</label>
-                                        <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} placeholder="Np. Frontend" className="input_base text-sm" />
+                                        <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} placeholder="Np. Frontend" className="input_base text-sm py-2.5 cursor-text" />
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <label className="text-xs font-semibold text-text-500">Opis (opcjonalnie)</label>
-                                    <input type="text" value={editForm.description} onChange={e => setEditForm({...editForm, description: e.target.value})} placeholder="Krótki opis do czego służy etykieta..." className="input_base text-sm" />
+                                    <input type="text" value={editForm.description} onChange={e => setEditForm({...editForm, description: e.target.value})} placeholder="Krótki opis do czego służy etykieta..." className="input_base text-sm py-2.5 cursor-text" />
                                 </div>
                                 <div className="flex gap-2 justify-end mt-2">
-                                    <Button variant="secondary" onClick={resetForm} className="!py-2 !px-4 !text-sm">Anuluj</Button>
-                                    <Button variant="primary" onClick={handleSave} isLoading={loading} className="!py-2 !px-4 !text-sm flex items-center gap-1.5"><Plus className="w-4 h-4"/> Utwórz Etykietę</Button>
+                                    <Button variant="secondary" onClick={resetForm} className="!py-2 !px-4 !text-sm cursor-pointer">Anuluj</Button>
+                                    <Button variant="primary" onClick={handleSave} isLoading={loading} className="!py-2 !px-4 !text-sm flex items-center gap-1.5 cursor-pointer"><Plus className="w-4 h-4"/> Utwórz Etykietę</Button>
                                 </div>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+            
+            <ConfirmationPopup
+                isOpen={!!labelToDelete}
+                title="Usuń etykietę"
+                message="Czy na pewno chcesz usunąć tę etykietę? Zostanie ona usunięta ze wszystkich pytań. Ta akcja jest nieodwracalna."
+                confirmText="Usuń"
+                onConfirm={confirmDelete}
+                onClose={() => setLabelToDelete(null)}
+            />
         </Modal>
     );
 }

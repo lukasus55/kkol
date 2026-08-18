@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BarChart2, Users, Loader2 } from 'lucide-react';
 import { Modal } from '../ui/Modal';
+import { Tooltip } from '../ui/Tooltip';
 
 interface PollResultsTabProps {
     pollId: string;
@@ -98,17 +99,16 @@ export default function PollResultsTab({ pollId, questions, labels }: PollResult
                                 {q.labels && q.labels.length > 0 && (
                                     <div className="flex flex-wrap gap-1.5">
                                         {q.labels.map((lbl: any) => (
-                                            <span 
-                                                key={lbl.id} 
-                                                className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border"
-                                                style={{
-                                                    borderColor: lbl.hex,
-                                                    backgroundColor: `${lbl.hex}15`,
-                                                    color: lbl.hex
-                                                }}
-                                            >
-                                                {lbl.name}
-                                            </span>
+                                            <Tooltip key={lbl.id} content={
+                                                <div className="flex flex-col gap-0.5">
+                                                    <span className="font-bold">{lbl.name}</span>
+                                                    {lbl.description && <span className="text-text-500 font-normal">{lbl.description}</span>}
+                                                </div>
+                                            }>
+                                                <span className="text-xs px-2.5 py-1 rounded-full font-semibold border flex items-center gap-1 cursor-help" style={{ backgroundColor: `${lbl.hex}15`, color: lbl.hex, borderColor: lbl.hex }}>
+                                                    {lbl.name}
+                                                </span>
+                                            </Tooltip>
                                         ))}
                                     </div>
                                 )}
@@ -119,12 +119,35 @@ export default function PollResultsTab({ pollId, questions, labels }: PollResult
                             <div className="flex flex-col gap-3 mt-2">
                                 {optionsArray.map((opt: any) => (
                                     <div key={opt.id} className="flex flex-col gap-1.5 relative group">
-                                        
-                                        <div className="flex justify-between items-end z-10 px-1">
-                                            <span className="text-sm font-medium text-text-900 drop-shadow-sm">{opt.name}</span>
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <span className="font-bold text-text-900">{opt.vote_count}</span>
-                                                <span className="text-text-500 text-xs w-10 text-right">{opt.percentage}%</span>
+                                        {/* HEADER: NAME + VOTERS + VOTE COUNT */}
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="font-medium text-sm text-text-900 truncate pr-4">{opt.name}</span>
+                                            <div className="flex items-center gap-3 shrink-0">
+                                                {/* VOTERS AVATARS */}
+                                                {opt.voters && opt.voters.length > 0 && (
+                                                    <div 
+                                                        className="flex -space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                                        onClick={() => setSelectedVoters({ name: opt.name, voters: opt.voters })}
+                                                    >
+                                                        {opt.voters.slice(0, 3).map((v: any) => (
+                                                            <img 
+                                                                key={v.id} 
+                                                                src={v.pfp_base64 ? (v.pfp_base64.startsWith('data:image') ? v.pfp_base64 : `data:image/jpeg;base64,${v.pfp_base64}`) : '/img/default_pfp.webp'}
+                                                                alt={v.displayed_name} 
+                                                                className="w-6 h-6 rounded-full border-2 border-bg-200 object-cover bg-bg-100" 
+                                                                title={v.displayed_name} 
+                                                            />
+                                                        ))}
+                                                        {opt.voters.length > 3 && (
+                                                            <div className="w-6 h-6 rounded-full border-2 border-bg-200 bg-bg-100 flex items-center justify-center text-[9px] font-bold text-text-500 relative z-10">
+                                                                +{opt.voters.length - 3}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                <span className="text-sm font-semibold text-text-900 tabular-nums">
+                                                    {opt.vote_count} <span className="text-xs text-text-500 font-normal">({opt.percentage}%)</span>
+                                                </span>
                                             </div>
                                         </div>
                                         
@@ -136,29 +159,6 @@ export default function PollResultsTab({ pollId, questions, labels }: PollResult
                                                 style={{ width: `${opt.percentage}%` }}
                                             />
                                         </div>
-
-                                        {/* VOTERS AVATARS */}
-                                        {opt.voters && opt.voters.length > 0 && (
-                                            <div 
-                                                className="flex -space-x-2 cursor-pointer mt-1 hover:opacity-80 transition-opacity self-start pl-1"
-                                                onClick={() => setSelectedVoters({ name: opt.name, voters: opt.voters })}
-                                            >
-                                                {opt.voters.slice(0, 3).map((v: any) => (
-                                                    <img 
-                                                        key={v.id} 
-                                                        src={v.pfp_base64 ? (v.pfp_base64.startsWith('data:image') ? v.pfp_base64 : `data:image/jpeg;base64,${v.pfp_base64}`) : '/img/default_pfp.webp'}
-                                                        alt={v.displayed_name} 
-                                                        className="w-6 h-6 rounded-full border-2 border-bg-200 object-cover bg-bg-100" 
-                                                        title={v.displayed_name} 
-                                                    />
-                                                ))}
-                                                {opt.voters.length > 3 && (
-                                                    <div className="w-6 h-6 rounded-full border-2 border-bg-200 bg-bg-100 flex items-center justify-center text-[9px] font-bold text-text-500 relative z-10">
-                                                        +{opt.voters.length - 3}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
                                     </div>
                                 ))}
                             </div>
