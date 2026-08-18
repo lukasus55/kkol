@@ -2,6 +2,7 @@ import { ExternalLink, Info, Circle, CheckCircle2, Square, CheckSquare } from 'l
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Tooltip } from '@/components/ui/Tooltip';
+import { useToast } from '../ui/ToastProvider';
 import { ensureAbsoluteUrl } from '@/lib/utils';
 
 interface PollVoteTabProps {
@@ -17,6 +18,7 @@ interface PollVoteTabProps {
 export default function PollVoteTab({
     questions, labels, answers, setAnswers, filterQuery, selectedLabels, permissions
 }: PollVoteTabProps) {
+    const { addToast } = useToast();
 
     // Apply filters
     const filteredQuestions = questions.filter(q => {
@@ -40,7 +42,7 @@ export default function PollVoteTab({
 
     const handleOptionToggle = (questionId: string, optionIdRaw: any, isMultiple: boolean) => {
         if (!permissions.canVote) {
-            alert("Nie masz uprawnień do głosowania.");
+            addToast({ message: "Nie masz uprawnień do głosowania.", type: "error" });
             return;
         }
 

@@ -27,8 +27,17 @@ const config: Config = {
         'danger-500': 'var(--color-danger-500)',
         'danger-600': 'var(--color-danger-600)',
       },
-      fontFamily: {
+        fontFamily: {
         sans: ['var(--font-outfit)', 'Outfit', 'sans-serif'],
+      },
+      keyframes: {
+        'toast-in': {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+      },
+      animation: {
+        'toast-in': 'toast-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
       },
     },
   },

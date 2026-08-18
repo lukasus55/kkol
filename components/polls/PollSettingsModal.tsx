@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Settings, AlertCircle } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { useToast } from '../ui/ToastProvider';
 
 interface PollSettingsModalProps {
     poll: any;
@@ -18,6 +19,7 @@ const formatDateForInput = (isoString: string) => {
 };
 
 export default function PollSettingsModal({ poll, isOpen, onClose, onSuccess }: PollSettingsModalProps) {
+    const { addToast } = useToast();
     const [name, setName] = useState(poll?.name || '');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -52,6 +54,16 @@ export default function PollSettingsModal({ poll, isOpen, onClose, onSuccess }: 
         setError('');
         
         try {
+            onSuccess({
+                ...poll,
+                name,
+                start_date: new Date(startDate).toISOString(),
+                end_date: new Date(endDate).toISOString(),
+                rights_level: Number(rightsLevel)
+            });
+            addToast({ message: "Ustawienia ankiety zostały zapisane", type: "success" });
+            onClose();
+
             const res = await fetch('/api/poll_update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -65,19 +77,8 @@ export default function PollSettingsModal({ poll, isOpen, onClose, onSuccess }: 
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Wystąpił błąd podczas zapisywania');
-            
-            onSuccess({
-                ...poll,
-                name,
-                start_date: new Date(startDate).toISOString(),
-                end_date: new Date(endDate).toISOString(),
-                rights_level: Number(rightsLevel)
-            });
-            onClose();
         } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+            addToast({ message: err.message || "Wystąpił nieznany błąd", type: "error" });
         }
     };
 
