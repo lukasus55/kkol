@@ -253,6 +253,8 @@ export default function PollClient() {
             pollId={pollId}
             questions={questions}
             labels={labels}
+            filterQuery={filterQuery}
+            selectedLabels={selectedLabels}
           />
         )}
 
@@ -262,6 +264,8 @@ export default function PollClient() {
             setQuestions={setQuestions}
             labels={labels}
             permissions={permissions}
+            filterQuery={filterQuery}
+            selectedLabels={selectedLabels}
           />
         )}
       </div>

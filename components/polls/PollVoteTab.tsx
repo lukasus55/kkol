@@ -32,8 +32,8 @@ export default function PollVoteTab({
 
         // Label filter (must have AT LEAST ONE of the selected labels)
         if (selectedLabels.length > 0) {
-            const qLabels = q.label_ids || [];
-            const hasMatchingLabel = selectedLabels.some(id => qLabels.includes(id));
+            const qLabels = (q.labels || []).map((l: any) => String(l.id));
+            const hasMatchingLabel = selectedLabels.some(id => qLabels.includes(String(id)));
             if (!hasMatchingLabel) return false;
         }
 

@@ -7,9 +7,11 @@ interface PollResultsTabProps {
     pollId: string;
     questions: any[];
     labels: any[];
+    filterQuery?: string;
+    selectedLabels?: string[];
 }
 
-export default function PollResultsTab({ pollId, questions, labels }: PollResultsTabProps) {
+export default function PollResultsTab({ pollId, questions, labels, filterQuery, selectedLabels = [] }: PollResultsTabProps) {
     const [resultsData, setResultsData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -57,8 +59,27 @@ export default function PollResultsTab({ pollId, questions, labels }: PollResult
     const totalParticipants = resultsData.total_participants;
     const resultsMap = resultsData.results;
 
-    // Use original questions array to maintain order and labels
-    const displayQuestions = questions.filter(q => resultsMap[q.id]);
+    // Use original questions array to maintain order and labels, plus apply filters
+    const displayQuestions = questions.filter(q => {
+        if (!resultsMap[q.id]) return false;
+        
+        // Search query
+        if (filterQuery) {
+            const query = filterQuery.toLowerCase();
+            if (!q.name.toLowerCase().includes(query)) {
+                return false;
+            }
+        }
+
+        // Label filter
+        if (selectedLabels.length > 0) {
+            const qLabels = (q.labels || []).map((l: any) => String(l.id));
+            const hasMatchingLabel = selectedLabels.some(id => qLabels.includes(String(id)));
+            if (!hasMatchingLabel) return false;
+        }
+
+        return true;
+    });
 
     return (
         <div className="flex flex-col gap-6 w-full animate-in fade-in duration-500">
@@ -78,7 +99,13 @@ export default function PollResultsTab({ pollId, questions, labels }: PollResult
 
             {/* RESULTS LIST */}
             <div className="flex flex-col gap-6">
-                {displayQuestions.map((q: any) => {
+                {displayQuestions.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-10 text-text-500 gap-2 text-center bg-bg-200 border border-bg-300 rounded-md">
+                        <p className="font-bold">Brak wyników do wyświetlenia</p>
+                        <p className="text-sm">Nie ma pytań spełniających Twoje kryteria wyszukiwania.</p>
+                    </div>
+                ) : (
+                    displayQuestions.map((q: any) => {
                     const qResults = resultsMap[q.id];
                     if (!qResults) return null;
                     
@@ -164,7 +191,8 @@ export default function PollResultsTab({ pollId, questions, labels }: PollResult
                             </div>
                         </div>
                     );
-                })}
+                })
+                )}
             </div>
 
             {/* VOTERS MODAL */}

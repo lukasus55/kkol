@@ -7,10 +7,12 @@ interface PollEditTabProps {
     setQuestions: React.Dispatch<React.SetStateAction<any[]>>;
     labels: any[];
     permissions: any;
+    filterQuery?: string;
+    selectedLabels?: string[];
 }
 
 export default function PollEditTab({
-    questions, setQuestions, labels, permissions
+    questions, setQuestions, labels, permissions, filterQuery, selectedLabels = []
 }: PollEditTabProps) {
 
     // Drag & Drop
@@ -165,9 +167,34 @@ export default function PollEditTab({
 
     const sortedQuestions = [...questions].sort((a, b) => a.sort_order - b.sort_order);
 
+    const filteredQuestions = sortedQuestions.filter(q => {
+        // Search query
+        if (filterQuery) {
+            const query = filterQuery.toLowerCase();
+            if (!q.name.toLowerCase().includes(query)) {
+                return false;
+            }
+        }
+
+        // Label filter
+        if (selectedLabels.length > 0) {
+            const qLabels = (q.labels || []).map((l: any) => String(l.id));
+            const hasMatchingLabel = selectedLabels.some(id => qLabels.includes(String(id)));
+            if (!hasMatchingLabel) return false;
+        }
+
+        return true;
+    });
+
     return (
         <div className="flex flex-col gap-6 w-full pb-32">
-            {sortedQuestions.map((q, index) => {
+            {filteredQuestions.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 text-text-500 gap-2 text-center bg-bg-200 border border-bg-300 rounded-md">
+                    <p className="font-bold">Brak pytań do wyświetlenia</p>
+                    <p className="text-sm">Nie ma pytań spełniających Twoje kryteria wyszukiwania.</p>
+                </div>
+            ) : (
+                filteredQuestions.map((q, index) => {
                 return (
                     <div
                         key={q.id}
@@ -320,7 +347,8 @@ export default function PollEditTab({
 
                     </div>
                 )
-            })}
+            })
+            )}
 
             <button onClick={handleAddQuestion} className="w-full mt-4 py-4 border-2 border-dashed border-accent-500/50 text-accent-500 rounded-xl text-lg font-bold hover:bg-accent-500 hover:text-white hover:border-accent-500 transition-all duration-300 flex items-center justify-center gap-2">
             <Plus className="w-6 h-6" /> Dodaj nowe pytanie

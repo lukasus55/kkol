@@ -231,7 +231,8 @@ export default async function handler(request, response) {
                     DELETE FROM questions_poll_labels WHERE question_id = ${q.id}
                 `;
 
-                for (const labelId of q.label_ids) {
+                const labelIds = q.labels ? q.labels.map(l => l.id) : (q.label_ids || []);
+                for (const labelId of labelIds) {
                     await sqlTransaction`
                         INSERT INTO questions_poll_labels (question_id, label_id, poll_id)
                         VALUES (${q.id}, ${labelId}, ${poll_id})
