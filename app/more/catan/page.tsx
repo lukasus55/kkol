@@ -2,8 +2,8 @@ import React from 'react';
 import { CatanMapClient } from './CatanMapClient';
 
 export const metadata = {
-  title: 'Olimpiada Karwińska - Mapa catana',
-  description: 'Mapa do gry catan.',
+  title: 'Interaktywna mapa Catana - Karwińska Olimpiada',
+  description: 'Sprawdź szczegóły pól, wymaganą ilość oczek i procentowe szanse.',
 };
 
 export default function CatanMapPage() {

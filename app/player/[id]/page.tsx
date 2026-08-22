@@ -1,6 +1,36 @@
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { PlayerProfileClient } from './PlayerProfileClient';
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
+  const headersList = await headers();
+  const host = headersList.get('host') || 'localhost:3000';
+  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
+
+  try {
+    const res = await fetch(`${baseUrl}/api/players?id=${id}`, { cache: 'no-store' });
+    const data = await res.json();
+    const player = data[id];
+    if (player && player.displayed_name) {
+      return {
+        title: `${player.displayed_name} - Profil Gracza - Karwińska Olimpiada`,
+        description: `Sprawdź profil, statystyki i wygrane turnieje gracza ${player.displayed_name} w Karwińskiej Olimpiadzie.`,
+      };
+    }
+  } catch (error) {}
+
+  return {
+    title: 'Profil Gracza - Karwińska Olimpiada',
+    description: 'Profil zawodnika Karwińskiej Olimpiady.',
+  };
+}
 
 export default async function PlayerProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;

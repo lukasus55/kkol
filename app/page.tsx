@@ -4,6 +4,11 @@ import EventsSection from '@/components/home/EventsSection';
 import PlayersSection from '@/components/home/PlayersSection';
 import PageFooter from '@/components/ui/PageFooter';
 
+export const metadata = {
+  title: 'Strona Główna - Karwińska Olimpiada',
+  description: 'Oficjalna strona Karwińskiej Olimpiady. Śledź statystyki, wydarzenia i rankingi wszystkich graczy.',
+};
+
 export default function Home() {
   return (
     <>

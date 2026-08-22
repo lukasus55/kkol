@@ -1,6 +1,11 @@
 import { redirect } from 'next/navigation';
 import { PlayerSearchWrapper } from './PlayerSearchWrapper';
 
+export const metadata = {
+  title: 'Wyszukaj gracza - Karwińska Olimpiada',
+  description: 'Wyszukaj profil i statystyki zawodnika Karwińskiej Olimpiady.',
+};
+
 interface PageProps {
   searchParams: Promise<{ id?: string }>;
 }
