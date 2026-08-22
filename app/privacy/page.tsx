@@ -22,12 +22,12 @@ export default function PrivacyPage() {
           </div>
 
           <div className="prose prose-invert max-w-none text-text-700 leading-relaxed space-y-8">
-            
+
             <p className="text-lg font-medium text-text-800">
               Niniejsza strona jest projektem prywatnym o charakterze hobbystycznym. Szanuję Twoją prywatność i nie gromadzę danych osobowych w celach marketingowych ani reklamowych. Poniżej znajdziesz informacje o tym, jak przetwarzane są Twoje dane w związku z funkcjonowaniem systemu kont i bezpieczeństwem serwera.
             </p>
 
-            <section className="bg-bg-200 border border-bg-300 rounded-md p-6">
+            <section className="bg-bg-200 rounded-md p-6">
               <h2 className="text-xl font-bold text-text-900 mb-3 uppercase tracking-wide">1. Administrator Danych</h2>
               <p>
                 Administratorem strony i danych jest osoba prywatna. W razie pytań lub chęci usunięcia konta, możesz skontaktować się pod adresem e-mail:{' '}
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="bg-bg-200 border border-bg-300 rounded-md p-6">
+            <section className="bg-bg-200 rounded-md p-6">
               <h2 className="text-xl font-bold text-text-900 mb-3 uppercase tracking-wide">2. Jakie dane zbieramy i w jakim celu?</h2>
               <p className="mb-4">Aby umożliwić Ci pełne korzystanie z serwisu (np. logowanie, personalizacja profilu), przetwarzamy następujące dane:</p>
               <ul className="list-disc pl-6 space-y-2">
@@ -48,21 +48,21 @@ export default function PrivacyPage() {
               </ul>
             </section>
 
-            <section className="bg-bg-200 border border-bg-300 rounded-md p-6">
+            <section className="bg-bg-200 rounded-md p-6">
               <h2 className="text-xl font-bold text-text-900 mb-3 uppercase tracking-wide">3. Pliki Cookies (Ciasteczka)</h2>
               <p>
                 Strona korzysta <strong className="text-text-900">wyłącznie z niezbędnych plików cookies</strong>. Używamy ciasteczka o nazwie <code className="bg-bg-300 px-1 py-0.5 rounded text-sm text-text-900 font-mono">auth_token</code>, które zawiera bezpieczny token (JWT) pozwalający utrzymać Twoją sesję po zalogowaniu. Ze względu na to, że jest to ciastko technicznie niezbędne do działania konta użytkownika, nie wymaga ono dodatkowej zgody (zgodnie z przepisami Prawa Telekomunikacyjnego). Nie używamy cookies śledzących ani reklamowych.
               </p>
             </section>
 
-            <section className="bg-bg-200 border border-bg-300 rounded-md p-6">
+            <section className="bg-bg-200 rounded-md p-6">
               <h2 className="text-xl font-bold text-text-900 mb-3 uppercase tracking-wide">4. Infrastruktura i Przekazywanie Danych</h2>
               <p>
                 Serwis jest hostowany na prywatnej infrastrukturze serwerowej. W celu zapewnienia najwyższego standardu bezpieczeństwa, szyfrowania połączenia (HTTPS) oraz ochrony przed atakami DDoS, ruch sieciowy jest kierowany przez serwery firmy <strong className="text-text-900">Cloudflare, Inc. (USA)</strong>. Cloudflare działa jako tarcza ochronna i posiada odpowiednie certyfikaty (Data Privacy Framework), co gwarantuje poziom ochrony zgodny z wymogami Unii Europejskiej.
               </p>
             </section>
 
-            <section className="bg-bg-200 border border-bg-300 rounded-md p-6">
+            <section className="bg-bg-200 rounded-md p-6">
               <h2 className="text-xl font-bold text-text-900 mb-3 uppercase tracking-wide">5. Twoje Prawa</h2>
               <p className="mb-4">Zgodnie z przepisami RODO masz pełną kontrolę nad swoimi danymi. Przysługuje Ci prawo do:</p>
               <ul className="list-disc pl-6 space-y-2 mb-6">
