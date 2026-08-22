@@ -200,24 +200,6 @@ a {
   cursor: pointer;
 }
 
-@media (min-width: 2560px) {
-  html {
-    font-size: 21px;
-  }
-}
-
-@media (min-width: 3840px) {
-  html {
-    font-size: 32px;
-  }
-}
-
-@media (max-width: 1366px) {
-  html {
-    font-size: 11px;
-  }
-}
-
 .anim-hidden {
   opacity: 0;
   transition: 1s;
