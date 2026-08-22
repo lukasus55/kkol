@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import Footer from '../components/Footer';
 import EventsSection from '@/components/home/EventsSection';
+import PlayersSection from '@/components/home/PlayersSection';
 
 export default function Home() {
   return (
     <>
-      <main className='flex w-full flex-col justify-center items-center pt-16 gap-24'>
+      <main className='flex w-full flex-col justify-center items-center py-16 gap-24'>
 
         <img
           src="/img/logos/kol-logo-horizontal.svg"
@@ -14,6 +15,7 @@ export default function Home() {
         />
 
         <EventsSection />
+        <PlayersSection />
 
       </main>
     </>

@@ -137,7 +137,7 @@ export default function EventsSection() {
 
     return (
         <section className="w-full flex flex-col items-center">
-            <h2 className="mb-6 sm:mb-8 text-3xl sm:text-4xl font-bold">Wydarzenia</h2>
+            <h2 className="mb-6 sm:mb-8 text-3xl sm:text-4xl font-bold">Główne Wydarzenia</h2>
 
             <div className="relative flex items-center w-full max-w-[1016px] px-8 sm:px-12">
                 <button
@@ -149,7 +149,7 @@ export default function EventsSection() {
 
                 <div
                     ref={scrollContainerRef}
-                    className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth w-full mx-auto"
+                    className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth w-full mx-auto py-4"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
 
