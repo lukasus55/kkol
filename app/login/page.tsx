@@ -95,7 +95,7 @@ function LoginForm() {
             <img
               src="/img/logos/kol-logo-horizontal.svg"
               alt="Karwińska Olimpiada Logo"
-              className="h-16 w-auto cursor-pointer"
+              className="h-16 w-auto cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
             />
           </Link>
         </div>

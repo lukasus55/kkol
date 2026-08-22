@@ -17,14 +17,14 @@ export default function ContactPage() {
           </h1>
 
           <div className="space-y-8">
-            
-            <div className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-bg-200 rounded-md border border-bg-300">
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-bg-200 rounded-md">
               <div className="mb-4 md:mb-0">
                 <h2 className="text-xl font-bold text-text-900 mb-1">Administrator strony</h2>
                 <p className="text-sm text-text-600">Sprawy techniczne, błędy, konta użytkowników</p>
               </div>
-              <a 
-                href="mailto:admin@kkol.pl" 
+              <a
+                href="mailto:admin@kkol.pl"
                 className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium py-2 px-4 rounded-md transition-colors w-fit"
               >
                 <Mail className="w-4 h-4" />
@@ -32,13 +32,13 @@ export default function ContactPage() {
               </a>
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-bg-200 rounded-md border border-bg-300">
+            <div className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-bg-200 rounded-md">
               <div className="mb-4 md:mb-0">
                 <h2 className="text-xl font-bold text-text-900 mb-1">Zarząd KKOL</h2>
                 <p className="text-sm text-text-600">Organizacja, współpraca, pytania ogólne</p>
               </div>
-              <a 
-                href="mailto:zarzad@kkol.pl" 
+              <a
+                href="mailto:zarzad@kkol.pl"
                 className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium py-2 px-4 rounded-md transition-colors w-fit"
               >
                 <Mail className="w-4 h-4" />
