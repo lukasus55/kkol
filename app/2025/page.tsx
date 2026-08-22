@@ -524,9 +524,8 @@ export default function Page2025() {
             <div className="results_footer">
               <div className="results_footer_container">
                 <div
-                  className={`results_footer_container_single_game ${
-                    selectedGame === "catan" ? "results_footer_container_single_game_active" : ""
-                  }`}
+                  className={`results_footer_container_single_game ${selectedGame === "catan" ? "results_footer_container_single_game_active" : ""
+                    }`}
                   title="Catan"
                   id="results_footer_catan"
                   onClick={() => handleToggleGame("catan")}
@@ -537,9 +536,8 @@ export default function Page2025() {
               </div>
               <div className="results_footer_container">
                 <div
-                  className={`results_footer_container_single_game ${
-                    selectedGame === "codenames" ? "results_footer_container_single_game_active" : ""
-                  }`}
+                  className={`results_footer_container_single_game ${selectedGame === "codenames" ? "results_footer_container_single_game_active" : ""
+                    }`}
                   title="Codenames"
                   id="results_footer_codenames"
                   onClick={() => handleToggleGame("codenames")}
@@ -550,9 +548,8 @@ export default function Page2025() {
               </div>
               <div className="results_footer_container">
                 <div
-                  className={`results_footer_container_single_game ${
-                    selectedGame === "brain" ? "results_footer_container_single_game_active" : ""
-                  }`}
+                  className={`results_footer_container_single_game ${selectedGame === "brain" ? "results_footer_container_single_game_active" : ""
+                    }`}
                   title="Brain Show"
                   id="results_footer_brain"
                   onClick={() => handleToggleGame("brain")}
@@ -653,7 +650,7 @@ export default function Page2025() {
         <section className="logos">
           <div className="logos_container anim-hidden">
             <div className="logos_single_logo">
-              <img src="/img/logos/s25_logo_v2.webp" title="Logo sezonu 2025 Karwińskiej Olimpiady" alt="S25" />
+              <img src="/img/logos/s25_logo.webp" title="Logo sezonu 2025 Karwińskiej Olimpiady" alt="S25" />
             </div>
             <div className="logos_single_logo">
               <img src="/img/logos/kkol-white.webp" title="Logo Karwińskiego Komitetu Olimpijskiego" alt="KKOL" />

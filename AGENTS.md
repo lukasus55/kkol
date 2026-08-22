@@ -23,9 +23,7 @@ Jeśli użytkownik użyje sformułowania w stylu "refactor stronaxyz" lub "przep
 4. Utrzymanie pełnej spójności wizualnej (nasze przyciski, kolory tła, akcenty z `globals.css`).
 
 ## 4. Płaski Design (Flat Design)
-Aplikacja KKOL bazuje na **płaskim designie**. Unikaj używania głębokich cieni (`shadow-md`, `shadow-lg`, `shadow-xl` itp.). Zamiast cieni, do oddzielania elementów i kontenerów od tła używaj:
-- Wyraźnych obramowań (`border border-bg-400` lub inne kolory borderów).
-- Subtelnych różnic w odcieniach tła (`bg-bg-100` vs `bg-bg-200`).
+Aplikacja KKOL bazuje na **płaskim designie**. Unikaj używania głębokich cieni (`shadow-md`, `shadow-lg`, `shadow-xl` itp.). Zamiast cieni, do oddzielania elementów i kontenerów od tła używaj subtelnych różnic w odcieniach tła (`bg-bg-100` vs `bg-bg-200`).
 Kieruj się minimalizmem wizualnym bez efektów przestrzennych.
 
 ## 5. Maksymalne zaokrąglenie (Border Radius)
