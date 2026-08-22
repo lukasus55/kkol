@@ -35,10 +35,10 @@ export default function PollsTab({ user }: { user: any }) {
       if (pRes.ok) {
         const pData = await pRes.json();
         const filteredPolls = pData.filter((poll: any) => {
-           const isPlayer = !!user?.tournaments?.[poll.tournament_id];
-           const isOrganizer = !!user?.organizer_roles?.[poll.tournament_id];
-           const isAdmin = user?.role === 'admin';
-           return isAdmin || isPlayer || isOrganizer;
+          const isPlayer = !!user?.tournaments?.[poll.tournament_id];
+          const isOrganizer = !!user?.organizer_roles?.[poll.tournament_id];
+          const isAdmin = user?.role === 'admin';
+          return isAdmin || isPlayer || isOrganizer;
         });
         setPolls(filteredPolls);
       }
@@ -123,10 +123,10 @@ export default function PollsTab({ user }: { user: any }) {
           <div
             key={poll.id}
             onClick={() => router.push(`/poll/${poll.id}`)}
-            className="flex items-center justify-between bg-bg-300 border border-bg-400 rounded-lg p-5 hover:bg-bg-400 transition-colors cursor-pointer group"
+            className="flex items-center justify-between bg-bg-200 rounded-lg p-5 hover:bg-bg-300 transition-colors cursor-pointer group"
           >
             <div className="flex flex-col gap-1.5">
-              <span className="font-bold text-text-900 text-[15px] group-hover:text-accent-500 transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>
+              <span className="font-bold text-text-900 text-[15px] transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>
               <span className="text-text-700 text-[13px]">{poll.tournament_id}</span>
             </div>
             <div className="text-text-500 text-sm font-medium">

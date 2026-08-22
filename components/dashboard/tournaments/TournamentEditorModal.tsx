@@ -259,18 +259,18 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
 
             <button
               onClick={() => setInfo({ ...info, finished: !info.finished })}
-              className="flex items-center justify-center gap-2 w-[130px] py-1.5 rounded-md border transition-all duration-300 ml-4 border-bg-400 bg-bg-300 hover:bg-bg-200"
+              className="flex items-center justify-center gap-2 w-[130px] py-1.5 rounded-md border transition-all duration-300 ml-4 border-bg-400 bg-bg-300 hover:bg-bg-400"
             >
               <div className="relative w-4 h-4 flex items-center justify-center">
-                <CheckCircle2 className={`absolute transition-all duration-500 text-accent-500 w-4 h-4 ${info.finished ? 'opacity-0 scale-50 rotate-90' : 'opacity-100 scale-100 rotate-0'}`} />
-                <MinusCircle className={`absolute transition-all duration-500 text-gray-500 w-4 h-4 ${info.finished ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90'}`} />
+                <CheckCircle2 className={`absolute transition-all duration-500 text-text-500 w-4 h-4 ${info.finished ? 'opacity-0 scale-50 rotate-90' : 'opacity-100 scale-100 rotate-0'}`} />
+                <MinusCircle className={`absolute transition-all duration-500 text-text-500 w-4 h-4 ${info.finished ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90'}`} />
               </div>
               <span className="text-[11px] font-semibold uppercase tracking-wide text-text-700">
                 {info.finished ? "Zakończony" : "W trakcie"}
               </span>
             </button>
 
-            <div className="flex bg-bg-100 border border-bg-400 rounded-md p-1 ml-auto text-sm font-normal">
+            <div className="flex bg-bg-100 rounded-md p-1 ml-auto text-sm font-normal">
               <button
                 className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'players' ? 'bg-bg-300 text-text-900' : 'text-text-700 hover:text-text-900'}`}
                 onClick={() => setActiveTab('players')}

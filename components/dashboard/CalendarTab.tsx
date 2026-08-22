@@ -248,11 +248,11 @@ export default function CalendarTab({ user }: { user: any }) {
                           setModalState({ isOpen: true, mode: 'edit', initialData: evt });
                         }
                       }}
-                      className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded border text-[11px] cursor-grab active:cursor-grabbing transition-all overflow-hidden ${isFadedOriginal
+                      className={`w-full flex items-center gap-1.5 px-1.5 py-1 rounded text-[11px] cursor-grab active:cursor-grabbing transition-all overflow-hidden ${isFadedOriginal
                         ? 'opacity-0'
                         : isMajor
-                          ? 'bg-[#151c0d] border-bg-400 hover:bg-[#1a2410] hover:border-accent-500/40'
-                          : 'bg-bg-300 border-bg-400 hover:bg-bg-400 hover:border-bg-400'
+                          ? 'bg-bg-200'
+                          : 'bg-bg-200'
                         } ${isClone ? 'opacity-80 shadow-lg border-accent-500/50' : !isFadedOriginal ? 'hover:brightness-125' : ''}`}
                     >
                       {isFadedOriginal ? (
@@ -262,8 +262,8 @@ export default function CalendarTab({ user }: { user: any }) {
                         </>
                       ) : (
                         <>
-                          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-sm ${isMajor ? 'bg-accent-500' : 'bg-text-500'}`} />
-                          <span className={`font-semibold flex-shrink-0 ${isMajor ? 'text-accent-500' : 'text-text-700'}`}>
+                          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-sm ${isMajor ? 'bg-text-900' : 'bg-text-500'}`} />
+                          <span className={`font-semibold flex-shrink-0 text-text-700`}>
                             {timeStr}
                           </span>
                           <span className="text-text-900 truncate font-medium ml-0.5 flex-1 text-left">
@@ -299,7 +299,7 @@ export default function CalendarTab({ user }: { user: any }) {
                 >
                   <div className="flex justify-end mb-1 flex-shrink-0">
                     <span className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full transition-colors ${isToday
-                      ? 'bg-accent-500 text-black'
+                      ? 'bg-accent-500'
                       : cell.isCurrentMonth
                         ? 'text-text-900 group-hover:text-text-900'
                         : 'text-bg-400'

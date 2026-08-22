@@ -36,8 +36,8 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
     : '/img/default_pfp.webp';
 
   return (
-    <nav className="bg-bg-200 w-full h-auto md:h-[calc(100vh-60px)] md:sticky md:top-0 flex flex-row-reverse justify-center md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 border-r border-bg-400 z-10">
-      <div className="hidden md:flex justify-center items-center h-fit mx-4 mt-8 mb-4 pb-4 border-b border-bg-400 px-2">
+    <nav className="bg-bg-200 w-full h-auto md:h-[calc(100vh-60px)] md:sticky md:top-0 flex flex-row-reverse justify-center md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 z-10">
+      <div className="hidden md:flex justify-center items-center h-fit mx-4 mt-8 mb-4 pb-4 border-b border-bg-300 px-2">
         <Link href="/" className="w-full flex justify-center">
           <img src="/img/logos/kol-logo-horizontal.svg" className="w-full h-auto max-h-16 object-contain" alt="Karwińska Olimpiada Logo" />
         </Link>
@@ -45,23 +45,23 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
 
       <div className="p-4 md:px-8 md:py-0 w-auto h-full">
         <ul className="flex flex-wrap list-none gap-2">
-          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-400 ${activeTab === 'account' ? 'bg-bg-400' : ''}`} onClick={() => setActiveTab('account')} title="Konto">
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-300 ${activeTab === 'account' ? 'bg-bg-300' : ''}`} onClick={() => setActiveTab('account')} title="Konto">
             <User className="w-5 h-5 text-text-900" />
             <span className="text-text-900 md:block">Konto</span>
           </li>
-          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-400 ${activeTab === 'tournaments' ? 'bg-bg-400' : ''}`} onClick={() => setActiveTab('tournaments')} title="Turnieje">
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-300 ${activeTab === 'tournaments' ? 'bg-bg-300' : ''}`} onClick={() => setActiveTab('tournaments')} title="Turnieje">
             <Trophy className="w-5 h-5 text-text-900" />
             <span className="text-text-900 md:block">Turnieje</span>
           </li>
-          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-400 ${activeTab === 'calendar' ? 'bg-bg-400' : ''}`} onClick={() => setActiveTab('calendar')} title="Kalendarz">
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-300 ${activeTab === 'calendar' ? 'bg-bg-300' : ''}`} onClick={() => setActiveTab('calendar')} title="Kalendarz">
             <Calendar className="w-5 h-5 text-text-900" />
             <span className="text-text-900 md:block">Kalendarz</span>
           </li>
-          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-400 ${activeTab === 'polls' ? 'bg-bg-400' : ''}`} onClick={() => setActiveTab('polls')} title="Głosowania">
+          <li className={`flex items-center w-auto md:w-full h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-300 ${activeTab === 'polls' ? 'bg-bg-300' : ''}`} onClick={() => setActiveTab('polls')} title="Głosowania">
             <PieChart className="w-5 h-5 text-text-900" />
             <span className="text-text-900 md:block">Głosowania</span>
           </li>
-          <li className="block md:hidden flex items-center w-auto h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-400" title="Wyloguj się" onClick={handleLogout}>
+          <li className="block md:hidden flex items-center w-auto h-10 gap-3 text-lg rounded-md px-2 py-4 cursor-pointer transition-colors hover:bg-bg-300" title="Wyloguj się" onClick={handleLogout}>
             <div className="flex justify-center items-center w-full h-full gap-3 text-red-500">
               <LogOut className="w-5 h-5" />
               <span className="text-red-500 md:block">Wyloguj się</span>
@@ -108,8 +108,8 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
                   className="fixed inset-0 z-40"
                   onClick={() => setShowUserMenu(false)}
                 />
-                <div className="absolute bottom-full left-0 mb-3 w-52 bg-bg-300 border border-bg-400 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-in slide-in-from-bottom-2 fade-in duration-200">
-                  <div className="px-3.5 py-2 text-[11px] font-bold text-text-500 uppercase tracking-wider border-b border-bg-400 mb-1">
+                <div className="absolute bottom-full left-0 mb-3 w-52 bg-bg-300 border-bg-300 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-in slide-in-from-bottom-2 fade-in duration-200">
+                  <div className="px-3.5 py-2 text-[11px] font-bold text-text-500 uppercase tracking-wider border-b border-bg-300 mb-1">
                     Akcje konta
                   </div>
 
@@ -117,7 +117,7 @@ export default function DashboardNav({ activeTab, setActiveTab, user }: Dashboar
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-bg-200 transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-bg-400 transition-colors text-left"
                   >
                     <svg width="16" height="16" viewBox="0 0 12 12" className="flex-shrink-0">
                       <polygon fill="currentColor" points="9,2 9,0 1,0 1,12 9,12 9,10 8,10 8,11 2,11 2,1 8,1 8,2 " />

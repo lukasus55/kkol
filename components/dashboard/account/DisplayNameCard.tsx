@@ -50,24 +50,24 @@ export default function DisplayNameCard({ currentName }: { currentName: string }
     <>
       <ErrorPopup isOpen={!!errorModal} message={errorModal} onClose={() => setErrorModal('')} />
       <Card>
-      <CardTitle>Wyświetlana nazwa</CardTitle>
-      <div className="flex items-center gap-4">
-        <div className="flex-1">
-          <Input 
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Wpisz nową nazwę..." 
-          />
+        <CardTitle>Wyświetlana nazwa</CardTitle>
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Wpisz nową nazwę..."
+            />
+          </div>
+          <Button
+            variant="primary"
+            onClick={handleSave}
+            isLoading={loading}
+          >
+            Zmień
+          </Button>
         </div>
-        <Button 
-          variant="primary" 
-          onClick={handleSave} 
-          isLoading={loading}
-        >
-          Zmień
-        </Button>
-      </div>
-    </Card>
+      </Card>
     </>
   );
 }

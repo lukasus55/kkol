@@ -66,9 +66,9 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
         {/* Status Icon */}
         <div className="flex-shrink-0" title={isFinished ? 'Zakończony' : 'W trakcie'}>
           {isFinished ? (
-            <MinusCircle className="w-5 h-5 text-gray-500" />
+            <MinusCircle className="w-5 h-5 text-text-500" />
           ) : (
-            <CheckCircle2 className="w-5 h-5 text-accent-500" />
+            <CheckCircle2 className="w-5 h-5 text-text-900" />
           )}
         </div>
 

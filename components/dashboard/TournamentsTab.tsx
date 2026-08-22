@@ -80,7 +80,7 @@ export default function TournamentsTab({ user }: { user: any }) {
         <div className="flex flex-col gap-6 w-full max-w-[700px]">
 
           {canAdd && (
-            <div className="flex items-center gap-4 bg-bg-300 p-4 border border-bg-400 rounded-md">
+            <div className="flex items-center gap-4 bg-bg-200 p-4 rounded-md">
               <div className="flex-1">
                 <Input
                   placeholder="ID nowego turnieju..."
@@ -97,7 +97,7 @@ export default function TournamentsTab({ user }: { user: any }) {
           {loading && tournaments.length === 0 ? (
             <div className="text-center text-text-700 py-8">Ładowanie turniejów...</div>
           ) : (
-            <div className={`border border-bg-400 rounded-md divide-y divide-bg-400 bg-bg-300 transition-opacity ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+            <div className={`rounded-md divide-y divide-bg-400 bg-bg-200 transition-opacity ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
               {tournaments.length === 0 ? (
                 <div className="p-8 text-center text-text-700">
                   Brak przypisanych turniejów.
