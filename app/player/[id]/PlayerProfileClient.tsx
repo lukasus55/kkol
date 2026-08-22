@@ -47,24 +47,24 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
   const tierStyles: Record<string, { badge: string, bar: string, tableBadge: string }> = {
     s: {
-      badge: 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-s-glow animate-s-pulse border border-yellow-300',
-      bar: 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white',
-      tableBadge: 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-yellow-300'
+      badge: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white shadow-s-glow animate-s-pulse border border-yellow-400',
+      bar: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white',
+      tableBadge: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-yellow-400'
     },
     a: {
-      badge: 'bg-purple-600 text-white border border-purple-400',
-      bar: 'bg-purple-600 text-white',
-      tableBadge: 'bg-purple-600 text-white border-purple-400'
+      badge: 'bg-purple-700 text-white border border-purple-400',
+      bar: 'bg-purple-700 text-white',
+      tableBadge: 'bg-purple-700 text-white border-purple-400'
     },
     b: {
-      badge: 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white border border-blue-300',
-      bar: 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white',
-      tableBadge: 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-blue-300'
+      badge: 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border border-blue-300',
+      bar: 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white',
+      tableBadge: 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-blue-300'
     },
     c: {
-      badge: 'bg-gray-500 text-white border border-gray-400',
-      bar: 'bg-gray-500 text-white',
-      tableBadge: 'bg-gray-500 text-white border-gray-400'
+      badge: 'bg-gray-600 text-white border border-gray-400',
+      bar: 'bg-gray-600 text-white',
+      tableBadge: 'bg-gray-600 text-white border-gray-400'
     }
   };
 
@@ -187,14 +187,14 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
                           <td className="py-4 px-6 text-sm font-medium text-text-900">
                             <div className="flex items-center gap-2">
                               {t.page_exists ? (
-                                <Link href={`/${t.page_url}`} className="hover:text-accent-600 transition-colors font-bold flex items-center gap-1 group-hover:underline">
+                                <Link href={`/${t.page_url}`} className="hover:text-text-500 transition-colors font-bold flex items-center gap-1 group-hover:underline">
                                   {t.displayed_name}
-                                  <ExternalLink className="w-4 h-4 text-accent-500 opacity-70 group-hover:opacity-100" />
+                                  <ExternalLink className="w-4 h-4 text-text-700 opacity-70 group-hover:opacity-100" />
                                 </Link>
                               ) : (
                                 <span className="font-bold">{t.displayed_name}</span>
                               )}
-                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${smallBadgeClass}`}>
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold shadow-lg ${smallBadgeClass}`}>
                                 {t.details?.tier ?? '?'}-Tier
                               </span>
                             </div>
