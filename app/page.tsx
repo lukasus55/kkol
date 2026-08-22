@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Footer from '../components/Footer';
 import EventsSection from '@/components/home/EventsSection';
 import PlayersSection from '@/components/home/PlayersSection';
+import PageFooter from '@/components/ui/PageFooter';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <PlayersSection />
 
       </main>
+      <PageFooter />
     </>
   );
 }

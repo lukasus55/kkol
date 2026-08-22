@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --color-bg-100: #071014;
+    --color-bg-150: #0d1316;
     --color-bg-200: #1d1f22;
     --color-bg-300: #37393d;
     --color-bg-400: #44474d;

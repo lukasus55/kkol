@@ -14,6 +14,7 @@ const config: Config = {
         'lavender-mist': 'var(--color-text-900)',
         'onyx': 'var(--color-bg-100)',
         'bg-100': 'var(--color-bg-100)',
+        'bg-150': 'var(--color-bg-150)',
         'bg-200': 'var(--color-bg-200)',
         'bg-300': 'var(--color-bg-300)',
         'bg-400': 'var(--color-bg-400)',
@@ -22,12 +23,13 @@ const config: Config = {
         'text-900': 'var(--color-text-900)',
         'text-700': 'var(--color-text-700)',
         'text-500': 'var(--color-text-500)',
+        'accent-400': 'var(--color-accent-400)',
         'accent-500': 'var(--color-accent-500)',
         'accent-600': 'var(--color-accent-600)',
         'danger-500': 'var(--color-danger-500)',
         'danger-600': 'var(--color-danger-600)',
       },
-        fontFamily: {
+      fontFamily: {
         sans: ['var(--font-outfit)', 'Outfit', 'sans-serif'],
       },
       keyframes: {
