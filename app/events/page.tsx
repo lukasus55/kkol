@@ -73,7 +73,7 @@ export default function EventsPage() {
       </h1>
 
       <div className="w-full max-w-5xl">
-        <div className="w-full overflow-hidden rounded-md border border-bg-400">
+        <div className="w-full overflow-hidden rounded-md">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
@@ -84,7 +84,7 @@ export default function EventsPage() {
                   <th className="py-4 px-6 font-semibold">Zwycięzca/y</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-bg-400">
+              <tbody className="">
                 {loading ? (
                   <tr>
                     <td colSpan={4} className="py-16 text-center">
@@ -106,7 +106,7 @@ export default function EventsPage() {
                     return (
                       <tr
                         key={tournament.id || tournament.displayed_name}
-                        className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100"
+                        className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100"
                       >
                         <td className="py-4 px-6 text-sm font-medium text-text-900">
                           {tournament.page_exists && tournament.page_url ? (
@@ -151,7 +151,7 @@ export default function EventsPage() {
                                     <img
                                       src={pfpSrc}
                                       alt={displayName}
-                                      className="w-6 h-6 rounded-full object-cover shadow-sm"
+                                      className="w-6 h-6 rounded-full object-cover border border-bg-300"
                                     />
                                     <span className="font-semibold text-text-900 group-hover:text-accent-600 transition-colors">
                                       {displayName}

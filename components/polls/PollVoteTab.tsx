@@ -73,7 +73,7 @@ export default function PollVoteTab({
 
     if (!permissions.canVote) {
         return (
-            <div className="w-full text-center mt-12 text-text-500 bg-bg-200 p-8 rounded-md border border-bg-300">
+            <div className="w-full text-center mt-12 text-text-500 bg-bg-200 p-8 rounded-md">
                 <h2 className="text-xl font-bold mb-2">Brak uprawnień</h2>
                 <p>Nie masz odpowiednich uprawnień, aby wyświetlić zawartość tego głosowania.</p>
             </div>
@@ -100,7 +100,7 @@ export default function PollVoteTab({
                 const selectedOptionIds = answers[q.id] || [];
 
                 return (
-                    <div key={q.id} className="bg-bg-200 border border-bg-400 rounded-md p-4 md:p-6 w-full shadow-sm flex flex-col gap-4">
+                    <div key={q.id} className="bg-bg-200 rounded-md p-4 md:p-6 w-full shadow-sm flex flex-col gap-4">
 
                         {/* Question Header */}
                         <div className="flex flex-col gap-1.5">
@@ -109,18 +109,16 @@ export default function PollVoteTab({
                                     {q.name}
                                 </h2>
                                 <Tooltip content={q.multiple_choice ? "Pytanie wielokrotnego wyboru" : "Pytanie jednokrotnego wyboru"}>
-                                    <div className={`relative flex items-center justify-center shrink-0 border-[2px] border-text-500 transition-all duration-300 ease-in-out ${
-                                        q.multiple_choice ? 'w-[22px] h-[22px] rounded-sm rotate-90' : 'w-[22px] h-[22px] rounded-full rotate-0'
-                                    }`}>
-                                        <div className={`bg-text-500 transition-all duration-300 ease-in-out ${
-                                            q.multiple_choice ? 'w-2.5 h-2.5 rounded-[2px]' : 'w-[10px] h-[10px] rounded-full'
-                                        }`} />
+                                    <div className={`relative flex items-center justify-center shrink-0 border-[2px] border-text-500 transition-all duration-300 ease-in-out ${q.multiple_choice ? 'w-[22px] h-[22px] rounded-sm rotate-90' : 'w-[22px] h-[22px] rounded-full rotate-0'
+                                        }`}>
+                                        <div className={`bg-text-500 transition-all duration-300 ease-in-out ${q.multiple_choice ? 'w-2.5 h-2.5 rounded-[2px]' : 'w-[10px] h-[10px] rounded-full'
+                                            }`} />
                                     </div>
                                 </Tooltip>
                             </div>
 
                             {q.page_url && (
-                                <a href={ensureAbsoluteUrl(q.page_url)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-accent-500 hover:text-accent-600 text-sm w-fit transition-colors mt-1">
+                                <a href={ensureAbsoluteUrl(q.page_url)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-accent-600 hover:text-accent-500 text-sm w-fit transition-colors mt-1">
                                     <ExternalLink className="w-3.5 h-3.5" />
                                     <span className="truncate max-w-[200px] md:max-w-full">{q.page_url}</span>
                                 </a>

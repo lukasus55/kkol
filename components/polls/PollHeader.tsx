@@ -48,7 +48,7 @@ export default function PollHeader({
   return (
     <>
       {/* TOP ROW: Name & Dates */}
-      <div className="w-full bg-bg-200 border border-bg-400 rounded-md p-4 md:p-6 flex flex-col gap-1 shadow-sm mb-6">
+      <div className="w-full bg-bg-200 rounded-md p-4 md:p-6 flex flex-col gap-1 shadow-sm mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-text-900 font-markazi break-words">
           {poll.name}
         </h1>
@@ -59,10 +59,10 @@ export default function PollHeader({
       </div>
 
       {/* BOTTOM ROW: Modes & Tools */}
-      <div className="w-full bg-bg-200 border border-bg-400 rounded-md p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm sticky top-4 z-[60]">
+      <div className="w-full bg-bg-200 rounded-md p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm sticky top-4 z-[60]">
 
         {/* MODES */}
-        <div className="flex items-center gap-2 bg-bg-100 p-1 rounded-md border border-bg-300 w-full md:w-auto overflow-x-auto">
+        <div className="flex items-center gap-2 bg-bg-100 p-1 rounded-md w-full md:w-auto overflow-x-auto">
 
           <button
             onClick={() => setMode('vote')}
@@ -108,7 +108,7 @@ export default function PollHeader({
             {isFilterOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
-                <div className="absolute right-0 top-full mt-2 w-64 bg-bg-200 border border-bg-400 rounded-md shadow-xl z-50 p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+                <div className="absolute right-0 top-full mt-2 w-64 bg-bg-100 rounded-md shadow-xl z-50 p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
                   <div className="relative">
                     <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-500" />
                     <input

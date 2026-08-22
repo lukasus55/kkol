@@ -8,7 +8,7 @@ export default function Footer() {
   const pathname = usePathname() || '';
 
   let footerBg = "bg-bg-200";
-  let iconClass = "text-text-500 hover:text-accent-500 hover:bg-bg-400";
+  let iconClass = "text-text-500 hover:text-text-700 hover:bg-bg-400";
 
   if (pathname.startsWith('/2024')) {
     footerBg = "bg-[#00163a]";
@@ -26,22 +26,22 @@ export default function Footer() {
   return (
     <div className="flex fixed flex-row bottom-0 left-0 w-full z-[200] text-[25px] justify-center self-center flex-wrap text-text-900">
       <div className={`flex justify-around md:justify-center flex-row p-0 items-center w-full h-[2.4em] z-[290] transition-colors duration-500 ${footerBg}`}>
-        
+
         <Link href="/">
           <div className={`${btnBase} ${iconClass}`} title="Strona Główna">
             <Home className="w-[1em] h-[1em]" />
           </div>
         </Link>
-        
+
         <Link href="/events">
           <div className={`${btnBase} ${iconClass}`} title="Wydarzenia">
             <Trophy className="w-[1em] h-[1em]" />
           </div>
         </Link>
-        
+
         <Link href="/2026">
-          <div 
-            className="flex justify-center items-center w-[1.7em] h-[1.7em] rounded-[5pt] transition-all duration-300 opacity-80 mx-[2px] font-semibold cursor-pointer text-text-500 hover:opacity-100 hover:-translate-y-[2px] bg-[#0c0a0a] hover:bg-[#181515] relative overflow-hidden group" 
+          <div
+            className="flex justify-center items-center w-[1.7em] h-[1.7em] rounded-[5pt] transition-all duration-300 opacity-80 mx-[2px] font-semibold cursor-pointer text-text-500 hover:opacity-100 hover:-translate-y-[2px] bg-[#0c0a0a] hover:bg-[#181515] relative overflow-hidden group"
             title="Sezon 2026"
           >
             <img src="/img/season_icon.webp" alt="Sezon 2026" className="w-[1.15em] h-[1.15em] relative z-10" />
@@ -54,7 +54,7 @@ export default function Footer() {
             <BarChart2 className="w-[1em] h-[1em]" />
           </div>
         </Link>
-        
+
         <Link href="/dashboard">
           <div className={`${btnBase} ${iconClass}`} title="Profil">
             <User className="w-[1em] h-[1em]" />

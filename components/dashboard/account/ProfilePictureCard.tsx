@@ -66,7 +66,7 @@ export default function ProfilePictureCard({ currentPfpBase64 }: { currentPfpBas
       <Card>
         <CardTitle>Zdjęcie profilowe</CardTitle>
         <div className="flex items-center gap-6">
-          <div className="w-16 h-16 rounded-full overflow-hidden border border-bg-400 bg-bg-100 flex-shrink-0">
+          <div className="w-16 h-16 rounded-full overflow-hidden bg-bg-100 flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={pfpSrc}

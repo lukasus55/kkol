@@ -52,7 +52,7 @@ export default function RankingPage() {
       </h1>
 
       <div className="w-full max-w-5xl">
-        <div className="w-full overflow-hidden rounded-md border border-bg-400">
+        <div className="w-full overflow-hidden rounded-md">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
@@ -63,7 +63,7 @@ export default function RankingPage() {
                   <th className="py-4 px-6 font-semibold text-right">Ranking</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-bg-400">
+              <tbody className="">
                 {loading ? (
                   <tr>
                     <td colSpan={4} className="py-16 text-center">
@@ -76,17 +76,17 @@ export default function RankingPage() {
                   leaderboard.map((player) => (
                     <tr
                       key={player.id}
-                      className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100"
+                      className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100"
                     >
                       <td className="py-4 px-6 text-sm font-medium text-text-900">
                         <Link
                           href={`/player/${player.id}`}
-                          className="flex items-center gap-3 hover:text-accent-600 transition-colors font-bold group-hover:underline w-max"
+                          className="flex items-center gap-3 hover:bg-300 transition-colors font-bold group-hover:underline w-max"
                         >
                           <img
                             src={player.pfpSrc}
                             alt={player.name}
-                            className="w-8 h-8 rounded-full object-cover border border-bg-400"
+                            className="w-8 h-8 rounded-full object-cover border border-bg-300"
                           />
                           {player.name}
                         </Link>
@@ -119,7 +119,7 @@ export default function RankingPage() {
         </div>
 
         {/* Explainer section */}
-        <div className="mt-8 p-6 bg-bg-200 rounded-md border border-bg-400 text-sm text-text-700 leading-relaxed max-w-4xl mx-auto">
+        <div className="mt-8 p-6 bg-bg-200 rounded-md border border-bg-200 text-sm text-text-700 leading-relaxed max-w-4xl mx-auto">
           <p className="font-semibold mb-4 text-text-900">
             Wzór na ranking KKOL to suma następujących elementów:
           </p>

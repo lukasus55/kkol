@@ -33,7 +33,7 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
         <PlayerSearchBar onSelect={onAddPlayer} />
       </div>
 
-      <div className="border border-bg-400 rounded-md bg-bg-100 overflow-x-auto flex-1 custom-scrollbar">
+      <div className="rounded-md bg-bg-100 overflow-x-auto flex-1 custom-scrollbar">
         <table className="w-full text-left text-sm whitespace-nowrap">
           <thead className="bg-bg-300 border-b border-bg-400 text-text-700">
             <tr>

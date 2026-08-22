@@ -10,12 +10,12 @@ import { Card } from '../../components/ui/Card';
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  
+
   const [answerTitle, setAnswerTitle] = useState('');
   const [answerContent, setAnswerContent] = useState('');
   const [showAnswer, setShowAnswer] = useState(false);
@@ -43,7 +43,7 @@ function LoginForm() {
           const destination = rParam ? decodeURIComponent(rParam) : 'dashboard';
           router.push(`/${destination}`);
         }
-      } catch (err) {}
+      } catch (err) { }
     };
     checkAuth();
   }, [router, searchParams]);
@@ -88,13 +88,13 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-60px)] bg-bg-200 flex flex-col relative font-sans">
+    <div className="min-h-[calc(100vh-60px)] bg-bg-100 flex flex-col relative font-sans">
       <header className="absolute top-0 left-0 p-8">
         <div className="flex items-center gap-4">
           <Link href="/">
-            <img 
-              src="/img/logos/kol-logo-horizontal.svg" 
-              alt="Karwińska Olimpiada Logo" 
+            <img
+              src="/img/logos/kol-logo-horizontal.svg"
+              alt="Karwińska Olimpiada Logo"
               className="h-16 w-auto cursor-pointer"
             />
           </Link>
@@ -104,9 +104,9 @@ function LoginForm() {
       <main className="flex-1 flex items-center justify-center p-4">
         <Card className="max-w-[480px] shadow-xl pt-10 !rounded-xl border-bg-400">
           <h1 className="text-2xl font-bold mb-8 text-text-900">Zaloguj się</h1>
-          
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <Input 
+            <Input
               label="Nazwa użytkownika"
               id="username"
               name="username"
@@ -116,7 +116,7 @@ function LoginForm() {
               autoComplete="username"
             />
 
-            <Input 
+            <Input
               label="Hasło"
               id="password"
               name="current_password"
@@ -137,11 +137,11 @@ function LoginForm() {
                 <button type="button" onClick={handleNoAccount} className="text-left hover:text-accent-600 transition-colors">Nie masz konta?</button>
                 <button type="button" onClick={handleForgot} className="text-left hover:text-accent-600 transition-colors">Zapomniałeś hasła?</button>
               </div>
-              
-              <Button 
-                type="submit" 
+
+              <Button
+                type="submit"
                 variant="primary"
-                isLoading={loading} 
+                isLoading={loading}
                 className="!px-6 !py-2.5 !rounded-lg"
               >
                 Zaloguj się
@@ -151,15 +151,15 @@ function LoginForm() {
         </Card>
 
         {showAnswer && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
             onClick={(e) => {
               if (e.target === e.currentTarget) setShowAnswer(false);
             }}
           >
             <Card className="max-w-[500px] shadow-2xl p-8 relative !rounded-xl">
-              <button 
-                onClick={() => setShowAnswer(false)} 
+              <button
+                onClick={() => setShowAnswer(false)}
                 className="absolute top-4 right-4 text-text-500 hover:text-text-900 transition-colors text-xl font-bold"
               >
                 ✕

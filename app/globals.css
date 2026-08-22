@@ -4,20 +4,20 @@
 
 @layer base {
   :root {
-    --color-bg-100: #ffffff;
-    --color-bg-200: #f1f5f9; /* around Slate 100 */
-    --color-bg-300: #e3e8ee; /* around Slate 200 */
-    --color-bg-400: #dae1e9; /* around Slate 300 */
-    --color-bg-500: #b4bfcf; /* around Slate 400 */
-    --color-bg-600: #8b97a8; /* around Slate 500 */
+    --color-bg-100: #071014;
+    --color-bg-200: #1d1f22;
+    --color-bg-300: #37393d;
+    --color-bg-400: #44474d;
+    --color-bg-500: #55575d;
+    --color-bg-600: #606368;
 
-    --color-text-900: #0f172a;
-    --color-text-700: #334155;
-    --color-text-500: #64748b;
+    --color-text-900: #f4f5f6;
+    --color-text-700: #d8d8d8;
+    --color-text-500: #a7aaae;
 
-    --color-accent-400: #2db3d4;
-    --color-accent-500: #1497b8;
-    --color-accent-600: #0d7494;
+    --color-accent-400: #323c3f;
+    --color-accent-500: #48565a;
+    --color-accent-600: #57696e;
 
     --color-danger-500: #ef4444;
     --color-danger-600: #dc2626;
@@ -82,34 +82,91 @@ input[type="number"]:not(:focus) {
 }
 
 @keyframes bounce-out-down {
-  0% { transform: translate(-50%, 0); }
-  20% { transform: translate(-50%, -10px); }
-  100% { transform: translate(-50%, 150%); opacity: 0; }
+  0% {
+    transform: translate(-50%, 0);
+  }
+
+  20% {
+    transform: translate(-50%, -10px);
+  }
+
+  100% {
+    transform: translate(-50%, 150%);
+    opacity: 0;
+  }
 }
+
 .animate-bounce-out {
   animation: bounce-out-down 0.4s ease-in forwards;
 }
+
 @keyframes bounce-in-up {
-  0% { transform: translate(-50%, 150%); opacity: 0; }
-  60% { transform: translate(-50%, -10px); opacity: 1; }
-  100% { transform: translate(-50%, 0); opacity: 1; }
+  0% {
+    transform: translate(-50%, 150%);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translate(-50%, -10px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
 }
+
 .animate-bounce-in {
   animation: bounce-in-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+
 @keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
 }
+
 .animate-shake {
   animation: shake 0.4s ease-in-out;
 }

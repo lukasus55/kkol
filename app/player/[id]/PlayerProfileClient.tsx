@@ -90,7 +90,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
       {/* Banner */}
       <div
-        className="w-full h-72 rounded-md flex flex-col justify-center items-center relative overflow-hidden shadow-lg border border-bg-400"
+        className="w-full h-72 rounded-md flex flex-col justify-center items-center relative overflow-hidden shadow-lg"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${pfpSrc})`,
           backgroundSize: 'cover',
@@ -157,7 +157,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
         {/* Tournaments List */}
         <div className="md:col-span-2 space-y-4">
-          <div className="w-full overflow-hidden rounded-md border border-bg-400">
+          <div className="w-full overflow-hidden rounded-md">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse bg-bg-100">
                 <thead>
@@ -167,7 +167,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
                     <th className="py-4 px-6 font-semibold text-right">Data</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-bg-400">
+                <tbody className="">
                   {tournaments.length === 0 ? (
                     <tr>
                       <td colSpan={3} className="py-8 text-center text-text-500 font-medium">Brak przypisanych turniejów</td>
@@ -183,7 +183,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
                       const smallBadgeClass = tierStyles[tTierKey]?.tableBadge || 'bg-bg-300 text-text-600 border-bg-400';
 
                       return (
-                        <tr key={t.id || i} className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
+                        <tr key={t.id || i} className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
                           <td className="py-4 px-6 text-sm font-medium text-text-900">
                             <div className="flex items-center gap-2">
                               {t.page_exists ? (
@@ -217,23 +217,23 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
         {/* Stats Card */}
         <div className="md:col-span-1">
-          <div className="w-full overflow-hidden rounded-md border border-bg-400 h-fit">
+          <div className="w-full overflow-hidden rounded-md h-fit">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
                 <tr className="bg-accent-500 text-white uppercase text-xs md:text-sm tracking-wide">
                   <th colSpan={2} className="py-4 px-6 font-semibold text-center">Statystyki</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-bg-400">
-                <tr className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
+              <tbody className="">
+                <tr className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
                   <td className="py-4 px-6 text-sm font-medium text-text-700">Ranking KKOL</td>
                   <td className="py-4 px-6 text-sm font-bold text-text-900 text-right">{ranking.ranking}</td>
                 </tr>
-                <tr className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
+                <tr className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
                   <td className="py-4 px-6 text-sm font-medium text-text-700">S-Score</td>
                   <td className="py-4 px-6 text-sm font-bold text-text-900 text-right">{ranking.majorRanking}</td>
                 </tr>
-                <tr className="hover:bg-bg-400 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
+                <tr className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100">
                   <td className="py-4 px-6 text-sm font-medium text-text-700">AB-Score</td>
                   <td className="py-4 px-6 text-sm font-bold text-text-900 text-right">{ranking.minorRanking}</td>
                 </tr>

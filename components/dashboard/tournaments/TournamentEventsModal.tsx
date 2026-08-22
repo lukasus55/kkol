@@ -67,10 +67,7 @@ export function TournamentEventsModal({ isOpen, onClose, tournament }: Tournamen
             .map(event => (
               <div
                 key={event.id}
-                className={`flex items-center justify-between p-4 rounded-md border ${event.is_major
-                  ? 'bg-accent-500/10 border-accent-500/30'
-                  : 'bg-bg-300 border-bg-400'
-                  }`}
+                className={`flex items-center justify-between p-4 rounded-md bg-bg-200`}
               >
                 <div className="flex flex-col gap-1">
                   <span className="font-bold text-text-900 text-sm">{event.name}</span>

@@ -43,9 +43,9 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 outline-none"
     >
       <div
-        className={`bg-bg-100 border border-bg-400 rounded-xl shadow-2xl w-full flex flex-col h-[650px] max-h-[95vh] sm:max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200 ${maxWidth}`}
+        className={`bg-bg-100 rounded-xl shadow-2xl w-full flex flex-col h-[650px] max-h-[95vh] sm:max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200 ${maxWidth}`}
       >
-        <div className="p-5 border-b border-bg-400 flex justify-between items-center bg-bg-200 flex-shrink-0">
+        <div className="p-5 flex justify-between items-center bg-bg-200 flex-shrink-0">
           <h2 className="text-xl font-bold text-text-900">{title}</h2>
           <button
             onClick={onClose}
@@ -60,7 +60,7 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
         </div>
 
         {footer && (
-          <div className="p-5 border-t border-bg-400 bg-bg-200 flex-shrink-0">
+          <div className="p-5 bg-bg-200 flex-shrink-0">
             {footer}
           </div>
         )}

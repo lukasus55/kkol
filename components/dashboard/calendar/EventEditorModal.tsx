@@ -315,7 +315,7 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
             <div className="flex flex-col">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-bg-400">
+                  <tr className="">
                     <th className="p-3 text-text-700 font-semibold">Gracz</th>
                     <th className="p-3 text-text-700 font-semibold text-center w-24">Pozycja</th>
                     <th className="p-3 text-text-700 font-semibold text-center w-24">Punkty</th>
@@ -326,7 +326,7 @@ export function EventEditorModal({ isOpen, onClose, mode, initialData, onSuccess
                     <tr><td colSpan={3} className="p-4 text-center text-text-500">Brak graczy przypisanych do tego turnieju.</td></tr>
                   ) : (
                     results.map((r, idx) => (
-                      <tr key={r.player_id} className="border-b border-bg-400/50 hover:bg-bg-200 transition-colors">
+                      <tr key={r.player_id} className="hover:bg-bg-200 transition-colors">
                         <td className="p-3 font-semibold text-text-900">{r.displayed_name}</td>
                         <td className="p-3 text-center">
                           <NumberInput
