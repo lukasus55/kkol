@@ -15,4 +15,5 @@ COPY . .
 EXPOSE 3000
 
 # The command to start your backend
+RUN npm run build
 CMD ["npm", "start"]
