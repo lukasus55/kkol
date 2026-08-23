@@ -84,7 +84,7 @@ export default function EventsSection() {
                 <div className="relative flex-1 w-full overflow-hidden bg-bg-100 rounded-t-md transform-gpu">
                     <div
                         className="absolute inset-0 bg-cover bg-center transition-all duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0 will-change-transform"
-                        style={{ backgroundImage: `url('/img/home/events/kol${year}.jpg')` }}
+                        style={{ backgroundImage: `url('/img/home/events/kol${year}.webp')` }}
                     />
                     <div className="absolute inset-0 bg-blue-900/40 mix-blend-overlay transition-opacity duration-700 group-hover:opacity-0 pointer-events-none" />
                 </div>
