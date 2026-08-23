@@ -34,6 +34,10 @@ const nextConfig = {
       {
         source: '/dashboard',
         destination: '/dashboard.html',
+      },
+      {
+        source: '/more/api',
+        destination: 'https://github.com/lukasus55/kkol/blob/main/API.md',
       }
     ];
   },
