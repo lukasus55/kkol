@@ -101,7 +101,7 @@ export default async function handler(request, response) {
             }
 
             // Route to correct array
-            if (!q.id || String(q.id).startsWith('temp-')) {
+            if (!q.id || String(q.id).startsWith('temp-') || String(q.id).startsWith('new-')) {
                 processedQuestion.id = uuidv7(); 
                 toInsert.push(processedQuestion);
             } else {
@@ -194,7 +194,7 @@ export default async function handler(request, response) {
             for (const q of allProcessedQuestions) {
                 
                 const incomingOptIds = q.options
-                    .filter(o => o.id && !String(o.id).startsWith('temp-'))
+                    .filter(o => o.id && !String(o.id).startsWith('temp-') && !String(o.id).startsWith('new-'))
                     .map(o => o.id);
 
                 // Delete removed options for this question
@@ -212,7 +212,7 @@ export default async function handler(request, response) {
 
                 // Upsert options
                 for (const opt of q.options) {
-                    if (!opt.id || String(opt.id).startsWith('temp-')) {
+                    if (!opt.id || String(opt.id).startsWith('temp-') || String(opt.id).startsWith('new-')) {
                         await sqlTransaction`
                             INSERT INTO "options" (question_id, name)
                             VALUES (${q.id}, ${opt.name})
