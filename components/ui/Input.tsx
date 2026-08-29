@@ -28,9 +28,9 @@ export function Input({
       )}
       <div className="relative flex items-center">
         <input
+          {...props}
           type={inputType}
           className={`w-full bg-bg-200 text-text-900 border border-bg-400 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-text-900 focus:shadow-[0_0_0_3px_rgba(114,176,29,0.15)] transition-all ${className}`}
-          {...props}
         />
         {isPassword && (
           <button
