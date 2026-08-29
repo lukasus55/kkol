@@ -5,7 +5,7 @@
   <a href="#features"><img alt="Features" src="https://img.shields.io/badge/Features-yellow?style=for-the-badge"></a>
   <a href="#technologies--architecture"><img alt="Technologies & Architecture" src="https://img.shields.io/badge/Technologies-purple?style=for-the-badge"></a>
   <a href="#documentation"><img alt="Documentation" src="https://img.shields.io/badge/Documentation-blue?style=for-the-badge"></a>
-  <a href="#repository-status--setup"><img alt="Repository Status & Setup" src="https://img.shields.io/badge/Contributing-green?style=for-the-badge"></a>
+  <a href="#repository-status"><img alt="Repository Status" src="https://img.shields.io/badge/Contributing-green?style=for-the-badge"></a>
 </p>
 
 Welcome to the official tournament tracking and management platform for the **Karwińska Olimpiada** - an annual series of competitive tournaments among friends. 
@@ -46,17 +46,9 @@ Detailed documentation for the backend infrastructure, including security layers
 
 ---
 
-## Repository Status & Setup
+## Repository Status
 
 **This is a personal project.** The source code is hosted publicly on GitHub for portfolio and reference purposes. 
 
 * **Issues:** Feedback and bug reports are welcome! If you spot a bug or have a suggestion, feel free to open an issue. Please make sure your tickets are as detailed as possible (include steps to reproduce, expected behavior, and any relevant errors).
 * **Pull Requests:** At this time, **pull requests are not accepted.** This is a closed environment customized for a specific group of friends.
-
-**Running Locally:**
-If you wish to fork or run this project locally to see how it works:
-1. You will need to manually reconstruct the PostgreSQL database using the ERD provided in the API Documentation. A database dump is not provided for privacy and security reasons.
-2. Once your local database is running and your `.env` variables are configured, the server can be started natively using:
-   ```bash
-   node server.js
-   ```
