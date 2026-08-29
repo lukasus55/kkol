@@ -82,7 +82,15 @@ export default async function handler(request: PollPlayersAnswersUpdateRequest, 
         const optionIdsToInsert: string[] = [];
         for (const optionIds of Object.values(answers)) {
             if (Array.isArray(optionIds) && optionIds.length > 0) {
-                optionIdsToInsert.push(...optionIds);
+                for (const optId of optionIds) {
+                    if (optId !== null && optId !== undefined) {
+                        const strId = String(optId);
+                        if (!/^\d+$/.test(strId)) {
+                            return response.status(400).json({ error: "Nieprawidłowe ID opcji (musi być liczbą)." });
+                        }
+                        optionIdsToInsert.push(strId);
+                    }
+                }
             }
         }
 

@@ -73,96 +73,97 @@ export default function PollClient() {
   const [filterQuery, setFilterQuery] = useState('');
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
 
+  const fetchData = async () => {
+    if (!pollId) return;
+    try {
+      setLoading(true);
+
+      const userRes = await fetch('/api/me');
+      if (!userRes.ok) throw new Error('Brak autoryzacji');
+      const userData = await userRes.json();
+      const currentUser = userData.user;
+
+      const pollRes = await fetch(`/api/polls?id=${pollId}`);
+      const pollDataArr = await pollRes.json();
+      if (!pollDataArr || pollDataArr.length === 0) {
+        throw new Error('Ankieta nie istnieje.');
+      }
+      const currentPoll = pollDataArr[0];
+
+      // Fetch labels, questions, answers concurrently
+      const timestamp = Date.now();
+      const labelsRes = await fetch(`/api/poll_labels?poll=${pollId}&t=${timestamp}`);
+      const questionsRes = await fetch(`/api/poll_questions?poll=${pollId}&t=${timestamp}`);
+      const answersRes = await fetch(`/api/poll_player_answers?poll=${pollId}&player=${currentUser.id}&t=${timestamp}`);
+      const defaultOptionsRes = await fetch(`/api/poll_default_options?poll_id=${pollId}&t=${timestamp}`);
+      const resultsRes = await fetch(`/api/poll_results?poll=${pollId}&t=${timestamp}`);
+
+      if (!questionsRes.ok) {
+          const errData = await questionsRes.json();
+          throw new Error(errData.error || 'Brak dostępu do pytań.');
+      }
+
+      const labelsData = await labelsRes.json();
+      const questionsData = await questionsRes.json();
+      const answersMap = await answersRes.json(); // API returns Record<string, string[]>
+      const defaultOptionsData = defaultOptionsRes.ok ? await defaultOptionsRes.json() : [];
+      const resultsDataJson = resultsRes.ok ? await resultsRes.json() : null;
+
+      // Permission Logic
+      const isGlobalAdmin = currentUser.role === 'admin';
+      const tourRole = currentUser.organizer_roles?.[currentPoll.tournament_id];
+      const isTourManagerOrOwner = tourRole === 'owner' || tourRole === 'manager';
+      const isTourPlayer = !!currentUser.tournaments?.[currentPoll.tournament_id];
+
+      const canEditSettings = isGlobalAdmin || isTourManagerOrOwner;
+      const rightsLevel = currentPoll.rights_level || 0;
+
+      const now = new Date();
+      const startDate = currentPoll.start_date ? new Date(currentPoll.start_date) : null;
+      const endDate = currentPoll.end_date ? new Date(currentPoll.end_date) : null;
+
+      let votingStatus = 'open';
+      if (startDate && startDate > now) votingStatus = 'not_started';
+      else if (endDate && endDate < now) votingStatus = 'ended';
+
+      setPermissions({
+        canEditSettings,
+        canEditLabels: canEditSettings || rightsLevel >= 3,
+        canEditQuestions: canEditSettings || rightsLevel >= 2,
+        canVote: canEditSettings || isTourPlayer || rightsLevel >= 1, // Basic assumption
+        votingStatus
+      });
+
+      setUser(currentUser);
+      setPoll(currentPoll);
+      setLabels(labelsData || []);
+      setPollDefaultOptions(defaultOptionsData || []);
+      if (resultsDataJson) setTotalParticipants(resultsDataJson.total_participants);
+      
+      setQuestions(questionsData || []);
+      setOriginalQuestions(JSON.parse(JSON.stringify(questionsData || []))); // deep copy
+
+      setAnswers(answersMap || {});
+      setOriginalAnswers(JSON.parse(JSON.stringify(answersMap || {}))); // deep copy
+
+    } catch (err: any) {
+      console.error(err);
+      if (err.message === 'Brak autoryzacji') {
+         router.push(`/login?r=${encodeURIComponent(`poll/${pollId}`)}`);
+         return;
+      }
+      setError(err.message || 'Wystąpił błąd.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!pollId) {
       setError('Brak ID ankiety w URL.');
       setLoading(false);
       return;
     }
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        const userRes = await fetch('/api/me');
-        if (!userRes.ok) throw new Error('Brak autoryzacji');
-        const userData = await userRes.json();
-        const currentUser = userData.user;
-
-        const pollRes = await fetch(`/api/polls?id=${pollId}`);
-        const pollDataArr = await pollRes.json();
-        if (!pollDataArr || pollDataArr.length === 0) {
-          throw new Error('Ankieta nie istnieje.');
-        }
-        const currentPoll = pollDataArr[0];
-
-        // Fetch labels, questions, answers concurrently
-        const timestamp = Date.now();
-        const labelsRes = await fetch(`/api/poll_labels?poll=${pollId}&t=${timestamp}`);
-        const questionsRes = await fetch(`/api/poll_questions?poll=${pollId}&t=${timestamp}`);
-        const answersRes = await fetch(`/api/poll_player_answers?poll=${pollId}&player=${currentUser.id}&t=${timestamp}`);
-        const defaultOptionsRes = await fetch(`/api/poll_default_options?poll_id=${pollId}&t=${timestamp}`);
-        const resultsRes = await fetch(`/api/poll_results?poll=${pollId}&t=${timestamp}`);
-
-        if (!questionsRes.ok) {
-            const errData = await questionsRes.json();
-            throw new Error(errData.error || 'Brak dostępu do pytań.');
-        }
-
-        const labelsData = await labelsRes.json();
-        const questionsData = await questionsRes.json();
-        const answersMap = await answersRes.json(); // API returns Record<string, string[]>
-        const defaultOptionsData = defaultOptionsRes.ok ? await defaultOptionsRes.json() : [];
-        const resultsDataJson = resultsRes.ok ? await resultsRes.json() : null;
-
-        // Permission Logic
-        const isGlobalAdmin = currentUser.role === 'admin';
-        const tourRole = currentUser.organizer_roles?.[currentPoll.tournament_id];
-        const isTourManagerOrOwner = tourRole === 'owner' || tourRole === 'manager';
-        const isTourPlayer = !!currentUser.tournaments?.[currentPoll.tournament_id];
-
-        const canEditSettings = isGlobalAdmin || isTourManagerOrOwner;
-        const rightsLevel = currentPoll.rights_level || 0;
-
-        const now = new Date();
-        const startDate = currentPoll.start_date ? new Date(currentPoll.start_date) : null;
-        const endDate = currentPoll.end_date ? new Date(currentPoll.end_date) : null;
-
-        let votingStatus = 'open';
-        if (startDate && startDate > now) votingStatus = 'not_started';
-        else if (endDate && endDate < now) votingStatus = 'ended';
-
-        setPermissions({
-          canEditSettings,
-          canEditLabels: canEditSettings || rightsLevel >= 3,
-          canEditQuestions: canEditSettings || rightsLevel >= 2,
-          canVote: canEditSettings || isTourPlayer || rightsLevel >= 1, // Basic assumption
-          votingStatus
-        });
-
-        setUser(currentUser);
-        setPoll(currentPoll);
-        setLabels(labelsData || []);
-        setPollDefaultOptions(defaultOptionsData || []);
-        if (resultsDataJson) setTotalParticipants(resultsDataJson.total_participants);
-        
-        setQuestions(questionsData || []);
-        setOriginalQuestions(JSON.parse(JSON.stringify(questionsData || []))); // deep copy
-
-        setAnswers(answersMap || {});
-        setOriginalAnswers(JSON.parse(JSON.stringify(answersMap || {}))); // deep copy
-
-      } catch (err: any) {
-        console.error(err);
-        if (err.message === 'Brak autoryzacji') {
-           router.push(`/login?r=${encodeURIComponent(`poll/${pollId}`)}`);
-           return;
-        }
-        setError(err.message || 'Wystąpił błąd.');
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchData();
   }, [pollId]);
@@ -350,11 +351,6 @@ export default function PollClient() {
                           }
                       }
 
-                      addToast({ message: "Zmiany w ankiecie zostały pomyślnie zapisane", type: "success" });
-                      closeModal(() => {
-                          setOriginalQuestions(JSON.parse(JSON.stringify(questions)));
-                      });
-
                       try {
                           const res = await fetch('/api/poll_question_update', {
                               method: 'POST',
@@ -363,6 +359,10 @@ export default function PollClient() {
                           });
                           const data = await res.json();
                           if (!res.ok) throw new Error(data.error || "Błąd podczas zapisywania pytań");
+                          
+                          addToast({ message: "Zmiany w ankiecie zostały pomyślnie zapisane", type: "success" });
+                          closeModal(() => {});
+                          await fetchData();
                       } catch (err: any) {
                           addToast({ message: err.message || "Wystąpił nieznany błąd", type: "error" });
                       }
