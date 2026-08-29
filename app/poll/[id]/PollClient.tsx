@@ -49,6 +49,7 @@ export default function PollClient() {
     canEditLabels: false,
     canEditQuestions: false,
     canVote: false,
+    votingStatus: 'open'
   });
 
   // Dirty flags

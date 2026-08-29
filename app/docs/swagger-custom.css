@@ -1,0 +1,156 @@
+.swagger-ui {
+    color: var(--color-text-900);
+    font-family: inherit;
+}
+.swagger-ui .info .title,
+.swagger-ui .info h1, .swagger-ui .info h2, .swagger-ui .info h3, .swagger-ui .info h4, .swagger-ui .info h5 {
+    color: var(--color-text-900);
+}
+.swagger-ui .info p {
+    color: var(--color-text-700);
+}
+.swagger-ui .info a {
+    color: var(--color-accent-500);
+}
+.swagger-ui .scheme-container {
+    background-color: var(--color-bg-200);
+    box-shadow: none;
+    border-bottom: 1px solid var(--color-bg-300);
+    margin-bottom: 20px;
+}
+.swagger-ui .opblock .opblock-summary-operation-id, 
+.swagger-ui .opblock .opblock-summary-path, 
+.swagger-ui .opblock .opblock-summary-path__deprecated {
+    color: var(--color-text-900);
+}
+.swagger-ui .opblock .opblock-summary-description {
+    color: var(--color-text-700);
+}
+.swagger-ui section.models {
+    background-color: var(--color-bg-200);
+    border: 1px solid var(--color-bg-400);
+    border-radius: 6px;
+}
+.swagger-ui section.models h4 {
+    color: var(--color-text-900);
+}
+.swagger-ui section.models h5 {
+    color: var(--color-text-700);
+}
+.swagger-ui .model {
+    color: var(--color-text-900);
+}
+.swagger-ui .model-title {
+    color: var(--color-text-900);
+}
+.swagger-ui .prop-type {
+    color: var(--color-text-500);
+}
+.swagger-ui .prop-format {
+    color: var(--color-text-700);
+}
+.swagger-ui table thead tr td, .swagger-ui table thead tr th {
+    color: var(--color-text-900);
+    border-bottom: 1px solid var(--color-bg-400);
+}
+.swagger-ui table tbody tr td {
+    color: var(--color-text-700);
+}
+.swagger-ui .parameter__name {
+    color: var(--color-text-900);
+}
+.swagger-ui .parameter__type {
+    color: var(--color-text-500);
+}
+.swagger-ui .parameter__in {
+    color: var(--color-text-700);
+}
+.swagger-ui select, .swagger-ui input, .swagger-ui textarea {
+    background-color: var(--color-bg-100);
+    border: 1px solid var(--color-bg-400);
+    color: var(--color-text-900);
+    outline: none;
+}
+.swagger-ui select:focus, .swagger-ui input:focus, .swagger-ui textarea:focus {
+    border-color: var(--color-accent-500);
+}
+.swagger-ui .btn {
+    color: var(--color-text-900);
+    border-color: var(--color-bg-400);
+    background-color: var(--color-bg-300);
+    box-shadow: none;
+}
+.swagger-ui .btn:hover {
+    background-color: var(--color-bg-400);
+}
+.swagger-ui .opblock-tag {
+    color: var(--color-text-900);
+    border-bottom: 1px solid var(--color-bg-300);
+}
+.swagger-ui .opblock-tag small {
+    color: var(--color-text-700);
+}
+.swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5 {
+    color: var(--color-text-900);
+}
+.swagger-ui .response-col_status {
+    color: var(--color-text-900);
+}
+.swagger-ui .response-col_description {
+    color: var(--color-text-700);
+}
+.swagger-ui .dialog-ux .modal-ux {
+    background-color: var(--color-bg-200);
+    border: 1px solid var(--color-bg-400);
+}
+.swagger-ui .dialog-ux .modal-ux-header h3 {
+    color: var(--color-text-900);
+}
+.swagger-ui .dialog-ux .modal-ux-content h4 {
+    color: var(--color-text-900);
+}
+.swagger-ui label {
+    color: var(--color-text-900);
+}
+.swagger-ui .auth-container input {
+    color: var(--color-text-900) !important;
+    background-color: var(--color-bg-100) !important;
+    border: 1px solid var(--color-bg-400) !important;
+}
+.swagger-ui .auth-btn-wrapper .btn-done {
+    color: var(--color-text-900);
+}
+.swagger-ui .opblock-body pre.microlight {
+    background-color: var(--color-bg-150) !important;
+    border-radius: 4px;
+}
+.swagger-ui .opblock-body .opblock-section-header {
+    background-color: var(--color-bg-200);
+    color: var(--color-text-900);
+}
+.swagger-ui .opblock-body .opblock-section-header h4 {
+    color: var(--color-text-900) !important;
+}
+.swagger-ui .opblock-body p, 
+.swagger-ui .opblock-description-wrapper p, 
+.swagger-ui .markdown p,
+.swagger-ui .parameters-col_name p,
+.swagger-ui .parameters-col_description p,
+.swagger-ui .dialog-ux .modal-ux-content p {
+    color: var(--color-text-900) !important;
+}
+.swagger-ui .parameters-col_name {
+    color: var(--color-text-900) !important;
+}
+.swagger-ui .tab li {
+    color: var(--color-text-700);
+}
+.swagger-ui .tab li.active {
+    color: var(--color-text-900);
+    font-weight: bold;
+}
+.swagger-ui .dialog-ux .modal-ux-content input {
+    background-color: var(--color-bg-100) !important;
+    color: var(--color-text-900) !important;
+    border: 1px solid var(--color-bg-400) !important;
+}

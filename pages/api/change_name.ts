@@ -1,0 +1,114 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player } from '../../types/db';
+import jwt from 'jsonwebtoken';
+import { parse } from 'cookie';
+import sql from '../../db.js';
+import { escapeHTML } from '../../public/js/utils/helpers.js';
+
+interface ChangeNameRequest extends NextApiRequest {
+    body: {
+        new_name: string;
+    };
+}
+
+/**
+ * @swagger
+ * /api/change_name:
+ *   post:
+ *     summary: Change user display name
+ *     description: Updates the displayed name for the authenticated user. Cooldown is 2 hours.
+ *     tags: [Auth & Player]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - new_name
+ *             properties:
+ *               new_name:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *     responses:
+ *       200:
+ *         description: Name successfully updated
+ *       400:
+ *         description: Invalid name length
+ *       401:
+ *         description: Not authenticated
+ *       404:
+ *         description: User not found
+ *       429:
+ *         description: Cooldown active
+ *       500:
+ *         description: Internal server error
+ */
+export default async function handler(request: ChangeNameRequest, response: NextApiResponse) {
+    if (request.method !== 'POST') {
+        return response.status(405).json({ error: "Method not allowed" });
+    }
+
+    try {
+        const cookies = parse(request.headers.cookie || '');
+        const token = cookies.auth_token;
+
+        if (!token) return response.status(401).json({ error: "Not authenticated" });
+
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
+        const userId = decodedPayload.id;
+
+        const { new_name } = request.body;
+        const clean_new_name = escapeHTML(new_name);
+
+        if (!clean_new_name || clean_new_name.trim().length < 3) {
+            return response.status(400).json({ error: "Nazwa musi mieć co najmniej 3 znaki." });
+        }
+        
+        if (clean_new_name.trim().length > 30) {
+            return response.status(400).json({ error: "Nazwa może mieć maksymalnie 30 znaków." });
+        }
+
+        const cleanName = clean_new_name.trim();
+
+        const userCheck = await sql<Pick<Player, 'last_name_change'>[]>`
+            SELECT last_name_change FROM players WHERE id = ${userId}
+        `;
+
+        if (userCheck.length === 0) {
+            return response.status(404).json({ error: "Nie znaleziono użytkownika." });
+        }
+
+        const lastChange = userCheck[0].last_name_change;
+
+        // cooldown - 2 hours
+        if (lastChange) {
+            const twoHoursInMs = 2 * 60 * 60 * 1000;
+            const timeSinceLastChange = Date.now() - new Date(lastChange).getTime();
+
+            if (timeSinceLastChange < twoHoursInMs) {
+                const remainingMs = twoHoursInMs - timeSinceLastChange;
+                const remainingMinutes = Math.ceil(remainingMs / (60 * 1000));
+                
+                return response.status(429).json({ 
+                    error: `Musisz odczekać jeszcze ${remainingMinutes} minut przed kolejną zmianą nazwy.` 
+                });
+            }
+        }
+
+        await sql`
+            UPDATE players 
+            SET displayed_name = ${cleanName}, last_name_change = NOW() 
+            WHERE id = ${userId}
+        `;
+
+        return response.status(200).json({ message: "Nazwa została zaktualizowana." });
+
+    } catch (error: any) {
+        console.error("Change Name Error:", error);
+        return response.status(500).json({ error: "Wystąpił błąd podczas zmiany nazwy." });
+    }
+}

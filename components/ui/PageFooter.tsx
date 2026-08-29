@@ -20,7 +20,7 @@ export default function PageFooter() {
                     <Link href="/privacy" className="text-text-500 hover:text-white transition-colors">
                         Polityka Prywatności
                     </Link>
-                    <Link href="https://github.com/lukasus55/kkol/blob/main/API.md" target="_blank" rel="noopener noreferrer" className="text-text-500 hover:text-white transition-colors">
+                    <Link href="/docs" className="text-text-500 hover:text-white transition-colors">
                         Dokumentacja API
                     </Link>
                     <Link href="https://www.youtube.com/@KarwińskaOlimpiada" target="_blank" rel="noopener noreferrer" className="text-text-500 hover:text-white transition-colors">

@@ -1,0 +1,51 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { GdLevel, GdScore } from '../../types/db';
+import sql from '../../db.js';
+
+/**
+ * @swagger
+ * /api/gd:
+ *   get:
+ *     summary: Get Geometry Dash leaderboard
+ *     description: Retrieves all Geometry Dash levels and their corresponding player scores.
+ *     tags: [GD]
+ *     responses:
+ *       200:
+ *         description: Geometry Dash levels and scores
+ *       500:
+ *         description: Internal server error
+ */
+export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+    try {
+        const [levels, scores] = await Promise.all([
+            sql<GdLevel[]>`SELECT * FROM gd_levels ORDER BY id ASC`,
+            sql<GdScore[]>`SELECT * FROM gd_scores`
+        ]);
+
+        const result = {
+            levels: levels.map((level) => {
+                const levelScores = scores.filter(s => s.level_id === level.id);
+
+                const players = levelScores.map(s => ({
+                    id: s.player_id,     
+                    position: s.position, 
+                    score: s.score       
+                }));
+
+                return {
+                    id: level.id,
+                    name: level.name,
+                    difficulty: level.difficulty,
+                    finished: level.finished,
+                    players: players
+                };
+            })
+        };
+
+        return response.status(200).json(result);
+
+    } catch (error: any) {
+        console.error("GD API Error:", error);
+        return response.status(500).json({ error: "Failed to fetch GD data" });
+    }
+}

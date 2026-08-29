@@ -1,0 +1,126 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Poll, Player } from '../../types/db';
+import sql from '../../db.js';
+import jwt from 'jsonwebtoken';
+import { parse } from 'cookie';
+import { isUUIDv7 } from '../../public/js/utils/helpers.js';
+import { hasTournamentPermission, isPartOfTournament } from '../../public/js/utils/permissionChecks.js';
+
+interface PollPlayerAnswersRequest extends NextApiRequest {
+    query: {
+        poll?: string;
+        player?: string;
+    };
+}
+
+/**
+ * @swagger
+ * /api/poll_player_answers:
+ *   get:
+ *     summary: Get player answers
+ *     description: Retrieves a specific player's answers for a poll. Only allowed for self or if permitted by rights_level.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: poll
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *       - in: query
+ *         name: player
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Map of player answers
+ *       400:
+ *         description: Missing or invalid parameters
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
+export default async function handler(request: PollPlayerAnswersRequest, response: NextApiResponse) {
+    if (request.method !== 'GET') {
+        return response.status(405).json({ error: "Method not allowed" });
+    }
+
+    try {
+        const { poll, player } = request.query;
+
+        if (!poll || !player) {
+            return response.status(400).json({ error: "Brakujące dane (Id ankiety lub Id gracza)." });
+        }
+
+        if (!isUUIDv7(poll)) {
+            return response.status(400).json({ error: "Id ankiety musi być typu uuidv7." });
+        }
+
+        const cookies = parse(request.headers.cookie || '');
+        const token = cookies.auth_token;
+
+        if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
+
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
+        const requesterId = decodedPayload.id;
+
+        if (requesterId !== player) {
+            const pollCheck = await sql<Pick<Poll, 'tournament_id' | 'rights_level'>[]>`
+                SELECT tournament_id, rights_level FROM polls WHERE id = ${poll}
+            `;
+            
+            if (pollCheck.length === 0) {
+                return response.status(404).json({ error: "Ankieta nie istnieje." });
+            }
+
+            const tournamentId = pollCheck[0].tournament_id;
+            const rightsLevel = pollCheck[0].rights_level;
+
+            const allowedByRules = rightsLevel >= 2 && await isPartOfTournament(requesterId, tournamentId);
+            const hasPermission = allowedByRules || await hasTournamentPermission(requesterId, tournamentId);
+            
+            if (!hasPermission) {
+                return response.status(403).json({ error: "Brak uprawnień do przeglądania odpowiedzi innych graczy." });
+            }
+        }
+
+        const result = await sql<{ answers_map: Record<string, string[]> }[]>`
+            WITH grouped_answers AS (
+                SELECT 
+                    o.question_id,
+                    array_agg(ca.option_id::text) AS selected_options
+                FROM checked_answers ca
+                JOIN "options" o ON ca.option_id = o.id
+                JOIN questions q ON o.question_id = q.id
+                WHERE q.poll_id = ${poll} AND ca.player_id = ${player}
+                GROUP BY o.question_id
+            )
+            SELECT COALESCE(
+                json_object_agg(question_id, selected_options), 
+                '{}'::json
+            ) AS answers_map
+            FROM grouped_answers
+        `;
+
+        const answersMap = result[0]?.answers_map || {};
+
+        return response.status(200).json(answersMap);
+
+    } catch (error: any) {
+        console.error("Fetch Player Answers Error:", error);
+        
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
+        }
+
+        return response.status(500).json({ error: "Wystąpił błąd podczas pobierania odpowiedzi gracza." });
+    }
+}
