@@ -34,7 +34,7 @@ describe('/api/poll_default_options', () => {
             query: { poll_id: '123e4567-e89b-12d3-a456-426614174000' }
         });
 
-        vi.mocked(sql).mockResolvedValueOnce([{ id: '1', name: 'Tak', sort_order: 0 }] as any);
+        vi.mocked(sql as any).mockResolvedValueOnce([{ id: '1', name: 'Tak', sort_order: 0 }] as any);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(200);
@@ -54,7 +54,7 @@ describe('/api/poll_default_options', () => {
 
     it('POST - fails if no permission', async () => {
         vi.mocked(jwt.verify).mockReturnValueOnce({ id: 'user1', role: 'user' } as any);
-        vi.mocked(sql).mockResolvedValueOnce([{ tournament_id: 't1' }] as any); // polls
+        vi.mocked(sql as any).mockResolvedValueOnce([{ tournament_id: 't1' }] as any); // polls
         vi.mocked(hasTournamentPermission).mockResolvedValueOnce(false);
 
         const { req, res } = createMocks({
@@ -69,7 +69,7 @@ describe('/api/poll_default_options', () => {
 
     it('POST - saves options for authorized user', async () => {
         vi.mocked(jwt.verify).mockReturnValueOnce({ id: 'admin1', role: 'admin' } as any);
-        vi.mocked(sql).mockResolvedValueOnce([{ tournament_id: 't1' }] as any); // polls
+        vi.mocked(sql as any).mockResolvedValueOnce([{ tournament_id: 't1' }] as any); // polls
         vi.mocked(hasTournamentPermission).mockResolvedValueOnce(true);
 
         const { req, res } = createMocks({
