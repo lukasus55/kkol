@@ -1,4 +1,4 @@
-import { ExternalLink, Info, Circle, CheckCircle2, Square, CheckSquare } from 'lucide-react';
+import { ExternalLink, Info, Circle, CheckCircle2, Square, CheckSquare, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { Tooltip } from '@/components/ui/Tooltip';
@@ -6,6 +6,7 @@ import { useToast } from '../ui/ToastProvider';
 import { ensureAbsoluteUrl } from '@/lib/utils';
 
 interface PollVoteTabProps {
+    poll: any;
     questions: any[];
     labels: any[];
     answers: Record<string, string[]>;
@@ -16,7 +17,7 @@ interface PollVoteTabProps {
 }
 
 export default function PollVoteTab({
-    questions, labels, answers, setAnswers, filterQuery, selectedLabels, permissions
+    poll, questions, labels, answers, setAnswers, filterQuery, selectedLabels, permissions
 }: PollVoteTabProps) {
     const { addToast } = useToast();
 
@@ -43,6 +44,16 @@ export default function PollVoteTab({
     const handleOptionToggle = (questionId: string, optionIdRaw: any, isMultiple: boolean) => {
         if (!permissions.canVote) {
             addToast({ message: "Nie masz uprawnień do głosowania.", type: "error" });
+            return;
+        }
+
+        if (permissions.votingStatus === 'not_started') {
+            addToast({ message: "Głosowanie jeszcze się nie rozpoczęło.", type: "error" });
+            return;
+        }
+
+        if (permissions.votingStatus === 'ended') {
+            addToast({ message: "Głosowanie zostało już zakończone.", type: "error" });
             return;
         }
 
@@ -84,6 +95,13 @@ export default function PollVoteTab({
     const sortedQuestions = [...filteredQuestions]
         .sort((a, b) => a.sort_order - b.sort_order);
 
+    const formatDate = (dateStr: string) => {
+        return new Date(dateStr).toLocaleString('pl-PL', { 
+            day: '2-digit', month: 'long', year: 'numeric', 
+            hour: '2-digit', minute: '2-digit' 
+        });
+    };
+
     if (sortedQuestions.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-20 text-text-500">
@@ -94,6 +112,27 @@ export default function PollVoteTab({
 
     return (
         <div className="flex flex-col gap-6 w-full pb-32">
+            
+            {permissions.votingStatus === 'not_started' && (
+                <div className="bg-accent-500/10 border border-accent-500 text-accent-700 p-4 rounded-md flex items-start gap-3">
+                    <Clock className="w-5 h-5 shrink-0 mt-0.5" />
+                    <div className="flex flex-col">
+                        <span className="font-bold">Głosowanie jeszcze się nie rozpoczęło</span>
+                        <span className="text-sm mt-0.5">Możesz przeglądać pytania, ale głosowanie będzie możliwe dopiero od: <span className="font-semibold">{poll.start_date ? formatDate(poll.start_date) : ''}</span>.</span>
+                    </div>
+                </div>
+            )}
+
+            {permissions.votingStatus === 'ended' && (
+                <div className="bg-text-200 border border-text-400 text-text-700 p-4 rounded-md flex items-start gap-3">
+                    <Clock className="w-5 h-5 shrink-0 mt-0.5" />
+                    <div className="flex flex-col">
+                        <span className="font-bold">Głosowanie zakończone</span>
+                        <span className="text-sm mt-0.5">Czas na oddawanie głosów minął {poll.end_date ? formatDate(poll.end_date) : ''}. Dziękujemy za udział!</span>
+                    </div>
+                </div>
+            )}
+
             {sortedQuestions.map((q) => {
 
                 const questionLabels = labels.filter(l => (q.label_ids || []).includes(l.id));
@@ -147,13 +186,15 @@ export default function PollVoteTab({
                         <div className="flex flex-col gap-1 mt-1">
                             {q.options?.map((opt: any) => {
                                 const isSelected = selectedOptionIds.some((id: any) => String(id) === String(opt.id));
+                                const isDisabled = permissions.votingStatus !== 'open';
                                 return (
-                                    <label key={opt.id} className="flex items-center gap-3 py-2 px-3 -mx-3 rounded-md cursor-pointer group hover:bg-bg-300 transition-colors">
+                                    <label key={opt.id} className={`flex items-center gap-3 py-2 px-3 -mx-3 rounded-md group transition-colors ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:bg-bg-300'}`}>
                                         <input
                                             type="checkbox"
                                             name={`q-${q.id}`}
                                             value={opt.id}
                                             checked={isSelected}
+                                            disabled={isDisabled}
                                             onChange={() => handleOptionToggle(q.id, opt.id, !!q.multiple_choice)}
                                             className="hidden"
                                         />

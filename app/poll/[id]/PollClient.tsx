@@ -117,11 +117,20 @@ export default function PollClient() {
         const canEditSettings = isGlobalAdmin || isTourManagerOrOwner;
         const rightsLevel = currentPoll.rights_level || 0;
 
+        const now = new Date();
+        const startDate = currentPoll.start_date ? new Date(currentPoll.start_date) : null;
+        const endDate = currentPoll.end_date ? new Date(currentPoll.end_date) : null;
+
+        let votingStatus = 'open';
+        if (startDate && startDate > now) votingStatus = 'not_started';
+        else if (endDate && endDate < now) votingStatus = 'ended';
+
         setPermissions({
           canEditSettings,
           canEditLabels: canEditSettings || rightsLevel >= 3,
           canEditQuestions: canEditSettings || rightsLevel >= 2,
           canVote: canEditSettings || isTourPlayer || rightsLevel >= 1, // Basic assumption
+          votingStatus
         });
 
         setUser(currentUser);
@@ -241,6 +250,7 @@ export default function PollClient() {
       <div className="mt-6 flex-1 w-full">
         {mode === 'vote' && (
           <PollVoteTab
+            poll={poll}
             questions={questions}
             labels={labels}
             answers={answers}

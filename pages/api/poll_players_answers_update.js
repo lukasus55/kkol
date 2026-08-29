@@ -42,9 +42,17 @@ export default async function handler(request, response) {
             }
         }
 
-        const tournamentRes = await sql`SELECT tournament_id FROM polls WHERE id = ${poll_id}`;
+        const tournamentRes = await sql`SELECT tournament_id, start_date, end_date FROM polls WHERE id = ${poll_id}`;
         if (tournamentRes.length === 0) return response.status(404).json({ error: "Ankieta nie istnieje." });
-        const tournament_id = tournamentRes[0].tournament_id;
+        const { tournament_id, start_date, end_date } = tournamentRes[0];
+
+        const now = new Date();
+        if (start_date && new Date(start_date) > now) {
+            return response.status(403).json({ error: "Głosowanie jeszcze się nie rozpoczęło." });
+        }
+        if (end_date && new Date(end_date) < now) {
+            return response.status(403).json({ error: "Głosowanie zostało już zakończone." });
+        }
 
         const permissions = await sql`
             SELECT
