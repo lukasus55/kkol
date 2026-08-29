@@ -1,22 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Event, Tournament, Player, TournamentOrganizer } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface EventCreateRequest extends NextApiRequest {
+    body: {
+        tournament_id: string;
+        name: string;
+        is_major: boolean;
+        start_date: string;
+        end_date?: string;
+    };
+}
+
+export default async function handler(request: EventCreateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // AUTHENTICATION
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { tournament_id, name, is_major, start_date, end_date } = request.body;
@@ -35,11 +45,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Nazwa wydarzenia może mieć maksymalnie 70 znaków." });
         }
 
-        // DATE VALIDATION
         const parsedStart = new Date(start_date);
         const minDate = new Date('2024-01-01T00:00:00');
-        
-        // Calculate max date: exactly 500 days from this exact moment
         const maxDate = new Date();
         maxDate.setDate(maxDate.getDate() + 500);
 
@@ -53,7 +60,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (end_date) {
             const parsedEnd = new Date(end_date);
-            
             if (isNaN(parsedEnd.getTime())) {
                 return response.status(400).json({ error: "Nieprawidłowy format daty końcowej." });
             }
@@ -65,8 +71,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             }
         }
 
-        // tournament VALIDATION
-        const tournamentCheck = await sql`
+        const tournamentCheck = await sql<Pick<Tournament, 'finished'>[]>`
             SELECT finished FROM tournaments WHERE id = ${tournament_id}
         `;
 
@@ -78,10 +83,9 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Nie możesz dodać wydarzenia do zakończonego turnieju." });
         }
 
-        // PERMISSION CHECK
         const [globalRoleCheck, tournamentRoleCheck] = await Promise.all([
-            sql`SELECT role FROM players WHERE id = ${requesterId}`,
-            sql`SELECT role FROM tournament_organizers WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}`
+            sql<Pick<Player, 'role'>[]>`SELECT role FROM players WHERE id = ${requesterId}`,
+            sql<Pick<TournamentOrganizer, 'role'>[]>`SELECT role FROM tournament_organizers WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}`
         ]);
 
         const globalRole = globalRoleCheck.length > 0 ? globalRoleCheck[0].role : 'user';
@@ -92,7 +96,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             hasPermission = true;
         } else if (tournamentRoleCheck.length > 0) {
             const tournamentRole = tournamentRoleCheck[0].role;
-            if (['owner', 'manager'].includes(tournamentRole)) {
+            if (tournamentRole && ['owner', 'manager'].includes(tournamentRole)) {
                 hasPermission = true;
             }
         }
@@ -101,8 +105,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień. Musisz być administratorem lub zarządcą tego turnieju." });
         }
 
-        // EXECUTE
-        const result = await sql`
+        const result = await sql<Pick<Event, 'id'>[]>`
             INSERT INTO events (tournament_id, creator_id, event_date, end_date, name, is_major)
             VALUES (${tournament_id}, ${requesterId}, ${start_date}, ${end_date || null}, ${clean_name}, ${is_major})
             RETURNING id

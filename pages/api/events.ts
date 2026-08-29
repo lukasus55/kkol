@@ -1,7 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Event, Player } from '../../types/db';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface EventsRequest extends NextApiRequest {
+    query: { 
+        tournament?: string; 
+        player?: string; 
+        format?: string; 
+        limit?: string; 
+        upcoming?: string; 
+    };
+}
+
+type EventRow = Pick<Event, 'id' | 'tournament_id' | 'creator_id' | 'event_date' | 'end_date' | 'name' | 'is_major'>;
+
+export default async function handler(request: EventsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -11,14 +24,13 @@ export default async function handler(request: NextApiRequest, response: NextApi
         const outputFormat = format || 'calendar';
         const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
         
-        // Convert the string parameter to a boolean
         const isUpcoming = upcoming === 'true';
         
-        let dbEvents;
+        let dbEvents: EventRow[];
 
         if (tournament) {
             if (isUpcoming) {
-                dbEvents = await sql`
+                dbEvents = await sql<EventRow[]>`
                     SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                     FROM events 
                     WHERE tournament_id = ${tournament} AND event_date > NOW()
@@ -26,7 +38,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     LIMIT ${actualLimit}
                 `;
             } else {
-                dbEvents = await sql`
+                dbEvents = await sql<EventRow[]>`
                     SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                     FROM events 
                     WHERE tournament_id = ${tournament}
@@ -37,7 +49,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
         } 
         else if (player) {
             if (isUpcoming) {
-                dbEvents = await sql`
+                dbEvents = await sql<EventRow[]>`
                     SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                     FROM events 
                     WHERE tournament_id IN (
@@ -47,7 +59,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     LIMIT ${actualLimit}
                 `;
             } else {
-                dbEvents = await sql`
+                dbEvents = await sql<EventRow[]>`
                     SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                     FROM events 
                     WHERE tournament_id IN (
@@ -60,7 +72,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
         } 
         else {
             if (isUpcoming) {
-                dbEvents = await sql`
+                dbEvents = await sql<EventRow[]>`
                     SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                     FROM events 
                     WHERE event_date > NOW()
@@ -68,7 +80,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     LIMIT ${actualLimit}
                 `;
             } else {
-                dbEvents = await sql`
+                dbEvents = await sql<EventRow[]>`
                     SELECT id, tournament_id, creator_id, event_date, end_date, name, is_major 
                     FROM events 
                     ORDER BY event_date DESC
@@ -77,9 +89,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
             }
         }
 
-        // Format output based on format parameter
         if (outputFormat === 'list') {
-            const listEvents = dbEvents.map(event => ({
+            const listEvents = dbEvents.map((event: EventRow) => ({
                 id: event.id,
                 tournament_id: event.tournament_id,
                 creator_id: event.creator_id,
@@ -92,8 +103,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(200).json(listEvents);
         }
 
-        // Default: Calendar format for FullCalendar
-        const calendarEvents = dbEvents.map(event => ({
+        const calendarEvents = dbEvents.map((event: EventRow) => ({
             id: event.id,
             title: event.name,
             start: event.event_date,

@@ -1,36 +1,41 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Event, Tournament, Player, TournamentOrganizer } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface EventUpdateResultsRequest extends NextApiRequest {
+    body: { 
+        event_id: number; 
+        results: { 
+            player_id: string; 
+            position: number | null; 
+            points: number | null; 
+        }[]; 
+    };
+}
+
+export default async function handler(request: EventUpdateResultsRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // AUTHENTICATION
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
-        // PAYLOAD VALIDATION
         const { event_id, results } = request.body || {};
 
-        if (!event_id) {
-            return response.status(400).json({ error: "Brak ID wydarzenia." });
+        if (!event_id || !Array.isArray(results)) {
+            return response.status(400).json({ error: "Brakujące lub nieprawidłowe dane wyników." });
         }
 
-        if (!Array.isArray(results)) {
-            return response.status(400).json({ error: "Wyniki muszą być przekazane w formie tablicy (array)." });
-        }
-
-        // TOURNAMENT & EVENT CHECK
-        const eventCheck = await sql`
+        const eventCheck = await sql<(Pick<Event, 'tournament_id'> & Pick<Tournament, 'finished'>)[]>`
             SELECT e.tournament_id, t.finished 
             FROM events e
             JOIN tournaments t ON e.tournament_id = t.id
@@ -42,25 +47,25 @@ export default async function handler(request: NextApiRequest, response: NextApi
         }
 
         if (eventCheck[0].finished === true) {
-            return response.status(400).json({ error: "Nie możesz edytować wyników w zakończonym turnieju." });
+            return response.status(400).json({ error: "Nie możesz edytować wydarzeń w zakończonym turnieju." });
         }
 
         const eventTournamentId = eventCheck[0].tournament_id;
 
-        // PERMISSION CHECK
-        const [globalRoleCheck, tournamentRoleCheck] = await Promise.all([
-            sql`SELECT role FROM players WHERE id = ${requesterId}`,
-            sql`SELECT role FROM tournament_organizers WHERE tournament_id = ${eventTournamentId} AND player_id = ${requesterId}`
+        const [globalRoleCheck, tournamentRoleCheckQuery] = await Promise.all([
+            sql<Pick<Player, 'role'>[]>`SELECT role FROM players WHERE id = ${requesterId}`,
+            sql<Pick<TournamentOrganizer, 'role'>[]>`SELECT role FROM tournament_organizers WHERE tournament_id = ${eventTournamentId || null} AND player_id = ${requesterId}`
         ]);
 
         const globalRole = globalRoleCheck.length > 0 ? globalRoleCheck[0].role : 'user';
+
         let hasPermission = false;
 
         if (globalRole === 'admin') {
             hasPermission = true;
-        } else if (tournamentRoleCheck.length > 0) {
-            const tournamentRole = tournamentRoleCheck[0].role;
-            if (['owner', 'manager'].includes(tournamentRole)) {
+        } else if (tournamentRoleCheckQuery.length > 0) {
+            const tournamentRole = tournamentRoleCheckQuery[0].role;
+            if (tournamentRole && ['owner', 'manager'].includes(tournamentRole)) {
                 hasPermission = true;
             }
         }
@@ -69,18 +74,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień. Musisz być administratorem lub zarządcą tego turnieju." });
         }
 
-        // sql.begin ensures that if one query fails, everything is rolled back.
         await sql.begin(async (t: any) => {
-            for (const playerResult of results) {
-                const { player_id, position, points } = playerResult;
+            for (const res of results) {
+                const { player_id, position, points } = res;
 
                 if (!player_id) continue;
 
-                // Ensure undefined values default to null for the database
                 const finalPosition = position !== undefined ? position : null;
                 const finalPoints = points !== undefined ? points : null;
 
-                const existingRecord = await t`
+                const existingRecord = await t<{ '?column?': number }[]>`
                     SELECT 1 FROM event_results 
                     WHERE event_id = ${event_id} AND player_id = ${player_id}
                 `;
@@ -100,7 +103,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             }
         });
 
-        return response.status(200).json({ success: true, message: "Wyniki zostały zaktualizowane." });
+        return response.status(200).json({ success: true });
 
     } catch (error: any) {
         console.error("Update Event Results Error:", error);

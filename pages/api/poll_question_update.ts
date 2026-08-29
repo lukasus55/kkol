@@ -73,8 +73,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 page_url: q.page_url || null,
                 multiple_choice: Boolean(q.multiple_choice),
                 sort_order: Number(q.sort_order) || 0,
-                options: [],
-                label_ids: []
+                options: [] as any[],
+                label_ids: [] as any[]
             };
 
             // Process Options
@@ -232,7 +232,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     DELETE FROM questions_poll_labels WHERE question_id = ${q.id}
                 `;
 
-                const labelIds = q.labels ? q.labels.map(l => l.id) : (q.label_ids || []);
+                const labelIds = q.labels ? q.labels.map((l: any) => l.id) : (q.label_ids || []);
                 for (const labelId of labelIds) {
                     await sqlTransaction`
                         INSERT INTO questions_poll_labels (question_id, label_id, poll_id)

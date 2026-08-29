@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
@@ -6,7 +7,14 @@ import { escapeHTML } from '../../public/js/utils/helpers.js';
 import { validatePassword } from '../../public/js/utils/validatePassword.js';
 import bcrypt from 'bcrypt';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface ChangePasswordRequest extends NextApiRequest {
+    body: {
+        old_password?: string;
+        new_password?: string;
+    };
+}
+
+export default async function handler(request: ChangePasswordRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -17,10 +25,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Not authenticated" });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
 
         const userId = decodedPayload.id;
-        const users = await sql`
+        const users = await sql<Pick<Player, 'id' | 'password_hash' | 'role' | 'is_active'>[]>`
             SELECT id, password_hash, role, is_active 
             FROM players 
             WHERE id = ${userId}

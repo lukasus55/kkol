@@ -1,7 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { EventResult, Event, Player } from '../../types/db';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface EventResultsRequest extends NextApiRequest {
+    query: {
+        id?: string;
+        tournament?: string;
+        player?: string;
+        major?: string;
+    };
+}
+
+export type EventResultRow = {
+    player_id: string;
+    displayed_name: string;
+    position: number | null;
+    points: number | string | null;
+    event_id: number;
+    event_name: string;
+    is_major_event: boolean;
+    tournament_id: string;
+};
+
+export default async function handler(request: EventResultsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed." });
     }
@@ -13,11 +34,11 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(422).json({ error: "ID, tournament or player parameter is mandatory." });
         }
 
-        let flatResults: any[] = [];
+        let flatResults: EventResultRow[] = [];
 
         // DATABASE FETCHING
         if (id) {
-            flatResults = await sql`
+            flatResults = await sql<EventResultRow[]>`
                 SELECT r.player_id, p.displayed_name, er.position, er.points, e.id AS event_id, e.name AS event_name, e.is_major AS is_major_event, e.tournament_id 
                 FROM events e 
                 INNER JOIN results r 
@@ -30,7 +51,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 ORDER BY e.event_date;`;
         }
         else if (tournament) {
-            flatResults = await sql`
+            flatResults = await sql<EventResultRow[]>`
                 SELECT r.player_id, p.displayed_name, er.position, er.points, e.id AS event_id, e.name AS event_name, e.is_major AS is_major_event, e.tournament_id
                 FROM events e 
                 INNER JOIN results r 
@@ -43,7 +64,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 ORDER BY e.event_date;`;
         }
         else if (player) {
-            flatResults = await sql`
+            flatResults = await sql<EventResultRow[]>`
                 SELECT r.player_id, p.displayed_name, er.position, er.points, e.id AS event_id, e.name AS event_name, e.is_major AS is_major_event, e.tournament_id
                 FROM events e 
                 INNER JOIN results r 
@@ -56,17 +77,15 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 ORDER BY e.event_date;`;
         }
 
-        // OPTIONAL FILTERING
-        // Could use 6 separate sql queries to save memory instead of this filtering method but the scale of the db is too small to care about that and this way code looks cleaner.
         if (major === 'true') {
-            flatResults = (flatResults || []).filter(row => row.is_major_event === true);
+            flatResults = flatResults.filter((row: EventResultRow) => row.is_major_event === true);
         } else if (major === 'false') {
-            flatResults = (flatResults || []).filter(row => row.is_major_event === false);
+            flatResults = flatResults.filter((row: EventResultRow) => row.is_major_event === false);
         }
 
-        const groupedMap = new Map();
+        const groupedMap = new Map<number, any>();
 
-        flatResults.forEach(row => {
+        flatResults.forEach((row: EventResultRow) => {
             if (!groupedMap.has(row.event_id)) {
                 groupedMap.set(row.event_id, {
                     event_id: row.event_id,
@@ -85,9 +104,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             });
         });
 
-        // Sorted by event_date (ORDER BY e.event_date sql query)
         const finalPayload = Array.from(groupedMap.values());
-
         return response.status(200).json(finalPayload);
         
     } catch (error: any) {

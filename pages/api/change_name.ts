@@ -1,10 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface ChangeNameRequest extends NextApiRequest {
+    body: {
+        new_name: string;
+    };
+}
+
+export default async function handler(request: ChangeNameRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -15,7 +22,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Not authenticated" });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const userId = decodedPayload.id;
 
         const { new_name } = request.body;
@@ -30,9 +37,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
         }
 
         const cleanName = clean_new_name.trim();
-        
 
-        const userCheck = await sql`
+        const userCheck = await sql<Pick<Player, 'last_name_change'>[]>`
             SELECT last_name_change FROM players WHERE id = ${userId}
         `;
 
