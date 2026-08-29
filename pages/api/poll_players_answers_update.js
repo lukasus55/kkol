@@ -42,6 +42,29 @@ export default async function handler(request, response) {
             }
         }
 
+        const tournamentRes = await sql`SELECT tournament_id, start_date, end_date FROM polls WHERE id = ${poll_id}`;
+        if (tournamentRes.length === 0) return response.status(404).json({ error: "Ankieta nie istnieje." });
+        const { tournament_id, start_date, end_date } = tournamentRes[0];
+
+        const now = new Date();
+        if (start_date && new Date(start_date) > now) {
+            return response.status(403).json({ error: "Głosowanie jeszcze się nie rozpoczęło." });
+        }
+        if (end_date && new Date(end_date) < now) {
+            return response.status(403).json({ error: "Głosowanie zostało już zakończone." });
+        }
+
+        const permissions = await sql`
+            SELECT
+                (SELECT role FROM players WHERE id = ${requesterId}) as global_role,
+                EXISTS(SELECT 1 FROM tournament_organizers WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}) as is_organizer,
+                EXISTS(SELECT 1 FROM results WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}) as is_player
+        `;
+        const p = permissions[0];
+        if (p.global_role !== 'admin' && !p.is_organizer && !p.is_player) {
+            return response.status(403).json({ error: "Brak dostępu. Musisz być przypisany do turnieju, aby głosować." });
+        }
+
         // ------------------------------------------------------------------
         // SECURITY & DB TRANSACTION
         // ------------------------------------------------------------------
