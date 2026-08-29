@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Clock, Filter, Tag, Settings, BarChart2, Pencil, CheckSquare, Search } from 'lucide-react';
+import { Clock, Filter, Tag, Settings, BarChart2, Pencil, CheckSquare, Search, Users } from 'lucide-react';
 
 interface PollHeaderProps {
   poll: any;
@@ -13,12 +13,13 @@ interface PollHeaderProps {
   setSelectedLabels: React.Dispatch<React.SetStateAction<string[]>>;
   onOpenSettings?: () => void;
   onOpenLabels?: () => void;
+  totalParticipants?: number | null;
 }
 
 export default function PollHeader({
   poll, mode, setMode, permissions, labels,
   filterQuery, setFilterQuery, selectedLabels, setSelectedLabels,
-  onOpenSettings, onOpenLabels
+  onOpenSettings, onOpenLabels, totalParticipants
 }: PollHeaderProps) {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -159,9 +160,17 @@ export default function PollHeader({
           <h1 className="text-3xl md:text-5xl font-bold text-text-900 font-markazi break-words leading-tight">
             {poll.name}
           </h1>
-          <div className="flex items-center gap-2 text-text-500 text-sm mt-1">
-            <Clock className="w-4 h-4" />
-            <span title={formattedDate}>Koniec: {formattedDate}</span>
+          <div className="flex items-center gap-4 flex-wrap text-text-500 text-sm mt-1">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span title={formattedDate}>Koniec: {formattedDate}</span>
+            </div>
+            {totalParticipants != null && (
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                <span>Uczestników: {totalParticipants}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

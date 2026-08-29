@@ -90,7 +90,7 @@ export interface PollDefaultOption {
     id: number | string;
     poll_id: string;
     name: string;
-    hex: string;
+    sort_order: number;
 }
 
 export interface PollLabel {

@@ -38,6 +38,7 @@ export default function PollClient() {
   const [labels, setLabels] = useState<any[]>([]);
   const [questions, setQuestions] = useState<any[]>([]);
   const [pollDefaultOptions, setPollDefaultOptions] = useState<any[]>([]);
+  const [totalParticipants, setTotalParticipants] = useState<number | null>(null);
   const [answers, setAnswers] = useState<Record<string, string[]>>({}); // { question_id: [option_id, ...] }
   
   // Original states for Reset
@@ -101,6 +102,7 @@ export default function PollClient() {
         const questionsRes = await fetch(`/api/poll_questions?poll=${pollId}&t=${timestamp}`);
         const answersRes = await fetch(`/api/poll_player_answers?poll=${pollId}&player=${currentUser.id}&t=${timestamp}`);
         const defaultOptionsRes = await fetch(`/api/poll_default_options?poll_id=${pollId}&t=${timestamp}`);
+        const resultsRes = await fetch(`/api/poll_results?poll=${pollId}&t=${timestamp}`);
 
         if (!questionsRes.ok) {
             const errData = await questionsRes.json();
@@ -111,6 +113,7 @@ export default function PollClient() {
         const questionsData = await questionsRes.json();
         const answersMap = await answersRes.json(); // API returns Record<string, string[]>
         const defaultOptionsData = defaultOptionsRes.ok ? await defaultOptionsRes.json() : [];
+        const resultsDataJson = resultsRes.ok ? await resultsRes.json() : null;
 
         // Permission Logic
         const isGlobalAdmin = currentUser.role === 'admin';
@@ -141,6 +144,7 @@ export default function PollClient() {
         setPoll(currentPoll);
         setLabels(labelsData || []);
         setPollDefaultOptions(defaultOptionsData || []);
+        if (resultsDataJson) setTotalParticipants(resultsDataJson.total_participants);
         
         setQuestions(questionsData || []);
         setOriginalQuestions(JSON.parse(JSON.stringify(questionsData || []))); // deep copy
@@ -249,6 +253,7 @@ export default function PollClient() {
         setSelectedLabels={setSelectedLabels}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
         onOpenLabels={() => setIsLabelsModalOpen(true)}
+        totalParticipants={totalParticipants}
       />
 
       {/* CONTENT */}
