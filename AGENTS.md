@@ -15,12 +15,13 @@ Każdy nowo tworzony lub refaktorowany popup/modal musi przestrzegać następuj�
 2. Zamykanie za pomocą naciśnięcia poza oknem popupa (kliknięcie w zaciemnione tło/backdrop).
 3. Zamykanie za pomocą klawisza "ESC" na klawiaturze.
 
-## 3. Komenda "refactor stronaxyz"
-Jeśli użytkownik użyje sformułowania w stylu "refactor stronaxyz" lub "przepisz stronę", oznacza to następujący zestaw działań do wykonania przez agenta:
-1. Odtworzenie **layoutu i układu** na podstawie dostarczonego zrzutu ekranu (oraz starych plików HTML/JS, jeśli istnieją).
-2. Wykorzystanie nowoczesnego stosu technologicznego: **React (Next.js App Router) + Tailwind CSS**.
-3. Rezygnacja ze starych, sztywnych kolorów/klas z poprzednich plików (np. `login.css`) i zastosowanie **naszego domyślnego motywu, kolorów oraz komponentów** (np. `components/ui/`).
-4. Utrzymanie pełnej spójności wizualnej (nasze przyciski, kolory tła, akcenty z `globals.css`).
+## 3. Testowanie Backendu (Vitest)
+Kiedy edytujesz, modyfikujesz, lub tworzysz jakikolwiek plik backendowy (np. endpointy API w `pages/api/`), **zawsze** musisz zaktualizować lub napisać dla nich rygorystyczne testy jednostkowe. 
+- Testy znajdują się w folderze `__tests__/api/`.
+- Wykorzystuj środowisko `vitest` oraz `node-mocks-http` do symulowania żądań.
+- Pamiętaj o mockowaniu zapytań bazodanowych (`vi.hoisted` + `vi.mock('../../db.js')`).
+- Dokładnie sprawdzaj *edge case'y* (nieprawidłowe dane, brak uprawnień, walidacje).
+- **Po każdych większych modyfikacjach backendu masz obowiązek uruchomić komendę `npx vitest run` w terminalu**, aby zweryfikować czy wszystko działa poprawnie.
 
 ## 4. Płaski Design (Flat Design)
 Aplikacja KKOL bazuje na **płaskim designie**. Unikaj używania głębokich cieni (`shadow-md`, `shadow-lg`, `shadow-xl` itp.). Zamiast cieni, do oddzielania elementów i kontenerów od tła używaj subtelnych różnic w odcieniach tła (`bg-bg-100` vs `bg-bg-200`).
