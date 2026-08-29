@@ -128,28 +128,29 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
         const pollCheck = await sql<Pick<Poll, 'tournament_id' | 'rights_level'>[]>`
             SELECT tournament_id, rights_level FROM polls WHERE id = ${poll_id}
         `;
-        
+
         if (pollCheck.length === 0) {
             return response.status(404).json({ error: "Ankieta nie istnieje." });
         }
-        
+
         const tournamentId = pollCheck[0].tournament_id;
         const rightsLevel = pollCheck[0].rights_level;
 
         const allowedByRules = rightsLevel >= 2 && await isPartOfTournament(requesterId, tournamentId);
         const hasPermission = allowedByRules || await hasTournamentPermission(requesterId, tournamentId);
-        
+
         if (!hasPermission) {
             return response.status(403).json({ error: "Brak uprawnień do edycji pytań. Musisz być administratorem, zarządcą turnieju lub posiadać odpowiednie uprawnienia." });
         }
 
-        const incomingValidIds: string[] = []; 
+        const incomingValidIds: string[] = [];
         const toInsert: ProcessedQuestion[] = [];
         const toUpdate: ProcessedQuestion[] = [];
 
-        for (const q of questions) {
+        for (let i = 0; i < questions.length; i++) {
+            const q = questions[i];
             const clean_name = escapeHTML(q.name || '');
-            
+
             if (clean_name.trim().length < 3) {
                 return response.status(400).json({ error: `Pytanie "${clean_name}" musi mieć co najmniej 3 znaki.` });
             }
@@ -162,7 +163,7 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
                 name: clean_name,
                 page_url: q.page_url || null,
                 multiple_choice: Boolean(q.multiple_choice),
-                sort_order: Number(q.sort_order) || 0,
+                sort_order: i, // Always based on order from frontend
                 options: [],
                 label_ids: []
             };
@@ -171,7 +172,7 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
                 for (const opt of q.options) {
                     const clean_opt_name = escapeHTML(opt.name || '');
                     if (clean_opt_name.trim().length === 0) continue;
-                    
+
                     processedQuestion.options.push({
                         id: opt.id,
                         name: clean_opt_name
@@ -190,7 +191,7 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
             }
 
             if (!q.id || String(q.id).startsWith('temp-') || String(q.id).startsWith('new-')) {
-                processedQuestion.id = uuidv7(); 
+                processedQuestion.id = uuidv7();
                 toInsert.push(processedQuestion);
             } else {
                 incomingValidIds.push(q.id);
@@ -272,9 +273,9 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
             const allProcessedQuestions = [...toUpdate, ...toInsert];
 
             for (const q of allProcessedQuestions) {
-                
+
                 const incomingOptIds = q.options
-                    .filter((o: { id?: string; name: string }) => o.id && !String(o.id).startsWith('temp-') && !String(o.id).startsWith('new-'))
+                    .filter((o: { id?: string; name: string }) => o.id && /^\d+$/.test(String(o.id)))
                     .map((o: { id?: string; name: string }) => o.id as string);
 
                 if (incomingOptIds.length > 0) {
@@ -322,11 +323,11 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
 
     } catch (error: any) {
         console.error("Update Questions Error:", error);
-        
+
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
             return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
         }
-        
+
         if (error.code === '23505') {
             return response.status(409).json({ error: "Konflikt danych (np. w kolejności). Spróbuj zapisać ponownie." });
         }
