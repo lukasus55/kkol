@@ -9,6 +9,7 @@ interface PollEditTabProps {
     permissions: any;
     filterQuery?: string;
     selectedLabels?: string[];
+    pollDefaultOptions?: any[];
 }
 
 const AddQuestionButton = ({ onClick, className = '' }: { onClick: () => void, className?: string }) => (
@@ -21,7 +22,7 @@ const AddQuestionButton = ({ onClick, className = '' }: { onClick: () => void, c
 );
 
 export default function PollEditTab({
-    questions, setQuestions, labels, permissions, filterQuery, selectedLabels = []
+    questions, setQuestions, labels, permissions, filterQuery, selectedLabels = [], pollDefaultOptions = []
 }: PollEditTabProps) {
 
     // Drag & Drop
@@ -153,14 +154,23 @@ export default function PollEditTab({
     };
 
     const handleAddQuestion = (atTop = false) => {
+        let initialOptions = [
+            { id: `temp-opt-${Date.now()}-1`, name: '' },
+            { id: `temp-opt-${Date.now()}-2`, name: '' }
+        ];
+
+        if (pollDefaultOptions && pollDefaultOptions.length > 0) {
+            initialOptions = pollDefaultOptions.map((opt, i) => ({
+                id: `temp-opt-${Date.now()}-${i}`,
+                name: opt.name
+            }));
+        }
+
         const newQuestion = {
             id: `new-${Date.now()}`,
             name: '',
             multiple_choice: false,
-            options: [
-                { id: `temp-opt-${Date.now()}-1`, name: '' },
-                { id: `temp-opt-${Date.now()}-2`, name: '' }
-            ],
+            options: initialOptions,
             labels: []
         };
 

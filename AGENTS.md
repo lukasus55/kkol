@@ -23,7 +23,10 @@ Kiedy edytujesz, modyfikujesz, lub tworzysz jakikolwiek plik backendowy (np. end
 - Dokładnie sprawdzaj *edge case'y* (nieprawidłowe dane, brak uprawnień, walidacje).
 - **Po każdych większych modyfikacjach backendu masz obowiązek uruchomić komendę `npx vitest run` w terminalu**, aby zweryfikować czy wszystko działa poprawnie.
 
-## 4. Płaski Design (Flat Design)
+## 4. Struktura Bazy Danych
+Plik `types/db.ts` może służyć jako podgląd na strukturę bazy danych. Traktuj go jako użyteczny drogowskaz, ale pamiętaj, że nie jest on perfekcyjnym odzwierciedleniem bazy (np. nie zawiera dokładnych informacji o kluczach obcych czy constraintach). Zawsze możesz na niego spojrzeć, aby zrozumieć ogólny zarys modeli danych.
+
+## 5. Płaski Design (Flat Design)
 Aplikacja KKOL bazuje na **płaskim designie**. Unikaj używania głębokich cieni (`shadow-md`, `shadow-lg`, `shadow-xl` itp.). Zamiast cieni, do oddzielania elementów i kontenerów od tła używaj subtelnych różnic w odcieniach tła (`bg-bg-100` vs `bg-bg-200`).
 Kieruj się minimalizmem wizualnym bez efektów przestrzennych.
 

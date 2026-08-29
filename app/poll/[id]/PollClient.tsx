@@ -37,6 +37,7 @@ export default function PollClient() {
   const [poll, setPoll] = useState<any>(null);
   const [labels, setLabels] = useState<any[]>([]);
   const [questions, setQuestions] = useState<any[]>([]);
+  const [pollDefaultOptions, setPollDefaultOptions] = useState<any[]>([]);
   const [answers, setAnswers] = useState<Record<string, string[]>>({}); // { question_id: [option_id, ...] }
   
   // Original states for Reset
@@ -99,6 +100,7 @@ export default function PollClient() {
         const labelsRes = await fetch(`/api/poll_labels?poll=${pollId}&t=${timestamp}`);
         const questionsRes = await fetch(`/api/poll_questions?poll=${pollId}&t=${timestamp}`);
         const answersRes = await fetch(`/api/poll_player_answers?poll=${pollId}&player=${currentUser.id}&t=${timestamp}`);
+        const defaultOptionsRes = await fetch(`/api/poll_default_options?poll_id=${pollId}&t=${timestamp}`);
 
         if (!questionsRes.ok) {
             const errData = await questionsRes.json();
@@ -108,6 +110,7 @@ export default function PollClient() {
         const labelsData = await labelsRes.json();
         const questionsData = await questionsRes.json();
         const answersMap = await answersRes.json(); // API returns Record<string, string[]>
+        const defaultOptionsData = defaultOptionsRes.ok ? await defaultOptionsRes.json() : [];
 
         // Permission Logic
         const isGlobalAdmin = currentUser.role === 'admin';
@@ -137,6 +140,7 @@ export default function PollClient() {
         setUser(currentUser);
         setPoll(currentPoll);
         setLabels(labelsData || []);
+        setPollDefaultOptions(defaultOptionsData || []);
         
         setQuestions(questionsData || []);
         setOriginalQuestions(JSON.parse(JSON.stringify(questionsData || []))); // deep copy
@@ -280,6 +284,7 @@ export default function PollClient() {
             permissions={permissions}
             filterQuery={filterQuery}
             selectedLabels={selectedLabels}
+            pollDefaultOptions={pollDefaultOptions}
           />
         )}
       </div>
@@ -368,10 +373,14 @@ export default function PollClient() {
       {/* MODALS */}
       <PollSettingsModal 
         poll={poll}
+        pollDefaultOptions={pollDefaultOptions}
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
         onSuccess={(updatedPoll) => {
             setPoll(updatedPoll);
+        }}
+        onSuccessOptions={(opts) => {
+            setPollDefaultOptions(opts);
         }}
       />
 
