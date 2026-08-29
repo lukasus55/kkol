@@ -1,22 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Poll, Tournament, Player } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface PollDeleteRequest extends NextApiRequest {
+    body: {
+        id: string;
+    };
+}
+
+export default async function handler(request: PollDeleteRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // AUTHENTICATION
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { id } = request.body;
@@ -25,8 +31,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Brak ID ankiety do usunięcia." });
         }
 
-        // poll validation
-        const pollCheck = await sql`
+        const pollCheck = await sql<Pick<Poll, 'tournament_id'>[]>`
             SELECT tournament_id FROM polls WHERE id = ${id}
         `;
         
@@ -36,8 +41,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
         
         const tournamentId = pollCheck[0].tournament_id;
 
-        // tournament validation
-        const tournamentCheck = await sql`
+        const tournamentCheck = await sql<Pick<Tournament, 'finished'>[]>`
             SELECT finished FROM tournaments WHERE id = ${tournamentId}
         `;
 
@@ -50,7 +54,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień do usunięcia tej ankiety. Musisz być administratorem lub zarządcą tego turnieju." });
         }
 
-        // EXECUTE
         await sql`DELETE FROM polls WHERE id = ${id}`;
 
         return response.status(200).json({ success: true });

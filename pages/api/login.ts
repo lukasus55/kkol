@@ -1,24 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player } from '../../types/db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie'
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface LoginRequest extends NextApiRequest {
+    body: {
+        username?: string;
+        password?: string;
+    };
+}
+
+export default async function handler(request: LoginRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        
-        
         const { username, password } = request.body;
 
         if (!username || !password) {
             return response.status(400).json({ error: "Username and password are required" });
         }
 
-        const users = await sql`
+        const users = await sql<Pick<Player, 'id' | 'password_hash' | 'role' | 'is_active'>[]>`
             SELECT id, password_hash, role, is_active 
             FROM players 
             WHERE id = ${username}
@@ -33,7 +39,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "This account has been disabled." });
         }
 
-        // Compare the typed password with the hash in the database
         const passwordsMatch = await bcrypt.compare(password, user.password_hash);
 
         if (!passwordsMatch) {
@@ -49,10 +54,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
         );
 
         const cookieHeader = serialize('auth_token', token, {
-            httpOnly: true, // JavaScript cannot read this, preventing theft
-            secure: process.env.NODE_ENV === 'production', // Use HTTPS in production, allow HTTP on localhost
-            sameSite: 'lax', // maintains 99% of the security of strict but allows the cookie to survive the login redirect
-            maxAge: 60 * 60 * 2, // 2 hours
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 2,
             path: '/'
         });
 

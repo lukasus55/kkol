@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { GdLevel, GdScore } from '../../types/db';
 import sql from '../../db.js';
 
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     try {
-        
-
         const [levels, scores] = await Promise.all([
-            sql`SELECT * FROM gd_levels ORDER BY id ASC`,
-            sql`SELECT * FROM gd_scores`
+            sql<GdLevel[]>`SELECT * FROM gd_levels ORDER BY id ASC`,
+            sql<GdScore[]>`SELECT * FROM gd_scores`
         ]);
 
         const result = {

@@ -1,16 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, TournamentOrganizer } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import sql from '../../db.js';
 import { parse } from 'cookie';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
-    // Use GET since we are only fetching data, not modifying it yet
+interface TournamentEditorDetailsRequest extends NextApiRequest {
+    query: {
+        tournamentId?: string;
+    };
+}
+
+type MemberData = {
+    id: string;
+    displayed_name: string | null;
+    attended: boolean;
+    position: number;
+    total_points: number;
+    organizer_role: string | null;
+};
+
+export default async function handler(request: TournamentEditorDetailsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // Securely identify the user making the request
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
@@ -18,20 +32,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(401).json({ error: "Not authenticated" });
         }
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const userId = decodedPayload.id;
 
-        // In a GET request, data is passed in the URL query string (e.g., ?tournamentId=kol2024)
         const { tournamentId } = request.query;
 
         if (!tournamentId) {
             return response.status(400).json({ error: "Tournament ID is required" });
         }
 
-        
-
-        // Is this an owner or manager of this specific tournament?
-        const authCheck = await sql`
+        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
             SELECT role 
             FROM tournament_organizers 
             WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
@@ -41,7 +51,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
         }
 
-        const membersData = await sql`
+        const membersData = await sql<MemberData[]>`
             SELECT 
                 r.player_id as id,
                 p.displayed_name,
@@ -58,7 +68,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
             ORDER BY r.position ASC
         `;
 
-        // Send the data back to the frontend popup!
         return response.status(200).json({ 
             tournament_id: tournamentId,
             current_user_id: userId,

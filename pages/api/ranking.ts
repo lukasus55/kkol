@@ -1,18 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Tournament } from '../../types/db';
 import sql from '../../db.js';
 
-// Wzór na ranking KKOL to suma następujących elementów:
-// - S-SCORE (majorRanking): Średnia z 2 ostatnich (w ujęciu globalnym) turniejów S-Tier (15pkt, 10pkt, 5pkt). 
-//   Nieobecność na którymś z tych turniejów oznacza 0 punktów wliczanych do średniej (wynik zawsze dzielony przez 2).
-// - AB-SCORE (minorRanking): Średnia z 3 ostatnich (w ujęciu globalnym) turniejów A-Tier lub B-Tier (7pkt, 4pkt, 1pkt). 
-//   Podobnie jak wyżej, nieobecność to 0 punktów wliczanych do średniej z 3 turniejów.
-//
-// *Uwaga: Jeśli w historii ligi odbyło się ogółem mniej turniejów z danej kategorii (np. tylko 1 S-Tier), 
-// średnia jest liczona tylko z tych, które faktycznie miały miejsce (dzielnik nie zaniża sztucznie punktów).*
-//
-// W przypadku remisu na danej pozycji w danym turnieju punkty rankingowe za miejsca zajęte ex aequo 
-// są sumowane, a następnie dzielone po równo. Kolejne miejsce w klasyfikacji zostaje pominięte o liczbę 
-// zawodników biorących udział w remisie.
+interface RankingRequest extends NextApiRequest {
+    query: {
+        id?: string;
+    };
+}
+
+type RankingResultRow = {
+    tournament_id: string;
+    tournament_tier: string;
+    player_id: string;
+    player_position: number;
+    player_name: string;
+    player_pfp_base64: string | null;
+};
 
 const TIER_POINTS: Record<string, number[]> = {
     S: [15, 10, 5],
@@ -20,17 +23,17 @@ const TIER_POINTS: Record<string, number[]> = {
     B: [7, 4, 1]
 };
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+export default async function handler(request: RankingRequest, response: NextApiResponse) {
     try {
         const { id } = request.query;
 
-        const lastSTournaments = await sql`
+        const lastSTournaments = await sql<Pick<Tournament, 'id' | 'tier'>[]>`
             SELECT id, tier FROM tournaments 
             WHERE finished = true AND tier = 'S' 
             ORDER BY end_date DESC LIMIT 2
         `;
 
-        const lastABTournaments = await sql`
+        const lastABTournaments = await sql<Pick<Tournament, 'id' | 'tier'>[]>`
             SELECT id, tier FROM tournaments 
             WHERE finished = true AND tier IN ('A', 'B') 
             ORDER BY end_date DESC LIMIT 3
@@ -43,7 +46,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(200).json([]);
         }
 
-        const results = await sql`
+        const results = await sql<RankingResultRow[]>`
             SELECT t.id "tournament_id", t.tier "tournament_tier", r.player_id, r.position "player_position", p.displayed_name "player_name", p.pfp_base64 "player_pfp_base64"
             FROM tournaments t 
             INNER JOIN results r ON t.id = r.tournament_id

@@ -1,10 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Poll, Player } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface PollResultsRequest extends NextApiRequest {
+    query: {
+        poll?: string;
+    };
+}
+
+export default async function handler(request: PollResultsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -20,8 +27,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Id ankiety musi być typu uuidv7" });
         }
 
-        // Verify poll exists
-        const pollCheck = await sql`
+        const pollCheck = await sql<Pick<Poll, 'id' | 'tournament_id'>[]>`
             SELECT id, tournament_id FROM polls WHERE id = ${poll}
         `;
         
@@ -35,10 +41,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
         const token = cookies.auth_token;
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
         
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
-        const permissions = await sql`
+        const permissions = await sql<{ global_role: string, is_organizer: boolean, is_player: boolean }[]>`
             SELECT
                 (SELECT role FROM players WHERE id = ${requesterId}) as global_role,
                 EXISTS(SELECT 1 FROM tournament_organizers WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}) as is_organizer,
@@ -49,8 +55,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak dostępu. Musisz być przypisany do turnieju, aby zobaczyć wyniki tej ankiety." });
         }
 
-        // Get total unique participants for the entire poll
-        const participantsResult = await sql`
+        const participantsResult = await sql<{ total: number }[]>`
             SELECT COUNT(DISTINCT ca.player_id)::int AS total
             FROM checked_answers ca
             JOIN "options" o ON ca.option_id = o.id
@@ -59,10 +64,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
         `;
         const totalParticipants = participantsResult[0].total;
 
-        // Aggregated Math Query (returning a nested Dictionary/Map object)
-        const resultsData = await sql`
+        const resultsData = await sql<{ final_results: Record<string, any> }[]>`
             WITH option_counts AS (
-                -- Count the votes for every specific option and aggregate voters
                 SELECT 
                     o.question_id,
                     o.id AS option_id,
@@ -85,7 +88,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 GROUP BY o.question_id, o.id, o.name
             ),
             question_totals AS (
-                -- Find the total votes cast per question
                 SELECT 
                     question_id,
                     SUM(vote_count)::int AS total_votes
@@ -93,7 +95,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 GROUP BY question_id
             ),
             calculated_options AS (
-                -- Calculate the percentages
                 SELECT 
                     oc.question_id,
                     oc.option_id,
@@ -108,7 +109,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 JOIN question_totals qt ON oc.question_id = qt.question_id
             ),
             questions_aggregated AS (
-                -- Package options into a JSON object mapped by option_id
                 SELECT 
                     q.id AS question_id,
                     q."name" AS question_name,
@@ -129,7 +129,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 WHERE q.poll_id = ${poll}
                 GROUP BY q.id, q."name", q.sort_order
             )
-            -- Package all questions into a final JSON object mapped by question_id
             SELECT COALESCE(
                 json_object_agg(
                     question_id,
@@ -143,8 +142,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             FROM questions_aggregated;
         `;
 
-        // sql[] returns an array of rows
-        const finalResultsMap = resultsData[0].final_results;
+        const finalResultsMap = resultsData[0]?.final_results || {};
 
         return response.status(200).json({
             poll_id: poll,

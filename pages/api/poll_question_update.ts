@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Poll, Player } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
 import { uuidv7 } from "uuidv7";
@@ -6,21 +7,51 @@ import { parse } from 'cookie';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 import { hasTournamentPermission, isPartOfTournament } from '../../public/js/utils/permissionChecks.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+type QuestionOption = {
+    id?: string;
+    name: string;
+};
+
+type IncomingQuestion = {
+    id?: string;
+    name: string;
+    page_url?: string;
+    multiple_choice: boolean;
+    sort_order: number;
+    options: QuestionOption[];
+    label_ids?: number[];
+    labels?: { id: number }[];
+};
+
+type ProcessedQuestion = {
+    id: string;
+    name: string;
+    page_url: string | null;
+    multiple_choice: boolean;
+    sort_order: number;
+    options: { id: string | undefined; name: string }[];
+    label_ids: number[];
+};
+
+interface PollQuestionUpdateRequest extends NextApiRequest {
+    body: {
+        poll_id: string;
+        questions: IncomingQuestion[];
+    };
+}
+
+export default async function handler(request: PollQuestionUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // ------------------------------------------------------------------
-        // AUTHENTICATION
-        // ------------------------------------------------------------------
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { poll_id, questions } = request.body;
@@ -29,10 +60,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Brakujące dane (Id ankiety lub lista pytań)." });
         }
 
-        // ------------------------------------------------------------------
-        // PERMISSION CHECKS
-        // ------------------------------------------------------------------
-        const pollCheck = await sql`
+        const pollCheck = await sql<Pick<Poll, 'tournament_id' | 'rights_level'>[]>`
             SELECT tournament_id, rights_level FROM polls WHERE id = ${poll_id}
         `;
         
@@ -50,12 +78,9 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień do edycji pytań. Musisz być administratorem, zarządcą turnieju lub posiadać odpowiednie uprawnienia." });
         }
 
-        // ------------------------------------------------------------------
-        // PAYLOAD PARSING & SANITIZATION
-        // ------------------------------------------------------------------
-        const incomingValidIds: any[] = []; 
-        const toInsert: any[] = [];
-        const toUpdate: any[] = [];
+        const incomingValidIds: string[] = []; 
+        const toInsert: ProcessedQuestion[] = [];
+        const toUpdate: ProcessedQuestion[] = [];
 
         for (const q of questions) {
             const clean_name = escapeHTML(q.name || '');
@@ -67,17 +92,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 return response.status(400).json({ error: `Pytanie "${clean_name}" może mieć maksymalnie 100 znaków.` });
             }
 
-            const processedQuestion = {
-                id: q.id,
+            const processedQuestion: ProcessedQuestion = {
+                id: q.id || '',
                 name: clean_name,
                 page_url: q.page_url || null,
                 multiple_choice: Boolean(q.multiple_choice),
                 sort_order: Number(q.sort_order) || 0,
-                options: [] as any[],
-                label_ids: [] as any[]
+                options: [],
+                label_ids: []
             };
 
-            // Process Options
             if (Array.isArray(q.options)) {
                 for (const opt of q.options) {
                     const clean_opt_name = escapeHTML(opt.name || '');
@@ -90,18 +114,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 }
             }
 
-            // Process Labels (we only need their IDs for the junction table)
             if (Array.isArray(q.label_ids)) {
                 for (const lblId of q.label_ids) {
-                    if (lblId) processedQuestion.label_ids.push(lblId);
+                    if (lblId !== undefined && lblId !== null) processedQuestion.label_ids.push(lblId);
                 }
             } else if (Array.isArray(q.labels)) {
                 for (const lbl of q.labels) {
-                    if (lbl.id) processedQuestion.label_ids.push(lbl.id);
+                    if (lbl.id !== undefined && lbl.id !== null) processedQuestion.label_ids.push(lbl.id);
                 }
             }
 
-            // Route to correct array
             if (!q.id || String(q.id).startsWith('temp-') || String(q.id).startsWith('new-')) {
                 processedQuestion.id = uuidv7(); 
                 toInsert.push(processedQuestion);
@@ -111,14 +133,9 @@ export default async function handler(request: NextApiRequest, response: NextApi
             }
         }
 
-        // ------------------------------------------------------------------
-        // DATABASE TRANSACTION
-        // ------------------------------------------------------------------
         await sql.begin(async (sqlTransaction: any) => {
 
-            // DELETE MISSING QUESTIONS (And their dependencies)
             if (incomingValidIds.length > 0) {
-                // Explicitly delete dependencies in case ON DELETE CASCADE is missing
                 await sqlTransaction`
                     DELETE FROM questions_poll_labels 
                     WHERE question_id IN (
@@ -147,7 +164,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 `;
             }
 
-            // UPDATE EXISTING QUESTIONS
             if (toUpdate.length > 0) {
                 for (let i = 0; i < toUpdate.length; i++) {
                     const tempOrder = -1000 - i;
@@ -171,7 +187,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 }
             }
 
-            // INSERT NEW QUESTIONS
             if (toInsert.length > 0) {
                 for (const q of toInsert) {
                     await sqlTransaction`
@@ -189,16 +204,14 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 }
             }
 
-            // HANDLE OPTIONS AND LABELS FOR ALL QUESTIONS
             const allProcessedQuestions = [...toUpdate, ...toInsert];
 
             for (const q of allProcessedQuestions) {
                 
                 const incomingOptIds = q.options
-                    .filter(o => o.id && !String(o.id).startsWith('temp-') && !String(o.id).startsWith('new-'))
-                    .map(o => o.id);
+                    .filter((o: { id?: string; name: string }) => o.id && !String(o.id).startsWith('temp-') && !String(o.id).startsWith('new-'))
+                    .map((o: { id?: string; name: string }) => o.id as string);
 
-                // Delete removed options for this question
                 if (incomingOptIds.length > 0) {
                     await sqlTransaction`
                         DELETE FROM "options" 
@@ -211,7 +224,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     `;
                 }
 
-                // Upsert options
                 for (const opt of q.options) {
                     if (!opt.id || String(opt.id).startsWith('temp-') || String(opt.id).startsWith('new-')) {
                         await sqlTransaction`
@@ -227,12 +239,11 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     }
                 }
 
-                // Process Labels
                 await sqlTransaction`
                     DELETE FROM questions_poll_labels WHERE question_id = ${q.id}
                 `;
 
-                const labelIds = q.labels ? q.labels.map((l: any) => l.id) : (q.label_ids || []);
+                const labelIds = q.label_ids;
                 for (const labelId of labelIds) {
                     await sqlTransaction`
                         INSERT INTO questions_poll_labels (question_id, label_id, poll_id)

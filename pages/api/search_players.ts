@@ -1,7 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player } from '../../types/db';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface SearchPlayersRequest extends NextApiRequest {
+    query: {
+        q?: string;
+    };
+}
+
+export default async function handler(request: SearchPlayersRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed." });
     }
@@ -15,12 +22,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         const searchQuery = q.trim();
 
-        // The Trigram Search Query
-        // displayed_name % ${searchQuery}: This is the trigram fuzzy match. If they type "kukila", it will mathematically realize it's very similar to "kukula" and return it.
-        // ILIKE ${'%' + searchQuery + '%'}: Including the standard wildcard search as a fallback just in case user type a very short exact substring that the fuzzy matcher might score lower on.
-        // ORDER BY GREATEST(...) DESC: Checking the similarity score of both the id and the displayed_name, take whichever score is higher, and put the highest scoring players at the top of the list.
-
-        const players = await sql`
+        const players = await sql<Pick<Player, 'id' | 'displayed_name' | 'pfp_base64'>[]>`
             SELECT id, displayed_name, pfp_base64
             FROM players
             WHERE displayed_name % ${searchQuery} 

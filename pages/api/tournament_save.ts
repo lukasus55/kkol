@@ -1,10 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, TournamentOrganizer } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentSaveRequest extends NextApiRequest {
+    body: {
+        tournament_id: string;
+        results: { player_id: string, position: number, total_points: number }[];
+        tournament_info: { 
+            displayed_name: string; 
+            displayed_date: string; 
+            finished: boolean; 
+            end_date: string; 
+        };
+    };
+}
+
+export default async function handler(request: TournamentSaveRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -17,7 +31,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(401).json({ error: "Not authenticated" });
         }
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const userId = decodedPayload.id;
 
         const { tournament_id, results, tournament_info } = request.body;
@@ -37,10 +51,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Wyświetlana data turnieju może mieć maksymalnie 30 znaków." });
         }
 
-        // Handle empty strings from datetime-local input
         const finalEndDate = tournament_info.end_date ? tournament_info.end_date : null;
-        if (finalEndDate === null)
-        {
+        if (finalEndDate === null) {
             return response.status(400).json({ error: "Musisz podać datę końca wydarzenia." });
         }
 
@@ -61,8 +73,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             }
         }
 
-        // verify organizer role
-        const authCheck = await sql`
+        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
             SELECT role 
             FROM tournament_organizers 
             WHERE tournament_id = ${tournament_id} AND player_id = ${userId}

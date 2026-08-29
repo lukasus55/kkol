@@ -1,9 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, TournamentOrganizer } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentKickPlayerRequest extends NextApiRequest {
+    body: {
+        tournament_id: string;
+        target_player_id: string;
+    };
+}
+
+export default async function handler(request: TournamentKickPlayerRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -14,7 +22,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Not authenticated" });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { tournament_id, target_player_id } = request.body;
@@ -23,10 +31,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Invalid payload" });
         }
 
-        
-
-        // Is the requester an owner or manager
-        const authCheck = await sql`
+        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
             SELECT role 
             FROM tournament_organizers 
             WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
@@ -38,8 +43,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień do wyrzucania graczy." });
         }
 
-        // Ensure the target is NOT the owner
-        const targetCheck = await sql`
+        const targetCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
             SELECT role 
             FROM tournament_organizers 
             WHERE tournament_id = ${tournament_id} AND player_id = ${target_player_id}

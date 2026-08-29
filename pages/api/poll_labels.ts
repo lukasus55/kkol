@@ -1,10 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { PollLabel } from '../../types/db';
 import sql from '../../db.js';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface PollLabelsRequest extends NextApiRequest {
+    query: {
+        poll?: string;
+        limit?: string;
+        offset?: string;
+    };
+}
+
+type PollLabelRow = Pick<PollLabel, 'id' | 'poll_id' | 'name' | 'hex' | 'description'> & {
+    questions_count: number;
+};
+
+export default async function handler(request: PollLabelsRequest, response: NextApiResponse) {
     try {
-        const {poll, limit, offset} = request.query;
+        const { poll, limit, offset } = request.query;
         const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
         const actualOffset = offset ? Math.max(Number(offset), 0) : 0;
 
@@ -14,10 +27,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Id ankiety musi być typu uuidv7" });
         }
 
-        // Using ::int cast to the COUNT() function. In PostgreSQL by default, COUNT() returns a bigint, 
-        // which the Node.js driver will return as a string to prevent JavaScript precision loss. 
-        // Casting it to ::int guarantees frontend receives a standard, easy-to-use JavaScript Number.
-        const labels = await sql`
+        const labels = await sql<PollLabelRow[]>`
             SELECT 
                 pl.id,
                 pl.poll_id,

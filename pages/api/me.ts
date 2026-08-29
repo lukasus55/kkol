@@ -1,11 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-
+import type { Player } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+type MeQueryResult = Pick<Player, 'id' | 'role' | 'is_active' | 'email' | 'displayed_name' | 'pfp_base64'> & {
+    organizer_roles: Record<string, string>;
+    tournaments: Record<string, { id: string; attended: boolean; position: number; total_points: number }>;
+};
 
+export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     const cookies = parse(request.headers.cookie || '');
     const token = cookies.auth_token;
 
@@ -14,11 +18,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
     }
 
     try {
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         
-        
-        const users = await sql`
-            SELECT p.id, p.role, p.is_active, p.email, p.displayed_name,p.pfp_base64,
+        const users = await sql<MeQueryResult[]>`
+            SELECT p.id, p.role, p.is_active, p.email, p.displayed_name, p.pfp_base64,
                 COALESCE(
                     (SELECT json_object_agg(tournament_id, role) 
                     FROM tournament_organizers 

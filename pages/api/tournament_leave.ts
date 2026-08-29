@@ -1,15 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, Tournament, TournamentOrganizer } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentLeaveRequest extends NextApiRequest {
+    body: {
+        tournamentId: string;
+    };
+}
+
+export default async function handler(request: TournamentLeaveRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // identify the user
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
@@ -17,7 +23,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(401).json({ error: "Not authenticated" });
         }
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const userId = decodedPayload.id;
 
         const { tournamentId } = request.body;
@@ -26,9 +32,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Tournament ID is required" });
         }
 
-        
-
-        const checkData = await sql`
+        const checkData = await sql<(Pick<Tournament, 'tier'> & Pick<TournamentOrganizer, 'role'>)[]>`
             SELECT t.tier, o.role
             FROM tournaments t
             LEFT JOIN tournament_organizers o 
@@ -36,7 +40,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
             WHERE t.id = ${tournamentId}
         `;
 
-        // If the tournament doesn't exist, stop
         if (checkData.length === 0) {
             return response.status(404).json({ error: "Tournament not found" });
         }
@@ -44,17 +47,14 @@ export default async function handler(request: NextApiRequest, response: NextApi
         const tournamentTier = checkData[0].tier;
         const userRole = checkData[0].role;
 
-        // Block 1: S-Tier tournaments
         if (tournamentTier === 'S') {
             return response.status(403).json({ error: "Players are not allowed to leave S-Tier tournaments." });
         }
 
-        // Block 2: Tournament Owners
         if (userRole === 'owner') {
             return response.status(403).json({ error: "The owner cannot leave the tournament. You must delete it instead." });
         }
 
-        // Note: It's totally fine to run DELETE on organizers even if they aren't a manager; it just won't do anything.
         await sql`
             DELETE FROM tournament_organizers 
             WHERE tournament_id = ${tournamentId} AND player_id = ${userId}

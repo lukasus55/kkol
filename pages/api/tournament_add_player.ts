@@ -1,9 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, TournamentOrganizer, Result } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentAddPlayerRequest extends NextApiRequest {
+    body: {
+        tournament_id: string;
+        new_player_id: string;
+    };
+}
+
+export default async function handler(request: TournamentAddPlayerRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -14,7 +22,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Not authenticated" });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { tournament_id, new_player_id } = request.body;
@@ -25,8 +33,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         const cleanPlayerId = new_player_id.trim();
 
-        // Is the requester an owner or manager
-        const authCheck = await sql`
+        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
             SELECT role 
             FROM tournament_organizers 
             WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
@@ -36,8 +43,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień do dodawania graczy." });
         }
 
-        // Existance check
-        const playerCheck = await sql`
+        const playerCheck = await sql<Pick<Player, 'id'>[]>`
             SELECT id FROM players WHERE id = ${cleanPlayerId}
         `;
 
@@ -45,8 +51,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(404).json({ error: `Gracz o ID "${cleanPlayerId}" nie istnieje.` });
         }
 
-        // Duplicate check
-        const duplicateCheck = await sql`
+        const duplicateCheck = await sql<Pick<Result, 'player_id'>[]>`
             SELECT player_id FROM results 
             WHERE tournament_id = ${tournament_id} AND player_id = ${cleanPlayerId}
         `;

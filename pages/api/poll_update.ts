@@ -1,27 +1,36 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Poll, Tournament, Player } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
-import { uuidv7 } from "uuidv7";
 import { parse } from 'cookie';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface PollUpdateRequest extends NextApiRequest {
+    body: {
+        id: string;
+        name: string;
+        start_date: string;
+        end_date: string;
+        rights_level: number;
+    };
+}
+
+export default async function handler(request: PollUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // AUTHENTICATION
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
-        const {id, name, start_date, end_date, rights_level} = request.body;
+        const { id, name, start_date, end_date, rights_level } = request.body;
 
         if (!id || !name || !start_date || !end_date || rights_level === undefined) {
             return response.status(400).json({ error: "Brakujące dane." });
@@ -37,7 +46,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Nazwa ankiety może mieć maksymalnie 70 znaków." });
         }
 
-        // date validation
         const parsedStart = new Date(start_date);
         const minDate = new Date('2024-01-01T00:00:00');
         
@@ -64,8 +72,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Data końcowa nie może być wcześniejsza niż data początkowa." });
         }
 
-        // poll validation
-        const pollCheck = await sql`
+        const pollCheck = await sql<Pick<Poll, 'tournament_id'>[]>`
             SELECT tournament_id FROM polls WHERE id = ${id}
         `;
         
@@ -75,8 +82,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         const tournamentId = pollCheck[0].tournament_id;
 
-        // tournament validation
-        const tournamentCheck = await sql`
+        const tournamentCheck = await sql<Pick<Tournament, 'finished'>[]>`
             SELECT finished FROM tournaments WHERE id = ${tournamentId}
         `;
 
@@ -89,8 +95,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak uprawnień. Musisz być administratorem lub zarządcą turnieju do którego przypisana jest ta ankieta." });
         }
 
-        // EXECUTE
-        const result = await sql`
+        await sql`
             UPDATE polls
             SET name = ${clean_name},  
                 rights_level = ${rights_level}, 

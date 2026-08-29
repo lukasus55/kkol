@@ -1,9 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, TournamentOrganizer } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentUpdateOrganizerRoleRequest extends NextApiRequest {
+    body: {
+        tournament_id: string;
+        target_player_id: string;
+        action: 'promote' | 'demote';
+    };
+}
+
+export default async function handler(request: TournamentUpdateOrganizerRoleRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -14,7 +23,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Not authenticated" });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { tournament_id, target_player_id, action } = request.body;
@@ -23,10 +32,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Invalid payload" });
         }
 
-        
-
-        // SECURITY CHECK: Is the requester the actual OWNER?
-        const authCheck = await sql`
+        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
             SELECT role 
             FROM tournament_organizers 
             WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
@@ -36,16 +42,13 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Tylko właściciel turnieju może zarządzać uprawnieniami." });
         }
 
-        // EXECUTE ACTION
         if (action === 'promote') {
-            // Add them as a manager (ON CONFLICT prevents crashing if they somehow already are one)
             await sql`
                 INSERT INTO tournament_organizers (tournament_id, player_id, role)
                 VALUES (${tournament_id}, ${target_player_id}, 'manager')
                 ON CONFLICT (tournament_id, player_id) DO UPDATE SET role = 'manager'
             `;
         } else if (action === 'demote') {
-            // Demoting just means deleting their row from the organizers table
             await sql`
                 DELETE FROM tournament_organizers 
                 WHERE tournament_id = ${tournament_id} AND player_id = ${target_player_id} AND role = 'manager'

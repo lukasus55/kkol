@@ -1,9 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, Tournament } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentsActiveRequest extends NextApiRequest {
+    query: {
+        limit?: string;
+    };
+}
+
+export default async function handler(request: TournamentsActiveRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -17,18 +24,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
-        // Check global role
-        const userCheck = await sql`SELECT role FROM players WHERE id = ${requesterId}`;
+        const userCheck = await sql<Pick<Player, 'role'>[]>`SELECT role FROM players WHERE id = ${requesterId}`;
         const globalRole = userCheck.length > 0 ? userCheck[0].role : 'user';
 
-        let activeTournaments;
+        let activeTournaments: Pick<Tournament, 'id' | 'displayed_name'>[];
 
         if (globalRole === 'admin') {
-            // Admins get ALL unfinished tournaments
-            activeTournaments = await sql`
+            activeTournaments = await sql<Pick<Tournament, 'id' | 'displayed_name'>[]>`
                 SELECT id, displayed_name 
                 FROM tournaments 
                 WHERE finished = false OR finished IS NULL
@@ -36,8 +41,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 LIMIT ${actualLimit}
             `;
         } else {
-            // Organizers/Managers only get unfinished tournaments they are explicitly assigned to
-            activeTournaments = await sql`
+            activeTournaments = await sql<Pick<Tournament, 'id' | 'displayed_name'>[]>`
                 SELECT t.id, t.displayed_name 
                 FROM tournaments t
                 INNER JOIN tournament_organizers o ON t.id = o.tournament_id

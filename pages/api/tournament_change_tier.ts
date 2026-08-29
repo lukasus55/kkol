@@ -1,9 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, Tournament, TournamentOrganizer } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentChangeTierRequest extends NextApiRequest {
+    body: {
+        tournament_id: string;
+        new_tier: string;
+    };
+}
+
+export default async function handler(request: TournamentChangeTierRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -14,7 +22,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Not authenticated" });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { tournament_id, new_tier } = request.body;
@@ -23,36 +31,31 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Nieprawidłowe dane." });
         }
 
-        
-
-        const userCheck = await sql`SELECT role FROM players WHERE id = ${requesterId}`;
+        const userCheck = await sql<Pick<Player, 'role'>[]>`SELECT role FROM players WHERE id = ${requesterId}`;
         if (userCheck.length === 0) return response.status(401).json({ error: "Użytkownik nie istnieje." });
         
         const globalRole = userCheck[0].role; 
 
-        const tournamentCheck = await sql`SELECT tier FROM tournaments WHERE id = ${tournament_id}`;
+        const tournamentCheck = await sql<Pick<Tournament, 'tier'>[]>`SELECT tier FROM tournaments WHERE id = ${tournament_id}`;
         if (tournamentCheck.length === 0) {
             return response.status(404).json({ error: "Turniej nie został znaleziony." });
         }
         const currentTier = tournamentCheck[0].tier;
 
-
-        // Block non-admins from assigning a tournament TO S-Tier
         if (new_tier === 'S' && globalRole !== 'admin') {
             return response.status(403).json({ error: "Tylko administrator może przypisać rangę S-Tier." });
         }
 
-        // Block non-admins from changing a tournament FROM S-Tier
         if (currentTier === 'S' && globalRole !== 'admin') {
             return response.status(403).json({ error: "Tylko administrator może zmienić rangę turnieju o randze S-Tier." });
         }
 
-        // Standard check for A, B, C tiers
         if (['A', 'B', 'C'].includes(new_tier) && globalRole !== 'admin' && globalRole !== 'organizer') {
             return response.status(403).json({ error: "Tylko organizatorzy i administratorzy mogą zmieniać tier." });
         }
+
         if (globalRole !== 'admin') {
-            const authCheck = await sql`
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
                 SELECT role 
                 FROM tournament_organizers 
                 WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}

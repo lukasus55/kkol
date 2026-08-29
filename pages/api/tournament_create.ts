@@ -1,9 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Player, Tournament } from '../../types/db';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface TournamentCreateRequest extends NextApiRequest {
+    body: {
+        tournament_id: string;
+    };
+}
+
+export default async function handler(request: TournamentCreateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -14,7 +21,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (!token) return response.status(401).json({ error: "Not authenticated" });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         const { tournament_id } = request.body;
@@ -43,15 +50,12 @@ export default async function handler(request: NextApiRequest, response: NextApi
             });
         }
         
-
-        // Only admins and organizers can create tournaments
-        const userCheck = await sql`SELECT role FROM players WHERE id = ${requesterId}`;
-        if (userCheck.length === 0 || !['admin', 'organizer'].includes(userCheck[0].role)) {
+        const userCheck = await sql<Pick<Player, 'role'>[]>`SELECT role FROM players WHERE id = ${requesterId}`;
+        if (userCheck.length === 0 || !['admin', 'organizer'].includes(userCheck[0].role || '')) {
             return response.status(403).json({ error: "Brak uprawnień do tworzenia turniejów." });
         }
 
-        // duplicate check
-        const existCheck = await sql`SELECT id FROM tournaments WHERE id = ${cleanTournamentId}`;
+        const existCheck = await sql<Pick<Tournament, 'id'>[]>`SELECT id FROM tournaments WHERE id = ${cleanTournamentId}`;
         if (existCheck.length > 0) {
             return response.status(400).json({ error: "Turniej o takim ID już istnieje!" });
         }
@@ -61,13 +65,11 @@ export default async function handler(request: NextApiRequest, response: NextApi
             VALUES (${cleanTournamentId}, ${cleanTournamentId})
         `;
 
-        // asign to tournament
         await sql`
             INSERT INTO results (tournament_id, player_id)
             VALUES (${cleanTournamentId}, ${requesterId})
         `;
 
-        // assign owner role
         await sql`
             INSERT INTO tournament_organizers (tournament_id, player_id, role)
             VALUES (${cleanTournamentId}, ${requesterId}, 'owner')

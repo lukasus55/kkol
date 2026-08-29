@@ -1,11 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Poll, Player } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 import { hasTournamentPermission, isPartOfTournament } from '../../public/js/utils/permissionChecks.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface PollPlayerAnswersRequest extends NextApiRequest {
+    query: {
+        poll?: string;
+        player?: string;
+    };
+}
+
+export default async function handler(request: PollPlayerAnswersRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });
     }
@@ -13,7 +21,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
     try {
         const { poll, player } = request.query;
 
-        // PARAM VALIDATION
         if (!poll || !player) {
             return response.status(400).json({ error: "Brakujące dane (Id ankiety lub Id gracza)." });
         }
@@ -22,17 +29,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Id ankiety musi być typu uuidv7." });
         }
 
-        // AUTHENTICATION
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id;
 
         if (requesterId !== player) {
-            const pollCheck = await sql`
+            const pollCheck = await sql<Pick<Poll, 'tournament_id' | 'rights_level'>[]>`
                 SELECT tournament_id, rights_level FROM polls WHERE id = ${poll}
             `;
             
@@ -51,10 +57,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
             }
         }
 
-        // FETCH DATA (Using JSON Aggregation for Dictionary Map)
-        const result = await sql`
+        const result = await sql<{ answers_map: Record<string, string[]> }[]>`
             WITH grouped_answers AS (
-                -- Group the options into an array for each question
                 SELECT 
                     o.question_id,
                     array_agg(ca.option_id::text) AS selected_options
@@ -64,7 +68,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 WHERE q.poll_id = ${poll} AND ca.player_id = ${player}
                 GROUP BY o.question_id
             )
-            -- Turn rows into a single JSON object where question_id is the key
             SELECT COALESCE(
                 json_object_agg(question_id, selected_options), 
                 '{}'::json
@@ -72,7 +75,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             FROM grouped_answers
         `;
 
-        const answersMap = result[0].answers_map;
+        const answersMap = result[0]?.answers_map || {};
 
         return response.status(200).json(answersMap);
 

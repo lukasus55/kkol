@@ -1,30 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Poll, Player } from '../../types/db';
 import sql from '../../db.js';
 import jwt from 'jsonwebtoken';
-import { uuidv7 } from "uuidv7";
 import { parse } from 'cookie';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+interface PollPlayersAnswersUpdateRequest extends NextApiRequest {
+    body: {
+        poll_id: string;
+        answers: Record<string, string[]>;
+    };
+}
+
+export default async function handler(request: PollPlayersAnswersUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        // ------------------------------------------------------------------
-        // AUTHENTICATION
-        // ------------------------------------------------------------------
         const cookies = parse(request.headers.cookie || '');
         const token = cookies.auth_token;
 
         if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
 
-        const decodedPayload: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
         const requesterId = decodedPayload.id; 
 
-        // ------------------------------------------------------------------
-        // PAYLOAD VALIDATION
-        // ------------------------------------------------------------------
         const { poll_id, answers } = request.body;
 
         if (!poll_id || !answers || typeof answers !== 'object') {
@@ -35,15 +36,14 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "Id ankiety musi być typu uuidv7." });
         }
 
-        // Extract all selected option IDs into a single flat array
-        const optionIdsToInsert: any[] = [];
-        for (const [questionId, optionIds] of Object.entries(answers)) {
+        const optionIdsToInsert: string[] = [];
+        for (const optionIds of Object.values(answers)) {
             if (Array.isArray(optionIds) && optionIds.length > 0) {
                 optionIdsToInsert.push(...optionIds);
             }
         }
 
-        const tournamentRes = await sql`SELECT tournament_id, start_date, end_date FROM polls WHERE id = ${poll_id}`;
+        const tournamentRes = await sql<Pick<Poll, 'tournament_id' | 'start_date' | 'end_date'>[]>`SELECT tournament_id, start_date, end_date FROM polls WHERE id = ${poll_id}`;
         if (tournamentRes.length === 0) return response.status(404).json({ error: "Ankieta nie istnieje." });
         const { tournament_id, start_date, end_date } = tournamentRes[0];
 
@@ -55,7 +55,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Głosowanie zostało już zakończone." });
         }
 
-        const permissions = await sql`
+        const permissions = await sql<{ global_role: string, is_organizer: boolean, is_player: boolean }[]>`
             SELECT
                 (SELECT role FROM players WHERE id = ${requesterId}) as global_role,
                 EXISTS(SELECT 1 FROM tournament_organizers WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}) as is_organizer,
@@ -66,14 +66,9 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(403).json({ error: "Brak dostępu. Musisz być przypisany do turnieju, aby głosować." });
         }
 
-        // ------------------------------------------------------------------
-        // SECURITY & DB TRANSACTION
-        // ------------------------------------------------------------------
         await sql.begin(async (sqlTransaction: any) => {
-            
-            // Verify all submitted options actually belong to this poll
             if (optionIdsToInsert.length > 0) {
-                const validOptions = await sqlTransaction`
+                const validOptions = await sqlTransaction<{ id: string }[]>`
                     SELECT o.id 
                     FROM "options" o
                     JOIN questions q ON o.question_id = q.id
@@ -81,14 +76,11 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     AND o.id IN ${sql(optionIdsToInsert)}
                 `;
 
-                // If the counts don't match, the user injected an option from another poll
                 if (validOptions.length !== optionIdsToInsert.length) {
                     throw new Error("SECURITY_VIOLATION");
                 }
             }
 
-            // Wipe existing answers for this player in this poll
-            // Using subquery here because checked_answers doesn't have poll_id
             await sqlTransaction`
                 DELETE FROM checked_answers 
                 WHERE player_id = ${requesterId} 
@@ -99,14 +91,12 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 )
             `;
 
-            // Insert the new answers
             if (optionIdsToInsert.length > 0) {
                 const insertData = optionIdsToInsert.map(optId => ({
                     option_id: optId,
                     player_id: requesterId
                 }));
 
-                // postgres.js bulk insert syntax
                 await sqlTransaction`
                     INSERT INTO checked_answers ${sql(insertData, 'option_id', 'player_id')}
                 `;
