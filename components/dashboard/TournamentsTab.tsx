@@ -7,7 +7,7 @@ import { TournamentRow } from './tournaments/TournamentRow';
 import { useToast } from '../ui/ToastProvider';
 import { ErrorPopup } from '../ui/ErrorPopup';
 
-export default function TournamentsTab({ user }: { user: any }) {
+export default function TournamentsTab({ user, refreshUser }: { user: any, refreshUser?: () => void }) {
   const [tournaments, setTournaments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTournamentId, setNewTournamentId] = useState('');
@@ -56,6 +56,7 @@ export default function TournamentsTab({ user }: { user: any }) {
         addToast({ type: 'success', message: "Pomyślnie utworzono turniej: " + id });
         setNewTournamentId('');
         fetchTournaments(); // Refresh the list without page reload!
+        refreshUser?.(); // Also refresh the global user state so organizer_roles updates
       } else {
         const err = await res.json();
         setErrorModal(err.error || "Wystąpił błąd podczas tworzenia turnieju.");

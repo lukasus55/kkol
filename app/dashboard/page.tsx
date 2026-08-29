@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardNav from '../../components/dashboard/DashboardNav';
 import TournamentsTab from '../../components/dashboard/TournamentsTab';
@@ -15,25 +15,25 @@ export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Authenticate and fetch user data
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/me');
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data.user);
-        } else {
-          router.push('/login?r=dashboard');
-        }
-      } catch (err) {
-        console.error('Failed to fetch user:', err);
-      } finally {
-        setLoading(false);
+  const fetchUser = useCallback(async () => {
+    try {
+      const res = await fetch('/api/me');
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+      } else {
+        router.push('/login?r=dashboard');
       }
-    };
-    fetchUser();
+    } catch (err) {
+      console.error('Failed to fetch user:', err);
+    } finally {
+      setLoading(false);
+    }
   }, [router]);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   if (loading) {
     return (
@@ -52,7 +52,7 @@ export default function Dashboard() {
 
         <div className="w-full flex flex-col pb-10 overflow-hidden">
           {activeTab === 'account' && <AccountTab user={user} />}
-          {activeTab === 'tournaments' && <TournamentsTab user={user} />}
+          {activeTab === 'tournaments' && <TournamentsTab user={user} refreshUser={fetchUser} />}
           {activeTab === 'calendar' && <CalendarTab user={user} />}
           {activeTab === 'polls' && <PollsTab user={user} />}
         </div>
