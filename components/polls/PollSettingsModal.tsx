@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { X, Settings, AlertCircle, Plus, Trash2 } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { useRouter } from 'next/navigation';
 import { useToast } from '../ui/ToastProvider';
+import { ConfirmationPopup } from '../ui/ConfirmationPopup';
 
 interface PollSettingsModalProps {
     poll: any;
@@ -22,13 +24,19 @@ const formatDateForInput = (isoString: string) => {
 
 export default function PollSettingsModal({ poll, pollDefaultOptions = [], isOpen, onClose, onSuccess, onSuccessOptions }: PollSettingsModalProps) {
     const { addToast } = useToast();
-    const [name, setName] = useState(poll?.name || '');
+    const router = useRouter();
+    
+    const [name, setName] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [rightsLevel, setRightsLevel] = useState(0);
     const [defaultOptions, setDefaultOptions] = useState<any[]>([]);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         if (isOpen && poll) {
@@ -105,7 +113,28 @@ export default function PollSettingsModal({ poll, pollDefaultOptions = [], isOpe
         }
     };
 
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        try {
+            const res = await fetch('/api/poll_delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: poll.id })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Wystąpił błąd podczas usuwania ankiety.");
+
+            addToast({ message: "Ankieta została usunięta.", type: "success" });
+            router.push('/dashboard');
+        } catch (err: any) {
+            addToast({ message: err.message || "Wystąpił nieznany błąd", type: "error" });
+            setIsDeleting(false);
+            setIsDeleteOpen(false);
+        }
+    };
+
     return (
+        <>
         <Modal
             isOpen={isOpen}
             onClose={onClose}
@@ -235,8 +264,37 @@ export default function PollSettingsModal({ poll, pollDefaultOptions = [], isOpe
                         </div>
                     )}
                     <p className="text-xs text-text-500 mt-1">Te opcje będą automatycznie dodawane jako szablon przy każdym nowym pytaniu.</p>
+                    {/* DANGER ZONE */}
+                    <div className="mt-4 pt-4 border-t border-bg-300">
+                        <h4 className="text-sm font-bold text-danger-500 mb-3">Strefa Niebezpieczna</h4>
+                        <div className="flex items-center justify-between gap-4 p-4 bg-red-500/10 rounded-md border border-red-500/30">
+                            <div className="flex flex-col gap-1 pr-4">
+                                <span className="text-sm font-bold text-text-900">Usuń tę ankietę</span>
+                                <p className="text-xs text-text-500">Usunięcie ankiety jest nieodwracalne. Wszystkie pytania i głosy zostaną utracone.</p>
+                            </div>
+                            <Button 
+                                type="button" 
+                                variant="danger" 
+                                className="w-fit shrink-0 shadow-sm"
+                                onClick={() => setIsDeleteOpen(true)}
+                            >
+                                Usuń ankietę
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Modal>
+
+        <ConfirmationPopup
+            isOpen={isDeleteOpen}
+            title="Usuń ankietę"
+            message={`Czy na pewno chcesz usunąć ankietę "${poll?.name}"? Ta operacja jest nieodwracalna i usunie wszystkie głosy.`}
+            confirmText="Tak, usuń ankietę"
+            cancelText="Anuluj"
+            onConfirm={handleDelete}
+            onClose={() => setIsDeleteOpen(false)}
+        />
+        </>
     );
 }
