@@ -42,6 +42,21 @@ export default async function handler(request, response) {
             }
         }
 
+        const tournamentRes = await sql`SELECT tournament_id FROM polls WHERE id = ${poll_id}`;
+        if (tournamentRes.length === 0) return response.status(404).json({ error: "Ankieta nie istnieje." });
+        const tournament_id = tournamentRes[0].tournament_id;
+
+        const permissions = await sql`
+            SELECT
+                (SELECT role FROM players WHERE id = ${requesterId}) as global_role,
+                EXISTS(SELECT 1 FROM tournament_organizers WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}) as is_organizer,
+                EXISTS(SELECT 1 FROM results WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}) as is_player
+        `;
+        const p = permissions[0];
+        if (p.global_role !== 'admin' && !p.is_organizer && !p.is_player) {
+            return response.status(403).json({ error: "Brak dostępu. Musisz być przypisany do turnieju, aby głosować." });
+        }
+
         // ------------------------------------------------------------------
         // SECURITY & DB TRANSACTION
         // ------------------------------------------------------------------

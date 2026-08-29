@@ -95,11 +95,14 @@ export default function PollClient() {
 
         // Fetch labels, questions, answers concurrently
         const timestamp = Date.now();
-        const [labelsRes, questionsRes, answersRes] = await Promise.all([
-          fetch(`/api/poll_labels?poll=${pollId}&t=${timestamp}`),
-          fetch(`/api/poll_questions?poll=${pollId}&t=${timestamp}`),
-          fetch(`/api/poll_player_answers?poll=${pollId}&player=${currentUser.id}&t=${timestamp}`),
-        ]);
+        const labelsRes = await fetch(`/api/poll_labels?poll=${pollId}&t=${timestamp}`);
+        const questionsRes = await fetch(`/api/poll_questions?poll=${pollId}&t=${timestamp}`);
+        const answersRes = await fetch(`/api/poll_player_answers?poll=${pollId}&player=${currentUser.id}&t=${timestamp}`);
+
+        if (!questionsRes.ok) {
+            const errData = await questionsRes.json();
+            throw new Error(errData.error || 'Brak dostępu do pytań.');
+        }
 
         const labelsData = await labelsRes.json();
         const questionsData = await questionsRes.json();
