@@ -10,6 +10,40 @@ interface TournamentCreateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_create:
+ *   post:
+ *     summary: Create new tournament
+ *     description: Creates a new tournament. User must have global admin or organizer role.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *     responses:
+ *       200:
+ *         description: Tournament created successfully
+ *       400:
+ *         description: Validation error or tournament already exists
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing global permissions
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentCreateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

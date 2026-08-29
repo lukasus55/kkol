@@ -10,6 +10,40 @@ interface EventDeleteRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/event_delete:
+ *   post:
+ *     summary: Delete an event
+ *     description: Deletes an existing event. Requires owner/manager or admin role.
+ *     tags: [Events]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - event_id
+ *             properties:
+ *               event_id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Event deleted successfully
+ *       400:
+ *         description: Missing event ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: EventDeleteRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

@@ -19,6 +19,33 @@ type MemberData = {
     organizer_role: string | null;
 };
 
+/**
+ * @swagger
+ * /api/tournament_editor_details:
+ *   get:
+ *     summary: Get tournament editor details
+ *     description: Retrieves the detailed standings and permissions of players in a tournament for editor management.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: tournamentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Tournament editor details
+ *       400:
+ *         description: Missing tournament ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentEditorDetailsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });

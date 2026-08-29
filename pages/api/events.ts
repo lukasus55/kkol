@@ -14,6 +14,47 @@ interface EventsRequest extends NextApiRequest {
 
 type EventRow = Pick<Event, 'id' | 'tournament_id' | 'creator_id' | 'event_date' | 'end_date' | 'name' | 'is_major'>;
 
+/**
+ * @swagger
+ * /api/events:
+ *   get:
+ *     summary: List events
+ *     description: Retrieves a list of events. Can be formatted for fullcalendar or as a standard list.
+ *     tags: [Events]
+ *     parameters:
+ *       - in: query
+ *         name: tournament
+ *         schema:
+ *           type: string
+ *         description: Filter by tournament ID
+ *       - in: query
+ *         name: player
+ *         schema:
+ *           type: string
+ *         description: Filter by player ID
+ *       - in: query
+ *         name: format
+ *         schema:
+ *           type: string
+ *           enum: ['calendar', 'list']
+ *         description: Output format (default 'calendar')
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Max number of events (default 100)
+ *       - in: query
+ *         name: upcoming
+ *         schema:
+ *           type: string
+ *           enum: ['true', 'false']
+ *         description: Only show future events
+ *     responses:
+ *       200:
+ *         description: Array of events
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: EventsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });

@@ -16,6 +16,55 @@ interface PollUpdateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_update:
+ *   post:
+ *     summary: Update poll details
+ *     description: Updates the metadata of an existing poll. Requires owner/manager or admin role.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - name
+ *               - start_date
+ *               - end_date
+ *               - rights_level
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 format: uuid
+ *               name:
+ *                 type: string
+ *               start_date:
+ *                 type: string
+ *                 format: date-time
+ *               end_date:
+ *                 type: string
+ *                 format: date-time
+ *               rights_level:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Poll updated successfully
+ *       400:
+ *         description: Invalid payload or dates
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

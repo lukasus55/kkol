@@ -12,6 +12,47 @@ interface EventUpdateDateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/event_update_date:
+ *   post:
+ *     summary: Update event date
+ *     description: Updates the start and end dates of an event. Requires owner/manager or admin role.
+ *     tags: [Events]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - event_id
+ *               - event_date
+ *             properties:
+ *               event_id:
+ *                 type: integer
+ *               event_date:
+ *                 type: string
+ *                 format: date-time
+ *               end_date:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Date updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: EventUpdateDateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

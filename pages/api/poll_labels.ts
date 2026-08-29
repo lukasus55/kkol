@@ -15,6 +15,36 @@ type PollLabelRow = Pick<PollLabel, 'id' | 'poll_id' | 'name' | 'hex' | 'descrip
     questions_count: number;
 };
 
+/**
+ * @swagger
+ * /api/poll_labels:
+ *   get:
+ *     summary: Get poll labels
+ *     description: Retrieves all labels for a given poll.
+ *     tags: [Polls]
+ *     parameters:
+ *       - in: query
+ *         name: poll
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Array of poll labels
+ *       400:
+ *         description: Missing or invalid poll ID
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollLabelsRequest, response: NextApiResponse) {
     try {
         const { poll, limit, offset } = request.query;

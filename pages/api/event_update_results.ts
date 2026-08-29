@@ -15,6 +15,54 @@ interface EventUpdateResultsRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/event_update_results:
+ *   post:
+ *     summary: Update event results
+ *     description: Upserts player results for an event. Requires owner/manager or admin role.
+ *     tags: [Events]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - event_id
+ *               - results
+ *             properties:
+ *               event_id:
+ *                 type: integer
+ *               results:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     player_id:
+ *                       type: string
+ *                     position:
+ *                       type: integer
+ *                       nullable: true
+ *                     points:
+ *                       type: number
+ *                       nullable: true
+ *     responses:
+ *       200:
+ *         description: Results updated successfully
+ *       400:
+ *         description: Invalid payload or tournament finished
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: EventUpdateResultsRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

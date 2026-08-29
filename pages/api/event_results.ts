@@ -22,6 +22,43 @@ export type EventResultRow = {
     tournament_id: string;
 };
 
+/**
+ * @swagger
+ * /api/event_results:
+ *   get:
+ *     summary: Get event results
+ *     description: Retrieves results of players in events. Must provide either id, tournament, or player.
+ *     tags: [Events]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: Specific event ID
+ *       - in: query
+ *         name: tournament
+ *         schema:
+ *           type: string
+ *         description: Filter by tournament ID
+ *       - in: query
+ *         name: player
+ *         schema:
+ *           type: string
+ *         description: Filter by player ID
+ *       - in: query
+ *         name: major
+ *         schema:
+ *           type: string
+ *           enum: ['true', 'false']
+ *         description: Filter by major/minor events
+ *     responses:
+ *       200:
+ *         description: Array of event results grouped by event ID
+ *       422:
+ *         description: Missing required parameters
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: EventResultsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed." });

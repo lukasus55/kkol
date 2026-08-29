@@ -8,6 +8,28 @@ interface SearchPlayersRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/search_players:
+ *   get:
+ *     summary: Search for players
+ *     description: Searches players by displayed name or ID using text similarity matching. Returns up to 5 results.
+ *     tags: [Auth & Player]
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Search query
+ *     responses:
+ *       200:
+ *         description: Array of matched players
+ *       405:
+ *         description: Method not allowed
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: SearchPlayersRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed." });

@@ -18,6 +18,44 @@ type QuestionRow = Pick<Question, 'id' | 'poll_id' | 'name' | 'added_on' | 'crea
     options: Pick<Option, 'id' | 'name'>[];
 };
 
+/**
+ * @swagger
+ * /api/poll_questions:
+ *   get:
+ *     summary: Get poll questions
+ *     description: Retrieves the questions and options for a given poll.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: poll
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of poll questions
+ *       400:
+ *         description: Invalid poll ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollQuestionsRequest, response: NextApiResponse) {
     try {
         const { poll, limit, offset } = request.query;

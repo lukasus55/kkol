@@ -23,6 +23,25 @@ const TIER_POINTS: Record<string, number[]> = {
     B: [7, 4, 1]
 };
 
+/**
+ * @swagger
+ * /api/ranking:
+ *   get:
+ *     summary: Get KKOL ranking
+ *     description: Calculates and returns the official KKOL global ranking based on S-Tier, A-Tier, and B-Tier tournaments.
+ *     tags: [Ranking]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Filter ranking for a specific player ID
+ *     responses:
+ *       200:
+ *         description: Ranking leaderboard
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: RankingRequest, response: NextApiResponse) {
     try {
         const { id } = request.query;

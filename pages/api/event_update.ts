@@ -15,6 +15,52 @@ interface EventUpdateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/event_update:
+ *   post:
+ *     summary: Update an event
+ *     description: Updates event details. Requires owner/manager or admin role.
+ *     tags: [Events]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - name
+ *               - start_date
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               name:
+ *                 type: string
+ *               is_major:
+ *                 type: boolean
+ *               start_date:
+ *                 type: string
+ *                 format: date-time
+ *               end_date:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Event updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: EventUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

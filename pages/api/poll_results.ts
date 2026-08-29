@@ -11,6 +11,36 @@ interface PollResultsRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_results:
+ *   get:
+ *     summary: Get poll results
+ *     description: Retrieves aggregated results for a poll, including vote counts and voters per option.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: poll
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Poll results
+ *       400:
+ *         description: Invalid poll ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollResultsRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });

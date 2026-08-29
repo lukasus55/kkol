@@ -15,6 +15,51 @@ interface PollLabelUpdateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_label_update:
+ *   post:
+ *     summary: Update poll label
+ *     description: Modifies an existing poll label. Permissions depend on poll's rights_level or tournament roles.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - name
+ *               - hex
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               name:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *               hex:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *                 maxLength: 500
+ *     responses:
+ *       200:
+ *         description: Label updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Label or Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollLabelUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

@@ -14,6 +14,35 @@ type TournamentResultRow = Pick<Result, 'tournament_id' | 'player_id' | 'attende
     player_name: string;
 };
 
+/**
+ * @swagger
+ * /api/tournaments:
+ *   get:
+ *     summary: Get tournaments list
+ *     description: Retrieves a list of tournaments and their standings. Can be filtered by ID or Player.
+ *     tags: [Tournaments]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Specific tournament ID
+ *       - in: query
+ *         name: player
+ *         schema:
+ *           type: string
+ *         description: Filter tournaments by participating player
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Max number of returned tournaments
+ *     responses:
+ *       200:
+ *         description: A dictionary of tournaments mapped by ID
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentsRequest, response: NextApiResponse) {
     try {
         const { id, player, limit } = request.query;

@@ -11,6 +11,44 @@ interface TournamentChangeTierRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_change_tier:
+ *   post:
+ *     summary: Change tournament tier
+ *     description: Changes the tier (S, A, B, C) of a tournament. S-Tier requires admin privileges.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *               - new_tier
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *               new_tier:
+ *                 type: string
+ *                 enum: ['S', 'A', 'B', 'C']
+ *     responses:
+ *       200:
+ *         description: Tier changed successfully
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Tournament not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentChangeTierRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

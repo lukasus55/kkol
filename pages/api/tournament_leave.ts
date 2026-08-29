@@ -10,6 +10,40 @@ interface TournamentLeaveRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_leave:
+ *   post:
+ *     summary: Leave a tournament
+ *     description: Allows the authenticated user to leave a tournament. Cannot leave S-Tier tournaments or if they are the owner.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournamentId
+ *             properties:
+ *               tournamentId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully left the tournament
+ *       400:
+ *         description: Missing tournament ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Cannot leave S-Tier tournament or owner restriction
+ *       404:
+ *         description: Tournament not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentLeaveRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

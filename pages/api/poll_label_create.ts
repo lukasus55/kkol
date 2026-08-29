@@ -15,6 +15,52 @@ interface PollLabelCreateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_label_create:
+ *   post:
+ *     summary: Create poll label
+ *     description: Adds a new label to a poll. Permissions depend on poll's rights_level or tournament roles.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - poll
+ *               - name
+ *               - hex
+ *             properties:
+ *               poll:
+ *                 type: string
+ *                 format: uuid
+ *               name:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *               hex:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *                 maxLength: 500
+ *     responses:
+ *       200:
+ *         description: Label created successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollLabelCreateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

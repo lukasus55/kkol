@@ -11,6 +11,42 @@ interface ChangeNameRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/change_name:
+ *   post:
+ *     summary: Change user display name
+ *     description: Updates the displayed name for the authenticated user. Cooldown is 2 hours.
+ *     tags: [Auth & Player]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - new_name
+ *             properties:
+ *               new_name:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 30
+ *     responses:
+ *       200:
+ *         description: Name successfully updated
+ *       400:
+ *         description: Invalid name length
+ *       401:
+ *         description: Not authenticated
+ *       404:
+ *         description: User not found
+ *       429:
+ *         description: Cooldown active
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: ChangeNameRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

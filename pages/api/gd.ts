@@ -2,6 +2,19 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import type { GdLevel, GdScore } from '../../types/db';
 import sql from '../../db.js';
 
+/**
+ * @swagger
+ * /api/gd:
+ *   get:
+ *     summary: Get Geometry Dash leaderboard
+ *     description: Retrieves all Geometry Dash levels and their corresponding player scores.
+ *     tags: [GD]
+ *     responses:
+ *       200:
+ *         description: Geometry Dash levels and scores
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     try {
         const [levels, scores] = await Promise.all([

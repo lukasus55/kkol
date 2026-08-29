@@ -11,6 +11,41 @@ interface TournamentToggleAttendanceRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_toggle_attendance:
+ *   post:
+ *     summary: Toggle player attendance
+ *     description: Flips the 'attended' boolean flag for a specific player in a tournament. Requires owner or manager role.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *               - target_player_id
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *               target_player_id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Attendance toggled successfully
+ *       400:
+ *         description: Invalid payload
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentToggleAttendanceRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

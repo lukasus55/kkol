@@ -11,6 +11,41 @@ interface TournamentKickPlayerRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_kick_player:
+ *   post:
+ *     summary: Kick player from tournament
+ *     description: Removes a player from a tournament. Cannot kick the owner or fellow managers (if manager).
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *               - target_player_id
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *               target_player_id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Player kicked successfully
+ *       400:
+ *         description: Invalid payload
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions or attempting to kick protected roles
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentKickPlayerRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

@@ -13,6 +13,41 @@ interface PollPlayerAnswersRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_player_answers:
+ *   get:
+ *     summary: Get player answers
+ *     description: Retrieves a specific player's answers for a poll. Only allowed for self or if permitted by rights_level.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: poll
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *       - in: query
+ *         name: player
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Map of player answers
+ *       400:
+ *         description: Missing or invalid parameters
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollPlayerAnswersRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });

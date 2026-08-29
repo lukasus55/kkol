@@ -12,6 +12,45 @@ interface TournamentUpdateOrganizerRoleRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_update_organizer_role:
+ *   post:
+ *     summary: Update tournament organizer role
+ *     description: Promotes a player to manager or demotes them. Only the tournament owner can perform this action.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *               - target_player_id
+ *               - action
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *               target_player_id:
+ *                 type: string
+ *               action:
+ *                 type: string
+ *                 enum: ['promote', 'demote']
+ *     responses:
+ *       200:
+ *         description: Permissions updated successfully
+ *       400:
+ *         description: Invalid payload
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Only owner can manage permissions
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentUpdateOrganizerRoleRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

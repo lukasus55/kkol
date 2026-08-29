@@ -19,6 +19,43 @@ interface UploadPfpRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/upload_pfp:
+ *   post:
+ *     summary: Upload profile picture
+ *     description: Uploads and processes a new profile picture (Base64) for the authenticated user. Cooldown is 12 hours.
+ *     tags: [Auth & Player]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - image_base64
+ *             properties:
+ *               image_base64:
+ *                 type: string
+ *                 description: Base64 encoded image string (e.g. data:image/png;base64,...)
+ *     responses:
+ *       200:
+ *         description: Profile picture updated
+ *       400:
+ *         description: Missing image
+ *       401:
+ *         description: Not authenticated
+ *       404:
+ *         description: User not found
+ *       405:
+ *         description: Method not allowed
+ *       429:
+ *         description: Cooldown active
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: UploadPfpRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

@@ -10,6 +10,29 @@ interface TournamentsActiveRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournaments_active:
+ *   get:
+ *     summary: Get active tournaments
+ *     description: Retrieves a list of active (unfinished) tournaments the authenticated user has organizer permissions for.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Max number of returned tournaments
+ *     responses:
+ *       200:
+ *         description: Array of active tournaments
+ *       401:
+ *         description: Not authenticated
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentsActiveRequest, response: NextApiResponse) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: "Method not allowed" });

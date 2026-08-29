@@ -12,6 +12,49 @@ interface PollPlayersAnswersUpdateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_players_answers_update:
+ *   post:
+ *     summary: Update player answers
+ *     description: Records or updates a player's votes for a poll. Only allowed when the poll is active.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - poll_id
+ *               - answers
+ *             properties:
+ *               poll_id:
+ *                 type: string
+ *                 format: uuid
+ *               answers:
+ *                 type: object
+ *                 additionalProperties:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     format: uuid
+ *     responses:
+ *       200:
+ *         description: Answers saved successfully
+ *       400:
+ *         description: Missing or invalid parameters
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Voting hasn't started, has ended, or missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollPlayersAnswersUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

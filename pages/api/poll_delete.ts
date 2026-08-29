@@ -11,6 +11,41 @@ interface PollDeleteRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_delete:
+ *   post:
+ *     summary: Delete poll
+ *     description: Deletes a poll. Requires owner/manager or admin role in the tournament.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 format: uuid
+ *     responses:
+ *       200:
+ *         description: Poll deleted successfully
+ *       400:
+ *         description: Missing poll ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollDeleteRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

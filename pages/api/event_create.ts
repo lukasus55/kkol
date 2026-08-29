@@ -15,6 +15,51 @@ interface EventCreateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/event_create:
+ *   post:
+ *     summary: Create new event
+ *     description: Creates a new event for a tournament. Requires owner/manager or admin role.
+ *     tags: [Events]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *               - name
+ *               - is_major
+ *               - start_date
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               is_major:
+ *                 type: boolean
+ *               start_date:
+ *                 type: string
+ *                 format: date-time
+ *               end_date:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Event created successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: EventCreateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

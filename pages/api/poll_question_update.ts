@@ -40,6 +40,71 @@ interface PollQuestionUpdateRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_question_update:
+ *   post:
+ *     summary: Update poll questions
+ *     description: Upserts questions and options for a poll. Requires permissions based on rights_level or roles.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - poll_id
+ *               - questions
+ *             properties:
+ *               poll_id:
+ *                 type: string
+ *                 format: uuid
+ *               questions:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     page_url:
+ *                       type: string
+ *                     multiple_choice:
+ *                       type: boolean
+ *                     sort_order:
+ *                       type: integer
+ *                     options:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     label_ids:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                     labels:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *     responses:
+ *       200:
+ *         description: Questions updated successfully
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Poll not found
+ *       409:
+ *         description: Conflict (e.g. duplicate IDs or order)
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollQuestionUpdateRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

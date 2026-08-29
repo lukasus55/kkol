@@ -11,6 +11,40 @@ interface PollLabelDeleteRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/poll_label_delete:
+ *   post:
+ *     summary: Delete poll label
+ *     description: Removes a label from a poll. Permissions depend on poll's rights_level or tournament roles.
+ *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Label deleted successfully
+ *       400:
+ *         description: Missing label ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Label or Poll not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollLabelDeleteRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

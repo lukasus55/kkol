@@ -18,6 +18,63 @@ interface TournamentSaveRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_save:
+ *   post:
+ *     summary: Save tournament state
+ *     description: Updates tournament metadata and player standings in bulk. Requires owner or manager role.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *               - results
+ *               - tournament_info
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *               results:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     player_id:
+ *                       type: string
+ *                     position:
+ *                       type: integer
+ *                     total_points:
+ *                       type: integer
+ *               tournament_info:
+ *                 type: object
+ *                 properties:
+ *                   displayed_name:
+ *                     type: string
+ *                   displayed_date:
+ *                     type: string
+ *                   finished:
+ *                     type: boolean
+ *                   end_date:
+ *                     type: string
+ *                     format: date-time
+ *     responses:
+ *       200:
+ *         description: Saved successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentSaveRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

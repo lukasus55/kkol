@@ -9,6 +9,45 @@ type MeQueryResult = Pick<Player, 'id' | 'role' | 'is_active' | 'email' | 'displ
     tournaments: Record<string, { id: string; attended: boolean; position: number; total_points: number }>;
 };
 
+/**
+ * @swagger
+ * /api/me:
+ *   get:
+ *     summary: Get current user profile
+ *     description: Retrieves the profile, tournament participation, and organizer roles for the authenticated user.
+ *     tags: [Auth & Player]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     displayed_name:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     is_active:
+ *                       type: boolean
+ *                     email:
+ *                       type: string
+ *                     organizer_roles:
+ *                       type: object
+ *                     tournaments:
+ *                       type: object
+ *                     pfp_base64:
+ *                       type: string
+ *       401:
+ *         description: Not authenticated or inactive account
+ */
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     const cookies = parse(request.headers.cookie || '');
     const token = cookies.auth_token;

@@ -11,6 +11,43 @@ interface TournamentAddPlayerRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_add_player:
+ *   post:
+ *     summary: Add player to tournament
+ *     description: Enrolls a player in a tournament. User must be the tournament owner or manager.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *               - new_player_id
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *               new_player_id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Player added successfully
+ *       400:
+ *         description: Player already enrolled or invalid input
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       404:
+ *         description: Player not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentAddPlayerRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

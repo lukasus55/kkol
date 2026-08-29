@@ -14,6 +14,45 @@ interface ChangePasswordRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/change_password:
+ *   post:
+ *     summary: Change user password
+ *     description: Updates the password for the authenticated user. Requires current password validation.
+ *     tags: [Auth & Player]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - old_password
+ *               - new_password
+ *             properties:
+ *               old_password:
+ *                 type: string
+ *                 format: password
+ *               new_password:
+ *                 type: string
+ *                 format: password
+ *     responses:
+ *       200:
+ *         description: Password successfully updated
+ *       400:
+ *         description: Validation failed (length, weak password, missing fields)
+ *       401:
+ *         description: Not authenticated or incorrect old password
+ *       403:
+ *         description: Account inactive
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: ChangePasswordRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

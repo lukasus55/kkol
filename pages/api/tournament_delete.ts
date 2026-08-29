@@ -10,6 +10,38 @@ interface TournamentDeleteRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/tournament_delete:
+ *   post:
+ *     summary: Delete tournament
+ *     description: Deletes an existing tournament and all its results. User must be the tournament owner.
+ *     tags: [Tournaments]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tournament_id
+ *             properties:
+ *               tournament_id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Tournament deleted successfully
+ *       400:
+ *         description: Missing tournament ID
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Missing permissions
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: TournamentDeleteRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

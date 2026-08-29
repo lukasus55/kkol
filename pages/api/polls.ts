@@ -13,6 +13,44 @@ interface PollsRequest extends NextApiRequest {
     };
 }
 
+/**
+ * @swagger
+ * /api/polls:
+ *   get:
+ *     summary: Get polls
+ *     description: Retrieves polls. Can be filtered by ID, tournament, or player.
+ *     tags: [Polls]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: player
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: tournament
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: ['reversed', 'default']
+ *     responses:
+ *       200:
+ *         description: Array of polls
+ *       400:
+ *         description: Invalid UUID
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PollsRequest, response: NextApiResponse) {
     try {
         const { id, player, tournament, limit, order } = request.query;

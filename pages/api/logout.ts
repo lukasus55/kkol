@@ -1,6 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { serialize } from 'cookie';
 
+/**
+ * @swagger
+ * /api/logout:
+ *   post:
+ *     summary: User logout
+ *     description: Logs out the user by clearing the HTTP-only authentication cookie.
+ *     tags: [Auth & Player]
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ *       405:
+ *         description: Method not allowed
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });

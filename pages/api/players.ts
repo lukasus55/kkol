@@ -12,6 +12,36 @@ interface PlayersRequest extends NextApiRequest {
 
 type PlayerRow = Pick<Player, 'id' | 'displayed_name' | 'pfp_base64'>;
 
+/**
+ * @swagger
+ * /api/players:
+ *   get:
+ *     summary: Get players list or details
+ *     description: Retrieves a list of players. Can be filtered by a specific ID or tournament ID.
+ *     tags: [Auth & Player]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Specific player ID
+ *       - in: query
+ *         name: tournament
+ *         schema:
+ *           type: string
+ *         description: Filter players by tournament ID
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           maximum: 100
+ *         description: Limit the number of returned players (default 100)
+ *     responses:
+ *       200:
+ *         description: A dictionary of players mapped by ID
+ *       500:
+ *         description: Internal server error
+ */
 export default async function handler(request: PlayersRequest, response: NextApiResponse) {
     try {
         const { id, tournament, limit } = request.query;
