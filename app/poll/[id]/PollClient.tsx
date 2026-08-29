@@ -230,7 +230,7 @@ export default function PollClient() {
 
   return (
     <>
-      <div className={`w-full max-w-[800px] px-4 py-8 flex flex-col relative min-h-screen ${shakeScreen ? 'animate-shake' : ''}`}>
+      <div className={`w-full flex flex-col relative min-h-screen pb-16 ${shakeScreen ? 'animate-shake' : ''}`}>
 
       {/* HEADER */}
       <PollHeader
@@ -248,7 +248,7 @@ export default function PollClient() {
       />
 
       {/* CONTENT */}
-      <div className="mt-6 flex-1 w-full">
+      <div className="w-full max-w-[800px] mx-auto px-4 mt-6 flex-1">
         {mode === 'vote' && (
           <PollVoteTab
             poll={poll}
