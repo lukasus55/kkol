@@ -52,7 +52,7 @@ describe('Poll Players Answers Update API', () => {
         const { req, res } = createMocks({ 
             method: 'POST', 
             headers: { cookie: 'auth_token=token' },
-            body: { poll_id: 'valid-uuid-v7', answers: { q1: ['opt1'] } }
+            body: { poll_id: 'valid-uuid-v7', answers: { q1: ['123'] } }
         });
         vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 

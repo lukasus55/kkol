@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Clock, Filter, Tag, Settings, BarChart2, Pencil, CheckSquare, Search } from 'lucide-react';
+import { Clock, Filter, Tag, Settings, BarChart2, Pencil, CheckSquare, Search, Users } from 'lucide-react';
 
 interface PollHeaderProps {
   poll: any;
@@ -13,12 +13,13 @@ interface PollHeaderProps {
   setSelectedLabels: React.Dispatch<React.SetStateAction<string[]>>;
   onOpenSettings?: () => void;
   onOpenLabels?: () => void;
+  totalParticipants?: number | null;
 }
 
 export default function PollHeader({
   poll, mode, setMode, permissions, labels,
   filterQuery, setFilterQuery, selectedLabels, setSelectedLabels,
-  onOpenSettings, onOpenLabels
+  onOpenSettings, onOpenLabels, totalParticipants
 }: PollHeaderProps) {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -47,125 +48,131 @@ export default function PollHeader({
 
   return (
     <>
-      {/* TOP ROW: Name & Dates */}
-      <div className="w-full bg-bg-200 rounded-md p-4 md:p-6 flex flex-col gap-1 shadow-sm mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-text-900 font-markazi break-words">
-          {poll.name}
-        </h1>
-        <div className="flex items-center gap-2 text-text-500 text-sm">
-          <Clock className="w-4 h-4" />
-          <span title={formattedDate}>Koniec: {formattedDate}</span>
-        </div>
-      </div>
+      {/* TABS & TOOLS - Sticky Top Bar (100% width background) */}
+      <div className="w-full sticky top-0 z-[60] bg-bg-200 border-b border-bg-300 shadow-sm">
+        <div className="w-full max-w-[800px] mx-auto px-4 pt-3 flex flex-col md:flex-row md:items-end justify-between gap-4">
 
-      {/* BOTTOM ROW: Modes & Tools */}
-      <div className="w-full bg-bg-200 rounded-md p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm sticky top-4 z-[60]">
-
-        {/* MODES */}
-        <div className="flex items-center gap-2 bg-bg-100 p-1 rounded-md w-full md:w-auto overflow-x-auto">
-
-          <button
-            onClick={() => setMode('vote')}
-            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all whitespace-nowrap flex-1 md:flex-none ${mode === 'vote' ? 'bg-bg-300 text-text-900 shadow-sm' : 'text-text-500 hover:text-text-700 hover:bg-bg-200'}`}
-          >
-            <CheckSquare className="w-4 h-4" />
-            <span className="font-medium text-sm">Głosowanie</span>
-          </button>
-
-          <button
-            onClick={() => setMode('results')}
-            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all whitespace-nowrap flex-1 md:flex-none ${mode === 'results' ? 'bg-bg-300 text-text-900 shadow-sm' : 'text-text-500 hover:text-text-700 hover:bg-bg-200'}`}
-          >
-            <BarChart2 className="w-4 h-4" />
-            <span className="font-medium text-sm">Wyniki</span>
-          </button>
-
-          {permissions.canEditQuestions && (
+          {/* TABS */}
+          <div className="flex items-center gap-6 overflow-x-auto w-full md:w-auto scrollbar-hide">
             <button
-              onClick={() => setMode('edit')}
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all whitespace-nowrap flex-1 md:flex-none ${mode === 'edit' ? 'bg-bg-300 text-text-900 shadow-sm' : 'text-text-500 hover:text-text-700 hover:bg-bg-200'}`}
+              onClick={() => setMode('vote')}
+              className={`pb-3 px-1 font-medium text-sm transition-colors border-b-2 whitespace-nowrap flex items-center gap-2 ${mode === 'vote' ? 'border-accent-500 text-accent-600' : 'border-transparent text-text-500 hover:text-text-800 hover:border-bg-400'}`}
             >
-              <Pencil className="w-4 h-4" />
-              <span className="font-medium text-sm">Edycja</span>
-            </button>
-          )}
-
-        </div>
-
-        {/* TOOLS */}
-        <div className="flex items-center gap-2 w-full md:w-auto">
-
-          {/* Filter Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md border transition-colors ${selectedLabels.length > 0 || filterQuery ? 'border-accent-500 text-accent-500 bg-accent-500/10' : 'border-bg-400 text-text-700 hover:bg-bg-300'}`}
-            >
-              <Filter className="w-4 h-4" />
-              <span className="hidden md:inline text-sm font-medium">Filtry</span>
+              Głosowanie
             </button>
 
-            {isFilterOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
-                <div className="absolute right-0 top-full mt-2 w-64 bg-bg-100 rounded-md shadow-xl z-50 p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
-                  <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-500" />
-                    <input
-                      type="text"
-                      placeholder="Szukaj pytania..."
-                      value={filterQuery}
-                      onChange={(e) => setFilterQuery(e.target.value)}
-                      className="w-full bg-bg-100 border border-bg-300 text-text-900 rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-accent-500"
-                    />
-                  </div>
+            <button
+              onClick={() => setMode('results')}
+              className={`pb-3 px-1 font-medium text-sm transition-colors border-b-2 whitespace-nowrap flex items-center gap-2 ${mode === 'results' ? 'border-accent-500 text-accent-600' : 'border-transparent text-text-500 hover:text-text-800 hover:border-bg-400'}`}
+            >
+              Wyniki
+            </button>
 
-                  {labels.length > 0 && (
-                    <div className="flex flex-col gap-2">
-                      <span className="text-xs font-bold text-text-500 uppercase tracking-wider">Etykiety</span>
-                      <div className="flex flex-wrap gap-2 max-h-[200px] overflow-y-auto pr-1">
-                        {labels.map(lbl => {
-                          const isSelected = selectedLabels.includes(lbl.id);
-                          return (
-                            <button
-                              key={lbl.id}
-                              onClick={() => toggleLabelFilter(lbl.id)}
-                              className={`px-2 py-1 rounded-md text-xs font-medium border flex items-center gap-1.5 transition-opacity cursor-pointer hover:opacity-75`}
-                              style={{
-                                borderColor: isSelected ? lbl.hex : 'var(--color-bg-400)',
-                                backgroundColor: isSelected ? `${lbl.hex}20` : 'transparent',
-                                color: isSelected ? lbl.hex : 'var(--color-text-700)'
-                              }}
-                            >
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: lbl.hex }} />
-                              {lbl.name}
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </>
+            {permissions.canEditQuestions && (
+              <button
+                onClick={() => setMode('edit')}
+                className={`pb-3 px-1 font-medium text-sm transition-colors border-b-2 whitespace-nowrap flex items-center gap-2 ${mode === 'edit' ? 'border-accent-500 text-accent-600' : 'border-transparent text-text-500 hover:text-text-800 hover:border-bg-400'}`}
+              >
+                Edycja
+              </button>
             )}
           </div>
 
-          {permissions.canEditLabels && (
-            <button onClick={onOpenLabels} className="flex items-center gap-2 px-3 py-2 rounded-md border border-bg-400 text-text-700 hover:bg-bg-300 transition-colors">
-              <Tag className="w-4 h-4" />
-              <span className="hidden md:inline text-sm font-medium">Etykiety</span>
-            </button>
-          )}
+          {/* TOOLS */}
+          <div className="flex items-center gap-4 pb-3 w-full md:w-auto justify-end">
 
-          {permissions.canEditSettings && (
-            <button onClick={onOpenSettings} className="flex items-center gap-2 px-3 py-2 rounded-md border border-bg-400 text-text-700 hover:bg-bg-300 transition-colors">
-              <Settings className="w-4 h-4" />
-              <span className="hidden md:inline text-sm font-medium">Ustawienia</span>
-            </button>
-          )}
+            {/* Filter Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${selectedLabels.length > 0 || filterQuery ? 'text-accent-500' : 'text-text-500 hover:text-text-900'}`}
+              >
+                <Filter className="w-4 h-4" />
+                <span className="hidden md:inline">Filtry</span>
+              </button>
 
+              {isFilterOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
+                  <div className="absolute right-0 md:right-1/2 md:translate-x-1/2 top-full mt-2 w-64 bg-bg-100 border border-bg-300 rounded-md shadow-xl z-50 p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+                    <div className="relative">
+                      <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-500" />
+                      <input
+                        type="text"
+                        placeholder="Szukaj pytania..."
+                        value={filterQuery}
+                        onChange={(e) => setFilterQuery(e.target.value)}
+                        className="w-full bg-bg-100 border border-bg-300 text-text-900 rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-accent-500"
+                      />
+                    </div>
+
+                    {labels.length > 0 && (
+                      <div className="flex flex-col gap-2">
+                        <span className="text-xs font-bold text-text-500 uppercase tracking-wider">Etykiety</span>
+                        <div className="flex flex-wrap gap-2 max-h-[200px] overflow-y-auto pr-1">
+                          {labels.map(lbl => {
+                            const isSelected = selectedLabels.includes(lbl.id);
+                            return (
+                              <button
+                                key={lbl.id}
+                                onClick={() => toggleLabelFilter(lbl.id)}
+                                className={`px-2 py-1 rounded-md text-xs font-medium border flex items-center gap-1.5 transition-opacity cursor-pointer hover:opacity-75`}
+                                style={{
+                                  borderColor: isSelected ? lbl.hex : 'var(--color-bg-400)',
+                                  backgroundColor: isSelected ? `${lbl.hex}20` : 'transparent',
+                                  color: isSelected ? lbl.hex : 'var(--color-text-700)'
+                                }}
+                              >
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: lbl.hex }} />
+                                {lbl.name}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {permissions.canEditLabels && (
+              <button onClick={onOpenLabels} className="flex items-center gap-1.5 text-sm font-medium text-text-500 hover:text-text-900 transition-colors">
+                <Tag className="w-4 h-4" />
+                <span className="hidden md:inline">Etykiety</span>
+              </button>
+            )}
+
+            {permissions.canEditSettings && (
+              <button onClick={onOpenSettings} className="flex items-center gap-1.5 text-sm font-medium text-text-500 hover:text-text-900 transition-colors">
+                <Settings className="w-4 h-4" />
+                <span className="hidden md:inline">Ustawienia</span>
+              </button>
+            )}
+
+          </div>
         </div>
+      </div>
 
+      {/* TITLE CARD (Google Forms Style) */}
+      <div className="w-full max-w-[800px] mx-auto px-4 mt-8">
+        <div className="w-full bg-bg-200 rounded-md border-t-[8px] border-t-accent-500 p-6 md:p-8 flex flex-col gap-3 shadow-sm mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-text-900 font-markazi break-words leading-tight">
+            {poll.name}
+          </h1>
+          <div className="flex items-center gap-4 flex-wrap text-text-500 text-sm mt-1">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span title={formattedDate}>Koniec: {formattedDate}</span>
+            </div>
+            {totalParticipants != null && (
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                <span>Uczestników: {totalParticipants}</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </>
   );
