@@ -127,3 +127,21 @@ export interface TournamentOrganizer {
     player_id: string;
     role: 'owner' | 'manager' | string;
 }
+
+export interface AvailabilityDefault {
+    id: string;
+    player_id: string;
+    day_of_week: number;
+    start_time: string;
+    end_time: string;
+    status: 'available' | 'maybe' | 'unavailable' | string;
+}
+
+export interface AvailabilityOverride {
+    id: string;
+    player_id: string;
+    specific_date: Date | string;
+    start_time: string;
+    end_time: string;
+    status: 'available' | 'maybe' | 'unavailable' | string;
+}
