@@ -153,21 +153,21 @@ export default function FullCalendar({ user, onCollapse }: { user: any, onCollap
   const today = new Date();
 
   return (
-    <div className="flex flex-col w-full h-full pb-2">
+    <div className="flex flex-col w-full h-full bg-bg-100">
 
       {/* Header Toolbar */}
-      <div className="flex items-center justify-between py-4 flex-shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-bg-200 border-b border-bg-300 flex-shrink-0">
         <div className="flex items-center gap-4">
           <button
             onClick={handleToday}
-            className="px-4 py-1.5 rounded-md bg-bg-300 text-sm font-medium text-text-900 hover:text-text-900 hover:bg-bg-200 transition-colors"
+            className="px-4 py-1.5 rounded-md bg-bg-300 text-sm font-medium text-text-900 hover:text-text-900 hover:bg-bg-100 shadow-sm transition-colors"
           >
             Dzisiaj
           </button>
         </div>
 
         <div className="flex items-center gap-6">
-          <button onClick={handlePrevMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-200 transition-colors">
+          <button onClick={handlePrevMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-300 transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </button>
 
@@ -175,7 +175,7 @@ export default function FullCalendar({ user, onCollapse }: { user: any, onCollap
             {MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
 
-          <button onClick={handleNextMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-200 transition-colors">
+          <button onClick={handleNextMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-300 transition-colors">
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>
@@ -185,7 +185,7 @@ export default function FullCalendar({ user, onCollapse }: { user: any, onCollap
 
       {/* Calendar Grid */}
       <div className="flex-1 overflow-hidden min-h-0">
-        <div className="w-full h-full border border-bg-400 rounded-lg overflow-hidden bg-bg-100 shadow-sm flex flex-col">
+        <div className="w-full h-full overflow-hidden bg-bg-100 flex flex-col">
           <div className="grid grid-cols-7 border-b border-bg-400 bg-bg-300/50 flex-shrink-0">
             {DAY_NAMES.map((day, idx) => (
               <div key={idx} className="py-2.5 text-center text-xs font-bold text-text-900 uppercase tracking-wider">

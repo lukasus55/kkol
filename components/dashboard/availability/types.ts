@@ -17,6 +17,7 @@ export interface WeeklyTimeGridProps {
   isLoading?: boolean;
   headerLeft?: React.ReactNode;
   headerRight?: React.ReactNode;
+  readOnly?: boolean;
 }
 
 export const DAYS_SHORT = ["Pon", "Wto", "Śro", "Czw", "Pią", "Sob", "Nie"];

@@ -21,7 +21,7 @@ export default function DashboardLayoutClient({ children }: { children: React.Re
       <div className="w-full grid grid-rows-[auto_1fr] md:grid-rows-1 grid-cols-1 md:grid-cols-[20rem_1fr] min-h-[calc(100vh-60px)]">
         <DashboardNav user={user} />
         
-        <div className="w-full flex flex-col pb-10 overflow-hidden">
+        <div className="w-full flex flex-col overflow-hidden">
           {children}
         </div>
       </div>

@@ -66,7 +66,7 @@ export default function DashboardNav({ user }: DashboardNavProps) {
       </div>
 
       {/* Sidebar (Desktop) / Overlay (Mobile) */}
-      <div className={`bg-bg-200 w-full md:h-full flex-col md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 border-r border-bg-300 md:border-r-0 fixed inset-0 md:static ${isMobileMenuOpen ? 'flex' : 'hidden md:flex'}`}>
+      <div className={`bg-bg-200 w-full md:h-full flex-col md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 border-r border-bg-300 fixed inset-0 md:static ${isMobileMenuOpen ? 'flex' : 'hidden md:flex'}`}>
         
         {/* Mobile Close Header inside Overlay */}
         <div className="md:hidden flex items-center justify-between border-b border-bg-300 px-4 h-[60px] shrink-0">

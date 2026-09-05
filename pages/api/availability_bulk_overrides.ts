@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
@@ -44,29 +45,23 @@ export default async function handler(request: NextApiRequest, response: NextApi
         await sql`DELETE FROM availability_overrides WHERE player_id = ${playerId} AND specific_date = ${date}`;
 
         // If not reverting to routine, insert the provided blocks
-        // (if blocks is empty and revertToRoutine is false, they are explicitly unavailable all day)
         if (!revertToRoutine && Array.isArray(blocks)) {
-            // We need to insert a dummy block if blocks is empty to mark the day as overridden but empty.
-            // Wait, if there are no rows in availability_overrides, the frontend will assume routine!
-            // Let's insert a special "unavailable" block from 00:00 to 24:00 if they want to clear it?
-            // Actually, if a user wants to be completely unavailable, they should add a 00:00-23:59 unavailable block.
-            // If they just delete all blocks, maybe they want to be unavailable.
-            // Let's just insert whatever they provide.
             for (const block of blocks) {
                 if (block.start_time && block.end_time && block.status) {
+                    const newId = crypto.randomUUID();
                     await sql`
                         INSERT INTO availability_overrides (id, player_id, specific_date, start_time, end_time, status)
-                        VALUES (gen_random_uuid(), ${playerId}, ${date}, ${block.start_time}, ${block.end_time}, ${block.status})
+                        VALUES (${newId}, ${playerId}, ${date}, ${block.start_time}, ${block.end_time}, ${block.status})
                     `;
                 }
             }
             
-            // If blocks was empty, and they didn't revert to routine, we need to signify "override with 0 availability".
-            // We can do this by inserting a 00:00 to 00:00 block or similar.
+            // If blocks was empty, signify "override with 0 availability".
             if (blocks.length === 0) {
+                 const emptyId = crypto.randomUUID();
                  await sql`
-                    INSERT INTO availability_overrides (player_id, specific_date, start_time, end_time, status)
-                    VALUES (${playerId}, ${date}, '00:00', '00:00', 'unavailable')
+                    INSERT INTO availability_overrides (id, player_id, specific_date, start_time, end_time, status)
+                    VALUES (${emptyId}, ${playerId}, ${date}, '00:00', '00:00', 'unavailable')
                 `;
             }
         }

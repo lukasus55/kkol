@@ -8,10 +8,8 @@ export default function AvailabilityPage() {
   if (!user) return null;
 
   return (
-    <div className="h-full w-full p-4 overflow-hidden">
-      <div className="bg-bg-200 rounded-md p-4 h-full w-full flex flex-col">
-        <MyAvailability user={user} />
-      </div>
+    <div className="h-full w-full flex flex-col bg-bg-200">
+      <MyAvailability user={user} />
     </div>
   );
 }

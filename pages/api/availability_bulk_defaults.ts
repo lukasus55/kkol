@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import sql from '../../db.js';
@@ -45,9 +46,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
         // Insert new blocks
         for (const block of blocks) {
             if (block.day_of_week && block.start_time && block.end_time && block.status) {
+                const newId = crypto.randomUUID();
                 await sql`
                     INSERT INTO availability_defaults (id, player_id, day_of_week, start_time, end_time, status)
-                    VALUES (gen_random_uuid(), ${playerId}, ${block.day_of_week}, ${block.start_time}, ${block.end_time}, ${block.status})
+                    VALUES (${newId}, ${playerId}, ${block.day_of_week}, ${block.start_time}, ${block.end_time}, ${block.status})
                 `;
             }
         }

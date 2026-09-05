@@ -19,8 +19,10 @@ export default function WeeklyTimeGrid({
   onSaveRoutine,
   onSaveDayOverride,
   hasOverridesMap,
+  isLoading,
   headerLeft,
-  headerRight
+  headerRight,
+  readOnly
 }: WeeklyTimeGridProps) {
   const [blocks, setBlocks] = useState<TimeBlock[]>([]);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -117,6 +119,7 @@ export default function WeeklyTimeGrid({
   }, [blocks, userActionCount, mode, onSaveRoutine, onSaveDayOverride, weekStartDate]);
 
   const handleMouseDown = (e: React.MouseEvent, action: 'create' | 'move' | 'resize-top' | 'resize-bottom', blockId?: string) => {
+    if (readOnly) return;
     if (e.button !== 0) return;
     const day = getDayFromMouse(e);
     const hour = getHourFromMouse(e);
@@ -289,6 +292,7 @@ export default function WeeklyTimeGrid({
           weekStartDate={weekStartDate} 
           hasOverridesMap={hasOverridesMap} 
           onRevertDay={(dayIdx) => setRevertPopupState({ isOpen: true, dayIdx })} 
+          readOnly={readOnly}
         />
 
         <div className="relative w-full" style={{ height: '1152px' }}>
