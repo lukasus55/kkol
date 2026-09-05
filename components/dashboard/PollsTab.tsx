@@ -91,7 +91,7 @@ export default function PollsTab({ user }: { user: any }) {
   };
 
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-80px)] pb-6 px-8 pt-8 gap-8">
+    <div className="flex flex-col w-full h-full min-h-0 pb-2 px-8 pt-4 gap-8">
 
       {/* Create Poll Bar */}
       <div className="flex items-center gap-4 w-full max-w-4xl mx-auto flex-shrink-0">

@@ -1,36 +1,52 @@
-# Karwińska Olimpiada - Wytyczne dla Agentów AI
+# Karwińska Olimpiada - AI Agents Guidelines
 
-## 1. Wyciąganie Common Components
-Podczas każdego refactoru oraz budowania nowych widoków (np. Dashboard, Polls), aktywnie poszukuj okazji na wydzielenie uniwersalnych komponentów UI, m.in.:
-- **Buttony** (Primary, Secondary, Tertiary, Danger)
-- **Modale / Popup'y** (Uniwersalne okienka z propsami na tytuł, treść, akcje)
-- **Inputy** (Pola tekstowe, hasła z okiem (toggle visibility), walidatory)
-- **Karty** (Uniwersalny layout karty kontenerowej z określonym tłem i obramowaniem)
+## 1. ABSOLUTELY CRITICAL: Use Existing Shared UI Components
+**DO NOT CREATE RAW HTML ELEMENTS** (like raw `<button>`, `<input>`, native `alert()` or `confirm()`) unless absolutely necessary and no equivalent component exists.
 
-Uniwersalne komponenty powinny trafiać do folderu `components/ui/` i korzystać z Tailwind CSS. Celem jest osiągnięcie pełnej spójności wizualnej i DRY (Don't Repeat Yourself) we wszystkich nowych częściach aplikacji.
+Whenever you add or modify a view, you **MUST FIRST check the `components/ui/` directory** for reusable components. We already have robust, styled abstractions that you **MUST use**, including but not limited to:
+- **Buttons** (`Button.tsx` for all actions. DO NOT use raw `<button>`)
+- **Confirmation Dialogs** (`ConfirmationPopup.tsx` - DO NOT use browser native `confirm()`)
+- **Modals / Popups** (`Modal.tsx` for general popups)
+- **Inputs** (`Input.tsx` for text/passwords)
+- **Selects** (`Select.tsx` for dropdowns)
+- **Cards** (`Card.tsx` for layout containers)
 
-## 2. Zasady Zamykania Popupów / Modali
-Każdy nowo tworzony lub refaktorowany popup/modal musi przestrzegać następujących 3 zasad zamykania:
-1. Zamykanie za pomocą widocznego przycisku (np. krzyżyk w rogu lub przycisk "Zamknij").
-2. Zamykanie za pomocą naciśnięcia poza oknem popupa (kliknięcie w zaciemnione tło/backdrop).
-3. Zamykanie za pomocą klawisza "ESC" na klawiaturze.
+**MANDATORY RULE:** Every future AI agent is explicitly forbidden from generating new raw buttons, native alerts, or native confirmation popups if a UI component can do the job. The primary goal of this architecture is DRY (Don't Repeat Yourself) and 100% visual consistency.
 
-## 3. Testowanie Backendu (Vitest)
-Kiedy edytujesz, modyfikujesz, lub tworzysz jakikolwiek plik backendowy (np. endpointy API w `pages/api/`), **zawsze** musisz zaktualizować lub napisać dla nich rygorystyczne testy jednostkowe. 
-- Testy znajdują się w folderze `__tests__/api/`.
-- Wykorzystuj środowisko `vitest` oraz `node-mocks-http` do symulowania żądań.
-- Pamiętaj o mockowaniu zapytań bazodanowych (`vi.hoisted` + `vi.mock('../../db.js')`).
-- Dokładnie sprawdzaj *edge case'y* (nieprawidłowe dane, brak uprawnień, walidacje).
-- **Po każdych większych modyfikacjach backendu masz obowiązek uruchomić komendę `npx vitest run` w terminalu**, aby zweryfikować czy wszystko działa poprawnie.
+## 2. Popup / Modal Closing Rules
+Every newly created or refactored popup/modal must adhere to the following 3 closing rules:
+1. Close via a visible button (e.g., an "X" in the corner or a "Close" button).
+2. Close by clicking outside the popup window (clicking on the darkened background/backdrop).
+3. Close by pressing the "ESC" key on the keyboard.
+*(Note: Using the existing `Modal.tsx` component usually handles these rules automatically).*
 
-## 4. Struktura Bazy Danych
-Plik `types/db.ts` może służyć jako podgląd na strukturę bazy danych. Traktuj go jako użyteczny drogowskaz, ale pamiętaj, że nie jest on perfekcyjnym odzwierciedleniem bazy (np. nie zawiera dokładnych informacji o kluczach obcych czy constraintach). Zawsze możesz na niego spojrzeć, aby zrozumieć ogólny zarys modeli danych.
+## 3. Backend Testing and Documentation
+When you edit, modify, or create any backend file (e.g., API endpoints in `pages/api/`), **you must always**:
+1. **Write or update rigorous unit tests for them.**
+   - Tests are located in the `__tests__/api/` folder.
+   - Use the `vitest` environment and `node-mocks-http` to simulate requests.
+   - Remember to mock database queries (`vi.hoisted` + `vi.mock('../../db.js')`).
+   - Carefully check *edge cases* (invalid data, missing permissions, validations).
+   - **After any major backend modifications, you are required to run the `npx vitest run` command in the terminal** to verify everything works correctly.
+2. **Create or update Swagger (JSDoc) documentation** at the top of every modified endpoint file. Example: `/** @swagger ... */`. Ensure that all API endpoints have precise definitions of returned codes and parameters. Future agents MUST create and update Swagger documentation.
 
-## 5. Płaski Design (Flat Design)
-Aplikacja KKOL bazuje na **płaskim designie**. Unikaj używania głębokich cieni (`shadow-md`, `shadow-lg`, `shadow-xl` itp.). Zamiast cieni, do oddzielania elementów i kontenerów od tła używaj subtelnych różnic w odcieniach tła (`bg-bg-100` vs `bg-bg-200`).
-Kieruj się minimalizmem wizualnym bez efektów przestrzennych.
+## 4. Database Structure
+The `types/db.ts` file can serve as a preview of the database structure. Treat it as a useful guide, but remember that it is not a perfect reflection of the database (e.g., it doesn't contain exact information about foreign keys or constraints). You can always look at it to understand the general outline of the data models.
 
-## 5. Maksymalne zaokrąglenie (Border Radius)
-Zgodnie z przyjętą estetyką, unikaj używania dużych zaokrągleń (takich jak `rounded-lg`, `rounded-xl`, `rounded-2xl` czy `rounded-3xl`) w przypadku ogólnych kontenerów, kart, popupów czy przycisków.
-Maksymalna wartość, jakiej powinieneś używać w takich elementach, to **`rounded-md`**.
-Okrągłe elementy (np. `rounded-full` dla zdjęć profilowych) są nadal dozwolone tam, gdzie jest to logicznie uzasadnione, ale nie stosuj ich dla bloków interfejsu (np. przyciski powinny pozostać maksymalnie na poziomie `rounded-md`).
+## 5. Flat Design & Border Minimization
+The KKOL application is based on **flat design**. 
+- Avoid using deep shadows (`shadow-md`, `shadow-lg`, `shadow-xl`, etc.). Instead of shadows, use subtle differences in background shades (`bg-bg-100` vs `bg-bg-200`) to separate elements and containers from the background.
+- **Minimize the use of borders**. Whenever possible, separate sections or components using different background colors rather than adding a border. Borders (`border`, `border-bg-400`, etc.) should only be used as a last resort when color separation is not enough or when creating form inputs.
+Aim for visual minimalism without spatial effects and heavy outlines.
+
+## 6. Maximum Border Radius
+In accordance with the adopted aesthetic, avoid using large border radii (such as `rounded-lg`, `rounded-xl`, `rounded-2xl`, or `rounded-3xl`) for general containers, cards, popups, or buttons.
+The maximum value you should use for such elements is **`rounded-md`**.
+Fully rounded elements (e.g., `rounded-full` for profile pictures) are still allowed where logically justified, but do not use them for interface blocks (e.g., buttons should remain at a maximum of `rounded-md`).
+
+## 7. React File Length & Component Modularity
+Aim for clean, modular, and easy-to-maintain React components:
+- **Target (<150 lines)**: Aim to keep React component files under 150 lines. Extract subcomponents, custom hooks, helper utilities, and constants into dedicated files.
+- **Acceptable (150-300 lines)**: Files in this range are acceptable, but you must actively consider whether subcomponents, hooks, or pure helper functions can be cleanly split out.
+- **Strict Limit (>300 lines)**: Components exceeding 300 lines are an absolute last resort. Whenever a file approaches or exceeds this limit, you must refactor and decompose it into smaller, focused modules.
+

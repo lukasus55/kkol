@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { UserProvider } from '../../components/dashboard/UserProvider';
+import DashboardLayoutClient from '../../components/dashboard/DashboardLayoutClient';
 
 export const metadata: Metadata = {
   title: 'Panel Gracza - Karwińska Olimpiada',
@@ -10,5 +12,11 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <UserProvider>
+      <DashboardLayoutClient>
+        {children}
+      </DashboardLayoutClient>
+    </UserProvider>
+  );
 }
