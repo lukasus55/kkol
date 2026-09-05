@@ -7,7 +7,7 @@ import WeeklyTimeGrid, { TimeBlock } from './WeeklyTimeGrid';
 
 export default function MyAvailability({ user }: { user: any }) {
   const { addToast } = useToast();
-  
+
   const [mode, setMode] = useState<'routine' | 'specific_week'>('routine');
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
     const d = new Date();
@@ -74,11 +74,11 @@ export default function MyAvailability({ user }: { user: any }) {
     } else {
       const weekDates = getWeekDateStrings();
       const blocks: TimeBlock[] = [];
-      
+
       for (let i = 0; i < 7; i++) {
         const dateStr = weekDates[i];
         const dayOverrides = overrides.filter(o => o.specific_date.split('T')[0] === dateStr);
-        
+
         if (dayOverrides.length > 0) {
           dayOverrides.forEach(o => {
             // We ignore dummy 00:00 blocks that were used just to signify "empty override"
@@ -140,13 +140,13 @@ export default function MyAvailability({ user }: { user: any }) {
         end_time: formatHour(b.endHour),
         status: b.status
       }));
-      
+
       const res = await fetch('/api/availability_bulk_defaults', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ blocks: apiBlocks })
       });
-      
+
       if (!res.ok) {
         addToast({ type: 'error', message: 'Błąd zapisywania.' });
       }
@@ -159,12 +159,12 @@ export default function MyAvailability({ user }: { user: any }) {
 
   const handleSaveDayOverride = async (dateStr: string, blocks: TimeBlock[], revertToRoutine: boolean) => {
     setActiveRequests(prev => prev + 1);
-    
+
     // Optimistic update
     setOverrides(prev => {
       const filtered = prev.filter(o => o.specific_date.split('T')[0] !== dateStr);
       if (revertToRoutine) return filtered;
-      
+
       const newOverrides = blocks.map(b => ({
         id: b.id,
         specific_date: dateStr + 'T00:00:00.000Z',
@@ -174,13 +174,13 @@ export default function MyAvailability({ user }: { user: any }) {
       }));
       // If there are no blocks but not revertToRoutine, it means an empty override (00:00) should be created
       if (newOverrides.length === 0) {
-         newOverrides.push({
-           id: 'empty-' + Date.now(),
-           specific_date: dateStr + 'T00:00:00.000Z',
-           start_time: '00:00:00',
-           end_time: '00:00:00',
-           status: 'available'
-         });
+        newOverrides.push({
+          id: 'empty-' + Date.now(),
+          specific_date: dateStr + 'T00:00:00.000Z',
+          start_time: '00:00:00',
+          end_time: '00:00:00',
+          status: 'available'
+        });
       }
       return [...filtered, ...newOverrides];
     });
@@ -212,9 +212,9 @@ export default function MyAvailability({ user }: { user: any }) {
 
   return (
     <div className="flex flex-col h-full overflow-hidden p-0 gap-0">
-      
+
       <div className="flex-1 overflow-hidden">
-        <WeeklyTimeGrid 
+        <WeeklyTimeGrid
           mode={mode}
           weekStartDate={mode === 'specific_week' ? currentWeekStart : null}
           initialBlocks={currentBlocks}
@@ -225,39 +225,43 @@ export default function MyAvailability({ user }: { user: any }) {
           headerLeft={
             <div className="flex items-center gap-4">
               <div className="flex bg-bg-300 p-1 rounded-md">
-                <button 
-                  onClick={() => setMode('routine')} 
+                <button
+                  onClick={() => setMode('routine')}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm font-bold transition-colors ${mode === 'routine' ? 'bg-bg-100 text-text-900 shadow-sm' : 'text-text-500 hover:text-text-900 hover:bg-bg-200'}`}
                 >
-                  <Clock className="w-4 h-4" /> Szablon Tygodnia
+                  <Clock className="w-4 h-4" />
+                  <span className="hidden md:inline">Szablon Tygodnia</span>
+                  <span className="inline md:hidden">Szablon</span>
                 </button>
-                <button 
-                  onClick={() => setMode('specific_week')} 
+                <button
+                  onClick={() => setMode('specific_week')}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm font-bold transition-colors ${mode === 'specific_week' ? 'bg-bg-100 text-text-900 shadow-sm' : 'text-text-500 hover:text-text-900 hover:bg-bg-200'}`}
                 >
-                  <CalendarIcon className="w-4 h-4" /> Konkretny Tydzień
+                  <CalendarIcon className="w-4 h-4" />
+                  <span className="hidden md:inline">Konkretny Tydzień</span>
+                  <span className="inline md:hidden">Konkretny</span>
                 </button>
               </div>
-              <span className="text-sm font-medium text-text-500 hidden lg:inline">
+              <span className="text-sm font-medium text-text-500 hidden xl:inline">
                 {mode === 'routine' ? 'Przeciągnij myszką, aby tworzyć i edytować bloki.' : 'Edytujesz wyjątki dla konkretnych dat.'}
               </span>
             </div>
           }
           headerRight={
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6 ml-3 md:ml-0">
               <div className="flex items-center gap-2 text-sm font-bold text-text-500">
-                 {activeRequests > 0 ? (
-                   <>
-                     <div className="w-4 h-4 border-2 border-text-400 border-t-transparent rounded-full animate-spin" />
-                     <span>Zapisywanie...</span>
-                   </>
-                 ) : (
-                   <span className="flex items-center gap-1"><Check className="w-4 h-4 opacity-70" /> Zapisane</span>
-                 )}
+                {activeRequests > 0 ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-text-400 border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden lg:inline">Zapisywanie...</span>
+                  </>
+                ) : (
+                  <span className="flex items-center gap-1"><Check className="w-4 h-4 opacity-70" /> <span className="hidden lg:inline">Zapisane</span></span>
+                )}
               </div>
               {mode === 'specific_week' && (
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={() => {
                       const d = new Date(currentWeekStart);
                       d.setDate(d.getDate() - 7);
@@ -268,10 +272,10 @@ export default function MyAvailability({ user }: { user: any }) {
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <span className="font-bold text-text-900 min-w-[110px] text-center text-sm">
-                    {currentWeekStart.toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })} - 
+                    {currentWeekStart.toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })} -
                     {new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })}
                   </span>
-                  <button 
+                  <button
                     onClick={() => {
                       const d = new Date(currentWeekStart);
                       d.setDate(d.getDate() + 7);
