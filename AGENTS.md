@@ -1,15 +1,17 @@
 # Karwińska Olimpiada - AI Agents Guidelines
 
-## 1. Extracting and Using Common Components
-During any refactor or when building new views (e.g., Dashboard, Polls), actively look for opportunities to extract and **use** universal UI components, such as:
-- **Buttons** (`Button.tsx` with variants: Primary, Secondary, Tertiary, Danger)
-- **Modals / Popups** (`Modal.tsx` for universal dialogs with props for title, content, actions)
-- **Inputs** (`Input.tsx` for text fields, passwords with eye toggle, validators)
-- **Cards** (`Card.tsx` for universal container layout with specific background and border)
+## 1. ABSOLUTELY CRITICAL: Use Existing Shared UI Components
+**DO NOT CREATE RAW HTML ELEMENTS** (like raw `<button>`, `<input>`, native `alert()` or `confirm()`) unless absolutely necessary and no equivalent component exists.
 
-**CRITICAL:** Agents must actively search for opportunities to use these common components. Before making any major UI changes, you MUST read and familiarize yourself with the `/components/ui/` directory to check what reusable components already exist. Avoid creating raw HTML elements (like raw `<button>`, `<input>`) if a suitable UI component exists. 
+Whenever you add or modify a view, you **MUST FIRST check the `components/ui/` directory** for reusable components. We already have robust, styled abstractions that you **MUST use**, including but not limited to:
+- **Buttons** (`Button.tsx` for all actions. DO NOT use raw `<button>`)
+- **Confirmation Dialogs** (`ConfirmationPopup.tsx` - DO NOT use browser native `confirm()`)
+- **Modals / Popups** (`Modal.tsx` for general popups)
+- **Inputs** (`Input.tsx` for text/passwords)
+- **Selects** (`Select.tsx` for dropdowns)
+- **Cards** (`Card.tsx` for layout containers)
 
-Universal components should be placed in the `components/ui/` folder and use Tailwind CSS. The goal is to achieve full visual consistency and DRY (Don't Repeat Yourself) across all new parts of the application.
+**MANDATORY RULE:** Every future AI agent is explicitly forbidden from generating new raw buttons, native alerts, or native confirmation popups if a UI component can do the job. The primary goal of this architecture is DRY (Don't Repeat Yourself) and 100% visual consistency.
 
 ## 2. Popup / Modal Closing Rules
 Every newly created or refactored popup/modal must adhere to the following 3 closing rules:
@@ -41,3 +43,10 @@ Aim for visual minimalism without spatial effects and heavy outlines.
 In accordance with the adopted aesthetic, avoid using large border radii (such as `rounded-lg`, `rounded-xl`, `rounded-2xl`, or `rounded-3xl`) for general containers, cards, popups, or buttons.
 The maximum value you should use for such elements is **`rounded-md`**.
 Fully rounded elements (e.g., `rounded-full` for profile pictures) are still allowed where logically justified, but do not use them for interface blocks (e.g., buttons should remain at a maximum of `rounded-md`).
+
+## 7. React File Length & Component Modularity
+Aim for clean, modular, and easy-to-maintain React components:
+- **Target (<150 lines)**: Aim to keep React component files under 150 lines. Extract subcomponents, custom hooks, helper utilities, and constants into dedicated files.
+- **Acceptable (150-300 lines)**: Files in this range are acceptable, but you must actively consider whether subcomponents, hooks, or pure helper functions can be cleanly split out.
+- **Strict Limit (>300 lines)**: Components exceeding 300 lines are an absolute last resort. Whenever a file approaches or exceeds this limit, you must refactor and decompose it into smaller, focused modules.
+
