@@ -137,39 +137,42 @@ export default function EventsSection() {
 
     return (
         <section className="w-full flex flex-col items-center">
-            <h2 className="mb-6 sm:mb-8 text-3xl sm:text-4xl font-bold">Główne Wydarzenia</h2>
+            <div className="w-full max-w-[1016px] px-8 sm:px-12 flex flex-col items-start">
+                <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl font-bold tracking-tight text-white">Główne Wydarzenia</h2>
 
-            <div className="relative flex items-center w-full max-w-[1016px] px-8 sm:px-12">
-                <button
-                    onClick={() => scroll('left')}
-                    className="absolute left-2 sm:left-0 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-bg-300 rounded-full hover:bg-bg-400 transition-colors z-10 shadow-sm"
-                >
-                    <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-text-900" />
-                </button>
+                <div className="relative flex items-center w-full">
+                    <button
+                        onClick={() => scroll('left')}
+                        className="absolute -left-4 sm:-left-6 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-bg-200 border border-bg-300 rounded-full hover:bg-bg-300 transition-colors z-20 shadow-md"
+                        aria-label="Poprzednie"
+                    >
+                        <ChevronLeft className="w-5 h-5 text-text-900" />
+                    </button>
 
-                <div
-                    ref={scrollContainerRef}
-                    className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth w-full mx-auto py-4"
-                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
+                    <div
+                        ref={scrollContainerRef}
+                        className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth w-full py-1"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    >
+                        {renderCard('2026', '2026')}
+                        {renderCard('2025', '2025')}
+                        {renderCard('2024', '2024')}
+                    </div>
 
-                    {renderCard('2026', '2026')}
-                    {renderCard('2025', '2025')}
-                    {renderCard('2024', '2024')}
+                    <button
+                        onClick={() => scroll('right')}
+                        className="absolute -right-4 sm:-right-6 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-bg-200 border border-bg-300 rounded-full hover:bg-bg-300 transition-colors z-20 shadow-md"
+                        aria-label="Następne"
+                    >
+                        <ChevronRight className="w-5 h-5 text-text-900" />
+                    </button>
                 </div>
 
-                <button
-                    onClick={() => scroll('right')}
-                    className="absolute right-2 sm:right-0 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-bg-300 rounded-full hover:bg-bg-400 transition-colors z-10 shadow-sm"
-                >
-                    <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-text-900" />
-                </button>
-            </div>
-
-            <div className="mt-8">
-                <LinkButton href="/events" variant="secondary">
-                    Zobacz wszystkie wydarzenia
-                </LinkButton>
+                <div className="mt-4">
+                    <LinkButton href="/events" variant="primary">
+                        Zobacz wszystkie wydarzenia
+                    </LinkButton>
+                </div>
             </div>
         </section>
     );

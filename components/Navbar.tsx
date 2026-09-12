@@ -8,6 +8,39 @@ import { Menu, X } from 'lucide-react';
 export default function Navbar() {
   const pathname = usePathname() || '';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userPfp, setUserPfp] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchMe() {
+      try {
+        const res = await fetch('/api/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.user?.pfp_base64) {
+            setUserPfp(`data:image/webp;base64,${data.user.pfp_base64}`);
+          } else if (data?.user) {
+            setUserPfp('/img/default_pfp.webp');
+          } else {
+            setUserPfp(null);
+          }
+        } else {
+          setUserPfp(null);
+        }
+      } catch {
+        // Not authenticated or error
+      }
+    }
+
+    fetchMe();
+
+    // Re-check on window focus or auth state change
+    window.addEventListener('focus', fetchMe);
+    window.addEventListener('auth-changed', fetchMe);
+    return () => {
+      window.removeEventListener('focus', fetchMe);
+      window.removeEventListener('auth-changed', fetchMe);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -27,27 +60,27 @@ export default function Navbar() {
 
   let navBg = "bg-bg-200 border-bg-300";
   let linkClass = "text-text-700 hover:text-white";
-  let activeLinkClass = "text-white font-semibold after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-[2px] after:bg-white";
+  let activeLinkClass = "text-white font-semibold after:content-[''] after:absolute after:-bottom-[2px] after:left-1 after:right-1 after:h-[2px] after:bg-white";
 
   if (pathname.startsWith('/2024')) {
     navBg = "bg-[#00163a] border-[#1e295d]";
     linkClass = "text-[#A3BED0] hover:text-white";
-    activeLinkClass = "text-white font-semibold after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-[2px] after:bg-[#eaf6ff]";
+    activeLinkClass = "text-white font-semibold after:content-[''] after:absolute after:-bottom-[2px] after:left-1 after:right-1 after:h-[2px] after:bg-[#eaf6ff]";
   } else if (pathname.startsWith('/2025')) {
     navBg = "bg-[#251706] border-[#473016]";
     linkClass = "text-[#F4F5E9]/80 hover:text-[#FBAB18]";
-    activeLinkClass = "text-[#FBAB18] font-semibold after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-[2px] after:bg-[#FBAB18]";
+    activeLinkClass = "text-[#FBAB18] font-semibold after:content-[''] after:absolute after:-bottom-[2px] after:left-1 after:right-1 after:h-[2px] after:bg-[#FBAB18]";
   } else if (pathname.startsWith('/2026')) {
     navBg = "bg-[#1e2024] border-[#383b42]";
     linkClass = "text-[#b4c0cf] hover:text-[#8DC63F]";
-    activeLinkClass = "text-[#8DC63F] font-semibold after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-[2px] after:bg-[#8DC63F]";
+    activeLinkClass = "text-[#8DC63F] font-semibold after:content-[''] after:absolute after:-bottom-[2px] after:left-1 after:right-1 after:h-[2px] after:bg-[#8DC63F]";
   }
 
   const navLinks = [
     { label: 'Strona Główna', href: '/' },
-    { label: 'Wydarzenia', href: '/events' },
+    { label: 'Rozgrywki', href: '/events' },
     { label: 'Ranking', href: '/ranking' },
-    { label: 'Profil', href: '/dashboard' },
+    { label: 'Profil', href: '/dashboard', isProfile: true },
   ];
 
   const isCurrent2026 = pathname.startsWith('/2026');
@@ -76,16 +109,23 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`transition-colors py-2 px-1 relative tracking-wide flex items-center ${isActive ? activeLinkClass : linkClass}`}
+                className={`transition-colors py-2 px-1 relative tracking-wide flex items-center ${link.isProfile ? 'gap-1.5' : 'gap-2'} ${isActive ? activeLinkClass : linkClass}`}
               >
-                {link.label}
+                {link.isProfile && userPfp && (
+                  <img
+                    src={userPfp}
+                    alt="Profil"
+                    className="w-5 h-5 rounded-full object-cover border border-bg-400"
+                  />
+                )}
+                <span>{link.label}</span>
               </Link>
             );
           })}
 
           <Link
             href="/2026"
-            className={`relative group flex items-center gap-2 px-3.5 py-2 rounded-md font-semibold text-sm transition-all duration-300 overflow-hidden border ${isCurrent2026
+            className={`relative group flex items-center gap-2 px-3.5 py-1.5 rounded-md font-semibold text-sm transition-all duration-300 overflow-hidden border ${isCurrent2026
               ? 'bg-lime-500/20 text-lime-400 border-lime-500/80 shadow-[0_0_12px_rgba(141,198,63,0.25)]'
               : 'bg-[#000000] hover:bg-bg-300 text-text-900 border-lime-500/40 hover:border-lime-400'
               }`}
@@ -115,7 +155,7 @@ export default function Navbar() {
 
       {/* Fullscreen Mobile Overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-bg-200 border-t border-bg-300 overflow-y-auto animate-in fade-in duration-200">
+        <div className="md:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-bg-100/98 backdrop-blur-sm border-t border-bg-300 overflow-y-auto animate-in fade-in duration-200">
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-3 min-h-full">
             {navLinks.map((link) => {
               const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
@@ -123,12 +163,19 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`py-1.5 px-4 rounded-md text-lg font-medium transition-all ${isActive
+                  className={`py-3.5 px-4 rounded-md text-lg font-medium transition-all flex items-center ${link.isProfile ? 'gap-2.5' : 'gap-3'} ${isActive
                     ? 'bg-bg-200 text-white font-semibold'
                     : 'text-text-600 hover:bg-bg-200 hover:text-white'
                     }`}
                 >
-                  {link.label}
+                  {link.isProfile && userPfp && (
+                    <img
+                      src={userPfp}
+                      alt="Profil"
+                      className="w-7 h-7 rounded-full object-cover border border-bg-400"
+                    />
+                  )}
+                  <span>{link.label}</span>
                 </Link>
               );
             })}

@@ -47,37 +47,30 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
 
   const tierStyles: Record<string, { badge: string, bar: string, tableBadge: string }> = {
     s: {
-      badge: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white shadow-s-glow animate-s-pulse border border-yellow-400',
-      bar: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white',
-      tableBadge: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-yellow-400'
+      badge: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30',
+      bar: 'bg-amber-500 text-bg-100',
+      tableBadge: 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
     },
     a: {
-      badge: 'bg-purple-700 text-white border border-purple-400',
-      bar: 'bg-purple-700 text-white',
-      tableBadge: 'bg-purple-700 text-white border-purple-400'
+      badge: 'bg-purple-500/20 text-purple-300 border border-purple-500/40 hover:bg-purple-500/30',
+      bar: 'bg-purple-600 text-white',
+      tableBadge: 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
     },
     b: {
-      badge: 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border border-blue-300',
-      bar: 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white',
-      tableBadge: 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-blue-300'
+      badge: 'bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/30',
+      bar: 'bg-sky-600 text-white',
+      tableBadge: 'bg-sky-500/15 text-sky-300 border border-sky-500/30'
     },
     c: {
-      badge: 'bg-gray-600 text-white border border-gray-400',
-      bar: 'bg-gray-600 text-white',
-      tableBadge: 'bg-gray-600 text-white border-gray-400'
+      badge: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30',
+      bar: 'bg-emerald-600 text-white',
+      tableBadge: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
     }
   };
 
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6 font-sans">
       <style>{`
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 10px 2px rgba(245, 158, 11, 0.6); }
-          50% { box-shadow: 0 0 25px 8px rgba(245, 158, 11, 1); }
-        }
-        .animate-s-pulse {
-          animation: pulseGlow 2s infinite;
-        }
         @keyframes pingPongScroll {
           0%, 10% { transform: translateX(0); }
           45%, 55% { transform: translateX(calc(var(--scroll-dist) * -1px)); }
@@ -102,7 +95,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
             {player.displayed_name}
           </h1>
 
-          <div className="flex gap-4 relative z-10">
+          <div className="flex gap-3 relative z-10 flex-wrap justify-center">
             {(['s', 'a', 'b', 'c'] as const).map(tier => {
               const count = wonTournamentsByTier[tier].length;
               if (count === 0) return null;
@@ -111,7 +104,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
                 <button
                   key={tier}
                   onClick={() => handleBadgeClick(tier)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all hover:scale-105 ${tierStyles[tier].badge} ${activeTier === tier ? 'opacity-100 scale-105' : 'opacity-90'}`}
+                  className={`px-3.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${tierStyles[tier].badge} ${activeTier === tier ? 'ring-2 ring-white/50 scale-105' : 'opacity-90'}`}
                 >
                   {count}x {tier.toUpperCase()}-Tier
                 </button>
@@ -194,7 +187,7 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
                               ) : (
                                 <span className="font-bold">{t.displayed_name}</span>
                               )}
-                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold shadow-lg ${smallBadgeClass}`}>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${smallBadgeClass}`}>
                                 {t.details?.tier ?? '?'}-Tier
                               </span>
                             </div>

@@ -27,7 +27,7 @@ When you edit, modify, or create any backend file (e.g., API endpoints in `pages
    - Use the `vitest` environment and `node-mocks-http` to simulate requests.
    - Remember to mock database queries (`vi.hoisted` + `vi.mock('../../db.js')`).
    - Carefully check *edge cases* (invalid data, missing permissions, validations).
-   - **After any major backend modifications, you are required to run the `npx vitest run` command in the terminal** to verify everything works correctly.
+   - **After any backend modifications, run `npx vitest run` in the terminal to verify backend integrity. DO NOT run vitest for frontend-only or UI/styling changes where no backend files were modified.**
 2. **Create or update Swagger (JSDoc) documentation** at the top of every modified endpoint file. Example: `/** @swagger ... */`. Ensure that all API endpoints have precise definitions of returned codes and parameters. Future agents MUST create and update Swagger documentation.
 
 ## 4. Database Structure

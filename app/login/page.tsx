@@ -64,7 +64,9 @@ function LoginForm() {
       if (response.ok) {
         const rParam = searchParams?.get('r');
         const destination = rParam ? decodeURIComponent(rParam) : 'dashboard';
+        window.dispatchEvent(new Event('auth-changed'));
         router.push(`/${destination}`);
+        router.refresh();
       } else {
         setError(true);
         setLoading(false);

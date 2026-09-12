@@ -69,7 +69,7 @@ export default function EventsPage() {
   return (
     <div className="min-h-[calc(100vh-60px)] flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <h1 className="text-3xl md:text-4xl font-bold uppercase tracking-wider mb-10 text-text-900 text-center">
-        Wydarzenia
+        Rozgrywki
       </h1>
 
       <div className="w-full max-w-5xl">
