@@ -75,24 +75,39 @@ export default function EventsPage() {
       <div className="w-full max-w-5xl">
         <div className="w-full overflow-hidden rounded-md">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse bg-bg-100">
+            <table className="w-full text-left border-collapse bg-bg-100 table-fixed">
               <thead>
                 <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
-                  <th className="py-4 px-6 font-bold">Nazwa</th>
-                  <th className="py-4 px-6 font-bold">Tier</th>
-                  <th className="py-4 px-6 font-bold">Data</th>
-                  <th className="py-4 px-6 font-bold">Zwycięzca/y</th>
+                  <th className="py-4 px-6 font-bold w-[40%] sm:w-[42%]">Nazwa</th>
+                  <th className="py-4 px-6 font-bold w-[16%] sm:w-[15%]">Tier</th>
+                  <th className="py-4 px-6 font-bold w-[20%] sm:w-[18%]">Data</th>
+                  <th className="py-4 px-6 font-bold w-[24%] sm:w-[25%]">Zwycięzca/y</th>
                 </tr>
               </thead>
               <tbody className="">
                 {loading ? (
-                  <tr>
-                    <td colSpan={4} className="py-16 text-center">
-                      <div className="flex justify-center items-center">
-                        <Loader2 className="w-10 h-10 text-accent-500 animate-spin" />
-                      </div>
-                    </td>
-                  </tr>
+                  Array.from({ length: 6 }).map((_, i) => (
+                    <tr
+                      key={i}
+                      className="animate-pulse border-b border-bg-300/40 even:bg-bg-200 odd:bg-bg-100"
+                    >
+                      <td className="py-4 px-6">
+                        <div className="h-4 bg-bg-300 rounded w-36 sm:w-48" />
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="h-5 bg-bg-300 rounded w-14" />
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="h-4 bg-bg-300 rounded w-20" />
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 rounded-full bg-bg-300 shrink-0" />
+                          <div className="h-4 bg-bg-300 rounded w-24" />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
                 ) : (
                   tournaments.map((tournament) => {
                     const isFinished = tournament.finished;

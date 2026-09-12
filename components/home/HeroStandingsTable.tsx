@@ -98,31 +98,57 @@ export default function HeroStandingsTable() {
         </div>
 
         {/* Table Content */}
-        {loading ? (
-          <div className="py-12 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-text-500 animate-spin" />
-          </div>
-        ) : standings.length === 0 ? (
-          <div className="py-8 text-center text-text-500 text-sm">
-            Brak danych tabeli dla sezonu 2026.
-          </div>
-        ) : (
-          <div className="w-full">
-            <table className="w-full text-left text-sm border-collapse table-fixed">
-              <thead>
-                <tr className="text-xs text-text-500 uppercase tracking-wider border-b border-bg-300 pb-2">
-                  <th className="py-2 px-1 text-center w-7 sm:w-8">#</th>
-                  <th className="py-2 px-2 sm:px-3 font-semibold text-text-700">Gracz</th>
-                  {events.map((ev, i) => (
+        <div className="w-full">
+          <table className="w-full text-left text-sm border-collapse table-fixed">
+            <thead>
+              <tr className="text-xs text-text-500 uppercase tracking-wider border-b border-bg-300 pb-2">
+                <th className="py-2 px-1 text-center w-7 sm:w-8">#</th>
+                <th className="py-2 px-2 sm:px-3 font-semibold text-text-700">Gracz</th>
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => (
+                    <th key={i} className="py-2 px-2 text-center font-semibold text-text-700 hidden sm:table-cell w-10">
+                      G{i + 1}
+                    </th>
+                  ))
+                  : events.map((ev, i) => (
                     <th key={ev.event_id} className="py-2 px-2 text-center font-semibold text-text-700 hidden sm:table-cell w-10" title={ev.event_name}>
                       G{i + 1}
                     </th>
                   ))}
-                  <th className="py-2 px-1 sm:px-3 text-right font-semibold text-text-700 w-12 sm:w-16">Pkt</th>
+                <th className="py-2 px-1 sm:px-3 text-right font-semibold text-text-700 w-12 sm:w-16">Pkt</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-bg-300">
+              {loading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    <td className="py-2 px-1 text-center">
+                      <div className="w-3.5 h-3 bg-bg-300 rounded mx-auto" />
+                    </td>
+                    <td className="py-2 px-2 sm:px-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-bg-300 shrink-0" />
+                        <div className="h-3.5 bg-bg-300 rounded w-20 sm:w-28" />
+                      </div>
+                    </td>
+                    {Array.from({ length: 6 }).map((_, colIdx) => (
+                      <td key={colIdx} className="py-2 px-2 hidden sm:table-cell">
+                        <div className="w-4 h-3 bg-bg-300 rounded mx-auto" />
+                      </td>
+                    ))}
+                    <td className="py-2 px-1 sm:px-3 text-right">
+                      <div className="w-5 h-3.5 bg-bg-300 rounded ml-auto" />
+                    </td>
+                  </tr>
+                ))
+              ) : standings.length === 0 ? (
+                <tr>
+                  <td colSpan={2 + events.length + 1} className="py-8 text-center text-text-500 text-sm">
+                    Brak danych tabeli dla sezonu 2026.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-bg-300">
-                {standings.map((player) => {
+              ) : (
+                standings.map((player) => {
                   const pData = players[player.id];
                   const pfpSrc = pData?.pfp_base64
                     ? `data:image/webp;base64,${pData.pfp_base64}`
@@ -185,11 +211,11 @@ export default function HeroStandingsTable() {
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

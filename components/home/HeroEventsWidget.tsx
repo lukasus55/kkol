@@ -99,8 +99,25 @@ export default function HeroEventsWidget() {
 
         {/* Tournaments List */}
         {loading ? (
-          <div className="py-12 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-text-500 animate-spin" />
+          <div className="flex flex-col divide-y divide-bg-300">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="py-3 px-3 -mx-3 flex items-center justify-between gap-3 animate-pulse"
+              >
+                <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 bg-bg-300 rounded w-28 sm:w-36" />
+                    <div className="h-4 bg-bg-300 rounded w-12" />
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-4 h-4 rounded-full bg-bg-300 shrink-0" />
+                    <div className="h-3 bg-bg-300 rounded w-20" />
+                  </div>
+                </div>
+                <div className="h-3.5 bg-bg-300 rounded w-16 shrink-0" />
+              </div>
+            ))}
           </div>
         ) : tournaments.length === 0 ? (
           <div className="py-8 text-center text-text-500 text-sm">

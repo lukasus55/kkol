@@ -80,8 +80,15 @@ export default function HeroUpcomingEventWidget() {
 
       {/* Content: purely informational without links */}
       {loading ? (
-        <div className="py-3 flex items-center justify-center">
-          <Loader2 className="w-5 h-5 text-text-500 animate-spin" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 py-1 animate-pulse">
+          <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <div className="h-4 bg-bg-300 rounded w-28 sm:w-36" />
+              <div className="h-3.5 bg-bg-300 rounded w-12" />
+            </div>
+            <div className="h-3 bg-bg-300 rounded w-24" />
+          </div>
+          <div className="h-3.5 bg-bg-300 rounded w-28 shrink-0" />
         </div>
       ) : !event ? (
         <div className="py-2.5 text-center text-text-500 text-xs sm:text-sm">
