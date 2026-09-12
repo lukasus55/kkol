@@ -195,40 +195,6 @@ export default function Page2026() {
 
   return (
     <div className="season-2026">
-      <nav className="navbar" id="navbar">
-        <div className={`logo ${isScrolled ? "show-logo" : ""}`}>
-          <Link href="/2026">
-            <img src="/img/2026/SeasonLogoNoBackground.webp" alt="Logo 2026" />
-          </Link>
-        </div>
-
-        <div className="buttons">
-          <Link href="#schedule">
-            <div className="single_button">
-              <img src="/img/2026/ScheduleIcon.svg" alt="Kalendarz" />
-              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/ScheduleIcon.svg')" } as React.CSSProperties}></div>
-              <span className="label"> Kalendarz </span>
-            </div>
-          </Link>
-
-          <Link href="#ranking">
-            <div className="single_button">
-              <img src="/img/2026/RankingIcon.svg" alt="Ranking" />
-              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/RankingIcon.svg')" } as React.CSSProperties}></div>
-              <span className="label"> Ranking </span>
-            </div>
-          </Link>
-
-          <Link href="#games">
-            <div className="single_button">
-              <img src="/img/2026/GamesIcon.svg" alt="Gry" />
-              <div className="icon-mask" style={{ "--icon-url": "url('/img/2026/GamesIcon.svg')" } as React.CSSProperties}></div>
-              <span className="label"> Gry </span>
-            </div>
-          </Link>
-        </div>
-      </nav>
-
       <header className="header section_shadow" id="header">
         <div className="season_title">
           <div className={`season ${isScrolled ? "hide-season" : ""}`}>

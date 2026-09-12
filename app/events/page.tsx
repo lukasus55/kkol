@@ -77,11 +77,11 @@ export default function EventsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
-                <tr className="bg-accent-500 text-white uppercase text-xs md:text-sm tracking-wide">
-                  <th className="py-4 px-6 font-semibold">Nazwa</th>
-                  <th className="py-4 px-6 font-semibold">Tier</th>
-                  <th className="py-4 px-6 font-semibold">Data</th>
-                  <th className="py-4 px-6 font-semibold">Zwycięzca/y</th>
+                <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
+                  <th className="py-4 px-6 font-bold">Nazwa</th>
+                  <th className="py-4 px-6 font-bold">Tier</th>
+                  <th className="py-4 px-6 font-bold">Data</th>
+                  <th className="py-4 px-6 font-bold">Zwycięzca/y</th>
                 </tr>
               </thead>
               <tbody className="">

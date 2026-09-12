@@ -56,11 +56,11 @@ export default function RankingPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
-                <tr className="bg-accent-500 text-white uppercase text-xs md:text-sm tracking-wide">
-                  <th className="py-4 px-6 font-semibold">Nazwa</th>
-                  <th className="py-4 px-6 font-semibold text-center">S-Score</th>
-                  <th className="py-4 px-6 font-semibold text-center">AB-Score</th>
-                  <th className="py-4 px-6 font-semibold text-right">Ranking</th>
+                <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
+                  <th className="py-4 px-6 font-bold">Nazwa</th>
+                  <th className="py-4 px-6 font-bold text-center">S-Score</th>
+                  <th className="py-4 px-6 font-bold text-center">AB-Score</th>
+                  <th className="py-4 px-6 font-bold text-right">Ranking</th>
                 </tr>
               </thead>
               <tbody className="">

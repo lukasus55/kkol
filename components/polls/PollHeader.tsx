@@ -49,7 +49,7 @@ export default function PollHeader({
   return (
     <>
       {/* TABS & TOOLS - Sticky Top Bar (100% width background) */}
-      <div className="w-full sticky top-0 z-[60] bg-bg-200 border-b border-bg-300 shadow-sm">
+      <div className="w-full sticky top-16 z-40 bg-bg-200 border-b border-bg-300 shadow-sm">
         <div className="w-full max-w-[800px] mx-auto px-4 pt-3 flex flex-col md:flex-row md:items-end justify-between gap-4">
 
           {/* TABS */}

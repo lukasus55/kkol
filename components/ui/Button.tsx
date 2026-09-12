@@ -16,7 +16,7 @@ export function Button({
   const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variants = {
-    primary: 'bg-accent-500 text-white px-4 py-2 text-sm hover:bg-accent-600 transition-colors',
+    primary: 'bg-white text-bg-100 hover:bg-slate-200 px-4 py-2 text-sm font-semibold transition-colors',
     secondary: 'bg-bg-300 text-text-900 border border-bg-400 px-4 py-2 text-sm hover:bg-bg-400 transition-colors',
     tertiary: 'bg-bg-100 text-text-900 border border-bg-400 px-4 py-1.5 text-sm hover:bg-bg-200 transition-colors',
     danger: 'bg-red-500/10 text-red-500 border border-red-500/20 px-4 py-2 text-sm hover:bg-red-500/20 transition-colors'

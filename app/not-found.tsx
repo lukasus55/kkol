@@ -26,7 +26,7 @@ export default function NotFound() {
         
         <Link 
           href="/"
-          className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-bold py-3 px-6 rounded-md transition-all hover:scale-105 active:scale-95 shadow-sm"
+          className="flex items-center gap-2 bg-white hover:bg-slate-200 text-bg-100 font-bold py-3 px-6 rounded-md transition-all hover:scale-105 active:scale-95 shadow-sm"
         >
           <Home className="w-5 h-5" />
           Wróć na stronę główną

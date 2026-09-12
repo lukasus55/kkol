@@ -88,19 +88,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-60px)] bg-bg-100 flex flex-col relative font-sans">
-      <header className="absolute top-0 left-0 p-8">
-        <div className="flex items-center gap-4">
-          <Link href="/">
-            <img
-              src="/img/logos/kol-logo-horizontal.svg"
-              alt="Karwińska Olimpiada Logo"
-              className="h-16 w-auto cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
-            />
-          </Link>
-        </div>
-      </header>
-
+    <div className="min-h-[calc(100vh-64px)] bg-bg-100 flex flex-col relative font-sans">
       <main className="flex-1 flex items-center justify-center p-4">
         <Card className="max-w-[480px] shadow-xl pt-10 !rounded-xl border-bg-400">
           <h1 className="text-2xl font-bold mb-8 text-text-900">Zaloguj się</h1>

@@ -54,34 +54,10 @@ export default function DashboardNav({ user }: DashboardNavProps) {
     : '/img/default_pfp.webp';
 
   return (
-    <nav className="w-full md:w-auto h-auto md:h-[calc(100vh-60px)] md:sticky md:top-0 z-[60]">
-      {/* Mobile Header Bar */}
-      <div className="md:hidden flex items-center justify-between bg-bg-200 border-b border-bg-300 px-4 h-[60px] w-full shrink-0">
-        <Link href="/" className="flex items-center">
-          <img src="/img/logos/kol-logo-horizontal.svg" className="h-10 object-contain" alt="Karwińska Olimpiada Logo" />
-        </Link>
-        <button className="text-text-900 p-2" onClick={() => setIsMobileMenuOpen(true)}>
-          <Menu className="w-6 h-6" />
-        </button>
-      </div>
+    <nav className="w-full md:w-auto h-auto md:h-[calc(100vh-64px)] md:sticky md:top-16 z-[40]">
+      {/* Sidebar (Desktop) / Navigation Container */}
+      <div className="bg-bg-200 w-full md:h-full flex-col md:grid md:grid-rows-[1fr_auto] md:grid-cols-1 border-r border-bg-300">
 
-      {/* Sidebar (Desktop) / Overlay (Mobile) */}
-      <div className={`bg-bg-200 w-full md:h-full flex-col md:grid md:grid-rows-[auto_1fr_auto] md:grid-cols-1 border-r border-bg-300 fixed inset-0 md:static ${isMobileMenuOpen ? 'flex' : 'hidden md:flex'}`}>
-        
-        {/* Mobile Close Header inside Overlay */}
-        <div className="md:hidden flex items-center justify-between border-b border-bg-300 px-4 h-[60px] shrink-0">
-          <span className="font-bold text-text-900 text-lg">Menu</span>
-          <button className="text-text-900 p-2" onClick={() => setIsMobileMenuOpen(false)}>
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        {/* Desktop Logo */}
-        <div className="hidden md:flex justify-center items-center h-fit mx-4 mt-8 mb-4 pb-4 border-b border-bg-300 px-2">
-          <Link href="/" className="w-full flex justify-center">
-            <img src="/img/logos/kol-logo-horizontal.svg" className="w-full h-auto max-h-16 object-contain opacity-80 hover:opacity-100 transition-opacity" alt="Karwińska Olimpiada Logo" />
-          </Link>
-        </div>
 
         <div className="p-4 w-full h-full flex flex-col overflow-y-auto custom-scrollbar">
           <ul className="flex flex-col list-none gap-1 w-full">

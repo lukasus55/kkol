@@ -25,7 +25,7 @@ export default function ContactPage() {
               </div>
               <a
                 href="mailto:admin@kkol.pl"
-                className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium py-2 px-4 rounded-md transition-colors w-fit"
+                className="flex items-center gap-2 bg-white hover:bg-slate-200 text-bg-100 font-semibold py-2 px-4 rounded-md transition-colors w-fit shadow-sm"
               >
                 <Mail className="w-4 h-4" />
                 admin@kkol.pl
@@ -39,7 +39,7 @@ export default function ContactPage() {
               </div>
               <a
                 href="mailto:zarzad@kkol.pl"
-                className="flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-medium py-2 px-4 rounded-md transition-colors w-fit"
+                className="flex items-center gap-2 bg-white hover:bg-slate-200 text-bg-100 font-semibold py-2 px-4 rounded-md transition-colors w-fit shadow-sm"
               >
                 <Mail className="w-4 h-4" />
                 zarzad@kkol.pl

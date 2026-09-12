@@ -266,7 +266,7 @@ export default function FullCalendar({ user, onCollapse }: { user: any, onCollap
                   className={`min-h-0 h-full p-1.5 border-r border-b border-bg-400 transition-colors [&:nth-child(7n)]:border-r-0 [&:nth-last-child(-n+7)]:border-b-0 cursor-pointer overflow-hidden ${!cell.isCurrentMonth ? 'bg-bg-300/30' : 'bg-bg-100'} ${isToday ? 'bg-accent-500/5' : ''} ${dragState.hoveredDate?.getTime() === cell.date.getTime() ? 'bg-bg-200 ring-1 ring-inset ring-accent-500/30' : ''} hover:bg-bg-300/50 group flex flex-col`}
                 >
                   <div className="flex justify-end mb-1 flex-shrink-0">
-                    <span className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full transition-colors ${isToday ? 'bg-accent-500' : cell.isCurrentMonth ? 'text-text-900 group-hover:text-text-900' : 'text-bg-400'}`}>
+                    <span className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full transition-colors ${isToday ? 'bg-white text-bg-100 font-bold' : cell.isCurrentMonth ? 'text-text-900 group-hover:text-text-900' : 'text-bg-400'}`}>
                       {cell.date.getDate()}
                     </span>
                   </div>

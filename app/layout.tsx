@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 import { ToastProvider } from '../components/ui/ToastProvider';
 
 import './globals.css';
@@ -20,12 +20,10 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/img/logos/icon.png" type="image/x-icon" />
       </head>
       <body>
+        <Navbar />
         <ToastProvider>
           {children}
         </ToastProvider>
-        <footer className="footer" id="footer">
-          <Footer />
-        </footer>
       </body>
     </html>
   );

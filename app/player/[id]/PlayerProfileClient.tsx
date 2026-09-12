@@ -161,10 +161,10 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse bg-bg-100">
                 <thead>
-                  <tr className="bg-accent-500 text-white uppercase text-xs md:text-sm tracking-wide">
-                    <th className="py-4 px-6 font-semibold">Nazwa</th>
-                    <th className="py-4 px-6 font-semibold text-center">Pos.</th>
-                    <th className="py-4 px-6 font-semibold text-right">Data</th>
+                  <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
+                    <th className="py-4 px-6 font-bold">Nazwa</th>
+                    <th className="py-4 px-6 font-bold text-center">Pos.</th>
+                    <th className="py-4 px-6 font-bold text-right">Data</th>
                   </tr>
                 </thead>
                 <tbody className="">
@@ -220,8 +220,8 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
           <div className="w-full overflow-hidden rounded-md h-fit">
             <table className="w-full text-left border-collapse bg-bg-100">
               <thead>
-                <tr className="bg-accent-500 text-white uppercase text-xs md:text-sm tracking-wide">
-                  <th colSpan={2} className="py-4 px-6 font-semibold text-center">Statystyki</th>
+                <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
+                  <th colSpan={2} className="py-4 px-6 font-bold text-center">Statystyki</th>
                 </tr>
               </thead>
               <tbody className="">
