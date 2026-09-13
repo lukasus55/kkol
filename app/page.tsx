@@ -15,8 +15,8 @@ export default function Home() {
   return (
     <>
       <main className="flex w-full flex-col items-center gap-14 sm:gap-20">
-        {/* HERO SECTION - 100% viewport height with 64px navbar accounted for */}
-        <section className="w-full max-w-[1016px] px-8 sm:px-12 py-5 lg:min-h-[calc(100vh-64px)] flex flex-col justify-between gap-5 box-border">
+        {/* HERO SECTION - natural layout, comfortable on 1080p without forcing 100vh */}
+        <section className="w-full max-w-[1016px] px-8 sm:px-12 py-5 flex flex-col gap-5 box-border">
           {/* Duży baner ze zdjęciami i rotacją sezonów (bez CTA) */}
           <div className="w-full shrink-0">
             <HeroBanner />

@@ -89,7 +89,7 @@ export default function EventsPage() {
                   Array.from({ length: 6 }).map((_, i) => (
                     <tr
                       key={i}
-                      className="animate-pulse border-b border-bg-300/40 even:bg-bg-200 odd:bg-bg-100"
+                      className="animate-pulse even:bg-bg-200 odd:bg-bg-100"
                     >
                       <td className="py-4 px-4 sm:px-6">
                         <div className="h-4 bg-bg-300 rounded w-36 sm:w-48" />
