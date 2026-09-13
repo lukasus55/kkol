@@ -83,7 +83,10 @@ export default async function handler(request: TournamentsRequest, response: Nex
                     SELECT r.tournament_id, r.player_id, r.attended, r.finished, r."position", r.total_points, p.displayed_name AS player_name 
                     FROM results r
                     INNER JOIN players p ON r.player_id = p.id 
-                    LIMIT ${actualLimit}`
+                    WHERE r.tournament_id IN (
+                        SELECT id FROM tournaments ORDER BY "end_date" DESC LIMIT ${actualLimit}
+                    )
+                `
             ]);
         }
 
