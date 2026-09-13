@@ -155,7 +155,7 @@ export default function Navbar() {
 
       {/* Fullscreen Mobile Overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-bg-100/98 backdrop-blur-sm border-t border-bg-300 overflow-y-auto animate-in fade-in duration-200">
+        <div className="md:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-[#0b0e11] border-t border-bg-300 overflow-y-auto animate-in fade-in duration-200">
           <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-3 min-h-full">
             {navLinks.map((link) => {
               const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);

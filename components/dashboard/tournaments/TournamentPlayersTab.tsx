@@ -34,13 +34,13 @@ export function TournamentPlayersTab({ players, setPlayers, isOwner, currentUser
       </div>
 
       <div className="rounded-md bg-bg-100 overflow-x-auto flex-1 custom-scrollbar">
-        <table className="w-full text-left text-sm whitespace-nowrap">
+        <table className="w-full text-left text-sm whitespace-nowrap min-w-[460px]">
           <thead className="bg-bg-300 border-b border-bg-400 text-text-700">
             <tr>
-              <th className="p-3 font-semibold w-full">Gracz</th>
+              <th className="p-3 font-semibold">Gracz</th>
               <th className="p-3 font-semibold text-center w-24">Miejsce</th>
               <th className="p-3 font-semibold text-center w-24">Punkty</th>
-              <th className="p-3 font-semibold text-right w-44">Akcje</th>
+              <th className="p-3 font-semibold text-right w-36">Akcje</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-bg-400">

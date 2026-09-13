@@ -54,13 +54,13 @@ export default function RankingPage() {
       <div className="w-full max-w-5xl">
         <div className="w-full overflow-hidden rounded-md">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse bg-bg-100 table-fixed">
+            <table className="w-full text-left border-collapse bg-bg-100 min-w-[540px]">
               <thead>
                 <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
-                  <th className="py-4 px-6 font-bold w-[46%] sm:w-[52%]">Nazwa</th>
-                  <th className="py-4 px-6 font-bold text-center w-[18%] sm:w-[16%]">S-Score</th>
-                  <th className="py-4 px-6 font-bold text-center w-[18%] sm:w-[16%]">AB-Score</th>
-                  <th className="py-4 px-6 font-bold text-right w-[18%] sm:w-[16%]">Ranking</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold">Nazwa</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold text-center w-28">S-Score</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold text-center w-28">AB-Score</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold text-right w-32">Ranking</th>
                 </tr>
               </thead>
               <tbody className="">
@@ -70,19 +70,19 @@ export default function RankingPage() {
                       key={i}
                       className="animate-pulse border-b border-bg-300/40 even:bg-bg-200 odd:bg-bg-100"
                     >
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-bg-300 shrink-0" />
                           <div className="h-4 bg-bg-300 rounded w-28 sm:w-36" />
                         </div>
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="h-4 bg-bg-300 rounded w-12 mx-auto" />
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="h-4 bg-bg-300 rounded w-12 mx-auto" />
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="h-4 bg-bg-300 rounded w-14 ml-auto" />
                       </td>
                     </tr>
@@ -93,7 +93,7 @@ export default function RankingPage() {
                       key={player.id}
                       className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100"
                     >
-                      <td className="py-4 px-6 text-sm font-medium text-text-900">
+                      <td className="py-4 px-4 sm:px-6 text-sm font-medium text-text-900">
                         <Link
                           href={`/player/${player.id}`}
                           className="flex items-center gap-3 hover:bg-300 transition-colors font-bold group-hover:underline w-max"
@@ -107,15 +107,15 @@ export default function RankingPage() {
                         </Link>
                       </td>
 
-                      <td className="py-4 px-6 text-sm font-semibold text-center text-text-700">
+                      <td className="py-4 px-4 sm:px-6 text-sm font-semibold text-center text-text-700">
                         {player.majorRanking.toFixed(2)}
                       </td>
 
-                      <td className="py-4 px-6 text-sm font-semibold text-center text-text-700">
+                      <td className="py-4 px-4 sm:px-6 text-sm font-semibold text-center text-text-700">
                         {player.minorRanking.toFixed(2)}
                       </td>
 
-                      <td className="py-4 px-6 text-sm font-bold text-right text-accent-600">
+                      <td className="py-4 px-4 sm:px-6 text-sm font-bold text-right text-accent-600">
                         {player.ranking.toFixed(2)}
                       </td>
                     </tr>

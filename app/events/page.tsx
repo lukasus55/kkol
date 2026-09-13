@@ -75,13 +75,13 @@ export default function EventsPage() {
       <div className="w-full max-w-5xl">
         <div className="w-full overflow-hidden rounded-md">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse bg-bg-100 table-fixed">
+            <table className="w-full text-left border-collapse bg-bg-100 min-w-[580px]">
               <thead>
                 <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
-                  <th className="py-4 px-6 font-bold w-[40%] sm:w-[42%]">Nazwa</th>
-                  <th className="py-4 px-6 font-bold w-[16%] sm:w-[15%]">Tier</th>
-                  <th className="py-4 px-6 font-bold w-[20%] sm:w-[18%]">Data</th>
-                  <th className="py-4 px-6 font-bold w-[24%] sm:w-[25%]">Zwycięzca/y</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold">Nazwa</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold w-28">Tier</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold w-32">Data</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold w-44">Zwycięzca/y</th>
                 </tr>
               </thead>
               <tbody className="">
@@ -91,16 +91,16 @@ export default function EventsPage() {
                       key={i}
                       className="animate-pulse border-b border-bg-300/40 even:bg-bg-200 odd:bg-bg-100"
                     >
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="h-4 bg-bg-300 rounded w-36 sm:w-48" />
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="h-5 bg-bg-300 rounded w-14" />
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="h-4 bg-bg-300 rounded w-20" />
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6">
                         <div className="flex items-center gap-2">
                           <div className="w-5 h-5 rounded-full bg-bg-300 shrink-0" />
                           <div className="h-4 bg-bg-300 rounded w-24" />
@@ -123,7 +123,7 @@ export default function EventsPage() {
                         key={tournament.id || tournament.displayed_name}
                         className="hover:bg-bg-300 transition-colors duration-150 group even:bg-bg-200 odd:bg-bg-100"
                       >
-                        <td className="py-4 px-6 text-sm font-medium text-text-900">
+                        <td className="py-4 px-4 sm:px-6 text-sm font-medium text-text-900">
                           {tournament.page_exists && tournament.page_url ? (
                             <Link
                               href={`/${tournament.page_url}`}
@@ -137,15 +137,15 @@ export default function EventsPage() {
                           )}
                         </td>
 
-                        <td className="py-4 px-6 text-sm text-text-700 font-semibold">
+                        <td className="py-4 px-4 sm:px-6 text-sm text-text-700 font-semibold">
                           {tournament.details.tier ? `${tournament.details.tier}-Tier` : '-'}
                         </td>
 
-                        <td className="py-4 px-6 text-sm text-text-500 font-medium">
+                        <td className="py-4 px-4 sm:px-6 text-sm text-text-500 font-medium">
                           {tournament.details.displayed_date || '-'}
                         </td>
 
-                        <td className="py-4 px-6 text-sm text-text-900">
+                        <td className="py-4 px-4 sm:px-6 text-sm text-text-900">
                           {!isFinished ? (
                             <span className="text-text-500 italic font-medium">TBD</span>
                           ) : winners.length > 0 ? (

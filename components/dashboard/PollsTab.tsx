@@ -91,30 +91,37 @@ export default function PollsTab({ user }: { user: any }) {
   };
 
   return (
-    <div className="flex flex-col w-full h-full min-h-0 pb-2 px-8 pt-4 gap-8">
+    <div className="flex flex-col w-full h-full min-h-0 pb-2 px-4 sm:px-8 pt-4 gap-6 sm:gap-8">
 
       {/* Create Poll Bar */}
-      <div className="flex items-center gap-4 w-full max-w-4xl mx-auto flex-shrink-0">
-        <div className="flex-1">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-4xl mx-auto flex-shrink-0">
+        <div className="flex-1 min-w-0">
           <Input
             value={name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            placeholder="Nazwa"
+            placeholder="Nazwa ankiety"
           />
         </div>
-        <div className="w-64">
-          <Select
-            value={tournamentId}
-            onChange={setTournamentId}
-            options={tournaments.length === 0
-              ? [{ value: '', label: 'Brak turniejów' }]
-              : tournaments.map(t => ({ value: t.id, label: t.displayed_name || t.id }))
-            }
-          />
+        <div className="flex items-center gap-3">
+          <div className="flex-1 sm:w-64 sm:flex-initial">
+            <Select
+              value={tournamentId}
+              onChange={setTournamentId}
+              options={tournaments.length === 0
+                ? [{ value: '', label: 'Brak turniejów' }]
+                : tournaments.map(t => ({ value: t.id, label: t.displayed_name || t.id }))
+              }
+            />
+          </div>
+          <Button
+            variant="primary"
+            onClick={handleCreate}
+            disabled={loading || tournaments.length === 0}
+            className="whitespace-nowrap"
+          >
+            Utwórz ankietę
+          </Button>
         </div>
-        <Button variant="primary" onClick={handleCreate} disabled={loading || tournaments.length === 0}>
-          Utwórz ankietę
-        </Button>
       </div>
 
       {/* Polls List */}
@@ -123,7 +130,7 @@ export default function PollsTab({ user }: { user: any }) {
           <div
             key={poll.id}
             onClick={() => router.push(`/poll/${poll.id}`)}
-            className="flex items-center justify-between bg-bg-200 rounded-lg p-5 hover:bg-bg-300 transition-colors cursor-pointer group"
+            className="flex items-center justify-between bg-bg-200 rounded-md p-4 sm:p-5 hover:bg-bg-300 transition-colors cursor-pointer group"
           >
             <div className="flex flex-col gap-1.5">
               <span className="font-bold text-text-900 text-[15px] transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>

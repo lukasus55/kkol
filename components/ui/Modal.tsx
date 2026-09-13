@@ -45,11 +45,11 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
       <div
         className={`bg-bg-100 rounded-xl shadow-2xl w-full flex flex-col h-[650px] max-h-[95vh] sm:max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200 ${maxWidth}`}
       >
-        <div className="p-5 flex justify-between items-center bg-bg-200 flex-shrink-0">
-          <h2 className="text-xl font-bold text-text-900">{title}</h2>
+        <div className="p-4 sm:p-5 flex justify-between items-start sm:items-center gap-3 bg-bg-200 flex-shrink-0 border-b border-bg-300">
+          <div className="text-lg sm:text-xl font-bold text-text-900 flex-1 min-w-0">{title}</div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-text-900 transition-colors p-1 rounded-md hover:bg-bg-300"
+            className="text-gray-400 hover:text-text-900 transition-colors p-1.5 rounded-md hover:bg-bg-300 shrink-0 mt-0.5 sm:mt-0"
           >
             <X className="w-5 h-5" />
           </button>

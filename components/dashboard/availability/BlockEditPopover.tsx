@@ -23,6 +23,55 @@ export const BlockEditPopover: React.FC<BlockEditPopoverProps> = ({
   onUpdateStatus,
   onDelete
 }) => {
+  const popoverRef = React.useRef<HTMLDivElement>(null);
+  const [adjustedStyle, setAdjustedStyle] = React.useState<React.CSSProperties>({
+    left: coords.left,
+    bottom: coords.bottom,
+    transform: coords.alignRight ? 'translateX(-100%)' : 'none',
+    visibility: 'hidden'
+  });
+
+  React.useLayoutEffect(() => {
+    if (!popoverRef.current) return;
+    const popoverRect = popoverRef.current.getBoundingClientRect();
+    const width = popoverRect.width || 320;
+    const height = popoverRect.height || 260;
+    const pad = 12; // padding from screen edges
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Initial left calculation
+    let actualLeft = coords.alignRight ? coords.left - width : coords.left;
+
+    // Clamp horizontally to stay completely within viewport
+    if (actualLeft + width > vw - pad) {
+      actualLeft = vw - pad - width;
+    }
+    if (actualLeft < pad) {
+      actualLeft = pad;
+    }
+
+    // For vertical position: coords.bottom is (window.innerHeight - centerY)
+    // top = window.innerHeight - coords.bottom - height / 2 approx or bottom aligned
+    // If coords.bottom is used: top = vh - coords.bottom - height
+    let calculatedTop = vh - coords.bottom - height / 2;
+
+    // Clamp vertically
+    if (calculatedTop + height > vh - pad) {
+      calculatedTop = vh - pad - height;
+    }
+    if (calculatedTop < pad) {
+      calculatedTop = pad;
+    }
+
+    setAdjustedStyle({
+      left: `${Math.round(actualLeft)}px`,
+      top: `${Math.round(calculatedTop)}px`,
+      visibility: 'visible'
+    });
+  }, [coords]);
+
   return (
     <>
       <div 
@@ -31,12 +80,9 @@ export const BlockEditPopover: React.FC<BlockEditPopoverProps> = ({
         onMouseDown={(e) => e.stopPropagation()} 
       />
       <div 
-        className="fixed z-[9999] bg-bg-200 shadow-2xl rounded-md border border-bg-400 p-4 w-[320px] flex flex-col gap-3"
-        style={{ 
-          left: coords.left, 
-          bottom: coords.bottom,
-          transform: coords.alignRight ? 'translateX(-100%)' : 'none'
-        }}
+        ref={popoverRef}
+        className="fixed z-[9999] bg-bg-200 shadow-2xl rounded-md border border-bg-400 p-4 w-[min(320px,calc(100vw-24px))] flex flex-col gap-3"
+        style={adjustedStyle}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >

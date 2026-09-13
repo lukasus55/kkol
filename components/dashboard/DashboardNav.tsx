@@ -53,68 +53,144 @@ export default function DashboardNav({ user }: DashboardNavProps) {
     ? `data:image/webp;base64,${user.pfp_base64}`
     : '/img/default_pfp.webp';
 
+  // Determine active section name for mobile header
+  const getActiveTitle = () => {
+    if (pathname === '/dashboard/account' || pathname === '/dashboard') return 'Konto';
+    if (pathname.startsWith('/dashboard/tournaments')) return 'Turnieje';
+    if (pathname === '/dashboard/calendar') return 'Kalendarz: Przegląd Wydarzeń';
+    if (pathname.startsWith('/dashboard/calendar/availability')) return 'Kalendarz: Moja Dostępność';
+    if (pathname.startsWith('/dashboard/calendar/shared')) return 'Kalendarz: Dostępność Innych';
+    if (pathname.startsWith('/dashboard/calendar')) return 'Kalendarz';
+    if (pathname.startsWith('/dashboard/polls')) return 'Głosowania';
+    return 'Panel Gracza';
+  };
+
+  const navLinksList = (
+    <ul className="flex flex-col list-none gap-1 w-full">
+      <li className="group relative">
+        <Link
+          href="/dashboard/account"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname === '/dashboard/account' || pathname === '/dashboard' ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
+        >
+          <User className="w-4 h-4 flex-shrink-0" />
+          <span>Konto</span>
+        </Link>
+      </li>
+      <li className="group relative">
+        <Link
+          href="/dashboard/tournaments"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/tournaments') ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
+        >
+          <Trophy className="w-4 h-4 flex-shrink-0" />
+          <span>Turnieje</span>
+        </Link>
+      </li>
+      
+      <li className="group relative flex flex-col w-full">
+        <div
+          className={`flex items-center justify-between w-full h-9 rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/calendar') && !isCalendarExpanded ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800 font-medium'}`}
+          onClick={() => setIsCalendarExpanded(!isCalendarExpanded)}
+        >
+          <div className="flex items-center gap-3 text-sm">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span>Kalendarz</span>
+          </div>
+          <svg className={`w-3.5 h-3.5 text-text-500 transition-transform ${isCalendarExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        
+        {isCalendarExpanded && (
+          <div className="flex flex-col w-full mt-1">
+            <div className="flex flex-col border-l border-bg-400 ml-[20px] pl-[10px] gap-1 py-1">
+              <Link
+                href="/dashboard/calendar"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center w-full h-8 gap-3 text-[13px] rounded-md px-2 cursor-pointer transition-colors hover:bg-bg-300 ${pathname === '/dashboard/calendar' ? 'font-semibold text-text-900' : 'text-text-700'}`}
+              >
+                <span>Przegląd Wydarzeń</span>
+              </Link>
+              <Link
+                href="/dashboard/calendar/availability"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center w-full h-8 gap-3 text-[13px] rounded-md px-2 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/calendar/availability') ? 'font-semibold text-text-900' : 'text-text-700'}`}
+              >
+                <span>Moja Dostępność</span>
+              </Link>
+              <Link
+                href="/dashboard/calendar/shared"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center w-full h-8 gap-3 text-[13px] rounded-md px-2 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/calendar/shared') ? 'font-semibold text-text-900' : 'text-text-700'}`}
+              >
+                <span>Dostępność Innych</span>
+              </Link>
+            </div>
+          </div>
+        )}
+      </li>
+      
+      <li className="group relative">
+        <Link
+          href="/dashboard/polls"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/polls') ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
+        >
+          <PieChart className="w-4 h-4 flex-shrink-0" />
+          <span>Głosowania</span>
+        </Link>
+      </li>
+      
+      <li className="group relative md:hidden mt-2 pt-2 border-t border-bg-300">
+        <div
+          className="flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 text-red-500"
+          onClick={handleLogout}
+        >
+          <LogOut className="w-4 h-4 flex-shrink-0" />
+          <span>Wyloguj się</span>
+        </div>
+      </li>
+    </ul>
+  );
+
   return (
     <nav className="w-full md:w-auto h-auto md:h-[calc(100vh-64px)] md:sticky md:top-16 z-[40]">
-      {/* Sidebar (Desktop) / Navigation Container */}
-      <div className="bg-bg-200 w-full md:h-full flex-col md:grid md:grid-rows-[1fr_auto] md:grid-cols-1 border-r border-bg-300">
+      {/* Mobile Top Bar for Dashboard Navigation */}
+      <div className="md:hidden w-full bg-bg-200">
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className={`w-full px-4 py-3 flex items-center justify-between text-left hover:bg-bg-300/50 transition-colors ${isMobileMenuOpen ? 'border-b border-bg-300' : 'border-b border-bg-300'}`}
+          aria-expanded={isMobileMenuOpen}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-xs font-semibold text-text-500 uppercase tracking-wider">Panel:</span>
+            <span className="text-sm font-bold text-text-900 truncate">{getActiveTitle()}</span>
+          </div>
+          <div className="flex items-center gap-2 text-text-600 shrink-0">
+            <span className="text-xs font-medium">{isMobileMenuOpen ? 'Zwiń' : 'Zmień'}</span>
+            <svg
+              className={`w-4 h-4 transition-transform duration-200 ${isMobileMenuOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
 
+        {/* Collapsible Mobile Dropdown Panel */}
+        {isMobileMenuOpen && (
+          <div className="px-4 pb-4 pt-3 bg-bg-200 border-b border-bg-300 animate-in slide-in-from-top-2 duration-150">
+            {navLinksList}
+          </div>
+        )}
+      </div>
 
+      {/* Desktop Sidebar (unchanged layout, visible only on md+) */}
+      <div className="hidden md:grid bg-bg-200 w-full h-full md:grid-rows-[1fr_auto] md:grid-cols-1 border-r border-bg-300">
         <div className="p-4 w-full h-full flex flex-col overflow-y-auto custom-scrollbar">
-          <ul className="flex flex-col list-none gap-1 w-full">
-            <li className="group relative">
-              <Link href="/dashboard/account" className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname === '/dashboard/account' || pathname === '/dashboard' ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}>
-                <User className="w-4 h-4 flex-shrink-0" />
-                <span>Konto</span>
-              </Link>
-            </li>
-            <li className="group relative">
-              <Link href="/dashboard/tournaments" className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/tournaments') ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}>
-                <Trophy className="w-4 h-4 flex-shrink-0" />
-                <span>Turnieje</span>
-              </Link>
-            </li>
-            
-            <li className="group relative flex flex-col w-full">
-              <div className={`flex items-center justify-between w-full h-9 rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/calendar') && !isCalendarExpanded ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800 font-medium'}`} onClick={() => setIsCalendarExpanded(!isCalendarExpanded)}>
-                <div className="flex items-center gap-3 text-sm">
-                  <Calendar className="w-4 h-4 flex-shrink-0" />
-                  <span>Kalendarz</span>
-                </div>
-                <svg className={`w-3.5 h-3.5 text-text-500 transition-transform ${isCalendarExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </div>
-              
-              {isCalendarExpanded && (
-                <div className="flex flex-col w-full mt-1">
-                  {/* Removed w-full here to prevent bleeding on the right side */}
-                  <div className="flex flex-col border-l border-bg-400 ml-[20px] pl-[10px] gap-1 py-1">
-                    <Link href="/dashboard/calendar" className={`flex items-center w-full h-8 gap-3 text-[13px] rounded-md px-2 cursor-pointer transition-colors hover:bg-bg-300 ${pathname === '/dashboard/calendar' ? 'font-semibold text-text-900' : 'text-text-700'}`}>
-                      <span>Przegląd Wydarzeń</span>
-                    </Link>
-                    <Link href="/dashboard/calendar/availability" className={`flex items-center w-full h-8 gap-3 text-[13px] rounded-md px-2 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/calendar/availability') ? 'font-semibold text-text-900' : 'text-text-700'}`}>
-                      <span>Moja Dostępność</span>
-                    </Link>
-                    <Link href="/dashboard/calendar/shared" className={`flex items-center w-full h-8 gap-3 text-[13px] rounded-md px-2 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/calendar/shared') ? 'font-semibold text-text-900' : 'text-text-700'}`}>
-                      <span>Dostępność Innych</span>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </li>
-            
-            <li className="group relative">
-              <Link href="/dashboard/polls" className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/polls') ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}>
-                <PieChart className="w-4 h-4 flex-shrink-0" />
-                <span>Głosowania</span>
-              </Link>
-            </li>
-            
-            <li className="group relative md:hidden mt-4">
-              <div className="flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 text-red-500" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 flex-shrink-0" />
-                <span>Wyloguj się</span>
-              </div>
-            </li>
-          </ul>
+          {navLinksList}
         </div>
 
         <div className="hidden md:flex h-full">

@@ -13,6 +13,58 @@ export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, clo
   const canEdit = userRole === 'owner' || userRole === 'manager';
   const canLeave = userRole !== 'owner';
 
+  const menuRef = React.useRef<HTMLDivElement>(null);
+  const [menuStyle, setMenuStyle] = React.useState<React.CSSProperties>({
+    visibility: 'hidden',
+    position: 'fixed'
+  });
+
+  React.useLayoutEffect(() => {
+    if (!menuRef.current) return;
+    const menuEl = menuRef.current;
+    const parentTrigger = menuEl.parentElement;
+    if (!parentTrigger) return;
+
+    const triggerRect = parentTrigger.getBoundingClientRect();
+    const menuRect = menuEl.getBoundingClientRect();
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const pad = 8; // padding from screen edges
+
+    const menuWidth = menuRect.width || 192;
+    const menuHeight = menuRect.height || 120;
+
+    // Prefer aligning right edge of menu to right edge of trigger
+    let left = triggerRect.right - menuWidth;
+    if (left + menuWidth > vw - pad) {
+      left = vw - pad - menuWidth;
+    }
+    if (left < pad) {
+      left = pad;
+    }
+
+    // Vertical placement: prefer opening above trigger (as previously intended)
+    // If not enough room on top, open below
+    let top = triggerRect.top - menuHeight - 6;
+    if (top < pad) {
+      // Open below
+      top = triggerRect.bottom + 6;
+      // If it still overflows bottom, clamp
+      if (top + menuHeight > vh - pad) {
+        top = Math.max(pad, vh - pad - menuHeight);
+      }
+    }
+
+    setMenuStyle({
+      position: 'fixed',
+      left: `${Math.round(left)}px`,
+      top: `${Math.round(top)}px`,
+      visibility: 'visible',
+      zIndex: 50
+    });
+  }, []);
+
   // Prevent clicks inside the menu from propagating to the row/parent
   const handleClick = (e: React.MouseEvent) => e.stopPropagation();
 
@@ -23,7 +75,9 @@ export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, clo
         onClick={closeMenu}
       />
       <div
-        className="absolute left-0 bottom-full mb-2 w-48 bg-bg-100 border border-bg-400 rounded-md shadow-xl z-50 py-1 overflow-hidden animate-in slide-in-from-bottom-2 fade-in duration-200"
+        ref={menuRef}
+        style={menuStyle}
+        className="w-48 bg-bg-100 border border-bg-400 rounded-md shadow-xl py-1 overflow-hidden animate-in fade-in duration-150"
         onClick={handleClick}
       >
         {canEdit && (

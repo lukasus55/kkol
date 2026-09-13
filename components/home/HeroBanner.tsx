@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -46,6 +46,8 @@ const SLIDES: Slide[] = [
 
 export default function HeroBanner() {
   const [currentIdx, setCurrentIdx] = useState(0);
+  const touchStartX = React.useRef<number | null>(null);
+  const touchStartY = React.useRef<number | null>(null);
 
   // Auto slide every 6 seconds
   useEffect(() => {
@@ -55,10 +57,38 @@ export default function HeroBanner() {
     return () => clearInterval(timer);
   }, []);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // Trigger swipe only if horizontal movement is dominant and exceeds threshold (40px)
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        // Swipe left -> Next slide
+        setCurrentIdx((prev) => (prev + 1) % SLIDES.length);
+      } else {
+        // Swipe right -> Previous slide
+        setCurrentIdx((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+
   const active = SLIDES[currentIdx];
 
   return (
-    <div className="w-full relative rounded-md overflow-hidden bg-bg-200 h-64 sm:h-72 md:h-80 select-none group cursor-pointer">
+    <div
+      className="w-full relative rounded-md overflow-hidden bg-bg-200 h-64 sm:h-72 md:h-80 select-none group cursor-pointer"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Whole card clickable link */}
       <Link href={active.url} className="absolute inset-0 z-20" aria-label={active.title}>
         <span className="sr-only">{active.title}</span>

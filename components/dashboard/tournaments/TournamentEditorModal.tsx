@@ -229,7 +229,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
 
   const Footer = (
     <div className="flex justify-between items-center w-full">
-      <div className="text-sm text-text-700">
+      <div className="hidden sm:block text-sm text-text-700">
         {activeTab === 'players' ? `${players.length} uczestników` : ''}
       </div>
       <div className="flex gap-3">
@@ -254,31 +254,38 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
         isOpen={isOpen}
         onClose={onClose}
         title={
-          <div className="flex gap-4 items-center">
-            <span>Edytuj: {tournament.displayed_name}</span>
-
-            <button
-              onClick={() => setInfo({ ...info, finished: !info.finished })}
-              className="flex items-center justify-center gap-2 w-[130px] py-1.5 rounded-md border transition-all duration-300 ml-4 border-bg-400 bg-bg-300 hover:bg-bg-400"
-            >
-              <div className="relative w-4 h-4 flex items-center justify-center">
-                <CheckCircle2 className={`absolute transition-all duration-500 text-text-500 w-4 h-4 ${info.finished ? 'opacity-0 scale-50 rotate-90' : 'opacity-100 scale-100 rotate-0'}`} />
-                <MinusCircle className={`absolute transition-all duration-500 text-text-500 w-4 h-4 ${info.finished ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90'}`} />
-              </div>
-              <span className="text-[11px] font-semibold uppercase tracking-wide text-text-700">
-                {info.finished ? "Zakończony" : "W trakcie"}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full pr-2 sm:pr-0">
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+              <span className="truncate max-w-[200px] sm:max-w-[280px]">
+                Edytuj: {tournament.displayed_name}
               </span>
-            </button>
 
-            <div className="flex bg-bg-100 rounded-md p-1 ml-auto text-sm font-normal">
               <button
-                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'players' ? 'bg-bg-300 text-text-900' : 'text-text-700 hover:text-text-900'}`}
+                type="button"
+                onClick={() => setInfo({ ...info, finished: !info.finished })}
+                className="flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md border transition-all duration-300 border-bg-400 bg-bg-300 hover:bg-bg-400 shrink-0 cursor-pointer"
+              >
+                <div className="relative w-3.5 h-3.5 flex items-center justify-center">
+                  <CheckCircle2 className={`absolute transition-all duration-300 text-text-500 w-3.5 h-3.5 ${info.finished ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+                  <MinusCircle className={`absolute transition-all duration-300 text-text-500 w-3.5 h-3.5 ${info.finished ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+                </div>
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-text-700">
+                  {info.finished ? "Zakończony" : "W trakcie"}
+                </span>
+              </button>
+            </div>
+
+            <div className="flex bg-bg-100 rounded-md p-1 self-start sm:self-auto text-xs sm:text-sm font-normal shrink-0">
+              <button
+                type="button"
+                className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded transition-colors ${activeTab === 'players' ? 'bg-bg-300 text-text-900 font-medium' : 'text-text-700 hover:text-text-900'}`}
                 onClick={() => setActiveTab('players')}
               >
                 Uczestnicy
               </button>
               <button
-                className={`px-4 py-1.5 rounded-sm transition-colors ${activeTab === 'settings' ? 'bg-bg-300 text-text-900' : 'text-text-700 hover:text-text-900'}`}
+                type="button"
+                className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded transition-colors ${activeTab === 'settings' ? 'bg-bg-300 text-text-900 font-medium' : 'text-text-700 hover:text-text-900'}`}
                 onClick={() => setActiveTab('settings')}
               >
                 Ustawienia

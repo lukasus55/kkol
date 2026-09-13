@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Minimize2 } from 'lucide-react';
+import { Button } from '../../ui/Button';
 import { Tooltip } from '../../ui/Tooltip';
 import { useToast } from '../../ui/ToastProvider';
 import { EventEditorModal } from './EventEditorModal';
@@ -156,31 +157,41 @@ export default function FullCalendar({ user, onCollapse }: { user: any, onCollap
     <div className="flex flex-col w-full h-full bg-bg-100">
 
       {/* Header Toolbar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-bg-200 border-b border-bg-300 flex-shrink-0">
-        <div className="flex items-center gap-4">
-          <button
+      <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-bg-200 border-b border-bg-300 flex-shrink-0 gap-2">
+        <div className="flex items-center">
+          <Button
+            variant="secondary"
             onClick={handleToday}
-            className="px-4 py-1.5 rounded-md bg-bg-300 text-sm font-medium text-text-900 hover:text-text-900 hover:bg-bg-100 shadow-sm transition-colors"
+            className="!px-3 !py-1 text-xs sm:text-sm"
           >
             Dzisiaj
-          </button>
+          </Button>
         </div>
 
-        <div className="flex items-center gap-6">
-          <button onClick={handlePrevMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-300 transition-colors">
-            <ChevronLeft className="w-6 h-6" />
+        <div className="flex items-center gap-2 sm:gap-4">
+          <button
+            onClick={handlePrevMonth}
+            aria-label="Poprzedni miesiąc"
+            className="p-1.5 rounded-md text-text-700 hover:text-text-900 hover:bg-bg-300 transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
-          <h2 className="text-xl font-bold w-48 text-center text-text-900 capitalize tracking-wide">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-center text-text-900 capitalize tracking-wide whitespace-nowrap min-w-[140px] sm:min-w-[180px]">
             {MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
 
-          <button onClick={handleNextMonth} className="p-1.5 rounded-full text-text-700 hover:text-text-900 hover:bg-bg-300 transition-colors">
-            <ChevronRight className="w-6 h-6" />
+          <button
+            onClick={handleNextMonth}
+            aria-label="Następny miesiąc"
+            className="p-1.5 rounded-md text-text-700 hover:text-text-900 hover:bg-bg-300 transition-colors"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
-        <div className="w-20"></div>
+        {/* Empty balancing spacer on desktop, hidden on mobile so controls don't get pushed off screen */}
+        <div className="hidden sm:block sm:w-16"></div>
       </div>
 
       {/* Calendar Grid */}
