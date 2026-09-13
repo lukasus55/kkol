@@ -187,8 +187,9 @@ export function PlayerProfileClient({ player, tournaments, ranking, wonTournamen
                               ) : (
                                 <span className="font-bold">{t.displayed_name}</span>
                               )}
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ${smallBadgeClass}`}>
-                                {t.details?.tier ?? '?'}-Tier
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider shrink-0 ${smallBadgeClass}`}>
+                                <span className="sm:hidden">{t.details?.tier ?? '?'}</span>
+                                <span className="hidden sm:inline">{t.details?.tier ?? '?'}-Tier</span>
                               </span>
                             </div>
                           </td>

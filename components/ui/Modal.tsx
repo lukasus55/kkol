@@ -25,6 +25,8 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
     };
   }, [isOpen]);
 
+  const mouseDownTargetRef = useRef<EventTarget | null>(null);
+
   if (!isOpen) return null;
 
   return (
@@ -37,8 +39,13 @@ export function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-3xl'
           onClose();
         }
       }}
+      onMouseDown={(e) => {
+        mouseDownTargetRef.current = e.target;
+      }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget && mouseDownTargetRef.current === e.currentTarget) {
+          onClose();
+        }
       }}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 outline-none"
     >

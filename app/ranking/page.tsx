@@ -54,13 +54,13 @@ export default function RankingPage() {
       <div className="w-full max-w-5xl">
         <div className="w-full overflow-hidden rounded-md">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse bg-bg-100 min-w-[540px]">
+            <table className="w-full text-left border-collapse bg-bg-100 min-w-[640px]">
               <thead>
                 <tr className="bg-bg-300 text-text-900 border-b border-bg-400 uppercase text-xs md:text-sm tracking-wide">
                   <th className="py-4 px-4 sm:px-6 font-bold">Nazwa</th>
-                  <th className="py-4 px-4 sm:px-6 font-bold text-center w-28">S-Score</th>
-                  <th className="py-4 px-4 sm:px-6 font-bold text-center w-28">AB-Score</th>
-                  <th className="py-4 px-4 sm:px-6 font-bold text-right w-32">Ranking</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold text-center w-48">S-Score</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold text-center w-48">AB-Score</th>
+                  <th className="py-4 px-4 sm:px-6 font-bold text-right w-36">Ranking</th>
                 </tr>
               </thead>
               <tbody className="">
