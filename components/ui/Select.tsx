@@ -16,13 +16,17 @@ export function Select({ value, onChange, options, disabled, className = '' }: S
   const selectedOption = options.find(o => o.value === value);
 
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick);
+    };
   }, []);
 
   return (

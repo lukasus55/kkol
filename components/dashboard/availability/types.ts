@@ -22,6 +22,16 @@ export interface WeeklyTimeGridProps {
 
 export const DAYS_SHORT = ["Pon", "Wto", "Śro", "Czw", "Pią", "Sob", "Nie"];
 
+export const FULL_DAY_NAMES = [
+  'Poniedziałek',
+  'Wtorek',
+  'Środa',
+  'Czwartek',
+  'Piątek',
+  'Sobota',
+  'Niedziela'
+];
+
 export const STATUS_COLORS: Record<string, string> = {
   'available': 'bg-green-500 text-green-900',
   'maybe': 'bg-yellow-500 text-yellow-900'

@@ -248,19 +248,19 @@ export default function MyAvailability({ user }: { user: any }) {
             </div>
           }
           headerRight={
-            <div className="flex items-center gap-6 ml-3 md:ml-0">
-              <div className="flex items-center gap-2 text-sm font-bold text-text-500">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-text-500">
                 {activeRequests > 0 ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-text-400 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-3.5 h-3.5 border-2 border-text-400 border-t-transparent rounded-full animate-spin" />
                     <span className="hidden lg:inline">Zapisywanie...</span>
                   </>
                 ) : (
-                  <span className="flex items-center gap-1"><Check className="w-4 h-4 opacity-70" /> <span className="hidden lg:inline">Zapisane</span></span>
+                  <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 opacity-70" /> <span className="hidden lg:inline">Zapisane</span></span>
                 )}
               </div>
               {mode === 'specific_week' && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <button
                     onClick={() => {
                       const d = new Date(currentWeekStart);
@@ -269,11 +269,10 @@ export default function MyAvailability({ user }: { user: any }) {
                     }}
                     className="p-1 bg-bg-300 rounded hover:bg-bg-400 transition-colors"
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
-                  <span className="font-bold text-text-900 min-w-[110px] text-center text-sm">
-                    {currentWeekStart.toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })} -
-                    {new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString('pl-PL', { month: 'short', day: 'numeric' })}
+                  <span className="font-bold text-text-900 min-w-[85px] sm:min-w-[110px] text-center text-xs sm:text-sm">
+                    {currentWeekStart.toLocaleDateString('pl-PL', { month: 'numeric', day: 'numeric' })} - {new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString('pl-PL', { month: 'numeric', day: 'numeric' })}
                   </span>
                   <button
                     onClick={() => {
@@ -283,7 +282,7 @@ export default function MyAvailability({ user }: { user: any }) {
                     }}
                     className="p-1 bg-bg-300 rounded hover:bg-bg-400 transition-colors"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
               )}

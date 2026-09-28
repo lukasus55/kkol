@@ -1,14 +1,17 @@
 'use client';
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Plus } from 'lucide-react';
 import { ConfirmationPopup } from '../../ui/ConfirmationPopup';
+import { Button } from '../../ui/Button';
 import { TimeBlock, WeeklyTimeGridProps } from './types';
 import { normalizeBlocks } from './normalizeBlocks';
-import { useGridAutoScroll } from './useGridAutoScroll';
 import { BlockEditPopover } from './BlockEditPopover';
 import { TimeBlockItem } from './TimeBlockItem';
 import { DaysHeader } from './DaysHeader';
 import { GridBackground } from './GridBackground';
+import { MobileDaySelector } from './MobileDaySelector';
+import { AddBlockModal } from './AddBlockModal';
+import { useWeeklyDrag } from './useWeeklyDrag';
 
 export type { TimeBlock };
 
@@ -29,64 +32,29 @@ export default function WeeklyTimeGrid({
   const [menuCoords, setMenuCoords] = useState<{ left: number; bottom: number; alignRight: boolean } | null>(null);
   const [revertPopupState, setRevertPopupState] = useState<{ isOpen: boolean; dayIdx: number | null }>({ isOpen: false, dayIdx: null });
   const [activeModalBlock, setActiveModalBlock] = useState<TimeBlock | null>(null);
-
-  const [dragState, setDragState] = useState<{
-    isDragging: boolean;
-    dayIndex: number | null;
-    startHour: number | null;
-    currentHour: number | null;
-    action: 'create' | 'move' | 'resize-top' | 'resize-bottom' | null;
-    blockId: string | null;
-    originalBlock: TimeBlock | null;
-  }>({
-    isDragging: false, dayIndex: null, startHour: null, currentHour: null, action: null, blockId: null, originalBlock: null
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [addModalInitial, setAddModalInitial] = useState<{ dayIndex: number; startHour: number; endHour: number }>({
+    dayIndex: 0,
+    startHour: 16,
+    endHour: 18
   });
-  
-  const dragStateRef = useRef(dragState);
-  useEffect(() => { dragStateRef.current = dragState; }, [dragState]);
 
-  useEffect(() => { setBlocks(initialBlocks); }, [initialBlocks]);
+  const [selectedMobileDay, setSelectedMobileDay] = useState<number | 'all'>(() => {
+    const d = new Date().getDay();
+    return d === 0 ? 6 : d - 1;
+  });
+  const [isMobileScreen, setIsMobileScreen] = useState(false);
 
   useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setActiveModalBlock(null);
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    const checkScreen = () => setIsMobileScreen(window.innerWidth < 768);
+    checkScreen();
+    window.addEventListener('resize', checkScreen);
+    return () => window.removeEventListener('resize', checkScreen);
   }, []);
 
-  const getHourFromMouse = useCallback((e: { clientY: number }) => {
-    if (!gridRef.current) return 0;
-    const rect = gridRef.current.getBoundingClientRect();
-    const y = e.clientY - rect.top;
-    const scrollY = gridRef.current.scrollTop;
-    const rawHour = (y + scrollY) / 48;
-    return Math.max(0, Math.min(24, Math.round(rawHour * 2) / 2));
-  }, []);
+  const isSingleDay = isMobileScreen && selectedMobileDay !== 'all';
 
-  const getDayFromMouse = useCallback((e: React.MouseEvent | MouseEvent) => {
-    if (!gridRef.current) return 0;
-    const rect = gridRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - 48;
-    if (x < 0) return 0;
-    const dayWidth = (rect.width - 48) / 7;
-    return Math.max(0, Math.min(6, Math.floor(x / dayWidth)));
-  }, []);
-
-  const handleHourChange = useCallback((hour: number) => {
-    setDragState(prev => {
-      if (prev.currentHour === hour) return prev;
-      const next = { ...prev, currentHour: hour };
-      dragStateRef.current = next;
-      return next;
-    });
-  }, []);
-
-  const { isDraggingRef, dragClientYRef, startAutoScroll, stopAutoScroll } = useGridAutoScroll({
-    gridRef,
-    getHourFromMouse,
-    onHourChange: handleHourChange
-  });
+  useEffect(() => { setBlocks(initialBlocks); }, [initialBlocks]);
 
   const modifiedDaysRef = useRef<Set<number>>(new Set());
   const [userActionCount, setUserActionCount] = useState(0);
@@ -118,130 +86,64 @@ export default function WeeklyTimeGrid({
     return () => clearTimeout(timer);
   }, [blocks, userActionCount, mode, onSaveRoutine, onSaveDayOverride, weekStartDate]);
 
-  const handleMouseDown = (e: React.MouseEvent, action: 'create' | 'move' | 'resize-top' | 'resize-bottom', blockId?: string) => {
-    if (readOnly) return;
-    if (e.button !== 0) return;
-    const day = getDayFromMouse(e);
-    const hour = getHourFromMouse(e);
-    const original = blockId ? blocks.find(b => b.id === blockId) || null : null;
+  const handleOpenBlockEditor = useCallback((block: TimeBlock, clientX?: number, clientY?: number) => {
+    setActiveModalBlock(block);
+    let left = clientX ?? window.innerWidth / 2;
+    let bottom = window.innerHeight - (clientY ?? window.innerHeight / 2);
+    let alignRight = false;
 
-    const nextState = {
-      isDragging: true,
-      dayIndex: day,
-      startHour: hour,
-      currentHour: hour,
-      action,
-      blockId: blockId || null,
-      originalBlock: original ? { ...original } : null
-    };
+    const el = document.getElementById(`timeblock-${block.id}`);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+      const centerX = rect.left + rect.width / 2;
+      left = centerX + 10;
+      if (left + 320 > window.innerWidth) {
+        left = centerX - 10;
+        alignRight = true;
+      }
+      bottom = window.innerHeight - centerY;
+    }
+    setMenuCoords({ left, bottom, alignRight });
+  }, []);
 
-    isDraggingRef.current = true;
-    dragStateRef.current = nextState;
-    dragClientYRef.current = e.clientY;
-    setDragState(nextState);
+  const handleCommitBlocks = useCallback((newBlocks: TimeBlock[], activeId: string, dayIndex: number) => {
+    markAction(dayIndex);
+    setBlocks(normalizeBlocks(newBlocks, activeId));
+  }, []);
 
-    startAutoScroll();
-    e.preventDefault();
+  const { dragState, handleMouseDown, getDayFromMouse, wasDraggingRef } = useWeeklyDrag({
+    gridRef,
+    blocks,
+    readOnly,
+    onCommitBlocks: handleCommitBlocks,
+    onBlockClick: handleOpenBlockEditor
+  });
+
+  const handleGridClick = (e: React.MouseEvent) => {
+    if (readOnly || wasDraggingRef.current || !gridRef.current) return;
+    const rect = gridRef.current.getBoundingClientRect();
+    const y = e.clientY - rect.top;
+    const scrollY = gridRef.current.scrollTop;
+    const rawHour = (y + scrollY) / 48;
+    const snappedHour = Math.floor(rawHour);
+    const day = isSingleDay && typeof selectedMobileDay === 'number' 
+      ? selectedMobileDay 
+      : getDayFromMouse(e);
+
+    setAddModalInitial({
+      dayIndex: Math.max(0, Math.min(6, day)),
+      startHour: Math.max(0, Math.min(23, snappedHour)),
+      endHour: Math.max(1, Math.min(24, snappedHour + 1))
+    });
+    setIsAddModalOpen(true);
   };
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDraggingRef.current) return;
-      dragClientYRef.current = e.clientY;
-      const hour = getHourFromMouse(e);
-      setDragState(prev => {
-        if (prev.currentHour === hour) return prev;
-        const next = { ...prev, currentHour: hour };
-        dragStateRef.current = next;
-        return next;
-      });
-    };
-
-    const handleMouseUp = () => {
-      if (!isDraggingRef.current) return;
-      isDraggingRef.current = false;
-      dragClientYRef.current = null;
-      stopAutoScroll();
-
-      const state = dragStateRef.current;
-      const { action, dayIndex, startHour, currentHour, blockId, originalBlock } = state;
-
-      if (blockId && originalBlock && startHour !== null && currentHour !== null && Math.abs(currentHour - startHour) < 0.1) {
-        setActiveModalBlock(originalBlock);
-        const el = document.getElementById(`timeblock-${blockId}`);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const centerY = rect.top + rect.height / 2;
-          const centerX = rect.left + rect.width / 2;
-          let left = centerX + 10;
-          let alignRight = false;
-          if (left + 320 > window.innerWidth) {
-            left = centerX - 10;
-            alignRight = true;
-          }
-          setMenuCoords({ left, bottom: window.innerHeight - centerY, alignRight });
-        }
-        setDragState({ isDragging: false, dayIndex: null, startHour: null, currentHour: null, action: null, blockId: null, originalBlock: null });
-        return;
-      }
-
-      setBlocks(prev => {
-        let newBlocks = [...prev];
-        if (dayIndex === null || startHour === null || currentHour === null) return prev;
-        markAction(dayIndex);
-        let activeId = blockId;
-
-        if (action === 'create') {
-          const s = Math.min(startHour, currentHour);
-          const e = Math.max(startHour, currentHour);
-          if (e - s > 0) {
-            activeId = 'temp-' + Date.now();
-            newBlocks.push({ id: activeId, dayIndex, startHour: s, endHour: e, status: 'available' });
-          }
-        } else if (blockId && originalBlock) {
-          const blockIndex = newBlocks.findIndex(b => b.id === blockId);
-          if (blockIndex > -1) {
-            const block = { ...newBlocks[blockIndex] };
-            markAction(block.dayIndex);
-            if (action === 'move') {
-              const diff = currentHour - startHour;
-              block.startHour = Math.max(0, originalBlock.startHour + diff);
-              block.endHour = Math.min(24, originalBlock.endHour + diff);
-              if (block.endHour - block.startHour < (originalBlock.endHour - originalBlock.startHour)) {
-                if (block.startHour === 0) block.endHour = originalBlock.endHour - originalBlock.startHour;
-                if (block.endHour === 24) block.startHour = 24 - (originalBlock.endHour - originalBlock.startHour);
-              }
-            } else if (action === 'resize-top') {
-              const diff = currentHour - startHour;
-              block.startHour = Math.max(0, Math.min(block.endHour - 0.5, originalBlock.startHour + diff));
-            } else if (action === 'resize-bottom') {
-              const diff = currentHour - startHour;
-              block.endHour = Math.min(24, Math.max(block.startHour + 0.5, originalBlock.endHour + diff));
-            }
-            newBlocks[blockIndex] = block;
-          }
-        }
-
-        return activeId ? normalizeBlocks(newBlocks, activeId) : newBlocks;
-      });
-
-      setDragState({ isDragging: false, dayIndex: null, startHour: null, currentHour: null, action: null, blockId: null, originalBlock: null });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [stopAutoScroll, getHourFromMouse]);
-
-  const confirmRevertDay = () => {
-    if (revertPopupState.dayIdx === null || !onSaveDayOverride || !weekStartDate) return;
-    const date = new Date(weekStartDate);
-    date.setDate(date.getDate() + revertPopupState.dayIdx);
-    const dateStr = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-    onSaveDayOverride(dateStr, [], true);
+  const handleAddBlock = (dayIndex: number, startHour: number, endHour: number, status: 'available' | 'maybe') => {
+    const newId = 'temp-' + Date.now();
+    const newBlock: TimeBlock = { id: newId, dayIndex, startHour, endHour, status };
+    markAction(dayIndex);
+    setBlocks(prev => normalizeBlocks([...prev, newBlock], newId));
   };
 
   const updateBlock = (blockId: string, updates: Partial<TimeBlock>) => {
@@ -255,7 +157,15 @@ export default function WeeklyTimeGrid({
     if (activeModalBlock) markAction(activeModalBlock.dayIndex);
   };
 
-  const currentDisplayBlocks = blocks.map(b => {
+  const confirmRevertDay = () => {
+    if (revertPopupState.dayIdx === null || !onSaveDayOverride || !weekStartDate) return;
+    const date = new Date(weekStartDate);
+    date.setDate(date.getDate() + revertPopupState.dayIdx);
+    const dateStr = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    onSaveDayOverride(dateStr, [], true);
+  };
+
+  const displayedBlocks = (isSingleDay ? blocks.filter(b => b.dayIndex === selectedMobileDay) : blocks).map(b => {
     if (dragState.isDragging && dragState.blockId === b.id && dragState.originalBlock && dragState.startHour !== null && dragState.currentHour !== null) {
       const diff = dragState.currentHour - dragState.startHour;
       let ns = b.startHour;
@@ -269,9 +179,7 @@ export default function WeeklyTimeGrid({
         }
       } else if (dragState.action === 'resize-top') {
         ns = Math.max(0, Math.min(dragState.originalBlock.endHour - 0.5, dragState.originalBlock.startHour + diff));
-        ne = dragState.originalBlock.endHour;
       } else if (dragState.action === 'resize-bottom') {
-        ns = dragState.originalBlock.startHour;
         ne = Math.min(24, Math.max(dragState.originalBlock.startHour + 0.5, dragState.originalBlock.endHour + diff));
       }
       return { ...b, startHour: ns, endHour: ne };
@@ -280,36 +188,70 @@ export default function WeeklyTimeGrid({
   });
 
   return (
-    <div className="flex flex-col h-full bg-bg-100 rounded-md overflow-hidden">
-      <div className="flex items-center justify-between p-3 bg-bg-200">
+    <div className="flex flex-col h-full bg-bg-100 rounded-md overflow-hidden relative">
+      <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 sm:p-3 bg-bg-200 border-b border-bg-300">
         <div>{headerLeft}</div>
-        <div className="flex items-center gap-4">{headerRight}</div>
+        <div className="flex items-center gap-2 sm:gap-4">
+          {!readOnly && (
+            <Button
+              variant="primary"
+              onClick={() => {
+                const day = typeof selectedMobileDay === 'number' ? selectedMobileDay : 0;
+                setAddModalInitial({ dayIndex: day, startHour: 16, endHour: 18 });
+                setIsAddModalOpen(true);
+              }}
+              className="hidden md:inline-flex text-sm py-1.5 px-3 gap-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Dodaj blok</span>
+            </Button>
+          )}
+          {headerRight}
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto relative custom-scrollbar bg-bg-100" ref={gridRef} onMouseDown={(e) => handleMouseDown(e, 'create')}>
+      <MobileDaySelector
+        mode={mode}
+        weekStartDate={weekStartDate}
+        selectedDay={selectedMobileDay}
+        onSelectDay={setSelectedMobileDay}
+        blocks={blocks}
+        hasOverridesMap={hasOverridesMap}
+      />
+
+      <div
+        className="flex-1 overflow-y-auto relative custom-scrollbar bg-bg-100"
+        ref={gridRef}
+        onMouseDown={(e) => handleMouseDown(e, 'create')}
+        onClick={handleGridClick}
+      >
         <DaysHeader 
           mode={mode} 
           weekStartDate={weekStartDate} 
           hasOverridesMap={hasOverridesMap} 
           onRevertDay={(dayIdx) => setRevertPopupState({ isOpen: true, dayIdx })} 
           readOnly={readOnly}
+          isSingleDayView={isSingleDay}
+          selectedDayIndex={typeof selectedMobileDay === 'number' ? selectedMobileDay : 0}
         />
 
         <div className="relative w-full" style={{ height: '1152px' }}>
-          <GridBackground />
+          <GridBackground isSingleDayView={isSingleDay} />
 
           <div className="absolute inset-0 z-10 pointer-events-none">
-            {currentDisplayBlocks.map(block => (
+            {displayedBlocks.map(block => (
               <TimeBlockItem 
                 key={block.id}
                 block={block}
                 isActive={activeModalBlock?.id === block.id}
                 isDragging={dragState.isDragging && dragState.blockId === block.id}
+                isSingleDayView={isSingleDay}
                 onMouseDown={handleMouseDown}
+                onSelectBlock={(b, e) => handleOpenBlockEditor(b, e?.clientX, e?.clientY)}
               />
             ))}
 
-            {dragState.isDragging && dragState.action === 'create' && dragState.dayIndex !== null && dragState.startHour !== null && dragState.currentHour !== null && dragState.startHour !== dragState.currentHour && (
+            {!isSingleDay && dragState.isDragging && dragState.action === 'create' && dragState.dayIndex !== null && dragState.startHour !== null && dragState.currentHour !== null && dragState.startHour !== dragState.currentHour && (
               <div 
                 className="absolute bg-accent-500/40 border border-accent-500/80 rounded-md pointer-events-none z-[40]"
                 style={{
@@ -339,6 +281,32 @@ export default function WeeklyTimeGrid({
           />
         )}
       </div>
+
+      {!readOnly && (
+        <Button
+          variant="primary"
+          onClick={() => {
+            const day = typeof selectedMobileDay === 'number' ? selectedMobileDay : 0;
+            setAddModalInitial({ dayIndex: day, startHour: 16, endHour: 18 });
+            setIsAddModalOpen(true);
+          }}
+          className="md:hidden fixed bottom-6 right-6 z-40 shadow-xl py-3 px-4 gap-2 text-sm font-bold"
+        >
+          <Plus className="w-5 h-5" />
+          <span>Dodaj</span>
+        </Button>
+      )}
+
+      <AddBlockModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAdd={handleAddBlock}
+        mode={mode}
+        weekStartDate={weekStartDate}
+        initialDayIndex={addModalInitial.dayIndex}
+        initialStartHour={addModalInitial.startHour}
+        initialEndHour={addModalInitial.endHour}
+      />
 
       <ConfirmationPopup 
         isOpen={revertPopupState.isOpen}

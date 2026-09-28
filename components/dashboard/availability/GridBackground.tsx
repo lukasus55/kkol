@@ -1,6 +1,11 @@
+'use client';
 import React from 'react';
 
-export const GridBackground: React.FC = () => {
+interface GridBackgroundProps {
+  isSingleDayView?: boolean;
+}
+
+export const GridBackground: React.FC<GridBackgroundProps> = ({ isSingleDayView = false }) => {
   return (
     <div className="absolute inset-0 z-0">
       {Array.from({ length: 24 }).map((_, i) => (
@@ -9,9 +14,13 @@ export const GridBackground: React.FC = () => {
             {i}:00
           </div>
           <div className="flex-1 flex pointer-events-none border-t border-bg-300">
-            {Array.from({ length: 7 }).map((_, j) => (
-              <div key={j} className="flex-1 border-r border-bg-300 last:border-r-0"></div>
-            ))}
+            {isSingleDayView ? (
+              <div className="flex-1" />
+            ) : (
+              Array.from({ length: 7 }).map((_, j) => (
+                <div key={j} className="flex-1 border-r border-bg-300 last:border-r-0" />
+              ))
+            )}
           </div>
         </div>
       ))}
