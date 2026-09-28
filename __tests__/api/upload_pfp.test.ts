@@ -1,10 +1,14 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/upload_pfp';
-import jwt from 'jsonwebtoken';
 import sharp from 'sharp';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
+
 const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
@@ -23,25 +27,40 @@ describe('Upload PFP API', () => {
         vi.clearAllMocks();
     });
 
-    test('rejects missing image', async () => {
+    test('returns 401 if session is invalid or revoked', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
+            body: { image_base64: 'data:image/png;base64,xxxx' }
+        });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+        expect(JSON.parse(res._getData()).error).toBe('Not authenticated');
+    });
+
+    test('rejects missing image', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'Player', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
             body: {}
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
     });
 
     test('enforces rate limits on PFP changes', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'Player', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { image_base64: 'data:image/png;base64,xxxx' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         // Setting a recent date (1 hour ago)
         const recentDate = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -53,12 +72,14 @@ describe('Upload PFP API', () => {
     });
 
     test('processes and saves image successfully', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'Player', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { image_base64: 'data:image/png;base64,xxxx' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         const oldDate = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(); // 24 hours ago
         mockSql.mockResolvedValueOnce([{ last_pfp_change: oldDate }]);

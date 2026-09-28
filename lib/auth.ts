@@ -65,10 +65,11 @@ export function parseDeviceInfo(userAgent?: string | null): string {
 export function getClientIp(req: NextApiRequest): string | null {
     const forwarded = req.headers['x-forwarded-for'];
     if (typeof forwarded === 'string') {
-        const firstIp = forwarded.split(',')[0].trim();
+        const firstIp = forwarded.split(',')[0].trim().replace(/^::ffff:/, '');
         if (firstIp) return firstIp;
     }
-    return req.socket?.remoteAddress || null;
+    const ip = req.socket?.remoteAddress || null;
+    return ip ? ip.replace(/^::ffff:/, '') : null;
 }
 
 /**

@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player } from '../../types/db';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
 import sql from '../../db.js';
-import { escapeHTML } from '../../public/js/utils/helpers.js';
+import { verifySession, revokeAllUserSessions } from '../../lib/auth';
 import { validatePassword } from '../../public/js/utils/validatePassword.js';
 import bcrypt from 'bcrypt';
 
@@ -19,10 +17,11 @@ interface ChangePasswordRequest extends NextApiRequest {
  * /api/change_password:
  *   post:
  *     summary: Change user password
- *     description: Updates the password for the authenticated user. Requires current password validation.
+ *     description: Updates the password for the authenticated user and revokes other sessions. Requires current password validation.
  *     tags: [Auth & Player]
  *     security:
  *       - cookieAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -59,14 +58,15 @@ export default async function handler(request: ChangePasswordRequest, response: 
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
 
-        if (!token) return response.status(401).json({ error: "Not authenticated" });
+        const { old_password, new_password } = request.body || {};
+        if (!new_password || !old_password) return response.status(400).json({ error: "Wypełnij wszystkie wymagane pola." });
 
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-
-        const userId = decodedPayload.id;
+        const userId = auth.user.id;
         const users = await sql<Pick<Player, 'id' | 'password_hash' | 'role' | 'is_active'>[]>`
             SELECT id, password_hash, role, is_active 
             FROM players 
@@ -75,10 +75,6 @@ export default async function handler(request: ChangePasswordRequest, response: 
         const user = users[0];
         if (!user) return response.status(404).json({ error: "Nie znaleziono użytkownika." });
         if (!user.is_active) return response.status(403).json({ error: "Konto jest nieaktywne." });
-
-
-        const { old_password, new_password } = request.body;
-        if (!new_password || !old_password) return response.status(400).json({ error: "Wypełnij wszystkie wymagane pola." });
 
         const old_password_hash = user.password_hash;
         const passwordsMatch = await bcrypt.compare(old_password, old_password_hash);
@@ -100,13 +96,13 @@ export default async function handler(request: ChangePasswordRequest, response: 
             WHERE id = ${userId}
         `;
 
+        // Optional best practice: revoke all other sessions when password is changed
+        await revokeAllUserSessions(userId, auth.session.id).catch(() => {});
+
         return response.status(200).json({ message: "Hasło zostało pomyślnie zaktualizowane." });
 
     } catch (error: any) {
         console.error("Change Password Error:", error);
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
-        }
         return response.status(500).json({ error: "Wystąpił błąd podczas zmiany hasła." });
     }
 }

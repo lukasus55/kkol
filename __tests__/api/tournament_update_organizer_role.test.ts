@@ -1,9 +1,13 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/tournament_update_organizer_role';
-import jwt from 'jsonwebtoken';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
+
 const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
@@ -12,25 +16,40 @@ describe('Tournament Update Organizer Role API', () => {
         vi.clearAllMocks();
     });
 
-    test('validates action type', async () => {
+    test('returns 401 if session is invalid or revoked', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
+            body: { tournament_id: 't1', target_player_id: 'p2', action: 'promote' }
+        });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+        expect(JSON.parse(res._getData()).error).toBe('Not authenticated');
+    });
+
+    test('validates action type', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'owner_user', role: 'player', displayed_name: 'Owner', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
             body: { tournament_id: 't1', target_player_id: 'p2', action: 'invalid' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'owner_user' } as any);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
     });
 
     test('rejects non-owner from updating roles', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'manager_user', role: 'player', displayed_name: 'Manager', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'p2', action: 'promote' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'manager_user' } as any);
 
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]);
 
@@ -39,12 +58,14 @@ describe('Tournament Update Organizer Role API', () => {
     });
 
     test('successfully promotes a user', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'owner_user', role: 'player', displayed_name: 'Owner', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'p2', action: 'promote' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'owner_user' } as any);
 
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]);
         mockSql.mockResolvedValueOnce([]); // upsert execution
@@ -54,12 +75,14 @@ describe('Tournament Update Organizer Role API', () => {
     });
 
     test('successfully demotes a user', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'owner_user', role: 'player', displayed_name: 'Owner', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'p2', action: 'demote' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'owner_user' } as any);
 
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]);
         mockSql.mockResolvedValueOnce([]); // delete execution

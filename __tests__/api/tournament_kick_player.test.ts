@@ -1,9 +1,13 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/tournament_kick_player';
-import jwt from 'jsonwebtoken';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
+
 const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
@@ -12,13 +16,26 @@ describe('Tournament Kick Player API', () => {
         vi.clearAllMocks();
     });
 
-    test('blocks kicking owner', async () => {
+    test('returns 401 if session is invalid or revoked', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'owner_user' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+        expect(JSON.parse(res._getData()).error).toBe('Not authenticated');
+    });
+
+    test('blocks kicking owner', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { tournament_id: 't1', target_player_id: 'owner_user' }
+        });
 
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]); // requester
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]); // target
@@ -29,12 +46,14 @@ describe('Tournament Kick Player API', () => {
     });
 
     test('blocks manager from kicking another manager', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'other_manager' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]); // requester
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]); // target
@@ -45,12 +64,14 @@ describe('Tournament Kick Player API', () => {
     });
 
     test('successfully kicks player', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'normal_user' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]); // requester
         mockSql.mockResolvedValueOnce([]); // target (not organizer)

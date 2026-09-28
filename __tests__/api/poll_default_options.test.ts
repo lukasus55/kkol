@@ -2,8 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/poll_default_options';
 import sql from '../../db.js';
-import jwt from 'jsonwebtoken';
 import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.js';
+import { verifySession } from '../../lib/auth';
+
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 
 vi.mock('../../db.js', () => {
     const mSql = vi.fn();
@@ -12,12 +17,6 @@ vi.mock('../../db.js', () => {
     });
     return { default: mSql };
 });
-
-vi.mock('jsonwebtoken', () => ({
-    default: {
-        verify: vi.fn(),
-    }
-}));
 
 vi.mock('../../public/js/utils/permissionChecks.js', () => ({
     hasTournamentPermission: vi.fn(),
@@ -41,11 +40,11 @@ describe('/api/poll_default_options', () => {
         expect(JSON.parse(res._getData())).toEqual([{ id: '1', name: 'Tak', sort_order: 0 }]);
     });
 
-    it('POST - fails if not authorized (no token)', async () => {
+    it('POST - fails if not authorized (no session)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({
             method: 'POST',
-            body: { poll_id: '123e4567-e89b-12d3-a456-426614174000', options: [] },
-            headers: {}
+            body: { poll_id: '123e4567-e89b-12d3-a456-426614174000', options: [] }
         });
 
         await handler(req as any, res as any);
@@ -53,14 +52,16 @@ describe('/api/poll_default_options', () => {
     });
 
     it('POST - fails if no permission', async () => {
-        vi.mocked(jwt.verify).mockReturnValueOnce({ id: 'user1', role: 'user' } as any);
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         vi.mocked(sql as any).mockResolvedValueOnce([{ tournament_id: 't1' }] as any); // polls
         vi.mocked(hasTournamentPermission).mockResolvedValueOnce(false);
 
         const { req, res } = createMocks({
             method: 'POST',
-            body: { poll_id: '123e4567-e89b-12d3-a456-426614174000', options: [] },
-            headers: { cookie: 'auth_token=fake_token' }
+            body: { poll_id: '123e4567-e89b-12d3-a456-426614174000', options: [] }
         });
 
         await handler(req as any, res as any);
@@ -68,7 +69,10 @@ describe('/api/poll_default_options', () => {
     });
 
     it('POST - saves options for authorized user', async () => {
-        vi.mocked(jwt.verify).mockReturnValueOnce({ id: 'admin1', role: 'admin' } as any);
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin 1', is_active: true },
+            session: {} as any
+        });
         vi.mocked(sql as any).mockResolvedValueOnce([{ tournament_id: 't1' }] as any); // polls
         vi.mocked(hasTournamentPermission).mockResolvedValueOnce(true);
 
@@ -77,8 +81,7 @@ describe('/api/poll_default_options', () => {
             body: { 
                 poll_id: '123e4567-e89b-12d3-a456-426614174000', 
                 options: [{ name: 'Opcja 1' }] 
-            },
-            headers: { cookie: 'auth_token=fake_token' }
+            }
         });
 
         await handler(req as any, res as any);

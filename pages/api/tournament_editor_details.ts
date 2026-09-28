@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Player, TournamentOrganizer } from '../../types/db';
-import jwt from 'jsonwebtoken';
+import type { TournamentOrganizer } from '../../types/db';
 import sql from '../../db.js';
-import { parse } from 'cookie';
+import { verifySession } from '../../lib/auth';
 
 interface TournamentEditorDetailsRequest extends NextApiRequest {
     query: {
@@ -10,33 +9,35 @@ interface TournamentEditorDetailsRequest extends NextApiRequest {
     };
 }
 
-type MemberData = {
+interface MemberData {
     id: string;
-    displayed_name: string | null;
+    displayed_name: string;
     attended: boolean;
-    position: number;
-    total_points: number;
+    position: number | null;
+    total_points: number | null;
     organizer_role: string | null;
-};
+}
 
 /**
  * @swagger
  * /api/tournament_editor_details:
  *   get:
  *     summary: Get tournament editor details
- *     description: Retrieves the detailed standings and permissions of players in a tournament for editor management.
+ *     description: Retrieves the tournament details, organizer role, and participant results. Only for owners and managers. Verifies server session.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: tournamentId
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
+ *         description: The ID of the tournament
  *     responses:
  *       200:
- *         description: Tournament editor details
+ *         description: Tournament editor details and participants list
  *       400:
  *         description: Missing tournament ID
  *       401:
@@ -52,16 +53,12 @@ export default async function handler(request: TournamentEditorDetailsRequest, r
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
-
-        if (!token) {
+        const auth = await verifySession(request);
+        if (!auth) {
             return response.status(401).json({ error: "Not authenticated" });
         }
 
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const userId = decodedPayload.id;
-
+        const userId = auth.user.id;
         const { tournamentId } = request.query;
 
         if (!tournamentId) {

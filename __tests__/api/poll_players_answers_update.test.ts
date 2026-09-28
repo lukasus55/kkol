@@ -1,9 +1,12 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/poll_players_answers_update';
-import jwt from 'jsonwebtoken';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 vi.mock('../../public/js/utils/helpers.js', () => ({
     isUUIDv7: vi.fn().mockImplementation((id: string) => id === 'valid-uuid-v7')
 }));
@@ -20,24 +23,35 @@ describe('Poll Players Answers Update API', () => {
         vi.clearAllMocks();
     });
 
+    test('rejects unauthenticated requests', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
+        const { req, res } = createMocks({ method: 'POST', body: {} });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+    });
+
     test('rejects missing poll_id', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { answers: {} }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
     });
 
     test('rejects if voting period has not started', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { poll_id: 'valid-uuid-v7', answers: {} }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         const futureDate = new Date();
         futureDate.setFullYear(futureDate.getFullYear() + 1);
@@ -49,12 +63,14 @@ describe('Poll Players Answers Update API', () => {
     });
 
     test('throws security violation if option IDs do not match', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { poll_id: 'valid-uuid-v7', answers: { q1: ['123'] } }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         const pastDate = new Date();
         pastDate.setFullYear(pastDate.getFullYear() - 1);
@@ -71,7 +87,7 @@ describe('Poll Players Answers Update API', () => {
         });
 
         await handler(req as any, res as any);
-        expect(res._getStatusCode()).toBe(400); // Because error.message === "SECURITY_VIOLATION" is handled as 400
+        expect(res._getStatusCode()).toBe(400);
         expect(JSON.parse(res._getData()).error).toContain('nieprawidłowe opcje');
     });
 });

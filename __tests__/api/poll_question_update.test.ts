@@ -1,10 +1,13 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/poll_question_update';
-import jwt from 'jsonwebtoken';
 import { hasTournamentPermission, isPartOfTournament } from '../../public/js/utils/permissionChecks.js';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 vi.mock('../../public/js/utils/permissionChecks.js', () => ({
     hasTournamentPermission: vi.fn(),
     isPartOfTournament: vi.fn()
@@ -23,25 +26,39 @@ describe('Poll Question Update API', () => {
         vi.clearAllMocks();
     });
 
-    test('rejects missing payload', async () => {
+    test('rejects unauthenticated requests', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: {}
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+    });
+
+    test('rejects missing payload', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: {}
+        });
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
     });
 
     test('validates name length', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { poll_id: 'p1', questions: [{ name: 'a' }] }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
         vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
@@ -52,15 +69,17 @@ describe('Poll Question Update API', () => {
     });
 
     test('executes transaction on successful update', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { 
                 poll_id: 'p1', 
                 questions: [{ id: 'q1', name: 'Valid Question', sort_order: 1, multiple_choice: false, options: [{ name: 'Opt 1' }], label_ids: [] }] 
             }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
         vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);

@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
 import sql from '../../db.js';
 import type { AvailabilityDefault, AvailabilityOverride } from '../../types/db';
+import { verifySession } from '../../lib/auth';
 
 /**
  * @swagger
@@ -24,16 +23,12 @@ export default async function handler(request: NextApiRequest, response: NextApi
         return response.status(405).json({ error: "Method not allowed" });
     }
 
-    const cookies = parse(request.headers.cookie || '');
-    const token = cookies.auth_token;
-
-    if (!token) {
-        return response.status(401).json({ error: "Not authenticated" });
-    }
-
     try {
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
-        const playerId = decodedPayload.id;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
+        const playerId = auth.user.id;
 
         const defaults = await sql<AvailabilityDefault[]>`
             SELECT id, player_id, day_of_week, start_time, end_time, status

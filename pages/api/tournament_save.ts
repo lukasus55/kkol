@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player, TournamentOrganizer } from '../../types/db';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 
 interface TournamentSaveRequest extends NextApiRequest {
@@ -81,15 +80,11 @@ export default async function handler(request: TournamentSaveRequest, response: 
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
-
-        if (!token) {
+        const auth = await verifySession(request);
+        if (!auth) {
             return response.status(401).json({ error: "Not authenticated" });
         }
-
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const userId = decodedPayload.id;
+        const userId = auth.user.id;
 
         const { tournament_id, results, tournament_info } = request.body;
 

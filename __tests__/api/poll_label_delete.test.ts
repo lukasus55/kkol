@@ -1,10 +1,13 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/poll_label_delete';
-import jwt from 'jsonwebtoken';
 import { hasTournamentPermission, isPartOfTournament } from '../../public/js/utils/permissionChecks.js';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 vi.mock('../../public/js/utils/permissionChecks.js', () => ({
     hasTournamentPermission: vi.fn(),
     isPartOfTournament: vi.fn()
@@ -17,25 +20,36 @@ describe('Poll Label Delete API (/api/poll_label_delete)', () => {
         vi.clearAllMocks();
     });
 
+    test('rejects unauthenticated requests', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
+        const { req, res } = createMocks({ method: 'POST', body: { id: 1 } });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+    });
+
     test('rejects missing id', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: {}
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
     });
 
     test('returns 404 if label not found', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { id: 1 }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
         
         mockSql.mockResolvedValueOnce([]); // no label
 
@@ -45,18 +59,19 @@ describe('Poll Label Delete API (/api/poll_label_delete)', () => {
     });
 
     test('deletes label if allowed', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { id: 1 }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
         
         mockSql.mockResolvedValueOnce([{ poll_id: 'p1' }]); // label found
         mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 3 }]); // poll found
         
         vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
-        // hasTournamentPermission skipped due to allowedByRules=true
 
         mockSql.mockResolvedValueOnce([]); // DELETE
 

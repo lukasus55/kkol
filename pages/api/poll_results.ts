@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Poll, Player } from '../../types/db';
 import sql from '../../db.js';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
+import { verifySession } from '../../lib/auth';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 
 interface PollResultsRequest extends NextApiRequest {
@@ -47,6 +46,10 @@ export default async function handler(request: PollResultsRequest, response: Nex
     }
 
     try {
+        const auth = await verifySession(request);
+        if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
+        const requesterId = auth.user.id;
+
         const { poll } = request.query;
 
         if (!poll) {
@@ -66,13 +69,6 @@ export default async function handler(request: PollResultsRequest, response: Nex
         }
 
         const tournament_id = pollCheck[0].tournament_id;
-
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
-        if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
-        
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const requesterId = decodedPayload.id;
 
         const permissions = await sql<{ global_role: string, is_organizer: boolean, is_player: boolean }[]>`
             SELECT

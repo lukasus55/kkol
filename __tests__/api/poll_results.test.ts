@@ -1,9 +1,12 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/poll_results';
-import jwt from 'jsonwebtoken';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 vi.mock('../../public/js/utils/helpers.js', () => ({
     isUUIDv7: vi.fn().mockImplementation((id: string) => id === 'valid-uuid-v7')
 }));
@@ -16,13 +19,25 @@ describe('Poll Results API', () => {
         vi.clearAllMocks();
     });
 
-    test('rejects unassigned users', async () => {
+    test('rejects unauthenticated requests', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({ 
             method: 'GET',
-            query: { poll: 'valid-uuid-v7' },
-            headers: { cookie: 'auth_token=token' }
+            query: { poll: 'valid-uuid-v7' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+    });
+
+    test('rejects unassigned users', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'GET',
+            query: { poll: 'valid-uuid-v7' }
+        });
 
         mockSql.mockResolvedValueOnce([{ id: 'valid-uuid-v7', tournament_id: 't1' }]); 
         mockSql.mockResolvedValueOnce([{ global_role: 'user', is_organizer: false, is_player: false }]); 
@@ -32,12 +47,14 @@ describe('Poll Results API', () => {
     });
 
     test('returns mapped poll results', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'GET',
-            query: { poll: 'valid-uuid-v7' },
-            headers: { cookie: 'auth_token=token' }
+            query: { poll: 'valid-uuid-v7' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         mockSql.mockResolvedValueOnce([{ id: 'valid-uuid-v7', tournament_id: 't1' }]); 
         mockSql.mockResolvedValueOnce([{ global_role: 'admin', is_organizer: false, is_player: false }]); 

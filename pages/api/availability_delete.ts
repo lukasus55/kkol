@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 
 /**
  * @swagger
@@ -19,22 +18,20 @@ import sql from '../../db.js';
  *         description: Missing or invalid id/type
  *       401:
  *         description: Not authenticated
+ *       500:
+ *         description: Internal server error
  */
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (request.method !== 'DELETE') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
-    const cookies = parse(request.headers.cookie || '');
-    const token = cookies.auth_token;
-
-    if (!token) {
-        return response.status(401).json({ error: "Not authenticated" });
-    }
-
     try {
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
-        const playerId = decodedPayload.id;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
+        const playerId = auth.user.id;
 
         const { id, type } = request.query;
 

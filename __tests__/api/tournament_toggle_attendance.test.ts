@@ -1,9 +1,13 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/tournament_toggle_attendance';
-import jwt from 'jsonwebtoken';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
+
 const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
@@ -12,25 +16,40 @@ describe('Tournament Toggle Attendance API', () => {
         vi.clearAllMocks();
     });
 
-    test('validates payload', async () => {
+    test('returns 401 if session is invalid or revoked', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
+            body: { tournament_id: 't1', target_player_id: 'p1' }
+        });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+        expect(JSON.parse(res._getData()).error).toBe('Not authenticated');
+    });
+
+    test('validates payload', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
             body: { tournament_id: 't1' } // missing target
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
     });
 
     test('rejects unauthorized users', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'p1' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         mockSql.mockResolvedValueOnce([{ role: 'user' }]);
 
@@ -39,12 +58,14 @@ describe('Tournament Toggle Attendance API', () => {
     });
 
     test('successfully toggles attendance', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST',
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', target_player_id: 'p1' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]);
         mockSql.mockResolvedValueOnce([]); // update query execution
