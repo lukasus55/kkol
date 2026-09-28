@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Player, Tournament, TournamentOrganizer } from '../../types/db';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
+import type { Tournament, TournamentOrganizer } from '../../types/db';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 
 interface TournamentChangeTierRequest extends NextApiRequest {
     body: {
@@ -16,10 +15,11 @@ interface TournamentChangeTierRequest extends NextApiRequest {
  * /api/tournament_change_tier:
  *   post:
  *     summary: Change tournament tier
- *     description: Changes the tier (S, A, B, C) of a tournament. S-Tier requires admin privileges.
+ *     description: Changes the tier (S, A, B, C) of a tournament. S-Tier requires admin privileges. Verifies active server session.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -55,24 +55,19 @@ export default async function handler(request: TournamentChangeTierRequest, resp
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
 
-        if (!token) return response.status(401).json({ error: "Not authenticated" });
+        const requesterId = auth.user.id;
+        const globalRole = auth.user.role;
 
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const requesterId = decodedPayload.id;
-
-        const { tournament_id, new_tier } = request.body;
+        const { tournament_id, new_tier } = request.body || {};
 
         if (!tournament_id || !['S', 'A', 'B', 'C'].includes(new_tier)) {
             return response.status(400).json({ error: "Nieprawidłowe dane." });
         }
-
-        const userCheck = await sql<Pick<Player, 'role'>[]>`SELECT role FROM players WHERE id = ${requesterId}`;
-        if (userCheck.length === 0) return response.status(401).json({ error: "Użytkownik nie istnieje." });
-        
-        const globalRole = userCheck[0].role; 
 
         const tournamentCheck = await sql<Pick<Tournament, 'tier'>[]>`SELECT tier FROM tournaments WHERE id = ${tournament_id}`;
         if (tournamentCheck.length === 0) {

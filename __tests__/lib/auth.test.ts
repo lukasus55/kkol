@@ -146,9 +146,9 @@ describe('Auth Library (lib/auth.ts)', () => {
                 }
             });
 
-            const result = await createSession('player1', req as any);
+            const result = await createSession('player1', req as any, { role: 'player' });
             expect(result.token).toBeDefined();
-            expect(result.token).toHaveLength(64);
+            expect(typeof result.token).toBe('string');
             expect(result.session).toEqual(mockCreatedSession);
             expect(mockSql).toHaveBeenCalledTimes(1);
         });

@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import jwt from 'jsonwebtoken';
 import { uuidv7 } from 'uuidv7';
 import { parse, serialize } from 'cookie';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -93,18 +94,26 @@ export function getAuthTokenFromRequest(req: NextApiRequest): string | null {
 
 /**
  * Creates and stores a new session in the database.
+ * Token is formatted as a signed JWT containing { id, role, sessionId } to provide
+ * 100% backward-compatibility with existing routes calling jwt.verify while binding to PostgreSQL sessions.
  */
 export async function createSession(
     playerId: string,
     req: NextApiRequest,
-    options?: { appId?: string; durationDays?: number }
+    options?: { appId?: string; durationDays?: number; role?: string | null }
 ): Promise<{ token: string; session: Session }> {
-    const token = generateToken();
-    const tokenHash = hashToken(token);
     const sessionId = uuidv7();
-
     const durationDays = options?.durationDays ?? DEFAULT_SESSION_DURATION_DAYS;
     const expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000);
+
+    const secret = process.env.JWT_SECRET || 'kkol_jwt_secret_fallback';
+    const token = jwt.sign(
+        { id: playerId, role: options?.role ?? null, sessionId },
+        secret,
+        { expiresIn: `${durationDays}d` }
+    );
+    const tokenHash = hashToken(token);
+
     const rawUa = req.headers['user-agent'] || null;
     const ip = getClientIp(req);
     const deviceInfo = parseDeviceInfo(rawUa);
@@ -124,12 +133,22 @@ export async function createSession(
 
 /**
  * Verifies the session token and fetches the associated active user.
+ * Supports both JWTs with sessionId and opaque API tokens.
  */
 export async function verifySession(req: NextApiRequest): Promise<AuthContext | null> {
     const token = getAuthTokenFromRequest(req);
     if (!token) return null;
 
-    const tokenHash = hashToken(token);
+    let sessionId: string | null = null;
+    try {
+        const secret = process.env.JWT_SECRET || 'kkol_jwt_secret_fallback';
+        const decoded = jwt.verify(token, secret) as any;
+        if (decoded && decoded.sessionId) {
+            sessionId = decoded.sessionId;
+        }
+    } catch {
+        // Fall back to searching by raw token hash (for non-JWT tokens or legacy)
+    }
 
     type JoinResult = Session & {
         user_role: string | null;
@@ -137,17 +156,33 @@ export async function verifySession(req: NextApiRequest): Promise<AuthContext | 
         user_is_active: boolean | null;
     };
 
-    const rows = await sql<JoinResult[]>`
-        SELECT 
-            s.*,
-            p.role AS user_role,
-            p.displayed_name AS user_displayed_name,
-            p.is_active AS user_is_active
-        FROM sessions s
-        JOIN players p ON s.player_id = p.id
-        WHERE s.token_hash = ${tokenHash}
-          AND s.expires_at > CURRENT_TIMESTAMP
-    `;
+    let rows: JoinResult[];
+    if (sessionId) {
+        rows = await sql<JoinResult[]>`
+            SELECT 
+                s.*,
+                p.role AS user_role,
+                p.displayed_name AS user_displayed_name,
+                p.is_active AS user_is_active
+            FROM sessions s
+            JOIN players p ON s.player_id = p.id
+            WHERE s.id = ${sessionId}
+              AND s.expires_at > CURRENT_TIMESTAMP
+        `;
+    } else {
+        const tokenHash = hashToken(token);
+        rows = await sql<JoinResult[]>`
+            SELECT 
+                s.*,
+                p.role AS user_role,
+                p.displayed_name AS user_displayed_name,
+                p.is_active AS user_is_active
+            FROM sessions s
+            JOIN players p ON s.player_id = p.id
+            WHERE s.token_hash = ${tokenHash}
+              AND s.expires_at > CURRENT_TIMESTAMP
+        `;
+    }
 
     const row = rows[0];
     if (!row) return null;
