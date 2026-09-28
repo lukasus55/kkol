@@ -145,3 +145,17 @@ export interface AvailabilityOverride {
     end_time: string;
     status: 'available' | 'maybe' | 'unavailable' | string;
 }
+
+export interface Session {
+    id: string;
+    player_id: string;
+    token_hash: string;
+    ip_address?: string | null;
+    user_agent?: string | null;
+    device_info?: string | null;
+    app_id?: string | null;
+    created_at: Date | string;
+    last_active_at: Date | string;
+    expires_at: Date | string;
+}
+

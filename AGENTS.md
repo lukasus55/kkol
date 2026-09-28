@@ -22,8 +22,9 @@ Every newly created or refactored popup/modal must adhere to the following 3 clo
 
 ## 3. Backend Testing and Documentation
 When you edit, modify, or create any backend file (e.g., API endpoints in `pages/api/`), **you must always**:
-1. **Write or update rigorous unit tests for them.**
-   - Tests are located in the `__tests__/api/` folder.
+1. **Write or update rigorous unit tests FIRST (before writing or modifying the implementation code).**
+   - **MANDATORY TDD PRINCIPLE:** Always write or update the test suite before writing the production code. *"If you must test a system in isolation, first write down all the ways it could fail, then write the code."* Writing tests after the fact defeats the purpose of rigorous validation.
+   - Tests are located in the `__tests__/api/` folder (or `__tests__/lib/` for backend libraries).
    - Use the `vitest` environment and `node-mocks-http` to simulate requests.
    - Remember to mock database queries (`vi.hoisted` + `vi.mock('../../db.js')`).
    - Carefully check *edge cases* (invalid data, missing permissions, validations).
