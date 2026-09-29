@@ -113,17 +113,27 @@ export default function TournamentsTab({ user, refreshUser }: { user: any; refre
           <div className="text-center text-text-500 py-10 font-medium">Brak turniejów do wyświetlenia.</div>
         ) : (
           <>
-            {paginatedTournaments.map((t) => (
-              <TournamentRow
-                key={t.id}
-                tournament={t}
-                userRole={user.role}
-                onRefresh={() => {
-                  fetchTournaments();
-                  refreshUser?.();
-                }}
-              />
-            ))}
+            {paginatedTournaments.map((t) => {
+              const organizerRole = user?.organizer_roles?.[t.id];
+              const isAdmin = user?.role === 'admin';
+              const effectiveRole = isAdmin
+                ? (organizerRole || 'admin')
+                : (organizerRole || (user?.tournaments?.[t.id] ? 'gracz' : 'widz'));
+              const canManage = isAdmin || organizerRole === 'owner' || organizerRole === 'manager';
+
+              return (
+                <TournamentRow
+                  key={t.id}
+                  tournament={t}
+                  userRole={effectiveRole}
+                  canManage={canManage}
+                  onRefresh={() => {
+                    fetchTournaments();
+                    refreshUser?.();
+                  }}
+                />
+              );
+            })}
             <Pagination
               currentPage={page}
               totalPages={totalPages}

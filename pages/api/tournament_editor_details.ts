@@ -23,7 +23,7 @@ interface MemberData {
  * /api/tournament_editor_details:
  *   get:
  *     summary: Get tournament editor details
- *     description: Retrieves the tournament details, organizer role, and participant results. Only for owners and managers. Verifies server session.
+ *     description: Retrieves the tournament details, organizer role, and participant results. For owners, managers, and global administrators. Verifies server session.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
@@ -65,14 +65,29 @@ export default async function handler(request: TournamentEditorDetailsRequest, r
             return response.status(400).json({ error: "Tournament ID is required" });
         }
 
-        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
-            SELECT role 
-            FROM tournament_organizers 
-            WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
-        `;
+        let currentUserRole = 'owner';
+        const isAdmin = auth.user.role === 'admin';
 
-        if (authCheck.length === 0 || (authCheck[0].role !== 'owner' && authCheck[0].role !== 'manager')) {
-            return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
+        if (!isAdmin) {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
+            `;
+
+            if (authCheck.length === 0 || (authCheck[0].role !== 'owner' && authCheck[0].role !== 'manager')) {
+                return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
+            }
+            currentUserRole = authCheck[0].role;
+        } else {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
+            `;
+            if (authCheck.length > 0) {
+                currentUserRole = authCheck[0].role;
+            }
         }
 
         const membersData = await sql<MemberData[]>`
@@ -95,7 +110,7 @@ export default async function handler(request: TournamentEditorDetailsRequest, r
         return response.status(200).json({ 
             tournament_id: tournamentId,
             current_user_id: userId,
-            current_user_role: authCheck[0].role,
+            current_user_role: currentUserRole,
             members: membersData 
         });
 

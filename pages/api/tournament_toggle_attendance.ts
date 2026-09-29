@@ -15,7 +15,7 @@ interface TournamentToggleAttendanceRequest extends NextApiRequest {
  * /api/tournament_toggle_attendance:
  *   post:
  *     summary: Toggle player attendance
- *     description: Flips the 'attended' boolean flag for a specific player in a tournament. Requires owner or manager role.
+ *     description: Flips the 'attended' boolean flag for a specific player in a tournament. Accessible by owner, manager, or global administrator.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
@@ -61,14 +61,17 @@ export default async function handler(request: TournamentToggleAttendanceRequest
             return response.status(400).json({ error: "Invalid payload" });
         }
 
-        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
-            SELECT role 
-            FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
-        `;
+        const isAdmin = auth.user.role === 'admin';
+        if (!isAdmin) {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
+            `;
 
-        if (authCheck.length === 0 || !['owner', 'manager'].includes(authCheck[0].role)) {
-            return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
+            if (authCheck.length === 0 || !['owner', 'manager'].includes(authCheck[0].role)) {
+                return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
+            }
         }
 
         await sql`

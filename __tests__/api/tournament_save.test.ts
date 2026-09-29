@@ -81,4 +81,27 @@ describe('Tournament Save API', () => {
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(200);
     });
+
+    test('allows global admin to save tournament without tournament_organizers record', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { 
+                tournament_id: 't1', 
+                results: [{ player_id: 'p1', position: 1, total_points: 100 }], 
+                tournament_info: { displayed_name: 'T', displayed_date: 'D', finished: true, end_date: '2025-01-01' } 
+            }
+        });
+
+        // update tournaments
+        mockSql.mockResolvedValueOnce([]);
+        // update results
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+    });
 });

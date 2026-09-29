@@ -11,10 +11,11 @@ import { useToast } from '../../ui/ToastProvider';
 interface TournamentRowProps {
   tournament: any;
   userRole: string;
+  canManage?: boolean;
   onRefresh: () => void;
 }
 
-export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRowProps) {
+export function TournamentRow({ tournament, userRole, canManage, onRefresh }: TournamentRowProps) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -109,7 +110,7 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
         <div className="flex items-center gap-3 sm:gap-4 relative flex-shrink-0" onClick={(e) => e.stopPropagation()}>
           {/* User Role */}
           <div className="text-[12px] text-text-700 font-medium tracking-wide uppercase">
-            {userRole}
+            {userRole === 'owner' ? 'Właściciel' : userRole === 'manager' ? 'Manager' : userRole === 'admin' ? 'Administrator' : userRole}
           </div>
 
           {/* More Actions Button */}
@@ -128,6 +129,7 @@ export function TournamentRow({ tournament, userRole, onRefresh }: TournamentRow
           {menuOpen && (
             <TournamentActionsMenu
               userRole={userRole}
+              canManage={canManage}
               onEdit={handleEdit}
               onEvents={handleEvents}
               onLeave={handleLeave}
