@@ -125,8 +125,29 @@ Wszystkie poniższe endpointy są w pełni zaimplementowane, udokumentowane w Sw
 }
 ```
 
-### 4. `POST /api/login` & `POST /api/logout`
-* `/api/login` weryfikuje hasło, tworzy wpis w `sessions` z metadanymi urządzenia i zwraca ciasteczko `HttpOnly`.
+### 4. `POST /api/auth/authorize`
+* **Opis:** Umożliwia natychmiastowe wydanie tokenu sesji dla zewnętrznej aplikacji ekosystemu (`app_id`) dla użytkownika, który jest już zalogowany w KKOL (np. flow "Kontynuuj jako Jan Kowalski" na `/login?redirect_uri=...`).
+* **Autoryzacja:** Ciasteczko `auth_token` lub `Authorization: Bearer <token>`.
+* **Ciało żądania:**
+```json
+{
+  "appId": "kkol_game"
+}
+```
+* **Odpowiedź (200 OK):**
+```json
+{
+  "token": "<raw_session_token>",
+  "user": {
+    "id": "jan_kowalski",
+    "role": "player",
+    "displayed_name": "Jan Kowalski"
+  }
+}
+```
+
+### 5. `POST /api/login` & `POST /api/logout`
+* `/api/login` weryfikuje hasło, tworzy wpis w `sessions` z metadanymi urządzenia i `appId` (domyślnie `kkol_main`), ustawia ciasteczko `HttpOnly` oraz zwraca obiekt z surowym `token` w JSON (`{ message, token, user }`), co umożliwia bezpośrednie przekierowanie do `redirect_uri` w flow SSO.
 * `/api/logout` usuwa wpis sesji z bazy danych i czyści ciasteczko.
 
 ---
@@ -140,10 +161,12 @@ Planujesz stworzyć nową aplikację (np. grę KKOL, osobną stronę z inną baz
 Aplikacja zewnętrzna nie ma bezpośredniego dostępu do bazy użytkowników KKOL, ale ufa KKOL jako dostawcy tożsamości.
 
 #### Krok 1: Przekierowanie do logowania
-Gdy użytkownik wejdzie na zewnętrzną aplikację i nie jest zalogowany, aplikacja przekierowuje go na stronę logowania KKOL:
+Gdy użytkownik wejdzie na zewnętrzną aplikację i nie jest zalogowany, aplikacja przekierowuje go na dedykowaną stronę logowania KKOL:
 ```
 https://kkol.twojadomena.pl/login?redirect_uri=https://gra.twojadomena.pl/auth/callback&app_id=kkol_game
 ```
+* **Dedykowany layout bez głównego paska nawigacji:** Strona `/login` renderuje się autonomicznie (bez wewnętrznego navbara KKOL), wyświetla oficjalne logo Karwińskiej Olimpiady oraz dedykowany kafelek z informacją: *"Logujesz się do: kkol_game (gra.twojadomena.pl)"*.
+* **Automatyczne rozpoznawanie aktywnej sesji:** Jeśli użytkownik jest już zalogowany w przeglądarce, zamiast ponownego wpisywania hasła otrzymuje prompt: *"Zalogowano jako: Jan Kowalski"* z przyciskiem szybkiego przejścia (*"Kontynuuj jako Jan"*) lub możliwością zmiany konta.
 
 #### Krok 2: Po zalogowaniu w KKOL
 KKOL generuje sesję z parametrem `app_id = 'kkol_game'` i przekierowuje użytkownika z powrotem:

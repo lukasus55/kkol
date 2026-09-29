@@ -133,6 +133,8 @@ describe('Login API Endpoint (/api/login)', () => {
         
         const data = JSON.parse(res._getData());
         expect(data.message).toBe('Login successful!');
+        expect(data.token).toBeDefined();
+        expect(typeof data.token).toBe('string');
         expect(data.user.id).toBe('admin');
         expect(data.user.role).toBe('admin');
         
@@ -142,6 +144,32 @@ describe('Login API Endpoint (/api/login)', () => {
         expect(setCookieHeader).toContain(`${AUTH_COOKIE_NAME}=`);
         expect(setCookieHeader).toContain('HttpOnly');
         expect(setCookieHeader).toContain('SameSite=Lax');
+    });
+
+    test('accepts custom appId and stores it in session', async () => {
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { username: 'admin', password: 'password123', appId: 'external_app' }
+        });
+        
+        mockSql.mockResolvedValueOnce([{ id: 'admin', password_hash: 'hashed', role: 'admin', is_active: true }]);
+        mockSql.mockResolvedValueOnce([]); // UPDATE last_login
+        mockSql.mockResolvedValueOnce([{
+            id: 'session-uuid-2',
+            player_id: 'admin',
+            token_hash: 'hash-abc',
+            app_id: 'external_app',
+            created_at: new Date(),
+            expires_at: new Date()
+        }]); // INSERT session
+        
+        vi.mocked(bcrypt.compare).mockResolvedValueOnce(true as never);
+
+        await handler(req as any, res as any);
+        
+        expect(res._getStatusCode()).toBe(200);
+        const data = JSON.parse(res._getData());
+        expect(data.token).toBeDefined();
     });
 
     test('returns 500 when database throws an error', async () => {

@@ -47,6 +47,9 @@ interface LoginRequest extends NextApiRequest {
  *               properties:
  *                 message:
  *                   type: string
+ *                 token:
+ *                   type: string
+ *                   description: Raw session token for SSO callbacks or authorization header
  *                 user:
  *                   type: object
  *                   properties:
@@ -109,6 +112,7 @@ export default async function handler(request: LoginRequest, response: NextApiRe
 
         return response.status(200).json({ 
             message: "Login successful!",
+            token,
             user: {
                 id: user.id,
                 role: user.role

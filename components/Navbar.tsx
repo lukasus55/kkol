@@ -11,6 +11,8 @@ export default function Navbar() {
   const [userPfp, setUserPfp] = useState<string | null>(null);
 
   useEffect(() => {
+    if (pathname.startsWith('/login')) return;
+
     async function fetchMe() {
       try {
         const res = await fetch('/api/me');
@@ -84,6 +86,10 @@ export default function Navbar() {
   ];
 
   const isCurrent2026 = pathname.startsWith('/2026');
+
+  if (pathname.startsWith('/login')) {
+    return null;
+  }
 
   return (
     <header className={`sticky top-0 left-0 w-full z-50 border-b transition-colors duration-300 ${navBg}`}>
