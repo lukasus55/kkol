@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Card, CardTitle } from '../../ui/Card';
 import { Button } from '../../ui/Button';
 import { useToast } from '../../ui/ToastProvider';
+import { useUser } from '../UserProvider';
 
 export default function ProfilePictureCard({ currentPfpBase64 }: { currentPfpBase64: string | null }) {
+  const { fetchUser } = useUser();
   const defaultSrc = '/img/default_pfp.webp';
   const initialSrc = currentPfpBase64 ? (currentPfpBase64.startsWith('data:image') ? currentPfpBase64 : `data:image/jpeg;base64,${currentPfpBase64}`) : defaultSrc;
 
@@ -35,18 +37,31 @@ export default function ProfilePictureCard({ currentPfpBase64 }: { currentPfpBas
     if (!selectedFile) return;
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append('profilePicture', selectedFile);
-
     try {
+      let base64 = pfpSrc;
+      if (!base64 || !base64.startsWith('data:image')) {
+        base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(selectedFile);
+        });
+      }
+
       const res = await fetch('/api/upload_pfp', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image_base64: base64,
+        }),
       });
 
       if (res.ok) {
         addToast({ type: 'success', message: 'Pomyślnie zmieniono zdjęcie profilowe!' });
         setSelectedFile(null);
+        await fetchUser?.();
       } else {
         const err = await res.json();
         addToast({ type: 'error', message: err.error || "Wystąpił błąd podczas przesyłania zdjęcia." });

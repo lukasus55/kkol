@@ -10,6 +10,14 @@ interface UploadPfpRequest extends NextApiRequest {
     };
 }
 
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '4mb',
+        },
+    },
+};
+
 /**
  * @swagger
  * /api/upload_pfp:
@@ -99,7 +107,10 @@ export default async function handler(request: UploadPfpRequest, response: NextA
             WHERE id = ${userId}
         `;
 
-        return response.status(200).json({ message: "Zdjęcie profilowe zaktualizowane." });
+        return response.status(200).json({ 
+            message: "Zdjęcie profilowe zaktualizowane.",
+            pfp_base64: finalBase64
+        });
 
     } catch (error: any) {
         console.error("PFP Upload Error:", error);
