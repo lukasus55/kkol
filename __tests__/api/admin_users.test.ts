@@ -1,11 +1,13 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/admin/users';
-import { verifySession } from '../../lib/auth';
+import { verifySession, revokeAllUserSessions } from '../../lib/auth';
 import bcrypt from 'bcrypt';
 
 vi.mock('../../lib/auth', () => ({
     verifySession: vi.fn(),
+    revokeSession: vi.fn(),
+    revokeAllUserSessions: vi.fn(),
     AUTH_COOKIE_NAME: 'auth_token'
 }));
 
@@ -107,6 +109,22 @@ describe('Admin Users API (/api/admin/users)', () => {
             expect(JSON.parse(res._getData()).error).toContain('Wypełnij wszystkie wymagane pola');
         });
 
+        test('fails when trying to create user with admin role', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const { req, res } = createMocks({
+                method: 'POST',
+                body: { id: 'new_admin', displayed_name: 'New Admin', password: 'password12345678', role: 'admin' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(400);
+            expect(JSON.parse(res._getData()).error).toContain('nie może nadawać roli administratora');
+        });
+
         test('fails when user ID format is invalid', async () => {
             vi.mocked(verifySession).mockResolvedValueOnce({
                 user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
@@ -115,7 +133,7 @@ describe('Admin Users API (/api/admin/users)', () => {
 
             const { req, res } = createMocks({
                 method: 'POST',
-                body: { id: 'Invalid ID with Spaces', displayed_name: 'Valid Name', password: 'password123' }
+                body: { id: 'Invalid ID with Spaces', displayed_name: 'Valid Name', password: 'password12345678' }
             });
             await handler(req as any, res as any);
 
@@ -123,7 +141,7 @@ describe('Admin Users API (/api/admin/users)', () => {
             expect(JSON.parse(res._getData()).error).toContain('ID może zawierać tylko');
         });
 
-        test('fails when password is too short', async () => {
+        test('fails when password is too short (less than 14 characters)', async () => {
             vi.mocked(verifySession).mockResolvedValueOnce({
                 user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
                 session: {} as any
@@ -131,12 +149,12 @@ describe('Admin Users API (/api/admin/users)', () => {
 
             const { req, res } = createMocks({
                 method: 'POST',
-                body: { id: 'valid_id', displayed_name: 'Valid Name', password: '123' }
+                body: { id: 'valid_id', displayed_name: 'Valid Name', password: 'shortpass123' } // 12 chars
             });
             await handler(req as any, res as any);
 
             expect(res._getStatusCode()).toBe(400);
-            expect(JSON.parse(res._getData()).error).toContain('Hasło musi mieć co najmniej');
+            expect(JSON.parse(res._getData()).error).toContain('14 znaków');
         });
 
         test('fails when user ID already exists (409 Conflict)', async () => {
@@ -149,7 +167,7 @@ describe('Admin Users API (/api/admin/users)', () => {
 
             const { req, res } = createMocks({
                 method: 'POST',
-                body: { id: 'existing_id', displayed_name: 'Valid Name', password: 'password123' }
+                body: { id: 'existing_id', displayed_name: 'Valid Name', password: 'password12345678' }
             });
             await handler(req as any, res as any);
 
@@ -180,7 +198,7 @@ describe('Admin Users API (/api/admin/users)', () => {
                 body: {
                     id: 'new_player',
                     displayed_name: 'New Player',
-                    password: 'password123',
+                    password: 'password12345678',
                     role: 'player',
                     email: 'player@kkol.pl'
                 }
@@ -190,7 +208,7 @@ describe('Admin Users API (/api/admin/users)', () => {
             expect(res._getStatusCode()).toBe(201);
             const data = JSON.parse(res._getData());
             expect(data.user).toEqual(createdUser);
-            expect(bcrypt.hash).toHaveBeenCalledWith('password123', 10);
+            expect(bcrypt.hash).toHaveBeenCalledWith('password12345678', 10);
         });
     });
 
@@ -211,7 +229,39 @@ describe('Admin Users API (/api/admin/users)', () => {
             expect(JSON.parse(res._getData()).error).toContain('ID użytkownika jest wymagane');
         });
 
-        test('fails when neither role nor is_active is provided', async () => {
+        test('fails when trying to promote user to role admin', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                body: { id: 'user1', role: 'admin' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(400);
+            expect(JSON.parse(res._getData()).error).toContain('nie może nadawać roli administratora');
+        });
+
+        test('fails when new_password is shorter than 14 characters', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                body: { id: 'user1', new_password: 'shortpassword' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(400);
+            expect(JSON.parse(res._getData()).error).toContain('14 znaków');
+        });
+
+        test('fails when neither role, is_active nor new_password is provided', async () => {
             vi.mocked(verifySession).mockResolvedValueOnce({
                 user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
                 session: {} as any
@@ -241,6 +291,24 @@ describe('Admin Users API (/api/admin/users)', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData()).error).toContain('Nie możesz dezaktywować');
+        });
+
+        test('fails with 403 when trying to modify another admin account', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin 1', is_active: true },
+                session: {} as any
+            });
+
+            mockSql.mockResolvedValueOnce([{ id: 'other_admin', role: 'admin', is_active: true }]); // Target user is admin
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                body: { id: 'other_admin', is_active: false }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(403);
+            expect(JSON.parse(res._getData()).error).toContain('innego administratora');
         });
 
         test('fails when target user does not exist (404)', async () => {
@@ -282,6 +350,28 @@ describe('Admin Users API (/api/admin/users)', () => {
             expect(res._getStatusCode()).toBe(200);
             const data = JSON.parse(res._getData());
             expect(data.user.role).toBe('organizer');
+        });
+
+        test('successfully resets password for user and revokes their sessions', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const existingUser = { id: 'user1', displayed_name: 'User 1', role: 'player', is_active: true };
+            mockSql.mockResolvedValueOnce([existingUser]); // Find user
+            vi.mocked(bcrypt.hash).mockResolvedValueOnce('new_hashed_secret' as never);
+            mockSql.mockResolvedValueOnce([existingUser]); // Update user
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                body: { id: 'user1', new_password: 'new_super_password_14chars' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            expect(bcrypt.hash).toHaveBeenCalledWith('new_super_password_14chars', 10);
+            expect(revokeAllUserSessions).toHaveBeenCalledWith('user1');
         });
     });
 });

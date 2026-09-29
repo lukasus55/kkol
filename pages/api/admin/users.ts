@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player } from '../../../types/db';
 import sql from '../../../db.js';
-import { verifySession } from '../../../lib/auth';
+import { verifySession, revokeAllUserSessions } from '../../../lib/auth';
 import bcrypt from 'bcrypt';
 
 /**
@@ -43,7 +43,7 @@ import bcrypt from 'bcrypt';
  *         description: Internal server error
  *   post:
  *     summary: Create a new player account
- *     description: Creates a new user with hashed password. Only administrators are allowed.
+ *     description: Creates a new user with hashed password. Cannot assign admin role. Only administrators are allowed.
  *     tags: [Admin]
  *     security:
  *       - cookieAuth: []
@@ -69,10 +69,10 @@ import bcrypt from 'bcrypt';
  *                 maxLength: 30
  *               password:
  *                 type: string
- *                 minLength: 6
+ *                 minLength: 14
  *               role:
  *                 type: string
- *                 enum: [player, organizer, admin]
+ *                 enum: [player, organizer]
  *                 default: player
  *               email:
  *                 type: string
@@ -90,8 +90,8 @@ import bcrypt from 'bcrypt';
  *       500:
  *         description: Internal server error
  *   patch:
- *     summary: Update player role or active status
- *     description: Allows administrator to change a user's role or activate/deactivate account.
+ *     summary: Update player role, active status, or reset password
+ *     description: Allows administrator to change a user's role (player/organizer), activate/deactivate account, or reset password (min. 14 chars). Cannot edit another admin's account.
  *     tags: [Admin]
  *     security:
  *       - cookieAuth: []
@@ -109,9 +109,12 @@ import bcrypt from 'bcrypt';
  *                 type: string
  *               role:
  *                 type: string
- *                 enum: [player, organizer, admin]
+ *                 enum: [player, organizer]
  *               is_active:
  *                 type: boolean
+ *               new_password:
+ *                 type: string
+ *                 minLength: 14
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -120,7 +123,7 @@ import bcrypt from 'bcrypt';
  *       401:
  *         description: Not authenticated
  *       403:
- *         description: Forbidden - admin privileges required
+ *         description: Forbidden - cannot edit another admin's account
  *       404:
  *         description: User not found
  *       500:
@@ -222,6 +225,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 return response.status(400).json({ error: "Wypełnij wszystkie wymagane pola (ID, nazwa, hasło)." });
             }
 
+            if (role === 'admin') {
+                return response.status(400).json({ error: "Administrator nie może nadawać roli administratora." });
+            }
+
             const trimmedId = String(id).trim().toLowerCase();
             if (!/^[a-z0-9_-]{3,32}$/.test(trimmedId)) {
                 return response.status(400).json({ error: "ID może zawierać tylko małe litery, cyfry, myślnik i podkreślnik (3-32 znaki)." });
@@ -232,11 +239,11 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 return response.status(400).json({ error: "Wyświetlana nazwa musi mieć od 2 do 30 znaków." });
             }
 
-            if (String(password).length < 6) {
-                return response.status(400).json({ error: "Hasło musi mieć co najmniej 6 znaków." });
+            if (String(password).length < 14) {
+                return response.status(400).json({ error: "Hasło musi mieć co najmniej 14 znaków." });
             }
 
-            const validRole = ['player', 'organizer', 'admin'].includes(role) ? role : 'player';
+            const validRole = role === 'organizer' ? 'organizer' : 'player';
             const cleanEmail = email && typeof email === 'string' && email.trim() ? email.trim() : null;
 
             const existing = await sql<Pick<Player, 'id'>[]>`
@@ -262,37 +269,57 @@ export default async function handler(request: NextApiRequest, response: NextApi
         }
 
         if (request.method === 'PATCH') {
-            const { id, role, is_active } = request.body || {};
+            const { id, role, is_active, new_password } = request.body || {};
 
             if (!id || typeof id !== 'string') {
                 return response.status(400).json({ error: "ID użytkownika jest wymagane." });
             }
 
-            if (role === undefined && is_active === undefined) {
+            if (role === undefined && is_active === undefined && !new_password) {
                 return response.status(400).json({ error: "Brak danych do aktualizacji." });
+            }
+
+            if (role === 'admin') {
+                return response.status(400).json({ error: "Administrator nie może nadawać roli administratora." });
+            }
+
+            if (role !== undefined && !['player', 'organizer'].includes(role)) {
+                return response.status(400).json({ error: "Nieprawidłowa rola." });
+            }
+
+            if (new_password !== undefined && String(new_password).length < 14) {
+                return response.status(400).json({ error: "Nowe hasło musi mieć co najmniej 14 znaków." });
             }
 
             if (id === auth.user.id && (is_active === false || (role && role !== 'admin'))) {
                 return response.status(400).json({ error: "Nie możesz dezaktywować ani odebrać uprawnień administratora swojemu kontu." });
             }
 
-            if (role !== undefined && !['player', 'organizer', 'admin'].includes(role)) {
-                return response.status(400).json({ error: "Nieprawidłowa rola." });
-            }
-
-            const existing = await sql<Pick<Player, 'id'>[]>`
-                SELECT id FROM players WHERE id = ${id}
+            const existing = await sql<Pick<Player, 'id' | 'role'>[]>`
+                SELECT id, role FROM players WHERE id = ${id}
             `;
 
             if (existing.length === 0) {
                 return response.status(404).json({ error: "Użytkownik nie istnieje." });
             }
 
+            // Protect other admins from being modified
+            if (existing[0].role === 'admin' && existing[0].id !== auth.user.id) {
+                return response.status(403).json({ error: "Nie można modyfikować konta innego administratora." });
+            }
+
+            let newHash: string | null = null;
+            if (new_password) {
+                newHash = await bcrypt.hash(new_password, 10);
+                await revokeAllUserSessions(id);
+            }
+
             const [updatedUser] = await sql<Omit<Player, 'password_hash'>[]>`
                 UPDATE players
                 SET
                     role = COALESCE(${role !== undefined ? role : null}, role),
-                    is_active = COALESCE(${is_active !== undefined ? is_active : null}, is_active)
+                    is_active = COALESCE(${is_active !== undefined ? is_active : null}, is_active),
+                    password_hash = COALESCE(${newHash}, password_hash)
                 WHERE id = ${id}
                 RETURNING id, displayed_name, email, role, is_active, created_at, last_login
             `;
