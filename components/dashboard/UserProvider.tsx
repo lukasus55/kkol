@@ -63,7 +63,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (typeof window !== 'undefined') {
         localStorage.setItem('kkol_admin_mode', String(val));
         if (!val && window.location.pathname.startsWith('/dashboard/admin')) {
-          router.push('/dashboard/summary');
+          router.replace('/dashboard/summary');
         }
       }
     },
@@ -72,17 +72,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const toggleAdminMode = useCallback(() => {
     if (user?.role !== 'admin') return;
-    setIsAdminModeState((prev) => {
-      const next = !prev;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('kkol_admin_mode', String(next));
-        if (!next && window.location.pathname.startsWith('/dashboard/admin')) {
-          router.push('/dashboard/summary');
-        }
+    const next = !isAdminMode;
+    setIsAdminModeState(next);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('kkol_admin_mode', String(next));
+      if (!next && window.location.pathname.startsWith('/dashboard/admin')) {
+        router.replace('/dashboard/summary');
       }
-      return next;
-    });
-  }, [user, router]);
+    }
+  }, [user, isAdminMode, router]);
 
   return (
     <UserContext.Provider
