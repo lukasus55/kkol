@@ -7,13 +7,24 @@ import { verifySession } from '../../../lib/auth';
  * @swagger
  * /api/admin/trivia:
  *   get:
- *     summary: Get trivia list
- *     description: Returns a list of trivia items with optional filtering by used status. Only administrators are allowed.
+ *     summary: Get trivia list or next pending trivia
+ *     description: Returns a list of trivia items or the next pending item. Accessible by admins (session cookie / token) or Discord Bot (via x-trivia-api-key or Bearer TRIVIA_API_KEY).
  *     tags: [Admin]
  *     security:
  *       - cookieAuth: []
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: x-trivia-api-key
+ *         schema:
+ *           type: string
+ *         description: Secret API key for Discord bot or automation scripts
+ *       - in: query
+ *         name: next
+ *         schema:
+ *           type: string
+ *           enum: ['true', '1']
+ *         description: If true, returns the single oldest unused trivia from the queue (FIFO)
  *       - in: query
  *         name: is_used
  *         schema:
@@ -22,7 +33,7 @@ import { verifySession } from '../../../lib/auth';
  *         description: Filter trivia by whether it has been published to Discord
  *     responses:
  *       200:
- *         description: Trivia list returned successfully
+ *         description: Trivia list or next trivia object returned successfully
  *       401:
  *         description: Not authenticated
  *       403:
@@ -31,11 +42,17 @@ import { verifySession } from '../../../lib/auth';
  *         description: Internal server error
  *   post:
  *     summary: Add new trivia item
- *     description: Adds a new trivia item to the database. Only administrators are allowed.
+ *     description: Adds a new trivia item to the database. Accessible by admins or bot.
  *     tags: [Admin]
  *     security:
  *       - cookieAuth: []
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: x-trivia-api-key
+ *         schema:
+ *           type: string
+ *         description: Secret API key for Discord bot or automation scripts
  *     requestBody:
  *       required: true
  *       content:
@@ -61,11 +78,17 @@ import { verifySession } from '../../../lib/auth';
  *         description: Internal server error
  *   patch:
  *     summary: Update trivia content or publication status
- *     description: Allows updating trivia text or toggling used status.
+ *     description: Allows updating trivia text or toggling used status. Used by bot to mark trivia as published.
  *     tags: [Admin]
  *     security:
  *       - cookieAuth: []
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: x-trivia-api-key
+ *         schema:
+ *           type: string
+ *         description: Secret API key for Discord bot or automation scripts
  *     requestBody:
  *       required: true
  *       content:
@@ -101,15 +124,6 @@ import { verifySession } from '../../../lib/auth';
  *     security:
  *       - cookieAuth: []
  *       - bearerAuth: []
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: integer
  *     parameters:
  *       - in: query
  *         name: id
@@ -135,17 +149,47 @@ export default async function handler(request: NextApiRequest, response: NextApi
     }
 
     try {
-        const auth = await verifySession(request);
-        if (!auth) {
-            return response.status(401).json({ error: "Not authenticated" });
-        }
+        const configuredSecret = process.env.TRIVIA_API_KEY || process.env.DISCORD_BOT_SECRET;
+        const botKeyHeader = (request.headers['x-trivia-api-key'] || request.headers['x-api-key']) as string | undefined;
+        const authHeader = request.headers['authorization'];
+        const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7).trim() : undefined;
 
-        if (auth.user.role !== 'admin') {
-            return response.status(403).json({ error: "Tylko administrator ma dostęp." });
+        let authUserId: string | null = null;
+
+        if (configuredSecret && (botKeyHeader === configuredSecret || bearerToken === configuredSecret)) {
+            authUserId = 'discord_bot';
+        } else {
+            const auth = await verifySession(request);
+            if (!auth) {
+                return response.status(401).json({ error: "Not authenticated" });
+            }
+
+            if (auth.user.role !== 'admin') {
+                return response.status(403).json({ error: "Tylko administrator ma dostęp." });
+            }
+
+            authUserId = auth.user.id;
         }
 
         if (request.method === 'GET') {
-            const { is_used } = request.query;
+            const { is_used, next } = request.query;
+
+            // FIFO queue: oldest pending trivia
+            if (next === 'true' || next === '1') {
+                const [nextTrivia] = await sql<Trivia[]>`
+                    SELECT id, content, is_used, used_at, created_at, created_by
+                    FROM trivia
+                    WHERE is_used = false
+                    ORDER BY id ASC
+                    LIMIT 1
+                `;
+
+                return response.status(200).json({
+                    trivia: nextTrivia || null,
+                    message: nextTrivia ? undefined : "Kolejka ciekawostek jest pusta."
+                });
+            }
+
             let trivia: Trivia[];
 
             if (is_used === 'true') {
@@ -182,7 +226,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
             const [newTrivia] = await sql<Trivia[]>`
                 INSERT INTO trivia (content, is_used, created_by, created_at)
-                VALUES (${content.trim()}, false, ${auth.user.id}, NOW())
+                VALUES (${content.trim()}, false, ${authUserId}, NOW())
                 RETURNING id, content, is_used, used_at, created_at, created_by
             `;
 
@@ -194,7 +238,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
         if (request.method === 'PATCH' || request.method === 'PUT') {
             const { id, content, is_used } = request.body || {};
-            const triviaId = Number(id);
+            const triviaId = Number(id !== undefined ? id : request.query.id);
 
             if (!triviaId || isNaN(triviaId)) {
                 return response.status(400).json({ error: "ID ciekawostki jest wymagane." });
@@ -214,9 +258,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
             const trimmedContent = typeof content === 'string' && content.trim() ? content.trim() : null;
 
+            let isUsedValue: boolean | undefined = undefined;
+            if (is_used === true || is_used === 'true' || is_used === 1 || is_used === '1') {
+                isUsedValue = true;
+            } else if (is_used === false || is_used === 'false' || is_used === 0 || is_used === '0') {
+                isUsedValue = false;
+            }
+
             let updated: Trivia[];
 
-            if (is_used === true) {
+            if (isUsedValue === true) {
                 updated = await sql<Trivia[]>`
                     UPDATE trivia
                     SET
@@ -226,7 +277,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     WHERE id = ${triviaId}
                     RETURNING id, content, is_used, used_at, created_at, created_by
                 `;
-            } else if (is_used === false) {
+            } else if (isUsedValue === false) {
                 updated = await sql<Trivia[]>`
                     UPDATE trivia
                     SET

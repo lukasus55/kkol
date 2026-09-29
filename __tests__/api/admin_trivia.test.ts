@@ -80,6 +80,82 @@ describe('Admin Trivia API (/api/admin/trivia)', () => {
             expect(res._getStatusCode()).toBe(200);
             expect(mockSql).toHaveBeenCalled();
         });
+
+        test('handles next=true query and returns single oldest unused trivia', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const nextItem = { id: 5, content: 'Najstarsza w kolejce', is_used: false };
+            mockSql.mockResolvedValueOnce([nextItem]);
+
+            const { req, res } = createMocks({
+                method: 'GET',
+                query: { next: 'true' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            const data = JSON.parse(res._getData());
+            expect(data.trivia).toEqual(nextItem);
+        });
+
+        test('handles next=true when trivia queue is empty', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            mockSql.mockResolvedValueOnce([]);
+
+            const { req, res } = createMocks({
+                method: 'GET',
+                query: { next: 'true' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            const data = JSON.parse(res._getData());
+            expect(data.trivia).toBeNull();
+            expect(data.message).toContain('pusta');
+        });
+
+        test('allows bot authentication via x-trivia-api-key without user session', async () => {
+            const oldEnv = process.env.TRIVIA_API_KEY;
+            process.env.TRIVIA_API_KEY = 'super-bot-key-999';
+
+            mockSql.mockResolvedValueOnce([]);
+
+            const { req, res } = createMocks({
+                method: 'GET',
+                headers: { 'x-trivia-api-key': 'super-bot-key-999' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            expect(verifySession).not.toHaveBeenCalled();
+
+            process.env.TRIVIA_API_KEY = oldEnv;
+        });
+
+        test('allows bot authentication via Authorization Bearer TRIVIA_API_KEY', async () => {
+            const oldEnv = process.env.TRIVIA_API_KEY;
+            process.env.TRIVIA_API_KEY = 'super-bot-key-999';
+
+            mockSql.mockResolvedValueOnce([]);
+
+            const { req, res } = createMocks({
+                method: 'GET',
+                headers: { authorization: 'Bearer super-bot-key-999' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            expect(verifySession).not.toHaveBeenCalled();
+
+            process.env.TRIVIA_API_KEY = oldEnv;
+        });
     });
 
     describe('POST /api/admin/trivia', () => {
@@ -200,6 +276,28 @@ describe('Admin Trivia API (/api/admin/trivia)', () => {
             const data = JSON.parse(res._getData());
             expect(data.trivia.content).toBe('Zaktualizowana treść');
             expect(data.trivia.is_used).toBe(true);
+        });
+
+        test('allows bot with x-trivia-api-key to mark trivia as used', async () => {
+            const oldEnv = process.env.TRIVIA_API_KEY;
+            process.env.TRIVIA_API_KEY = 'super-bot-key-999';
+
+            mockSql.mockResolvedValueOnce([{ id: 1, content: 'Treść', is_used: false }]); // Found
+            mockSql.mockResolvedValueOnce([{ id: 1, content: 'Treść', is_used: true, used_at: new Date().toISOString() }]);
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                headers: { 'x-trivia-api-key': 'super-bot-key-999' },
+                body: { id: 1, is_used: 'true' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            const data = JSON.parse(res._getData());
+            expect(data.trivia.is_used).toBe(true);
+            expect(verifySession).not.toHaveBeenCalled();
+
+            process.env.TRIVIA_API_KEY = oldEnv;
         });
     });
 
