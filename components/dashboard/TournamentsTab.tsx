@@ -1,16 +1,19 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { Shield } from 'lucide-react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { TournamentRow } from './tournaments/TournamentRow';
 import { useToast } from '../ui/ToastProvider';
 import { ListRowSkeleton } from '../ui/Skeleton';
 import { Pagination } from '../ui/Pagination';
+import { useUser } from './UserProvider';
 
 const ITEMS_PER_PAGE = 8;
 
 export default function TournamentsTab({ user, refreshUser }: { user: any; refreshUser?: () => void }) {
+  const { isAdminMode } = useUser();
   const [tournaments, setTournaments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -21,7 +24,10 @@ export default function TournamentsTab({ user, refreshUser }: { user: any; refre
   const fetchTournaments = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/tournaments?player=${user.id}`);
+      const url = (user?.role === 'admin' && isAdminMode)
+        ? '/api/tournaments'
+        : `/api/tournaments?player=${user.id}`;
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         const arr = Object.values(data);
@@ -32,7 +38,7 @@ export default function TournamentsTab({ user, refreshUser }: { user: any; refre
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, [user?.id, user?.role, isAdminMode]);
 
   useEffect(() => {
     fetchTournaments();
@@ -106,6 +112,16 @@ export default function TournamentsTab({ user, refreshUser }: { user: any; refre
         </div>
       )}
 
+      {isAdminMode && user?.role === 'admin' && (
+        <div className="w-full max-w-4xl mx-auto flex items-center justify-between text-xs text-amber-400 bg-bg-200 border border-bg-300 px-3.5 py-2.5 rounded-md">
+          <span className="font-semibold flex items-center gap-2">
+            <Shield className="w-4 h-4 text-amber-400 shrink-0" />
+            Wszystkie turnieje (Tryb administratora)
+          </span>
+          <span className="text-text-500">Liczba: {tournaments.length}</span>
+        </div>
+      )}
+
       <div className="flex flex-col gap-3 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar flex-1 pb-4">
         {loading ? (
           <ListRowSkeleton count={4} />
@@ -113,17 +129,27 @@ export default function TournamentsTab({ user, refreshUser }: { user: any; refre
           <div className="text-center text-text-500 py-10 font-medium">Brak turniejów do wyświetlenia.</div>
         ) : (
           <>
-            {paginatedTournaments.map((t) => (
-              <TournamentRow
-                key={t.id}
-                tournament={t}
-                userRole={user.role}
-                onRefresh={() => {
-                  fetchTournaments();
-                  refreshUser?.();
-                }}
-              />
-            ))}
+            {paginatedTournaments.map((t) => {
+              const organizerRole = user?.organizer_roles?.[t.id];
+              const isAdmin = user?.role === 'admin' && isAdminMode;
+              const effectiveRole = isAdmin
+                ? (organizerRole || 'admin')
+                : (organizerRole || (user?.tournaments?.[t.id] ? 'gracz' : 'widz'));
+              const canManage = isAdmin || organizerRole === 'owner' || organizerRole === 'manager';
+
+              return (
+                <TournamentRow
+                  key={t.id}
+                  tournament={t}
+                  userRole={effectiveRole}
+                  canManage={canManage}
+                  onRefresh={() => {
+                    fetchTournaments();
+                    refreshUser?.();
+                  }}
+                />
+              );
+            })}
             <Pagination
               currentPage={page}
               totalPages={totalPages}

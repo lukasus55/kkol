@@ -76,4 +76,27 @@ describe('Tournament Editor Details API', () => {
         expect(data.current_user_role).toBe('manager');
         expect(data.members[0].id).toBe('p1');
     });
+
+    test('allows global admin even without tournament_organizers record', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'GET',
+            query: { tournamentId: 't1' }
+        });
+
+        // 1st sql call: check explicit role -> empty (no record)
+        mockSql.mockResolvedValueOnce([]);
+        // 2nd sql call: members
+        mockSql.mockResolvedValueOnce([{ id: 'p1', displayed_name: 'P1', attended: true, position: 1, total_points: 10, organizer_role: null }]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+        
+        const data = JSON.parse(res._getData());
+        expect(data.current_user_role).toBe('owner');
+        expect(data.members[0].id).toBe('p1');
+    });
 });

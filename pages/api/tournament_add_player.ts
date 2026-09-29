@@ -15,7 +15,7 @@ interface TournamentAddPlayerRequest extends NextApiRequest {
  * /api/tournament_add_player:
  *   post:
  *     summary: Add player to tournament
- *     description: Enrolls a player in a tournament. User must be the tournament owner or manager.
+ *     description: Enrolls a player in a tournament. Accessible by owner, manager, or global administrator.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
@@ -65,14 +65,17 @@ export default async function handler(request: TournamentAddPlayerRequest, respo
 
         const cleanPlayerId = new_player_id.trim();
 
-        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
-            SELECT role 
-            FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
-        `;
+        const isAdmin = auth.user.role === 'admin';
+        if (!isAdmin) {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
+            `;
 
-        if (authCheck.length === 0 || !['owner', 'manager'].includes(authCheck[0].role)) {
-            return response.status(403).json({ error: "Brak uprawnień do dodawania graczy." });
+            if (authCheck.length === 0 || !['owner', 'manager'].includes(authCheck[0].role)) {
+                return response.status(403).json({ error: "Brak uprawnień do dodawania graczy." });
+            }
         }
 
         const playerCheck = await sql<Pick<Player, 'id'>[]>`

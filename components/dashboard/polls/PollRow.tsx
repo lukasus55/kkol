@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle2, MinusCircle, ChevronRight } from 'lucide-react';
+import { AlertCircle, CheckCircle2, MinusCircle, ChevronRight, BarChart2, Clock } from 'lucide-react';
 import { PollItem } from './types';
 
 interface PollRowProps {
@@ -29,6 +29,8 @@ export function PollRow({ poll }: PollRowProps) {
   const isUnanswered = poll.status === 'unanswered';
   const isEnded = poll.status === 'ended';
   const isCompleted = poll.status === 'completed';
+  const isUpcoming = poll.status === 'upcoming';
+  const isNeutral = poll.status === 'neutral';
 
   const containerClasses = [
     'flex items-center justify-between rounded-md p-4 sm:p-5 transition-all cursor-pointer group',
@@ -51,8 +53,12 @@ export function PollRow({ poll }: PollRowProps) {
             <AlertCircle className="w-5 h-5 text-amber-400" />
           ) : isEnded ? (
             <MinusCircle className="w-5 h-5 text-text-500" />
-          ) : (
+          ) : isUpcoming ? (
+            <Clock className="w-5 h-5 text-text-500" />
+          ) : isCompleted ? (
             <CheckCircle2 className="w-5 h-5 text-text-500" />
+          ) : (
+            <BarChart2 className="w-5 h-5 text-text-500" />
           )}
         </div>
 
@@ -80,6 +86,16 @@ export function PollRow({ poll }: PollRowProps) {
             {isEnded && (
               <span className="text-[10px] font-medium px-1.5 py-0.5 rounded uppercase tracking-wider bg-bg-300 text-text-500 shrink-0">
                 Zakończona
+              </span>
+            )}
+            {isUpcoming && (
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded uppercase tracking-wider bg-bg-300 text-text-500 shrink-0">
+                Nadchodząca
+              </span>
+            )}
+            {isNeutral && (
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded uppercase tracking-wider bg-bg-100 text-text-500 shrink-0">
+                Podgląd
               </span>
             )}
           </div>

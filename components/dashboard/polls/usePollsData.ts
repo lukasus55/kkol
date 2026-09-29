@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { PollItem, PollTournament, PollStatus } from './types';
+import { useUser } from '../UserProvider';
 
 export function usePollsData(user: any) {
+  const { isAdminMode } = useUser();
   const [polls, setPolls] = useState<PollItem[]>([]);
   const [tournaments, setTournaments] = useState<PollTournament[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,20 +18,23 @@ export function usePollsData(user: any) {
         fetch('/api/polls')
       ]);
 
-      let tData: PollTournament[] = [];
+      let allActiveTournaments: PollTournament[] = [];
       if (tRes.ok) {
-        tData = await tRes.json();
-        setTournaments(tData);
+        allActiveTournaments = await tRes.json();
+        const selectable = (user?.role === 'admin' && !isAdminMode)
+          ? allActiveTournaments.filter(t => !!user?.organizer_roles?.[t.id])
+          : allActiveTournaments;
+        setTournaments(selectable);
       }
 
       if (pRes.ok) {
         const pData = await pRes.json();
-        const tournamentMap = new Map(tData.map(t => [t.id, t.displayed_name || t.id]));
+        const tournamentMap = new Map(allActiveTournaments.map(t => [t.id, t.displayed_name || t.id]));
 
+        const isAdmin = user?.role === 'admin' && isAdminMode;
         const filtered = pData.filter((poll: any) => {
           const isPlayer = !!user?.tournaments?.[poll.tournament_id];
           const isOrganizer = !!user?.organizer_roles?.[poll.tournament_id];
-          const isAdmin = user?.role === 'admin';
           return isAdmin || isPlayer || isOrganizer;
         });
 
@@ -48,6 +53,8 @@ export function usePollsData(user: any) {
             if (notStarted) {
               return { ...poll, tournament_name: tournamentName, status: 'upcoming' };
             }
+
+            const isParticipant = !!user?.tournaments?.[poll.tournament_id] || !!user?.organizer_roles?.[poll.tournament_id];
 
             try {
               const [qRes, aRes] = await Promise.all([
@@ -68,6 +75,10 @@ export function usePollsData(user: any) {
                     const hasUnanswered = answerable.some(
                       (q: any) => !answers[q.id] || answers[q.id].length === 0
                     );
+                    if (!isParticipant) {
+                      const status: PollStatus = hasUnanswered ? 'neutral' : 'completed';
+                      return { ...poll, tournament_name: tournamentName, status };
+                    }
                     const status: PollStatus = hasUnanswered ? 'unanswered' : 'completed';
                     return { ...poll, tournament_name: tournamentName, status };
                   }
@@ -103,7 +114,7 @@ export function usePollsData(user: any) {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, isAdminMode]);
 
   useEffect(() => {
     fetchData();

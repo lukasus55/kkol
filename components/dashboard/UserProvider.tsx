@@ -7,6 +7,9 @@ interface UserContextType {
   user: any;
   loading: boolean;
   fetchUser: () => Promise<void>;
+  isAdminMode: boolean;
+  toggleAdminMode: () => void;
+  setAdminMode: (val: boolean) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -15,6 +18,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdminMode, setIsAdminModeState] = useState<boolean>(false);
 
   const fetchUser = useCallback(async () => {
     try {
@@ -22,6 +26,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);
+        if (data.user?.role === 'admin') {
+          const stored = typeof window !== 'undefined' ? localStorage.getItem('kkol_admin_mode') : null;
+          setIsAdminModeState(stored === 'true');
+        } else {
+          setIsAdminModeState(false);
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('kkol_admin_mode');
+          }
+        }
       } else {
         router.push('/login?r=dashboard');
       }
@@ -37,8 +50,49 @@ export function UserProvider({ children }: { children: ReactNode }) {
     fetchUser();
   }, [fetchUser]);
 
+  const setAdminMode = useCallback(
+    (val: boolean) => {
+      if (user?.role !== 'admin') {
+        setIsAdminModeState(false);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('kkol_admin_mode');
+        }
+        return;
+      }
+      setIsAdminModeState(val);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('kkol_admin_mode', String(val));
+        if (!val && window.location.pathname.startsWith('/dashboard/admin')) {
+          router.replace('/dashboard/summary');
+        }
+      }
+    },
+    [user, router]
+  );
+
+  const toggleAdminMode = useCallback(() => {
+    if (user?.role !== 'admin') return;
+    const next = !isAdminMode;
+    setIsAdminModeState(next);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('kkol_admin_mode', String(next));
+      if (!next && window.location.pathname.startsWith('/dashboard/admin')) {
+        router.replace('/dashboard/summary');
+      }
+    }
+  }, [user, isAdminMode, router]);
+
   return (
-    <UserContext.Provider value={{ user, loading, fetchUser }}>
+    <UserContext.Provider
+      value={{
+        user,
+        loading,
+        fetchUser,
+        isAdminMode,
+        toggleAdminMode,
+        setAdminMode,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

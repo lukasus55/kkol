@@ -3,14 +3,15 @@ import { Edit, CalendarDays, LogOut } from 'lucide-react';
 
 interface TournamentActionsMenuProps {
   userRole: string;
+  canManage?: boolean;
   onEdit: () => void;
   onEvents: () => void;
   onLeave: () => void;
   closeMenu: () => void;
 }
 
-export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, closeMenu }: TournamentActionsMenuProps) {
-  const canEdit = userRole === 'owner' || userRole === 'manager';
+export function TournamentActionsMenu({ userRole, canManage, onEdit, onEvents, onLeave, closeMenu }: TournamentActionsMenuProps) {
+  const canEdit = canManage !== undefined ? canManage : (userRole === 'owner' || userRole === 'manager' || userRole === 'admin');
   const canLeave = userRole !== 'owner';
 
   const menuRef = React.useRef<HTMLDivElement>(null);
@@ -77,7 +78,7 @@ export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, clo
       <div
         ref={menuRef}
         style={menuStyle}
-        className="w-48 bg-bg-100 border border-bg-400 rounded-md shadow-xl py-1 overflow-hidden animate-in fade-in duration-150"
+        className="w-48 bg-bg-100 border border-bg-400 rounded-md py-1 overflow-hidden animate-in fade-in duration-150"
         onClick={handleClick}
       >
         {canEdit && (

@@ -64,13 +64,12 @@ export function useSummaryData(user: any) {
           const pData = await pollsRes.json();
           if (Array.isArray(pData)) {
             const now = new Date();
-            const isAdmin = user.role === 'admin';
             const eligiblePolls = pData.filter((poll: any) => {
               const isPlayer = !!user.tournaments?.[poll.tournament_id];
               const isOrganizer = !!user.organizer_roles?.[poll.tournament_id];
               const isStarted = !poll.start_date || new Date(poll.start_date) <= now;
               const isEnded = poll.end_date && new Date(poll.end_date) < now;
-              return (isAdmin || isPlayer || isOrganizer) && isStarted && !isEnded;
+              return (isPlayer || isOrganizer) && isStarted && !isEnded;
             });
 
             let unansweredCount = 0;

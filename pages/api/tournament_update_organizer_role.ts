@@ -16,7 +16,7 @@ interface TournamentUpdateOrganizerRoleRequest extends NextApiRequest {
  * /api/tournament_update_organizer_role:
  *   post:
  *     summary: Update tournament organizer role
- *     description: Promotes a player to manager or demotes them. Only the tournament owner can perform this action.
+ *     description: Promotes a player to manager or demotes them. Accessible by tournament owner or global administrator.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
@@ -66,14 +66,17 @@ export default async function handler(request: TournamentUpdateOrganizerRoleRequ
             return response.status(400).json({ error: "Invalid payload" });
         }
 
-        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
-            SELECT role 
-            FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
-        `;
+        const isAdmin = auth.user.role === 'admin';
+        if (!isAdmin) {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
+            `;
 
-        if (authCheck.length === 0 || authCheck[0].role !== 'owner') {
-            return response.status(403).json({ error: "Tylko właściciel turnieju może zarządzać uprawnieniami." });
+            if (authCheck.length === 0 || authCheck[0].role !== 'owner') {
+                return response.status(403).json({ error: "Tylko właściciel turnieju może zarządzać uprawnieniami." });
+            }
         }
 
         if (action === 'promote') {

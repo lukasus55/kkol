@@ -14,7 +14,7 @@ interface TournamentDeleteRequest extends NextApiRequest {
  * /api/tournament_delete:
  *   post:
  *     summary: Delete tournament
- *     description: Deletes a tournament and its associated results and organizer roles. Only the owner can delete. Verifies server session.
+ *     description: Deletes a tournament and its associated results and organizer roles. Accessible by owner or global administrator. Verifies server session.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
@@ -60,14 +60,17 @@ export default async function handler(request: TournamentDeleteRequest, response
             return response.status(400).json({ error: "Brak ID turnieju." });
         }
 
-        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
-            SELECT role 
-            FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
-        `;
+        const isAdmin = auth.user.role === 'admin';
+        if (!isAdmin) {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
+            `;
 
-        if (authCheck.length === 0 || authCheck[0].role !== 'owner') {
-            return response.status(403).json({ error: "Tylko właściciel może usunąć turniej." });
+            if (authCheck.length === 0 || authCheck[0].role !== 'owner') {
+                return response.status(403).json({ error: "Tylko właściciel może usunąć turniej." });
+            }
         }
 
         await sql`DELETE FROM results WHERE tournament_id = ${tournament_id}`;

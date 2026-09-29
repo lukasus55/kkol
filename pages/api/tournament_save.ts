@@ -22,7 +22,7 @@ interface TournamentSaveRequest extends NextApiRequest {
  * /api/tournament_save:
  *   post:
  *     summary: Save tournament state
- *     description: Updates tournament metadata and player standings in bulk. Requires owner or manager role.
+ *     description: Updates tournament metadata and player standings in bulk. Accessible by owner, manager, or global administrator.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
@@ -125,14 +125,17 @@ export default async function handler(request: TournamentSaveRequest, response: 
             }
         }
 
-        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
-            SELECT role 
-            FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${userId}
-        `;
+        const isAdmin = auth.user.role === 'admin';
+        if (!isAdmin) {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${userId}
+            `;
 
-        if (authCheck.length === 0 || (authCheck[0].role !== 'owner' && authCheck[0].role !== 'manager')) {
-            return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
+            if (authCheck.length === 0 || (authCheck[0].role !== 'owner' && authCheck[0].role !== 'manager')) {
+                return response.status(403).json({ error: "Brak uprawnień do edycji tego turnieju." });
+            }
         }
         
         await sql`

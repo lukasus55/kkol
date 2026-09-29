@@ -90,8 +90,24 @@ describe('Tournament Add Player API', () => {
         mockSql.mockResolvedValueOnce([{ id: 'p2' }]); // player exists
         mockSql.mockResolvedValueOnce([]); // no duplicate
         mockSql.mockResolvedValueOnce([]); // insert results
-        mockSql.mockResolvedValueOnce([]); // insert availability defaults
-        mockSql.mockResolvedValueOnce([]); // insert overrides
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+    });
+
+    test('allows global admin to add player without tournament_organizers record', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { tournament_id: 't1', new_player_id: 'p2' }
+        });
+
+        mockSql.mockResolvedValueOnce([{ id: 'p2' }]); // player exists
+        mockSql.mockResolvedValueOnce([]); // no duplicate
+        mockSql.mockResolvedValueOnce([]); // insert results
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(200);

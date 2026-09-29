@@ -6,7 +6,8 @@ import { verifySession } from '../../lib/auth';
 interface TournamentKickPlayerRequest extends NextApiRequest {
     body: {
         tournament_id: string;
-        target_player_id: string;
+        target_player_id?: string;
+        player_id?: string;
     };
 }
 
@@ -15,7 +16,7 @@ interface TournamentKickPlayerRequest extends NextApiRequest {
  * /api/tournament_kick_player:
  *   post:
  *     summary: Kick player from tournament
- *     description: Removes a player from a tournament. Cannot kick the owner or fellow managers (if manager).
+ *     description: Removes a player from a tournament. Accessible by owner, manager, or global administrator. Cannot kick the owner or fellow managers (if manager).
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
@@ -55,28 +56,34 @@ export default async function handler(request: TournamentKickPlayerRequest, resp
         if (!auth) return response.status(401).json({ error: "Not authenticated" });
         const requesterId = auth.user.id;
 
-        const { tournament_id, target_player_id } = request.body;
+        const { tournament_id, target_player_id, player_id } = request.body || {};
+        const effectiveTargetId = target_player_id || player_id;
 
-        if (!tournament_id || !target_player_id) {
+        if (!tournament_id || !effectiveTargetId) {
             return response.status(400).json({ error: "Invalid payload" });
         }
 
-        const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
-            SELECT role 
-            FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
-        `;
+        let userRole = 'owner';
+        const isAdmin = auth.user.role === 'admin';
 
-        const userRole = authCheck[0]?.role || '';
+        if (!isAdmin) {
+            const authCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+                SELECT role 
+                FROM tournament_organizers 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${requesterId}
+            `;
 
-        if (authCheck.length === 0 || !['owner', 'manager'].includes(userRole)) {
-            return response.status(403).json({ error: "Brak uprawnień do wyrzucania graczy." });
+            userRole = authCheck[0]?.role || '';
+
+            if (authCheck.length === 0 || !['owner', 'manager'].includes(userRole)) {
+                return response.status(403).json({ error: "Brak uprawnień do wyrzucania graczy." });
+            }
         }
 
         const targetCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
             SELECT role 
             FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${target_player_id}
+            WHERE tournament_id = ${tournament_id} AND player_id = ${effectiveTargetId}
         `;
 
         if (targetCheck.length > 0 && targetCheck[0].role === 'owner') {
@@ -89,12 +96,12 @@ export default async function handler(request: TournamentKickPlayerRequest, resp
 
         await sql`
             DELETE FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${target_player_id}
+            WHERE tournament_id = ${tournament_id} AND player_id = ${effectiveTargetId}
         `;
 
         await sql`
             DELETE FROM results 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${target_player_id}
+            WHERE tournament_id = ${tournament_id} AND player_id = ${effectiveTargetId}
         `;
 
         return response.status(200).json({ message: "Gracz został wyrzucony." });

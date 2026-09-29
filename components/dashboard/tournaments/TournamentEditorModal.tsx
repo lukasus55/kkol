@@ -118,7 +118,7 @@ export function TournamentEditorModal({ isOpen, onClose, tournament, userRole, o
           const res = await fetch('/api/tournament_kick_player', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tournament_id: tournament.id, player_id: playerId })
+            body: JSON.stringify({ tournament_id: tournament.id, target_player_id: playerId, player_id: playerId })
           });
           if (res.ok) {
             addToast({ type: 'success', message: `Wyrzucono gracza ${playerId}.` });
