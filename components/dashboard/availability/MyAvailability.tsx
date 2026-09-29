@@ -208,7 +208,17 @@ export default function MyAvailability({ user }: { user: any }) {
     }
   };
 
-  if (loading && defaults.length === 0) return <div className="p-4 text-text-500">Ładowanie interfejsu...</div>;
+  if (loading && defaults.length === 0) {
+    return (
+      <div className="flex flex-col h-full p-4 sm:p-6 gap-4">
+        <div className="flex items-center justify-between">
+          <div className="h-9 bg-bg-200 rounded-md w-64 animate-pulse" />
+          <div className="h-9 bg-bg-200 rounded-md w-32 animate-pulse" />
+        </div>
+        <div className="flex-1 w-full bg-bg-200 rounded-md animate-pulse min-h-[400px]" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full overflow-hidden p-0 gap-0">
