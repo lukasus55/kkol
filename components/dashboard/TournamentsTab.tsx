@@ -68,49 +68,51 @@ export default function TournamentsTab({ user, refreshUser }: { user: any, refre
   if (!user) return null;
 
   return (
-    <div className="w-full flex justify-center py-12 px-6">
-      <div className="flex flex-col gap-6 w-full max-w-[700px]">
-
-        {canAdd && (
-          <div className="flex items-center gap-4 bg-bg-200 p-4 rounded-md">
-            <div className="flex-1">
-              <Input
-                placeholder="ID nowego turnieju..."
-                value={newTournamentId}
-                onChange={(e) => setNewTournamentId(e.target.value)}
-              />
-            </div>
-            <Button
-              variant="primary"
-              onClick={handleCreate}
-              isLoading={creating}
-              disabled={!newTournamentId.trim()}
-            >
-              Dodaj turniej
-            </Button>
+    <div className="flex flex-col w-full h-full min-h-0 pb-2 px-4 sm:px-8 pt-4 gap-6 sm:gap-8">
+      {canAdd && (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-4xl mx-auto flex-shrink-0">
+          <div className="flex-1 min-w-0">
+            <Input
+              placeholder="ID nowego turnieju..."
+              value={newTournamentId}
+              onChange={(e) => setNewTournamentId(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && newTournamentId.trim() && !creating) {
+                  handleCreate();
+                }
+              }}
+            />
           </div>
-        )}
-
-        <div className="flex flex-col gap-3">
-          {loading ? (
-            <div className="text-center py-12 text-text-700">Ładowanie turniejów...</div>
-          ) : tournaments.length === 0 ? (
-            <div className="text-center py-12 text-text-700">Brak dostępnych turniejów.</div>
-          ) : (
-            tournaments.map((t) => (
-              <TournamentRow
-                key={t.id}
-                tournament={t}
-                userRole={user.role}
-                onRefresh={() => {
-                  fetchTournaments();
-                  refreshUser?.();
-                }}
-              />
-            ))
-          )}
+          <Button
+            variant="primary"
+            onClick={handleCreate}
+            isLoading={creating}
+            disabled={!newTournamentId.trim()}
+            className="whitespace-nowrap"
+          >
+            Dodaj turniej
+          </Button>
         </div>
+      )}
 
+      <div className="flex flex-col gap-3 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar flex-1 pb-4">
+        {loading ? (
+          <div className="text-center text-text-500 py-10 font-medium">Ładowanie turniejów...</div>
+        ) : tournaments.length === 0 ? (
+          <div className="text-center text-text-500 py-10 font-medium">Brak turniejów do wyświetlenia.</div>
+        ) : (
+          tournaments.map((t) => (
+            <TournamentRow
+              key={t.id}
+              tournament={t}
+              userRole={user.role}
+              onRefresh={() => {
+                fetchTournaments();
+                refreshUser?.();
+              }}
+            />
+          ))
+        )}
       </div>
     </div>
   );
