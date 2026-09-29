@@ -159,3 +159,13 @@ export interface Session {
     expires_at: Date | string;
 }
 
+export interface Trivia {
+    id: number;
+    content: string;
+    is_used: boolean;
+    used_at?: Date | string | null;
+    created_at: Date | string;
+    created_by?: string | null;
+}
+
+
