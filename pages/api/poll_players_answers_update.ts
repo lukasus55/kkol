@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Poll, Player } from '../../types/db';
 import sql from '../../db.js';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
+import { verifySession } from '../../lib/auth';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 
 interface PollPlayersAnswersUpdateRequest extends NextApiRequest {
@@ -61,13 +60,9 @@ export default async function handler(request: PollPlayersAnswersUpdateRequest, 
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
-
-        if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
-
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const requesterId = decodedPayload.id; 
+        const auth = await verifySession(request);
+        if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
+        const requesterId = auth.user.id; 
 
         const { poll_id, answers } = request.body;
 

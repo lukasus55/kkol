@@ -3,171 +3,134 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Input } from '../../components/ui/Input';
-import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { SsoAppBanner } from '../../components/auth/SsoAppBanner';
+import { LoginForm } from '../../components/auth/LoginForm';
+import { ActiveAccountPrompt } from '../../components/auth/ActiveAccountPrompt';
+import { AuthHelpModal, type HelpType } from '../../components/auth/AuthHelpModal';
 
-function LoginForm() {
+interface AuthenticatedUser {
+  id: string;
+  displayed_name?: string;
+  role?: string | null;
+}
+
+function LoginView() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const redirectUri = searchParams?.get('redirect_uri') || searchParams?.get('redirect_url') || null;
+  const appId = searchParams?.get('app_id') || searchParams?.get('appId') || null;
+  const rParam = searchParams?.get('r');
+  const destination = rParam ? decodeURIComponent(rParam) : 'dashboard';
 
-  const [answerTitle, setAnswerTitle] = useState('');
-  const [answerContent, setAnswerContent] = useState('');
-  const [showAnswer, setShowAnswer] = useState(false);
-
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setShowAnswer(false);
-      }
-    };
-    if (showAnswer) {
-      window.addEventListener('keydown', handleEsc);
-    }
-    return () => {
-      window.removeEventListener('keydown', handleEsc);
-    };
-  }, [showAnswer]);
+  const [activeUser, setActiveUser] = useState<AuthenticatedUser | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [helpType, setHelpType] = useState<HelpType>(null);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    async function checkCurrentSession() {
       try {
         const res = await fetch('/api/me');
         if (res.ok) {
-          const rParam = searchParams?.get('r');
-          const destination = rParam ? decodeURIComponent(rParam) : 'dashboard';
-          router.push(`/${destination}`);
+          const data = await res.json();
+          if (data?.user) {
+            setActiveUser(data.user);
+            // If user is already authenticated and this is NOT an SSO external redirect, go to dashboard
+            if (!redirectUri) {
+              router.push(`/${destination.replace(/^\//, '')}`);
+              return;
+            }
+          }
         }
-      } catch (err) { }
-    };
-    checkAuth();
-  }, [router, searchParams]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(false);
-    setShowAnswer(false);
-
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (response.ok) {
-        const rParam = searchParams?.get('r');
-        const destination = rParam ? decodeURIComponent(rParam) : 'dashboard';
-        window.dispatchEvent(new Event('auth-changed'));
-        router.push(`/${destination}`);
-        router.refresh();
-      } else {
-        setError(true);
-        setLoading(false);
+      } catch {
+        // Not authenticated
+      } finally {
+        setCheckingAuth(false);
       }
-    } catch (err) {
-      alert('Błąd komunikacji z serwerem.');
-      setLoading(false);
     }
-  };
 
-  const handleNoAccount = () => {
-    setAnswerTitle('Nie masz konta?');
-    setAnswerContent('Konta posiadają jedynie gracze uczestniczący w turniejach KKOL. Organizator powinien przekazać dane do logowania. Nie ma możliwości samodzielnego założenia konta.');
-    setShowAnswer(true);
-  };
+    checkCurrentSession();
+  }, [redirectUri, destination, router]);
 
-  const handleForgot = () => {
-    setAnswerTitle('Zapomniałeś hasła?');
-    setAnswerContent('Skontaktuj się z administratorem.');
-    setShowAnswer(true);
+  const handleSwitchAccount = async () => {
+    try {
+      await fetch('/api/logout', { method: 'POST' });
+      window.dispatchEvent(new Event('auth-changed'));
+    } catch {
+      // Ignore
+    }
+    setActiveUser(null);
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-bg-100 flex flex-col relative font-sans">
-      <main className="flex-1 flex items-center justify-center p-4">
-        <Card className="max-w-[480px] shadow-xl pt-10 !rounded-xl border-bg-400">
-          <h1 className="text-2xl font-bold mb-8 text-text-900">Zaloguj się</h1>
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <Input
-              label="Nazwa użytkownika"
-              id="username"
-              name="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoComplete="username"
+    <div className="min-h-screen bg-bg-100 flex flex-col items-center justify-center p-4">
+      <Card className="max-w-[440px] p-8">
+        <div className="flex flex-col items-center mb-6">
+          <Link href="/" className="transition-opacity hover:opacity-85 mb-3 inline-block">
+            <img
+              src="/img/logos/kol-logo-horizontal.svg"
+              alt="Karwińska Olimpiada"
+              className="h-8 sm:h-9 w-auto"
             />
+          </Link>
+          {!redirectUri && !appId && (
+            <span className="text-xs text-text-500 font-medium">
+              Portal zawodnika
+            </span>
+          )}
+        </div>
 
-            <Input
-              label="Hasło"
-              id="password"
-              name="current_password"
-              type="password"
-              isPassword={true}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
+        {checkingAuth ? (
+          <div className="py-12 flex flex-col items-center justify-center gap-3">
+            <div className="w-6 h-6 border-2 border-accent-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs text-text-500">Sprawdzanie stanu sesji...</span>
+          </div>
+        ) : activeUser && redirectUri ? (
+          <div>
+            <SsoAppBanner appId={appId} redirectUri={redirectUri} />
+            <ActiveAccountPrompt
+              user={activeUser}
+              appId={appId}
+              redirectUri={redirectUri}
+              destination={destination}
+              onSwitchAccount={handleSwitchAccount}
             />
-
-            <div className={`text-danger-500 text-sm font-medium transition-opacity ${!error ? 'opacity-0 h-0' : 'opacity-100 h-auto'}`}>
-              Niepoprawna nazwa użytkownika lub hasło
-            </div>
-
-            <div className="flex items-center justify-between mt-2">
-              <div className="flex flex-col gap-1 text-[13px] text-accent-500 font-medium">
-                <button type="button" onClick={handleNoAccount} className="text-left hover:text-accent-600 transition-colors">Nie masz konta?</button>
-                <button type="button" onClick={handleForgot} className="text-left hover:text-accent-600 transition-colors">Zapomniałeś hasła?</button>
-              </div>
-
-              <Button
-                type="submit"
-                variant="primary"
-                isLoading={loading}
-                className="!px-6 !py-2.5 !rounded-lg"
-              >
-                Zaloguj się
-              </Button>
-            </div>
-          </form>
-        </Card>
-
-        {showAnswer && (
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setShowAnswer(false);
-            }}
-          >
-            <Card className="max-w-[500px] shadow-2xl p-8 relative !rounded-xl">
-              <button
-                onClick={() => setShowAnswer(false)}
-                className="absolute top-4 right-4 text-text-500 hover:text-text-900 transition-colors text-xl font-bold"
-              >
-                ✕
-              </button>
-              <h3 className="text-xl font-bold mb-4 text-text-900">{answerTitle}</h3>
-              <p className="text-text-700 leading-relaxed">{answerContent}</p>
-            </Card>
+          </div>
+        ) : (
+          <div>
+            {(redirectUri || appId) && (
+              <SsoAppBanner appId={appId} redirectUri={redirectUri} />
+            )}
+            <LoginForm
+              appId={appId}
+              redirectUri={redirectUri}
+              destination={destination}
+              onOpenHelp={setHelpType}
+            />
           </div>
         )}
-      </main>
+      </Card>
+
+      <div className="mt-6 text-center text-xs text-text-500">
+        <span>2026 Karwińska Olimpiada&trade;</span>
+      </div>
+
+      <AuthHelpModal type={helpType} onClose={() => setHelpType(null)} />
     </div>
   );
 }
 
-export default function Login() {
+export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-bg-200 flex items-center justify-center text-text-500 font-medium">Ładowanie...</div>}>
-      <LoginForm />
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-bg-100 flex items-center justify-center text-text-500 text-sm">
+          Ładowanie...
+        </div>
+      }
+    >
+      <LoginView />
     </Suspense>
   );
 }

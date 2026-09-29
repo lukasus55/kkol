@@ -1,9 +1,12 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/poll_create';
-import jwt from 'jsonwebtoken';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
 vi.mock('../../db.js', () => ({ default: mockSql }));
 vi.mock('uuidv7', () => ({ uuidv7: vi.fn().mockReturnValue('new-uuid-123') }));
@@ -14,30 +17,35 @@ describe('Poll Create API (/api/poll_create)', () => {
     });
 
     test('rejects unauthenticated requests', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
         const { req, res } = createMocks({ method: 'POST', body: {} });
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(401);
     });
 
     test('rejects missing data', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { name: 'Valid Name' } // missing tournament_id
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
     });
 
     test('rejects creating poll in finished tournament', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', name: 'Valid Name' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
         
         // Return tournament is finished
         mockSql.mockResolvedValueOnce([{ finished: true }]);
@@ -48,12 +56,14 @@ describe('Poll Create API (/api/poll_create)', () => {
     });
 
     test('successfully creates poll when conditions are met', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { tournament_id: 't1', name: 'Valid Name' }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
         
         // Mock tournament not finished
         mockSql.mockResolvedValueOnce([{ finished: false }]);

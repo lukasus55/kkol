@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player } from '../../types/db';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 
 interface ChangeNameRequest extends NextApiRequest {
@@ -16,10 +15,11 @@ interface ChangeNameRequest extends NextApiRequest {
  * /api/change_name:
  *   post:
  *     summary: Change user display name
- *     description: Updates the displayed name for the authenticated user. Cooldown is 2 hours.
+ *     description: Updates the displayed name for the authenticated user. Cooldown is 2 hours. Checks server session validity.
  *     tags: [Auth & Player]
  *     security:
  *       - cookieAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -53,15 +53,13 @@ export default async function handler(request: ChangeNameRequest, response: Next
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
 
-        if (!token) return response.status(401).json({ error: "Not authenticated" });
-
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const userId = decodedPayload.id;
-
-        const { new_name } = request.body;
+        const userId = auth.user.id;
+        const { new_name } = request.body || {};
         const clean_new_name = escapeHTML(new_name);
 
         if (!clean_new_name || clean_new_name.trim().length < 3) {

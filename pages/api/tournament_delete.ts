@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Player, TournamentOrganizer } from '../../types/db';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
+import type { TournamentOrganizer } from '../../types/db';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 
 interface TournamentDeleteRequest extends NextApiRequest {
     body: {
@@ -15,10 +14,11 @@ interface TournamentDeleteRequest extends NextApiRequest {
  * /api/tournament_delete:
  *   post:
  *     summary: Delete tournament
- *     description: Deletes an existing tournament and all its results. User must be the tournament owner.
+ *     description: Deletes a tournament and its associated results and organizer roles. Only the owner can delete. Verifies server session.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -48,15 +48,13 @@ export default async function handler(request: TournamentDeleteRequest, response
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
 
-        if (!token) return response.status(401).json({ error: "Not authenticated" });
-
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const requesterId = decodedPayload.id;
-
-        const { tournament_id } = request.body;
+        const requesterId = auth.user.id;
+        const { tournament_id } = request.body || {};
 
         if (!tournament_id) {
             return response.status(400).json({ error: "Brak ID turnieju." });
@@ -73,9 +71,7 @@ export default async function handler(request: TournamentDeleteRequest, response
         }
 
         await sql`DELETE FROM results WHERE tournament_id = ${tournament_id}`;
-        
         await sql`DELETE FROM tournament_organizers WHERE tournament_id = ${tournament_id}`;
-        
         await sql`DELETE FROM tournaments WHERE id = ${tournament_id}`;
 
         return response.status(200).json({ message: "Turniej został usunięty." });

@@ -3,6 +3,7 @@
 import ProfilePictureCard from './account/ProfilePictureCard';
 import DisplayNameCard from './account/DisplayNameCard';
 import PasswordCard from './account/PasswordCard';
+import SessionsCard from './account/SessionsCard';
 
 export default function AccountTab({ user }: { user: any }) {
   if (!user) return null;
@@ -19,6 +20,8 @@ export default function AccountTab({ user }: { user: any }) {
         <h2 className="text-2xl font-bold text-text-900 mt-12 mb-2">Bezpieczeństwo i Hasło</h2>
 
         <PasswordCard username={user.id} />
+
+        <SessionsCard />
 
       </div>
     </div>

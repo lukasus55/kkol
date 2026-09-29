@@ -1,17 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player } from '../../types/db';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
-import sharp from 'sharp';
 import sql from '../../db.js';
-
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '5mb',
-        },
-    },
-};
+import sharp from 'sharp';
+import { verifySession } from '../../lib/auth';
 
 interface UploadPfpRequest extends NextApiRequest {
     body: {
@@ -24,10 +15,11 @@ interface UploadPfpRequest extends NextApiRequest {
  * /api/upload_pfp:
  *   post:
  *     summary: Upload profile picture
- *     description: Uploads and processes a new profile picture (Base64) for the authenticated user. Cooldown is 12 hours.
+ *     description: Uploads, resizes (256x256), and converts the user profile image to WebP base64. Cooldown is 12 hours. Verifies server session.
  *     tags: [Auth & Player]
  *     security:
  *       - cookieAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -39,7 +31,6 @@ interface UploadPfpRequest extends NextApiRequest {
  *             properties:
  *               image_base64:
  *                 type: string
- *                 description: Base64 encoded image string (e.g. data:image/png;base64,...)
  *     responses:
  *       200:
  *         description: Profile picture updated
@@ -49,8 +40,6 @@ interface UploadPfpRequest extends NextApiRequest {
  *         description: Not authenticated
  *       404:
  *         description: User not found
- *       405:
- *         description: Method not allowed
  *       429:
  *         description: Cooldown active
  *       500:
@@ -62,15 +51,13 @@ export default async function handler(request: UploadPfpRequest, response: NextA
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
 
-        if (!token) return response.status(401).json({ error: "Not authenticated" });
-
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const userId = decodedPayload.id;
-
-        const { image_base64 } = request.body;
+        const userId = auth.user.id;
+        const { image_base64 } = request.body || {};
 
         if (!image_base64) {
             return response.status(400).json({ error: "Brak pliku obrazu." });

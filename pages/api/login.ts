@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player } from '../../types/db';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { serialize } from 'cookie'
 import sql from '../../db.js';
+import { createSession, setSessionCookie } from '../../lib/auth';
 
 interface LoginRequest extends NextApiRequest {
     body: {
         username?: string;
         password?: string;
+        appId?: string;
     };
 }
 
@@ -17,7 +17,7 @@ interface LoginRequest extends NextApiRequest {
  * /api/login:
  *   post:
  *     summary: User login
- *     description: Authenticates a user and sets an HTTP-only cookie with a JWT token.
+ *     description: Authenticates a user, creates a server-side session in PostgreSQL, and sets an HTTP-only cookie.
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -34,6 +34,9 @@ interface LoginRequest extends NextApiRequest {
  *               password:
  *                 type: string
  *                 format: password
+ *               appId:
+ *                 type: string
+ *                 description: Optional ecosystem application identifier (defaults to kkol_main)
  *     responses:
  *       200:
  *         description: Login successful
@@ -44,6 +47,9 @@ interface LoginRequest extends NextApiRequest {
  *               properties:
  *                 message:
  *                   type: string
+ *                 token:
+ *                   type: string
+ *                   description: Raw session token for SSO callbacks or authorization header
  *                 user:
  *                   type: object
  *                   properties:
@@ -57,17 +63,18 @@ interface LoginRequest extends NextApiRequest {
  *         description: Invalid credentials
  *       403:
  *         description: Account disabled
+ *       405:
+ *         description: Method not allowed
  *       500:
  *         description: Internal server error
  */
-
 export default async function handler(request: LoginRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-        const { username, password } = request.body;
+        const { username, password, appId } = request.body || {};
 
         if (!username || !password) {
             return response.status(400).json({ error: "Username and password are required" });
@@ -96,24 +103,16 @@ export default async function handler(request: LoginRequest, response: NextApiRe
 
         await sql`UPDATE players SET last_login = CURRENT_TIMESTAMP WHERE id = ${user.id}`;
 
-        const token = jwt.sign(
-            { id: user.id, role: user.role },
-            process.env.JWT_SECRET as string,
-            { expiresIn: '2h' }
-        );
-
-        const cookieHeader = serialize('auth_token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 2,
-            path: '/'
+        const { token, session } = await createSession(user.id, request, {
+            appId: appId || 'kkol_main',
+            role: user.role
         });
 
-        response.setHeader('Set-Cookie', cookieHeader);
+        setSessionCookie(response, token, session.expires_at);
 
         return response.status(200).json({ 
             message: "Login successful!",
+            token,
             user: {
                 id: user.id,
                 role: user.role

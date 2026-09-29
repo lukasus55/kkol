@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player, Tournament } from '../../types/db';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 
 interface TournamentCreateRequest extends NextApiRequest {
     body: {
@@ -14,11 +13,12 @@ interface TournamentCreateRequest extends NextApiRequest {
  * @swagger
  * /api/tournament_create:
  *   post:
- *     summary: Create new tournament
- *     description: Creates a new tournament. User must have global admin or organizer role.
+ *     summary: Create tournament
+ *     description: Creates a new tournament. Only admins and organizers are allowed. Creator becomes owner. Verifies server session.
  *     tags: [Tournaments]
  *     security:
  *       - cookieAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -30,17 +30,15 @@ interface TournamentCreateRequest extends NextApiRequest {
  *             properties:
  *               tournament_id:
  *                 type: string
- *                 minLength: 3
- *                 maxLength: 30
  *     responses:
  *       200:
  *         description: Tournament created successfully
  *       400:
- *         description: Validation error or tournament already exists
+ *         description: Invalid tournament ID
  *       401:
  *         description: Not authenticated
  *       403:
- *         description: Missing global permissions
+ *         description: Missing permissions
  *       500:
  *         description: Internal server error
  */
@@ -50,15 +48,13 @@ export default async function handler(request: TournamentCreateRequest, response
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
+        const auth = await verifySession(request);
+        if (!auth) {
+            return response.status(401).json({ error: "Not authenticated" });
+        }
 
-        if (!token) return response.status(401).json({ error: "Not authenticated" });
-
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const requesterId = decodedPayload.id;
-
-        const { tournament_id } = request.body;
+        const requesterId = auth.user.id;
+        const { tournament_id } = request.body || {};
 
         if (!tournament_id || tournament_id.trim() === '') {
             return response.status(400).json({ error: "ID turnieju jest wymagane." });
@@ -75,8 +71,7 @@ export default async function handler(request: TournamentCreateRequest, response
         }
 
         const idRegex = /^[a-z0-9_]{3,30}$/;
-
-        const inputId = request.body.tournament_id.trim();
+        const inputId = cleanTournamentId;
 
         if (!idRegex.test(inputId)) {
             return response.status(400).json({ 

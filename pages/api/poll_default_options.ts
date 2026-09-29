@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import sql from '../../db.js';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
+import { verifySession } from '../../lib/auth';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.js';
 
@@ -23,6 +22,8 @@ import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.
  *   post:
  *     summary: Zaktualizuj domyślne opcje dla ankiety
  *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -37,6 +38,18 @@ import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.
  *     responses:
  *       200:
  *         description: Zapisano pomyślnie
+ *       400:
+ *         description: Nieprawidłowe dane
+ *       401:
+ *         description: Brak autoryzacji
+ *       403:
+ *         description: Brak uprawnień
+ *       404:
+ *         description: Ankieta nie istnieje
+ *       409:
+ *         description: Konflikt unikalności opcji
+ *       500:
+ *         description: Błąd serwera
  */
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (request.method === 'GET') {
@@ -59,16 +72,12 @@ export default async function handler(request: NextApiRequest, response: NextApi
     }
 
     if (request.method === 'POST') {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
-
-        if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
-
         try {
-            const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as any;
-            const requesterId = decodedPayload.id;
+            const auth = await verifySession(request);
+            if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
+            const requesterId = auth.user.id;
 
-            const { poll_id, options } = request.body;
+            const { poll_id, options } = request.body || {};
             if (!poll_id || typeof poll_id !== 'string') {
                 return response.status(400).json({ error: 'Nieprawidłowe ID ankiety' });
             }
@@ -106,9 +115,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
             console.error(error);
             if (error.code === '23505') {
                 return response.status(409).json({ error: 'Nazwy domyślnych opcji nie mogą się powtarzać' });
-            }
-            if (error.name === 'JsonWebTokenError') {
-                return response.status(401).json({ error: "Nieprawidłowy token." });
             }
             return response.status(500).json({ error: 'Błąd podczas zapisywania opcji domyślnych' });
         }

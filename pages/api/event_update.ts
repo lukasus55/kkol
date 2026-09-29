@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Event, Tournament, Player, TournamentOrganizer } from '../../types/db';
 import sql from '../../db.js';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
+import { verifySession } from '../../lib/auth';
 import { escapeHTML } from '../../public/js/utils/helpers.js';
 
 interface EventUpdateRequest extends NextApiRequest {
@@ -67,13 +66,9 @@ export default async function handler(request: EventUpdateRequest, response: Nex
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
-
-        if (!token) return response.status(401).json({ error: "Brak autoryzacji." });
-
-        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET as string) as Pick<Player, 'id'> & { role?: string };
-        const requesterId = decodedPayload.id;
+        const auth = await verifySession(request);
+        if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
+        const requesterId = auth.user.id;
 
         const { id, name, is_major, start_date, end_date } = request.body || {};
 

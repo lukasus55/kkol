@@ -1,9 +1,12 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/event_delete';
-import jwt from 'jsonwebtoken';
+import { verifySession } from '../../lib/auth';
 
-vi.mock('jsonwebtoken', () => ({ default: { verify: vi.fn() } }));
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
@@ -12,13 +15,22 @@ describe('Event Delete API (/api/event_delete)', () => {
         vi.clearAllMocks();
     });
 
+    test('rejects unauthenticated requests', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
+        const { req, res } = createMocks({ method: 'POST', body: { event_id: 1 } });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+    });
+
     test('returns 404 if event does not exist', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { event_id: 1 }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
         
         mockSql.mockResolvedValueOnce([]); // empty array -> not found
 
@@ -28,12 +40,14 @@ describe('Event Delete API (/api/event_delete)', () => {
     });
 
     test('deletes event if user has permissions', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'admin', displayed_name: 'Admin User', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({ 
             method: 'POST', 
-            headers: { cookie: 'auth_token=token' },
             body: { event_id: 1 }
         });
-        vi.mocked(jwt.verify).mockReturnValue({ id: 'user1' } as any);
         
         mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]); // event check
         mockSql.mockResolvedValueOnce([{ role: 'admin' }]); // global role check

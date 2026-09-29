@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 
 /**
  * @swagger
@@ -16,8 +15,12 @@ import sql from '../../db.js';
  *     responses:
  *       200:
  *         description: Success message
+ *       400:
+ *         description: Missing required fields
  *       401:
  *         description: Not authenticated
+ *       500:
+ *         description: Internal server error
  */
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (request.method !== 'POST') {
@@ -25,17 +28,13 @@ export default async function handler(request: NextApiRequest, response: NextApi
     }
 
     try {
-        const cookies = parse(request.headers.cookie || '');
-        const token = cookies.auth_token;
-
-        if (!token) {
+        const auth = await verifySession(request);
+        if (!auth) {
             return response.status(401).json({ error: "Not authenticated" });
         }
+        const playerId = auth.user.id;
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret') as { id: string };
-        const playerId = decoded.id;
-
-        const { date, blocks, revertToRoutine } = request.body;
+        const { date, blocks, revertToRoutine } = request.body || {};
 
         if (!date) {
             return response.status(400).json({ error: "date is required" });
