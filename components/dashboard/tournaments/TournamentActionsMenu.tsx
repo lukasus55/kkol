@@ -78,7 +78,7 @@ export function TournamentActionsMenu({ userRole, canManage, onEdit, onEvents, o
       <div
         ref={menuRef}
         style={menuStyle}
-        className="w-48 bg-bg-100 border border-bg-400 rounded-md shadow-xl py-1 overflow-hidden animate-in fade-in duration-150"
+        className="w-48 bg-bg-100 border border-bg-400 rounded-md py-1 overflow-hidden animate-in fade-in duration-150"
         onClick={handleClick}
       >
         {canEdit && (

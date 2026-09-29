@@ -145,7 +145,7 @@ export function CreateUserModal({ isOpen, onClose, onCreated }: CreateUserModalP
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-[13px] font-normal text-text-700">Rola w lidze</label>
+          <label className="text-[13px] font-normal text-text-700">Rola</label>
           <Select value={role} onChange={setRole} options={roleOptions} />
         </div>
 
