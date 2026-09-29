@@ -35,7 +35,7 @@ export function TriviaCard({ trivia, onEdit, onDelete, onToggleUsed }: TriviaCar
     d ? new Date(d).toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
 
   return (
-    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4 border border-bg-300">
+    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4">
       <div className="flex flex-col gap-3">
         {/* Header: Status text & ID / Copy */}
         <div className="flex items-center justify-between gap-2">

@@ -69,7 +69,7 @@ export function UserCard({
   };
 
   return (
-    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4 border border-bg-300">
+    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4">
       <div className="flex flex-col gap-3">
         {/* Header: Avatar, Name, and Unified Interactive Role Badge */}
         <div className="flex items-start justify-between gap-3">
@@ -81,9 +81,8 @@ export function UserCard({
                 className="w-12 h-12 rounded-full object-cover bg-bg-300"
               />
               <span
-                className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-bg-200 ${
-                  isActive ? 'bg-emerald-500' : 'bg-danger-500'
-                }`}
+                className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-bg-200 ${isActive ? 'bg-emerald-500' : 'bg-danger-500'
+                  }`}
                 title={isActive ? 'Konto aktywne' : 'Konto zablokowane'}
               />
               {Boolean(user.pfp_base64) && !isTargetAdmin && onResetPfp && (
