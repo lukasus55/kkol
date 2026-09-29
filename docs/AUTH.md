@@ -165,7 +165,10 @@ Gdy użytkownik wejdzie na zewnętrzną aplikację i nie jest zalogowany, aplika
 ```
 https://kkol.twojadomena.pl/login?redirect_uri=https://gra.twojadomena.pl/auth/callback&app_id=kkol_game
 ```
-* **Dedykowany layout bez głównego paska nawigacji:** Strona `/login` renderuje się autonomicznie (bez wewnętrznego navbara KKOL), wyświetla oficjalne logo Karwińskiej Olimpiady oraz dedykowany kafelek z informacją: *"Logujesz się do: kkol_game (gra.twojadomena.pl)"*.
+* **Dedykowany layout bez głównego paska nawigacji:** Strona `/login` renderuje się autonomicznie (bez wewnętrznego navbara KKOL), wyświetla oficjalne logo Karwińskiej Olimpiady oraz czytelną informację bezpośrednio pod logotypem: *"Logujesz się do usługi: kkol_game (gra.twojadomena.pl)"* (w czystym, minimalistycznym stylu bez zbędnych ramek i technicznego żargonu).
+* **Obsługiwane parametry URL:**
+  * `redirect_uri` (lub `redirect_url`) – adres URL callback w aplikacji zewnętrznej, do którego po pomyślnym logowaniu dodawany jest parametr `?token=<raw_session_token>`.
+  * `app_id` (lub `appId`) – opcjonalny identyfikator aplikacji (np. `kkol_game`), zapisywany w bazie w kolumnie `sessions.app_id`.
 * **Automatyczne rozpoznawanie aktywnej sesji:** Jeśli użytkownik jest już zalogowany w przeglądarce, zamiast ponownego wpisywania hasła otrzymuje prompt: *"Zalogowano jako: Jan Kowalski"* z przyciskiem szybkiego przejścia (*"Kontynuuj jako Jan"*) lub możliwością zmiany konta.
 
 #### Krok 2: Po zalogowaniu w KKOL
