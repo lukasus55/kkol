@@ -8,7 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      borderColor: {
+        DEFAULT: 'var(--color-bg-300)',
+      },
       colors: {
+        'stroke': 'var(--color-bg-300)',
+        'stroke-subtle': 'var(--color-bg-400)',
         'lime-moss': 'var(--color-accent-500)',
         'charcoal-blue': 'var(--color-bg-200)',
         'lavender-mist': 'var(--color-text-900)',

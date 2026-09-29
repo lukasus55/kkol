@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User, Trophy, Calendar, PieChart, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, User, Trophy, Calendar, PieChart, LogOut, Menu, X } from 'lucide-react';
+
+import { checkHasUnansweredPolls } from './polls/pollChecker';
 
 interface DashboardNavProps {
   user: any;
@@ -25,11 +27,23 @@ export default function DashboardNav({ user }: DashboardNavProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isCalendarExpanded, setIsCalendarExpanded] = useState(pathname.startsWith('/dashboard/calendar'));
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasUnansweredPolls, setHasUnansweredPolls] = useState(false);
 
   // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
+
+  // Check if user has open polls to fill
+  useEffect(() => {
+    let isMounted = true;
+    checkHasUnansweredPolls(user).then((res) => {
+      if (isMounted) setHasUnansweredPolls(res);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [user, pathname]);
 
   const handleLogout = async () => {
     try {
@@ -55,7 +69,8 @@ export default function DashboardNav({ user }: DashboardNavProps) {
 
   // Determine active section name for mobile header
   const getActiveTitle = () => {
-    if (pathname === '/dashboard/account' || pathname === '/dashboard') return 'Konto';
+    if (pathname === '/dashboard/summary' || pathname === '/dashboard') return 'Podsumowanie';
+    if (pathname === '/dashboard/account') return 'Konto';
     if (pathname.startsWith('/dashboard/tournaments')) return 'Turnieje';
     if (pathname === '/dashboard/calendar') return 'Kalendarz: Przegląd Wydarzeń';
     if (pathname.startsWith('/dashboard/calendar/availability')) return 'Kalendarz: Moja Dostępność';
@@ -69,9 +84,19 @@ export default function DashboardNav({ user }: DashboardNavProps) {
     <ul className="flex flex-col list-none gap-1 w-full">
       <li className="group relative">
         <Link
+          href="/dashboard/summary"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname === '/dashboard/summary' || pathname === '/dashboard' ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
+        >
+          <LayoutDashboard className="w-4 h-4 flex-shrink-0" />
+          <span>Podsumowanie</span>
+        </Link>
+      </li>
+      <li className="group relative">
+        <Link
           href="/dashboard/account"
           onClick={() => setIsMobileMenuOpen(false)}
-          className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname === '/dashboard/account' || pathname === '/dashboard' ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
+          className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname === '/dashboard/account' ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
         >
           <User className="w-4 h-4 flex-shrink-0" />
           <span>Konto</span>
@@ -133,10 +158,18 @@ export default function DashboardNav({ user }: DashboardNavProps) {
         <Link
           href="/dashboard/polls"
           onClick={() => setIsMobileMenuOpen(false)}
-          className={`flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/polls') ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
+          className={`flex items-center justify-between w-full h-9 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 ${pathname.startsWith('/dashboard/polls') ? 'bg-bg-300 font-semibold text-text-900' : 'text-text-800'}`}
         >
-          <PieChart className="w-4 h-4 flex-shrink-0" />
-          <span>Głosowania</span>
+          <div className="flex items-center gap-3">
+            <PieChart className="w-4 h-4 flex-shrink-0" />
+            <span>Głosowania</span>
+          </div>
+          {hasUnansweredPolls && (
+            <span
+              title="Masz ankiety do uzupełnienia"
+              className="w-2 h-2 rounded-full bg-amber-400 shrink-0"
+            />
+          )}
         </Link>
       </li>
       
@@ -165,6 +198,12 @@ export default function DashboardNav({ user }: DashboardNavProps) {
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-xs font-semibold text-text-500 uppercase tracking-wider">Panel:</span>
             <span className="text-sm font-bold text-text-900 truncate">{getActiveTitle()}</span>
+            {hasUnansweredPolls && (
+              <span
+                title="Masz ankiety do uzupełnienia"
+                className="w-2 h-2 rounded-full bg-amber-400 shrink-0"
+              />
+            )}
           </div>
           <div className="flex items-center gap-2 text-text-600 shrink-0">
             <span className="text-xs font-medium">{isMobileMenuOpen ? 'Zwiń' : 'Zmień'}</span>
