@@ -65,7 +65,7 @@ export function UserCard({
   };
 
   return (
-    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4 border border-bg-300 hover:border-bg-400 transition-colors">
+    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4 border border-bg-300">
       <div className="flex flex-col gap-3">
         {/* Header: Avatar, Name, and Unified Interactive Role Badge */}
         <div className="flex items-start justify-between gap-3">

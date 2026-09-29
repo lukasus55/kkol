@@ -35,13 +35,13 @@ export function TriviaCard({ trivia, onEdit, onDelete, onToggleUsed }: TriviaCar
     d ? new Date(d).toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
 
   return (
-    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4 border border-bg-300 hover:border-bg-400 transition-colors">
+    <div className="bg-bg-200 rounded-md p-4 sm:p-5 flex flex-col justify-between gap-4 border border-bg-300">
       <div className="flex flex-col gap-3">
-        {/* Header: Status badge & ID / Copy */}
+        {/* Header: Status text & ID / Copy */}
         <div className="flex items-center justify-between gap-2">
           {trivia.is_used ? (
             <div
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border border-bg-400 bg-bg-300 text-emerald-400 shrink-0"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 shrink-0 select-none"
               title={trivia.used_at ? `Opublikowano: ${formatDateTime(trivia.used_at)}` : 'Opublikowana'}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -49,7 +49,7 @@ export function TriviaCard({ trivia, onEdit, onDelete, onToggleUsed }: TriviaCar
             </div>
           ) : (
             <div
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border border-bg-400 bg-bg-300 text-amber-400 shrink-0"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 shrink-0 select-none"
               title="Oczekuje na wysłanie na Discordzie"
             >
               <Clock className="w-3.5 h-3.5" />

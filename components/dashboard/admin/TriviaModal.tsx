@@ -16,7 +16,6 @@ interface TriviaModalProps {
 export function TriviaModal({ isOpen, onClose, onSuccess, triviaToEdit }: TriviaModalProps) {
   const { addToast } = useToast();
   const [content, setContent] = useState('');
-  const [isUsed, setIsUsed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +24,6 @@ export function TriviaModal({ isOpen, onClose, onSuccess, triviaToEdit }: Trivia
   useEffect(() => {
     if (isOpen) {
       setContent(triviaToEdit?.content || '');
-      setIsUsed(triviaToEdit?.is_used || false);
       setError(null);
     }
   }, [isOpen, triviaToEdit]);
@@ -49,7 +47,6 @@ export function TriviaModal({ isOpen, onClose, onSuccess, triviaToEdit }: Trivia
           body: JSON.stringify({
             id: triviaToEdit.id,
             content: trimmed,
-            is_used: isUsed,
           }),
         });
         const data = await res.json();
@@ -115,21 +112,6 @@ export function TriviaModal({ isOpen, onClose, onSuccess, triviaToEdit }: Trivia
             required
           />
         </div>
-
-        {isEdit && (
-          <label className="flex items-center gap-2.5 p-3 rounded-md bg-bg-200 border border-bg-300 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isUsed}
-              onChange={(e) => setIsUsed(e.target.checked)}
-              className="w-4 h-4 rounded border-bg-400 text-amber-500 focus:ring-0 focus:outline-none cursor-pointer"
-            />
-            <div className="text-xs text-text-700">
-              <span className="font-semibold text-text-900 block">Oznaczona jako opublikowana</span>
-              <span>Odznacz, jeśli ciekawostka ma powrócić do kolejki oczekujących.</span>
-            </div>
-          </label>
-        )}
 
         <div className="flex items-center justify-end gap-2 pt-3 border-t border-bg-300">
           <Button type="button" variant="secondary" onClick={onClose} disabled={loading}>
