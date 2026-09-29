@@ -1,6 +1,6 @@
 {
   "name": "kkol",
-  "version": "4.0.0",
+  "version": "5.1.0",
   "type": "module",
   "scripts": {
     "dev": "next dev",
