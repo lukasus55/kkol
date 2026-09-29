@@ -4,14 +4,11 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Users, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Pagination } from '@/components/ui/Pagination';
-import { ConfirmationPopup } from '@/components/ui/ConfirmationPopup';
 import { useToast } from '@/components/ui/ToastProvider';
 import { useUser } from '@/components/dashboard/UserProvider';
 import { UsersFilters } from './UsersFilters';
 import { UserCard, UserItem } from './UserCard';
-import { CreateUserModal } from './CreateUserModal';
-import { ResetPasswordModal } from './ResetPasswordModal';
-import { UserSessionsModal } from './UserSessionsModal';
+import { UserModalsContainer } from './UserModalsContainer';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -33,6 +30,8 @@ export function UsersManagementTab() {
   const [userForStatus, setUserForStatus] = useState<UserItem | null>(null);
   const [userForPassword, setUserForPassword] = useState<UserItem | null>(null);
   const [userForSessions, setUserForSessions] = useState<UserItem | null>(null);
+  const [userForResetName, setUserForResetName] = useState<UserItem | null>(null);
+  const [userForResetPfp, setUserForResetPfp] = useState<UserItem | null>(null);
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -123,6 +122,52 @@ export function UsersManagementTab() {
     }
   };
 
+  const handleConfirmResetName = async () => {
+    if (!userForResetName) return;
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: userForResetName.id, reset_name: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userForResetName.id ? { ...u, displayed_name: 'Brak nazwy' } : u))
+      );
+      addToast({ type: 'success', message: 'Nazwa użytkownika została zresetowana na "Brak nazwy".' });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Błąd podczas resetowania nazwy';
+      addToast({ type: 'error', message: msg });
+    } finally {
+      setUserForResetName(null);
+    }
+  };
+
+  const handleConfirmResetPfp = async () => {
+    if (!userForResetPfp) return;
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: userForResetPfp.id, reset_pfp: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userForResetPfp.id ? { ...u, pfp_base64: null } : u))
+      );
+      addToast({ type: 'success', message: 'Awatar użytkownika został usunięty (przywrócono domyślny).' });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Błąd podczas usuwania awatara';
+      addToast({ type: 'error', message: msg });
+    } finally {
+      setUserForResetPfp(null);
+    }
+  };
+
   return (
     <div className="p-4 sm:p-6 md:p-8 flex flex-col gap-6 max-w-7xl mx-auto w-full">
       {/* Top Header */}
@@ -180,6 +225,8 @@ export function UsersManagementTab() {
               onToggleStatus={setUserForStatus}
               onResetPassword={setUserForPassword}
               onOpenSessions={setUserForSessions}
+              onResetName={setUserForResetName}
+              onResetPfp={setUserForResetPfp}
             />
           ))}
         </div>
@@ -196,41 +243,24 @@ export function UsersManagementTab() {
         />
       )}
 
-      {/* Modals */}
-      <CreateUserModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        onCreated={() => {
-          addToast({ type: 'success', message: 'Użytkownik został pomyślnie utworzony.' });
-          fetchUsers();
-        }}
-      />
-
-      <ResetPasswordModal
-        user={userForPassword}
-        isOpen={Boolean(userForPassword)}
-        onClose={() => setUserForPassword(null)}
-        onSuccess={() => {
-          addToast({ type: 'success', message: 'Hasło użytkownika zostało zaktualizowane.' });
-        }}
-      />
-
-      <UserSessionsModal
-        user={userForSessions}
-        isOpen={Boolean(userForSessions)}
-        onClose={() => setUserForSessions(null)}
-      />
-
-      <ConfirmationPopup
-        isOpen={Boolean(userForStatus)}
-        title={userForStatus?.is_active === false ? 'Odblokowanie konta' : 'Zablokowanie konta'}
-        message={`Czy na pewno chcesz ${
-          userForStatus?.is_active === false ? 'odblokować' : 'zablokować'
-        } konto użytkownika ${userForStatus?.displayed_name} (@${userForStatus?.id})?`}
-        confirmText={userForStatus?.is_active === false ? 'Odblokuj' : 'Zablokuj'}
-        cancelText="Anuluj"
-        onConfirm={handleToggleStatusConfirm}
-        onClose={() => setUserForStatus(null)}
+      {/* Modals & Confirmation Popups */}
+      <UserModalsContainer
+        isCreateOpen={isCreateOpen}
+        onCloseCreate={() => setIsCreateOpen(false)}
+        onUserCreated={fetchUsers}
+        userForPassword={userForPassword}
+        onClosePassword={() => setUserForPassword(null)}
+        userForSessions={userForSessions}
+        onCloseSessions={() => setUserForSessions(null)}
+        userForStatus={userForStatus}
+        onCloseStatus={() => setUserForStatus(null)}
+        onConfirmStatus={handleToggleStatusConfirm}
+        userForResetName={userForResetName}
+        onCloseResetName={() => setUserForResetName(null)}
+        onConfirmResetName={handleConfirmResetName}
+        userForResetPfp={userForResetPfp}
+        onCloseResetPfp={() => setUserForResetPfp(null)}
+        onConfirmResetPfp={handleConfirmResetPfp}
       />
     </div>
   );

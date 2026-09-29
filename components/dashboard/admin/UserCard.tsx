@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Shield, KeyRound, Monitor, Ban, CheckCircle2, ArrowLeftRight } from 'lucide-react';
+import { Shield, KeyRound, Monitor, Ban, CheckCircle2, ArrowLeftRight, ImageOff, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export interface UserItem {
@@ -23,6 +23,8 @@ interface UserCardProps {
   onToggleStatus: (user: UserItem) => void;
   onResetPassword: (user: UserItem) => void;
   onOpenSessions: (user: UserItem) => void;
+  onResetName?: (user: UserItem) => void;
+  onResetPfp?: (user: UserItem) => void;
 }
 
 export function UserCard({
@@ -32,6 +34,8 @@ export function UserCard({
   onToggleStatus,
   onResetPassword,
   onOpenSessions,
+  onResetName,
+  onResetPfp,
 }: UserCardProps) {
   const isSelf = user.id === currentUserId;
   const isTargetAdmin = user.role === 'admin';
@@ -82,15 +86,37 @@ export function UserCard({
                 }`}
                 title={isActive ? 'Konto aktywne' : 'Konto zablokowane'}
               />
+              {Boolean(user.pfp_base64) && !isTargetAdmin && onResetPfp && (
+                <button
+                  type="button"
+                  onClick={() => onResetPfp(user)}
+                  className="absolute -top-1 -left-1 w-5 h-5 bg-bg-100 hover:bg-bg-300 border border-bg-400 rounded-full text-text-500 hover:text-danger-500 transition-colors flex items-center justify-center shadow-sm cursor-pointer"
+                  title="Wymuś usunięcie awatara (przywróć domyślny)"
+                >
+                  <ImageOff className="w-2.5 h-2.5" />
+                </button>
+              )}
             </div>
 
             <div className="min-w-0">
-              <Link
-                href={`/player?id=${user.id}`}
-                className="font-bold text-text-900 text-base hover:underline truncate block"
-              >
-                {user.displayed_name}
-              </Link>
+              <div className="flex items-center gap-1.5 min-w-0">
+                <Link
+                  href={`/player?id=${user.id}`}
+                  className="font-bold text-text-900 text-base hover:underline truncate"
+                >
+                  {user.displayed_name}
+                </Link>
+                {!isTargetAdmin && onResetName && (
+                  <button
+                    type="button"
+                    onClick={() => onResetName(user)}
+                    className="p-1 text-text-500 hover:text-amber-400 hover:bg-bg-300 rounded transition-colors shrink-0 cursor-pointer"
+                    title="Wymuś zresetowanie nicku do 'Brak nazwy'"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
               <span className="text-xs text-text-500 truncate block">
                 @{user.id}
               </span>

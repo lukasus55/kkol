@@ -90,8 +90,8 @@ import bcrypt from 'bcrypt';
  *       500:
  *         description: Internal server error
  *   patch:
- *     summary: Update player role, active status, or reset password
- *     description: Allows administrator to change a user's role (player/organizer), activate/deactivate account, or reset password (min. 14 chars). Cannot edit another admin's account.
+ *     summary: Update player role, active status, reset password, or force reset name/pfp
+ *     description: Allows administrator to change a user's role (player/organizer), activate/deactivate account, reset password, or force reset nickname/pfp. Cannot edit another admin's account.
  *     tags: [Admin]
  *     security:
  *       - cookieAuth: []
@@ -115,6 +115,12 @@ import bcrypt from 'bcrypt';
  *               new_password:
  *                 type: string
  *                 minLength: 14
+ *               reset_name:
+ *                 type: boolean
+ *                 description: Resets displayed name to default placeholder
+ *               reset_pfp:
+ *                 type: boolean
+ *                 description: Removes custom profile picture (sets to null)
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -269,13 +275,13 @@ export default async function handler(request: NextApiRequest, response: NextApi
         }
 
         if (request.method === 'PATCH') {
-            const { id, role, is_active, new_password } = request.body || {};
+            const { id, role, is_active, new_password, reset_name, reset_pfp } = request.body || {};
 
             if (!id || typeof id !== 'string') {
                 return response.status(400).json({ error: "ID użytkownika jest wymagane." });
             }
 
-            if (role === undefined && is_active === undefined && !new_password) {
+            if (role === undefined && is_active === undefined && !new_password && !reset_name && !reset_pfp) {
                 return response.status(400).json({ error: "Brak danych do aktualizacji." });
             }
 
@@ -319,9 +325,11 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 SET
                     role = COALESCE(${role !== undefined ? role : null}, role),
                     is_active = COALESCE(${is_active !== undefined ? is_active : null}, is_active),
-                    password_hash = COALESCE(${newHash}, password_hash)
+                    password_hash = COALESCE(${newHash}, password_hash),
+                    displayed_name = CASE WHEN ${reset_name === true} THEN 'Brak nazwy' ELSE displayed_name END,
+                    pfp_base64 = CASE WHEN ${reset_pfp === true} THEN NULL ELSE pfp_base64 END
                 WHERE id = ${id}
-                RETURNING id, displayed_name, email, role, is_active, created_at, last_login
+                RETURNING id, displayed_name, email, role, is_active, created_at, last_login, pfp_base64
             `;
 
             return response.status(200).json({

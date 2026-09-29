@@ -373,5 +373,51 @@ describe('Admin Users API (/api/admin/users)', () => {
             expect(bcrypt.hash).toHaveBeenCalledWith('new_super_password_14chars', 10);
             expect(revokeAllUserSessions).toHaveBeenCalledWith('user1');
         });
+
+        test('successfully force resets user display name to "Brak nazwy"', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const existingUser = { id: 'user1', displayed_name: 'OffensiveName', role: 'player', is_active: true };
+            mockSql.mockResolvedValueOnce([existingUser]); // Find user
+
+            const updatedUser = { ...existingUser, displayed_name: 'Brak nazwy' };
+            mockSql.mockResolvedValueOnce([updatedUser]); // Update user
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                body: { id: 'user1', reset_name: true }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            const data = JSON.parse(res._getData());
+            expect(data.user.displayed_name).toBe('Brak nazwy');
+        });
+
+        test('successfully force resets user pfp to null', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const existingUser = { id: 'user1', displayed_name: 'User 1', role: 'player', is_active: true, pfp_base64: 'some_base64' };
+            mockSql.mockResolvedValueOnce([existingUser]); // Find user
+
+            const updatedUser = { ...existingUser, pfp_base64: null };
+            mockSql.mockResolvedValueOnce([updatedUser]); // Update user
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                body: { id: 'user1', reset_pfp: true }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(200);
+            const data = JSON.parse(res._getData());
+            expect(data.user.pfp_base64).toBeNull();
+        });
     });
 });
