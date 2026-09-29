@@ -5,6 +5,7 @@ import { Card, CardTitle } from '../../ui/Card';
 import { Button } from '../../ui/Button';
 import { ConfirmationPopup } from '../../ui/ConfirmationPopup';
 import { useToast } from '../../ui/ToastProvider';
+import { ListRowSkeleton } from '../../ui/Skeleton';
 import SessionItem from './SessionItem';
 import type { PublicSessionItem } from '../../../pages/api/sessions';
 
@@ -109,9 +110,7 @@ export default function SessionsCard() {
       </div>
 
       {loading ? (
-        <div className="py-6 text-center text-sm text-text-600">
-          Ładowanie aktywnych sesji...
-        </div>
+        <ListRowSkeleton count={2} />
       ) : sessions.length === 0 ? (
         <div className="py-6 text-center text-sm text-text-600">
           Brak aktywnych sesji.

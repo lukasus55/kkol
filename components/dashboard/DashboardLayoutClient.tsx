@@ -9,47 +9,76 @@ export default function DashboardLayoutClient({ children }: { children: React.Re
   if (loading) {
     return (
       <main className="w-full bg-bg-100 flex justify-center">
-        <div className="w-full grid grid-rows-[auto_1fr] md:grid-rows-1 grid-cols-1 md:grid-cols-[20rem_1fr] min-h-[calc(100vh-64px)]">
-          {/* Skeleton Sidebar */}
-          <aside className="bg-bg-200 border-r border-bg-300 p-6 flex flex-col justify-between animate-pulse">
-            <div className="space-y-6">
-              {/* Logo / Header placeholder */}
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-md bg-bg-300" />
-                <div className="h-5 bg-bg-300 rounded w-32" />
+        <div className="w-full grid grid-rows-[auto_1fr] md:grid-rows-1 grid-cols-1 md:grid-cols-[20rem_1fr] min-h-[calc(100vh-60px)]">
+          {/* Skeleton Navigation (mirrors DashboardNav on mobile & desktop) */}
+          <nav className="w-full md:w-auto h-auto md:h-[calc(100vh-64px)] md:sticky md:top-16 z-[40]">
+            {/* Mobile Top Bar Skeleton */}
+            <div className="md:hidden w-full bg-bg-200 border-b border-bg-300 px-4 py-3.5 flex items-center justify-between animate-pulse">
+              <div className="flex items-center gap-2">
+                <div className="h-3.5 bg-bg-300 rounded w-12" />
+                <div className="h-4 bg-bg-300 rounded w-28" />
               </div>
-
-              {/* Nav links skeleton */}
-              <div className="space-y-3 pt-4">
-                <div className="h-10 bg-bg-300 rounded-md w-full" />
-                <div className="h-10 bg-bg-300/70 rounded-md w-full" />
-                <div className="h-10 bg-bg-300/50 rounded-md w-full" />
-                <div className="h-10 bg-bg-300/40 rounded-md w-full" />
-              </div>
+              <div className="h-3.5 bg-bg-300 rounded w-10" />
             </div>
 
-            {/* User profile card skeleton */}
-            <div className="flex items-center gap-3 pt-6 border-t border-bg-300/50">
-              <div className="w-10 h-10 rounded-full bg-bg-300 shrink-0" />
-              <div className="space-y-2 flex-1">
-                <div className="h-3.5 bg-bg-300 rounded w-24" />
-                <div className="h-2.5 bg-bg-300/60 rounded w-16" />
+            {/* Desktop Sidebar Skeleton */}
+            <div className="hidden md:grid bg-bg-200 w-full h-full md:grid-rows-[1fr_auto] md:grid-cols-1 border-r border-bg-300 animate-pulse">
+              {/* Nav links skeleton matching DashboardNav exact dimensions */}
+              <div className="p-4 w-full h-full flex flex-col gap-1 overflow-y-auto custom-scrollbar">
+                {/* 1. Podsumowanie (active styling) */}
+                <div className="flex items-center w-full h-9 gap-3 rounded-md px-3 bg-bg-300">
+                  <div className="w-4 h-4 rounded bg-bg-400 shrink-0" />
+                  <div className="h-4 bg-bg-400 rounded w-28" />
+                </div>
+
+                {/* 2. Konto */}
+                <div className="flex items-center w-full h-9 gap-3 rounded-md px-3">
+                  <div className="w-4 h-4 rounded bg-bg-300 shrink-0" />
+                  <div className="h-4 bg-bg-300 rounded w-16" />
+                </div>
+
+                {/* 3. Turnieje */}
+                <div className="flex items-center w-full h-9 gap-3 rounded-md px-3">
+                  <div className="w-4 h-4 rounded bg-bg-300 shrink-0" />
+                  <div className="h-4 bg-bg-300 rounded w-20" />
+                </div>
+
+                {/* 4. Kalendarz */}
+                <div className="flex items-center justify-between w-full h-9 rounded-md px-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 rounded bg-bg-300 shrink-0" />
+                    <div className="h-4 bg-bg-300 rounded w-20" />
+                  </div>
+                  <div className="w-3.5 h-3.5 rounded bg-bg-300 shrink-0" />
+                </div>
+
+                {/* 5. Głosowania */}
+                <div className="flex items-center w-full h-9 gap-3 rounded-md px-3">
+                  <div className="w-4 h-4 rounded bg-bg-300 shrink-0" />
+                  <div className="h-4 bg-bg-300 rounded w-24" />
+                </div>
+              </div>
+
+              {/* Bottom user profile card matching DashboardNav */}
+              <div className="grid p-4 w-full bg-bg-300 h-24 grid-cols-[auto_1fr_auto] grid-rows-1 gap-x-4 items-center">
+                <div className="w-12 h-12 rounded-full bg-bg-400 shrink-0" />
+
+                <div className="flex flex-col gap-1.5 min-w-0">
+                  <div className="h-4 bg-bg-400 rounded w-24" />
+                  <div className="h-3 bg-bg-400 rounded w-16" />
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  <div className="w-1.5 h-1.5 rounded-full bg-bg-400" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-bg-400" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-bg-400" />
+                </div>
               </div>
             </div>
-          </aside>
+          </nav>
 
-          {/* Skeleton Content Area */}
-          <div className="p-6 md:p-10 space-y-6 animate-pulse">
-            <div className="h-8 bg-bg-200 rounded w-48" />
-            <div className="h-4 bg-bg-200/80 rounded w-72" />
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-              <div className="h-44 bg-bg-200 rounded-md" />
-              <div className="h-44 bg-bg-200 rounded-md" />
-            </div>
-
-            <div className="h-64 bg-bg-200 rounded-md" />
-          </div>
+          {/* Content Area placeholder while user auth initializes */}
+          <div className="w-full flex flex-col overflow-hidden bg-bg-100" />
         </div>
       </main>
     );

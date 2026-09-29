@@ -12,6 +12,9 @@
     --color-bg-500: #3f4b5a;
     --color-bg-600: #556477;
 
+    --color-stroke: #222932;
+    --color-stroke-subtle: #2f3844;
+
     --color-text-900: #ffffff;
     --color-text-700: #d1d5db;
     --color-text-500: #9ca3af;
@@ -25,6 +28,10 @@
 
     --color-warning-red: #b42525;
     --color-overlay: rgba(0, 0, 0, 0.7);
+  }
+
+  *, ::before, ::after {
+    border-color: var(--color-bg-300);
   }
 
   h1 {

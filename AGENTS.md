@@ -37,7 +37,11 @@ The `types/db.ts` file can serve as a preview of the database structure. Treat i
 ## 5. Flat Design & Border Minimization
 The KKOL application is based on **flat design**. 
 - Avoid using deep shadows (`shadow-md`, `shadow-lg`, `shadow-xl`, etc.). Instead of shadows, use subtle differences in background shades (`bg-bg-100` vs `bg-bg-200`) to separate elements and containers from the background.
-- **Minimize the use of borders**. Whenever possible, separate sections or components using different background colors rather than adding a border. Borders (`border`, `border-bg-400`, etc.) should only be used as a last resort when color separation is not enough or when creating form inputs.
+- **Minimize the use of borders**. Whenever possible, separate sections or components using different background colors rather than adding a border. Borders (`border`, `border-bg-300`, `border-bg-400`, `border-stroke`, etc.) should only be used as a last resort when color separation is not enough or when creating form inputs.
+- **CRITICAL - Border Defaults & No Opacity Slashes on Hex Variables:**
+  - The default border color is globally configured to `var(--color-bg-300)` (`#222932` / `border-stroke`).
+  - **NEVER use opacity slash syntax on hex CSS variable colors** (e.g. `border-bg-300/60`, `bg-bg-300/40`). Because CSS variables store hex strings, Tailwind's `rgb(var(--color) / opacity)` produces invalid CSS that causes browsers to fallback `border-color` to white (`currentColor`).
+  - Always use solid color tokens: `border-bg-300`, `border-bg-400`, or `border-stroke`.
 Aim for visual minimalism without spatial effects and heavy outlines.
 
 ## 6. Maximum Border Radius
@@ -50,4 +54,9 @@ Aim for clean, modular, and easy-to-maintain React components:
 - **Target (<150 lines)**: Aim to keep React component files under 150 lines. Extract subcomponents, custom hooks, helper utilities, and constants into dedicated files.
 - **Acceptable (150-300 lines)**: Files in this range are acceptable, but you must actively consider whether subcomponents, hooks, or pure helper functions can be cleanly split out.
 - **Strict Limit (>300 lines)**: Components exceeding 300 lines are an absolute last resort. Whenever a file approaches or exceeds this limit, you must refactor and decompose it into smaller, focused modules.
+
+## 8. Typography: Avoid Monospace Fonts in General UI
+**DO NOT use `font-mono` (monospace font)** for general UI elements, including scores, points, rankings, positions, usernames, badges, and status labels (e.g. `pkt`, `W trakcie`, `#1`, `@username`). Monospace styling makes numbers and ordinary text look disjointed and typewriter-like.
+Always use the default sans-serif font family across all UI components and dashboard cards. Monospace is reserved exclusively for code blocks or technical hashes if explicitly needed.
+
 

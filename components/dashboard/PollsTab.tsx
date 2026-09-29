@@ -1,70 +1,46 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Button } from '../ui/Button';
 import { useToast } from '../ui/ToastProvider';
+import { usePollsData } from './polls/usePollsData';
+import { PollRow } from './polls/PollRow';
+import { ListRowSkeleton } from '../ui/Skeleton';
+import { Pagination } from '../ui/Pagination';
+
+const ITEMS_PER_PAGE = 8;
 
 export default function PollsTab({ user }: { user: any }) {
-  const router = useRouter();
   const { addToast } = useToast();
-  const [polls, setPolls] = useState<any[]>([]);
-  const [tournaments, setTournaments] = useState<any[]>([]);
+  const { polls, tournaments, loading, refresh } = usePollsData(user);
 
-  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState('');
   const [tournamentId, setTournamentId] = useState('');
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const [tRes, pRes] = await Promise.all([
-        fetch('/api/tournaments_active'),
-        fetch('/api/polls')
-      ]);
-      if (tRes.ok) {
-        const tData = await tRes.json();
-        setTournaments(tData);
-        if (tData.length > 0 && !tournamentId) setTournamentId(tData[0].id);
-      }
-      if (pRes.ok) {
-        const pData = await pRes.json();
-        const filteredPolls = pData.filter((poll: any) => {
-          const isPlayer = !!user?.tournaments?.[poll.tournament_id];
-          const isOrganizer = !!user?.organizer_roles?.[poll.tournament_id];
-          const isAdmin = user?.role === 'admin';
-          return isAdmin || isPlayer || isOrganizer;
-        });
-        setPolls(filteredPolls);
-      }
-    } catch (e) {
-      console.error(e);
-      addToast({ type: 'error', message: 'Błąd pobierania danych.' });
-    }
-  };
+  // Keep tournamentId synced when tournaments load
+  const selectedTournamentId = tournamentId || (tournaments[0]?.id ?? '');
 
   const handleCreate = async () => {
-    if (!name || !tournamentId) {
+    if (!name || !selectedTournamentId) {
       addToast({ type: 'error', message: 'Wypełnij wszystkie pola.' });
       return;
     }
-    setLoading(true);
+    setSubmitting(true);
     try {
       const res = await fetch('/api/poll_create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, tournament_id: tournamentId })
+        body: JSON.stringify({ name, tournament_id: selectedTournamentId })
       });
       const data = await res.json();
       if (res.ok) {
         addToast({ type: 'success', message: 'Ankieta utworzona.' });
         setName('');
-        fetchData();
+        refresh();
       } else {
         addToast({ type: 'error', message: data.error || 'Wystąpił błąd.' });
       }
@@ -72,27 +48,18 @@ export default function PollsTab({ user }: { user: any }) {
       console.error(e);
       addToast({ type: 'error', message: 'Błąd krytyczny.' });
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  const getRelativeTime = (dateStr: string) => {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffTime = date.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays > 30) return `${Math.floor(diffDays / 30)} miesięcy`;
-    if (diffDays > 0) return `${diffDays} dni`;
-    if (diffDays === 0) return 'Dzisiaj';
-    if (diffDays < 0) return 'Zakończona';
-    return '';
-  };
+  const totalPages = Math.ceil(polls.length / ITEMS_PER_PAGE);
+  const paginatedPolls = polls.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="flex flex-col w-full h-full min-h-0 pb-2 px-4 sm:px-8 pt-4 gap-6 sm:gap-8">
-
       {/* Create Poll Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-4xl mx-auto flex-shrink-0">
         <div className="flex-1 min-w-0">
@@ -105,18 +72,19 @@ export default function PollsTab({ user }: { user: any }) {
         <div className="flex items-center gap-3">
           <div className="flex-1 sm:w-64 sm:flex-initial">
             <Select
-              value={tournamentId}
+              value={selectedTournamentId}
               onChange={setTournamentId}
-              options={tournaments.length === 0
-                ? [{ value: '', label: 'Brak turniejów' }]
-                : tournaments.map(t => ({ value: t.id, label: t.displayed_name || t.id }))
+              options={
+                tournaments.length === 0
+                  ? [{ value: '', label: 'Brak turniejów' }]
+                  : tournaments.map((t) => ({ value: t.id, label: t.displayed_name || t.id }))
               }
             />
           </div>
           <Button
             variant="primary"
             onClick={handleCreate}
-            disabled={loading || tournaments.length === 0}
+            disabled={submitting || tournaments.length === 0}
             className="whitespace-nowrap"
           >
             Utwórz ankietę
@@ -126,26 +94,27 @@ export default function PollsTab({ user }: { user: any }) {
 
       {/* Polls List */}
       <div className="flex flex-col gap-3 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar flex-1 pb-4">
-        {polls.map(poll => (
-          <div
-            key={poll.id}
-            onClick={() => router.push(`/poll/${poll.id}`)}
-            className="flex items-center justify-between bg-bg-200 rounded-md p-4 sm:p-5 hover:bg-bg-300 transition-colors cursor-pointer group"
-          >
-            <div className="flex flex-col gap-1.5">
-              <span className="font-bold text-text-900 text-[15px] transition-colors underline-offset-4 group-hover:underline">{poll.name}</span>
-              <span className="text-text-700 text-[13px]">{poll.tournament_id}</span>
-            </div>
-            <div className="text-text-500 text-sm font-medium">
-              {poll.end_date ? getRelativeTime(poll.end_date) : 'Bez terminu'}
-            </div>
+        {loading ? (
+          <ListRowSkeleton count={4} />
+        ) : polls.length === 0 ? (
+          <div className="text-center text-text-500 py-10 font-medium">
+            Brak ankiet do wyświetlenia.
           </div>
-        ))}
-        {polls.length === 0 && (
-          <div className="text-center text-text-500 py-10 font-medium">Brak ankiet do wyświetlenia.</div>
+        ) : (
+          <>
+            {paginatedPolls.map((poll) => (
+              <PollRow key={poll.id} poll={poll} />
+            ))}
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              totalItems={polls.length}
+              itemsPerPage={ITEMS_PER_PAGE}
+              onPageChange={setPage}
+            />
+          </>
         )}
       </div>
-
     </div>
   );
 }
