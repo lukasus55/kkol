@@ -3,24 +3,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, User, Trophy, Calendar, PieChart, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, User, Trophy, Calendar, PieChart, LogOut, Menu, X, Shield } from 'lucide-react';
 
 import { checkHasUnansweredPolls } from './polls/pollChecker';
+import { UserAccountMenu } from './UserAccountMenu';
 
 interface DashboardNavProps {
   user: any;
 }
 
-function NavTooltip({ text }: { text: string }) {
-  return (
-    <div className="hidden md:block absolute left-full top-1/2 -translate-y-1/2 ml-2 z-[100] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-[400ms]">
-      <div className="relative px-2.5 py-1.5 bg-bg-100 border border-bg-300 rounded-md shadow-lg text-xs text-text-900 font-medium whitespace-nowrap">
-        {text}
-        <div className="absolute left-[-5px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-bg-100 border-l border-t border-bg-300 -rotate-45 rounded-[1px]"></div>
-      </div>
-    </div>
-  );
-}
 
 export default function DashboardNav({ user }: DashboardNavProps) {
   const pathname = usePathname() || '';
@@ -173,9 +164,20 @@ export default function DashboardNav({ user }: DashboardNavProps) {
         </Link>
       </li>
       
+      {user?.role === 'admin' && (
+        <li className="group relative md:hidden">
+          <div
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 text-text-800"
+          >
+            <Shield className="w-4 h-4 flex-shrink-0" />
+            <span>Tryb administratora</span>
+          </div>
+        </li>
+      )}
       <li className="group relative md:hidden mt-2 pt-2 border-t border-bg-300">
         <div
-          className="flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 text-red-500"
+          className="flex items-center w-full h-9 gap-3 text-sm rounded-md px-3 cursor-pointer transition-colors hover:bg-bg-300 text-danger-500"
           onClick={handleLogout}
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
@@ -265,28 +267,11 @@ export default function DashboardNav({ user }: DashboardNavProps) {
               </button>
 
               {showUserMenu && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setShowUserMenu(false)}
-                  />
-                  <div className="absolute bottom-full left-0 mb-3 w-52 bg-bg-300 border-bg-300 rounded-xl shadow-2xl z-50 overflow-hidden py-1.5 animate-in slide-in-from-bottom-2 fade-in duration-200">
-                    <div className="px-3.5 py-2 text-[11px] font-bold text-text-500 uppercase tracking-wider border-b border-bg-300 mb-1">
-                      Akcje konta
-                    </div>
-
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-bg-400 transition-colors text-left"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 12 12" className="flex-shrink-0">
-                        <polygon fill="currentColor" points="9,2 9,0 1,0 1,12 9,12 9,10 8,10 8,11 2,11 2,1 8,1 8,2 " />
-                        <polygon fill="currentColor" points="8.2929688,3.2929688 7.5859375,4 9.0859375,5.5 5,5.5 5,6.5 9.0859375,6.5 7.5859375,8 8.2929688,8.7070313 11,6 " />
-                      </svg>
-                      Wyloguj się
-                    </button>
-                  </div>
-                </>
+                <UserAccountMenu
+                  user={user}
+                  onLogout={handleLogout}
+                  closeMenu={() => setShowUserMenu(false)}
+                />
               )}
             </div>
           </div>

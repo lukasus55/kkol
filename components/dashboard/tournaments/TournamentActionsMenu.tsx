@@ -101,7 +101,7 @@ export function TournamentActionsMenu({ userRole, onEdit, onEvents, onLeave, clo
         {canLeave && (
           <button
             onClick={() => { onLeave(); closeMenu(); }}
-            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-danger-500 hover:bg-danger-500/10 transition-colors text-left"
+            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-danger-500 hover:bg-red-500/20 hover:text-red-400 transition-colors text-left"
           >
             <LogOut className="w-4 h-4" />
             Opuść turniej
