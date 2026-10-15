@@ -48,20 +48,20 @@ export function PlayerHeaderCard({ user, rank, totalPoints, stats }: PlayerHeade
 
       {/* Quick stats pills */}
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-bg-100 text-xs">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs">
           <Award className="w-3.5 h-3.5 text-text-500 shrink-0" />
           <span className="text-text-500">Rank:</span>
           <span className="font-bold text-white">{rank ? `#${rank}` : '-'}</span>
           {totalPoints && <span className="text-text-500 font-medium">({totalPoints} pkt)</span>}
         </div>
 
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-bg-100 text-xs">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs">
           <Trophy className="w-3.5 h-3.5 text-text-500 shrink-0" />
           <span className="text-text-500">Wygrane:</span>
           <span className="font-bold text-white">{stats.wins}</span>
         </div>
 
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-bg-100 text-xs">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs">
           <Flag className="w-3.5 h-3.5 text-text-500 shrink-0" />
           <span className="text-text-500">Rozegrane:</span>
           <span className="font-bold text-white">{stats.totalPlayed}</span>

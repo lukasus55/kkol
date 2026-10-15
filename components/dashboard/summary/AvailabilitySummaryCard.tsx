@@ -30,7 +30,7 @@ export function AvailabilitySummaryCard({ userStatus, friends }: AvailabilitySum
         <Link
           href="/dashboard/calendar/availability"
           title="Kliknij, aby zmienić grafik"
-          className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 rounded-md bg-bg-100 hover:bg-bg-300 transition-colors group shrink-0"
+          className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 rounded-md hover:bg-bg-300 transition-colors group shrink-0"
         >
           <span className="text-[11px] text-text-500 font-medium hidden xs:inline">Twój status:</span>
           <div className="flex items-center gap-1.5">
