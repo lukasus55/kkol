@@ -10,6 +10,8 @@ import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.
  *   get:
  *     summary: Pobierz domyślne opcje dla ankiety
  *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: poll_id
@@ -19,6 +21,12 @@ import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.
  *     responses:
  *       200:
  *         description: Lista domyślnych opcji
+ *       400:
+ *         description: Nieprawidłowe ID ankiety
+ *       401:
+ *         description: Brak autoryzacji
+ *       500:
+ *         description: Błąd serwera
  *   post:
  *     summary: Zaktualizuj domyślne opcje dla ankiety
  *     tags: [Polls]
@@ -53,6 +61,9 @@ import { hasTournamentPermission } from '../../public/js/utils/permissionChecks.
  */
 export default async function handler(request: NextApiRequest, response: NextApiResponse) {
     if (request.method === 'GET') {
+        const auth = await verifySession(request);
+        if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
+
         const { poll_id } = request.query;
         if (!poll_id || typeof poll_id !== 'string') {
             return response.status(400).json({ error: 'Nieprawidłowe ID ankiety' });

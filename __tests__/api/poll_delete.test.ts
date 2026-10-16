@@ -85,4 +85,22 @@ describe('Poll Delete API (/api/poll_delete)', () => {
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(403);
     });
+
+    test('rejects deletion if tournament is finished (400)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { id: 'poll-123' }
+        });
+        
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]);
+        mockSql.mockResolvedValueOnce([{ finished: true }]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('zakończonym turnieju');
+    });
 });

@@ -51,7 +51,7 @@ describe('Poll Player Answers API (/api/poll_player_answers)', () => {
         expect(JSON.parse(res._getData())).toEqual({ q1: ['opt1'] });
     });
 
-    test('checks permissions if viewing other player answers', async () => {
+    test('allows any tournament participant to view other player answers', async () => {
         vi.mocked(verifySession).mockResolvedValueOnce({
             user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
             session: {} as any
@@ -61,7 +61,9 @@ describe('Poll Player Answers API (/api/poll_player_answers)', () => {
             query: { poll: 'valid-uuid-v7', player: 'user2' }
         });
 
-        mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
+        // Query: poll exists
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]);
+        // User1 is part of tournament t1
         vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
 
         mockSql.mockResolvedValueOnce([{ answers_map: { q2: ['opt2'] } }]);
@@ -71,7 +73,27 @@ describe('Poll Player Answers API (/api/poll_player_answers)', () => {
         expect(JSON.parse(res._getData())).toEqual({ q2: ['opt2'] });
     });
 
-    test('blocks access if permissions lacking', async () => {
+    test('allows tournament organizer/admin to view other player answers', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'GET', 
+            query: { poll: 'valid-uuid-v7', player: 'user2' }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]);
+        vi.mocked(isPartOfTournament).mockResolvedValueOnce(false);
+        vi.mocked(hasTournamentPermission).mockResolvedValueOnce(true);
+
+        mockSql.mockResolvedValueOnce([{ answers_map: { q2: ['opt2'] } }]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+    });
+
+    test('blocks access if user is neither participant nor organizer', async () => {
         vi.mocked(verifySession).mockResolvedValueOnce({
             user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
             session: {} as any
@@ -81,11 +103,39 @@ describe('Poll Player Answers API (/api/poll_player_answers)', () => {
             query: { poll: 'valid-uuid-v7', player: 'user2' }
         });
 
-        mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 1 }]);
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]);
         vi.mocked(isPartOfTournament).mockResolvedValueOnce(false);
         vi.mocked(hasTournamentPermission).mockResolvedValueOnce(false);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(403);
+        expect(JSON.parse(res._getData()).error).toContain('Brak uprawnień');
+    });
+
+    test('returns 400 when parameters are missing', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ method: 'GET', query: { poll: 'valid-uuid-v7' } });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+    });
+
+    test('returns 404 when poll does not exist', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'GET', 
+            query: { poll: 'valid-uuid-v7', player: 'user2' }
+        });
+
+        mockSql.mockResolvedValueOnce([]); // Poll not found
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(404);
+        expect(JSON.parse(res._getData()).error).toBe('Ankieta nie istnieje.');
     });
 });

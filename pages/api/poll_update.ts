@@ -134,6 +134,10 @@ export default async function handler(request: PollUpdateRequest, response: Next
             return response.status(400).json({ error: "Nie możesz edytować ankiety w turnieju, który nie istnieje." });
         }
 
+        if (tournamentCheck[0].finished) {
+            return response.status(400).json({ error: "Nie można edytować ankiety w zakończonym turnieju." });
+        }
+
         const hasPermission = await hasTournamentPermission(requesterId, tournamentId);
         if (!hasPermission) {
             return response.status(403).json({ error: "Brak uprawnień. Musisz być administratorem lub zarządcą turnieju do którego przypisana jest ta ankieta." });
@@ -152,9 +156,6 @@ export default async function handler(request: PollUpdateRequest, response: Next
 
     } catch (error: any) {
         console.error("Update Poll Error:", error);
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
-        }
-        return response.status(500).json({ error: "Wystąpił błąd podczas tworzenia wydarzenia." });
+        return response.status(500).json({ error: "Wystąpił błąd podczas aktualizacji ankiety." });
     }
 }

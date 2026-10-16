@@ -75,4 +75,53 @@ describe('Poll Update API', () => {
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(200);
     });
+
+    test('rejects update if tournament is finished (400)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { 
+                id: 'p1', 
+                name: 'Valid Name', 
+                start_date: '2025-01-01', 
+                end_date: '2025-02-01',
+                rights_level: 2 
+            }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]);
+        mockSql.mockResolvedValueOnce([{ finished: true }]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('zakończonym turnieju');
+    });
+
+    test('rejects update if user lacks tournament permissions (403)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { 
+                id: 'p1', 
+                name: 'Valid Name', 
+                start_date: '2025-01-01', 
+                end_date: '2025-02-01',
+                rights_level: 2 
+            }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]);
+        mockSql.mockResolvedValueOnce([{ finished: false }]);
+        vi.mocked(hasTournamentPermission).mockResolvedValueOnce(false);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(403);
+        expect(JSON.parse(res._getData()).error).toContain('Brak uprawnień');
+    });
 });

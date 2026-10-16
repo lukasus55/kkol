@@ -1,9 +1,15 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 import handler from '../../pages/api/poll_labels';
+import { verifySession } from '../../lib/auth';
 
 const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
 vi.mock('../../db.js', () => ({ default: mockSql }));
+
+vi.mock('../../lib/auth', () => ({
+    verifySession: vi.fn(),
+    AUTH_COOKIE_NAME: 'auth_token'
+}));
 
 vi.mock('../../public/js/utils/helpers.js', () => ({
     isUUIDv7: vi.fn().mockImplementation((id: string) => id === 'valid-uuid-v7')
@@ -12,6 +18,18 @@ vi.mock('../../public/js/utils/helpers.js', () => ({
 describe('Poll Labels API (/api/poll_labels)', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.mocked(verifySession).mockResolvedValue({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+    });
+
+    test('rejects unauthenticated requests', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
+        const { req, res } = createMocks({ method: 'GET', query: { poll: 'valid-uuid-v7' } });
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+        expect(JSON.parse(res._getData()).error).toBe('Brak autoryzacji.');
     });
 
     test('rejects missing poll parameter', async () => {
