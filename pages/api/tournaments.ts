@@ -46,7 +46,8 @@ type TournamentResultRow = Pick<Result, 'tournament_id' | 'player_id' | 'attende
 export default async function handler(request: TournamentsRequest, response: NextApiResponse) {
     try {
         const { id, player, limit } = request.query;
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
 
         let tournaments: Tournament[];
         let results: TournamentResultRow[];
@@ -62,19 +63,25 @@ export default async function handler(request: TournamentsRequest, response: Nex
             ]);
         } 
         else if (player) {
-            [tournaments, results] = await Promise.all([
-                sql<Tournament[]>`
-                    SELECT t.id, t.displayed_name, t.page_exists, t.page_url, t.finished, t.end_date, t.displayed_date, t.tier, r.player_id as __player_id 
-                    FROM tournaments t 
-                    INNER JOIN results r ON r.tournament_id = t.id  
-                    WHERE r.player_id = ${player}
-                    ORDER BY "end_date" DESC`,
-                sql<TournamentResultRow[]>`
+            tournaments = await sql<Tournament[]>`
+                SELECT t.id, t.displayed_name, t.page_exists, t.page_url, t.finished, t.end_date, t.displayed_date, t.tier
+                FROM tournaments t 
+                INNER JOIN results r ON r.tournament_id = t.id  
+                WHERE r.player_id = ${player}
+                ORDER BY "end_date" DESC
+                LIMIT ${actualLimit}
+            `;
+            if (tournaments.length > 0) {
+                const tournamentIds = tournaments.map(t => t.id);
+                results = await sql<TournamentResultRow[]>`
                     SELECT r.tournament_id, r.player_id, r.attended, r.finished, r."position", r.total_points, p.displayed_name AS player_name 
                     FROM results r
                     INNER JOIN players p ON r.player_id = p.id
-                    WHERE player_id = ${player}`
-            ]);
+                    WHERE r.tournament_id = ANY(${tournamentIds})
+                `;
+            } else {
+                results = [];
+            }
         }
         else {
             [tournaments, results] = await Promise.all([
@@ -123,6 +130,9 @@ export default async function handler(request: TournamentsRequest, response: Nex
         });
 
         Object.values(dataMap).forEach((tournament: any) => {
+            if (tournament.details.players === undefined) {
+                tournament.details.players = tournament.standings.length;
+            }
             tournament.standings.sort((a: any, b: any) => {
                 if (a.position !== b.position) {
                     if (a.position === '-') return 1;

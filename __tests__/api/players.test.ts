@@ -53,4 +53,34 @@ describe('Players API Endpoint (/api/players)', () => {
         const data = JSON.parse(res._getData());
         expect(Object.keys(data).length).toBe(1);
     });
+
+    test('filters by player ID', async () => {
+        const { req, res } = createMocks({ method: 'GET', query: { id: 'player1' } });
+        
+        mockSql.mockResolvedValueOnce([
+            { id: 'player1', displayed_name: 'Player 1', pfp_base64: null }
+        ]);
+        mockSql.mockResolvedValueOnce([
+            { tournament_id: 't1', player_id: 'player1', attended: true, finished: true, position: 1, total_points: 100 }
+        ]);
+
+        await handler(req as any, res as any);
+        
+        expect(res._getStatusCode()).toBe(200);
+        const data = JSON.parse(res._getData());
+        expect(Object.keys(data).length).toBe(1);
+        expect(data['player1'].displayed_name).toBe('Player 1');
+    });
+
+    test('handles empty players query gracefully', async () => {
+        const { req, res } = createMocks({ method: 'GET' });
+        
+        mockSql.mockResolvedValueOnce([]); // no players
+
+        await handler(req as any, res as any);
+        
+        expect(res._getStatusCode()).toBe(200);
+        const data = JSON.parse(res._getData());
+        expect(data).toEqual({});
+    });
 });

@@ -70,11 +70,12 @@ export default async function handler(request: RankingRequest, response: NextApi
             FROM tournaments t 
             INNER JOIN results r ON t.id = r.tournament_id
             INNER JOIN players p ON r.player_id = p.id
-            WHERE t.id = ANY(${relevantTournamentIds})
+            WHERE t.id = ANY(${relevantTournamentIds}) AND r.attended = true AND r.position IS NOT NULL
         `;
 
         const tournamentsMap: Record<string, any> = {};
         for (const row of results) {
+            if (!row.player_position) continue;
             if (!tournamentsMap[row.tournament_id]) {
                 tournamentsMap[row.tournament_id] = { tier: row.tournament_tier, players: [] };
             }
@@ -95,6 +96,7 @@ export default async function handler(request: RankingRequest, response: NextApi
 
             for (const [posStr, tiedPlayers] of Object.entries(positionGroups)) {
                 const startPosition = parseInt(posStr, 10);
+                if (isNaN(startPosition) || startPosition <= 0) continue;
                 const tieCount = (tiedPlayers as any[]).length;
                 let totalPointsForGroup = 0;
 

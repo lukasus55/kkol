@@ -39,7 +39,7 @@ interface TournamentChangeTierRequest extends NextApiRequest {
  *       200:
  *         description: Tier changed successfully
  *       400:
- *         description: Invalid input
+ *         description: Invalid input or tournament already finished
  *       401:
  *         description: Not authenticated
  *       403:
@@ -69,9 +69,12 @@ export default async function handler(request: TournamentChangeTierRequest, resp
             return response.status(400).json({ error: "Nieprawidłowe dane." });
         }
 
-        const tournamentCheck = await sql<Pick<Tournament, 'tier'>[]>`SELECT tier FROM tournaments WHERE id = ${tournament_id}`;
+        const tournamentCheck = await sql<Pick<Tournament, 'tier' | 'finished'>[]>`SELECT tier, finished FROM tournaments WHERE id = ${tournament_id}`;
         if (tournamentCheck.length === 0) {
             return response.status(404).json({ error: "Turniej nie został znaleziony." });
+        }
+        if (tournamentCheck[0].finished) {
+            return response.status(400).json({ error: "Nie można zmienić rangi zakończonego turnieju." });
         }
         const currentTier = tournamentCheck[0].tier;
 

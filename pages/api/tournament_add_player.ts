@@ -37,13 +37,13 @@ interface TournamentAddPlayerRequest extends NextApiRequest {
  *       200:
  *         description: Player added successfully
  *       400:
- *         description: Player already enrolled or invalid input
+ *         description: Player already enrolled, invalid input, or tournament finished
  *       401:
  *         description: Not authenticated
  *       403:
  *         description: Missing permissions
  *       404:
- *         description: Player not found
+ *         description: Player or tournament not found
  *       500:
  *         description: Internal server error
  */
@@ -64,6 +64,18 @@ export default async function handler(request: TournamentAddPlayerRequest, respo
         }
 
         const cleanPlayerId = new_player_id.trim();
+
+        const tournamentCheck = await sql<Pick<Tournament, 'id' | 'finished'>[]>`
+            SELECT id, finished FROM tournaments WHERE id = ${tournament_id}
+        `;
+
+        if (tournamentCheck.length === 0) {
+            return response.status(404).json({ error: "Turniej nie istnieje." });
+        }
+
+        if (tournamentCheck[0].finished) {
+            return response.status(400).json({ error: "Nie można dodać gracza do zakończonego turnieju." });
+        }
 
         const isAdmin = auth.user.role === 'admin';
         if (!isAdmin) {

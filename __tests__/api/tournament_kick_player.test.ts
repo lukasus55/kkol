@@ -8,7 +8,11 @@ vi.mock('../../lib/auth', () => ({
     AUTH_COOKIE_NAME: 'auth_token'
 }));
 
-const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
+const { mockSql } = vi.hoisted(() => {
+    const fn: any = vi.fn();
+    fn.begin = vi.fn(async (cb: any) => cb(fn));
+    return { mockSql: fn };
+});
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
 describe('Tournament Kick Player API', () => {
@@ -27,6 +31,23 @@ describe('Tournament Kick Player API', () => {
         expect(JSON.parse(res._getData()).error).toBe('Not authenticated');
     });
 
+    test('blocks kicking player if tournament is finished', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { tournament_id: 't1', target_player_id: 'p2' }
+        });
+
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: true }]); // tournamentCheck
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('zakończonego turnieju');
+    });
+
     test('blocks kicking owner', async () => {
         vi.mocked(verifySession).mockResolvedValueOnce({
             user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
@@ -37,6 +58,7 @@ describe('Tournament Kick Player API', () => {
             body: { tournament_id: 't1', target_player_id: 'owner_user' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]); // requester
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]); // target
 
@@ -55,6 +77,7 @@ describe('Tournament Kick Player API', () => {
             body: { tournament_id: 't1', target_player_id: 'other_manager' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]); // requester
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]); // target
 
@@ -73,6 +96,7 @@ describe('Tournament Kick Player API', () => {
             body: { tournament_id: 't1', target_player_id: 'normal_user' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]); // requester
         mockSql.mockResolvedValueOnce([]); // target (not organizer)
         mockSql.mockResolvedValueOnce([]); // delete organizer
@@ -92,6 +116,7 @@ describe('Tournament Kick Player API', () => {
             body: { tournament_id: 't1', target_player_id: 'normal_user' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         // target check
         mockSql.mockResolvedValueOnce([]); // target (not owner)
         mockSql.mockResolvedValueOnce([]); // delete organizer
@@ -111,6 +136,7 @@ describe('Tournament Kick Player API', () => {
             body: { tournament_id: 't1', player_id: 'normal_user' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]); // requester
         mockSql.mockResolvedValueOnce([]); // target (not organizer)
         mockSql.mockResolvedValueOnce([]); // delete organizer

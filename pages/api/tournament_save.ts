@@ -138,27 +138,27 @@ export default async function handler(request: TournamentSaveRequest, response: 
             }
         }
         
-        await sql`
-            UPDATE tournaments 
-            SET 
-                displayed_name = ${clean_displayed_name},
-                finished = ${tournament_info.finished},
-                end_date = ${finalEndDate}, 
-                displayed_date = ${clean_displayed_date}
-            WHERE id = ${tournament_id}
-        `;
-
-        const updatePromises = results.map(player => {
-            return sql`
-                UPDATE results 
+        await sql.begin(async (tx: any) => {
+            await tx`
+                UPDATE tournaments 
                 SET 
-                    position = ${player.position}, 
-                    total_points = ${player.total_points}
-                WHERE tournament_id = ${tournament_id} AND player_id = ${player.player_id}
+                    displayed_name = ${clean_displayed_name},
+                    finished = ${tournament_info.finished},
+                    end_date = ${finalEndDate}, 
+                    displayed_date = ${clean_displayed_date}
+                WHERE id = ${tournament_id}
             `;
-        });
 
-        await Promise.all(updatePromises);
+            for (const player of results) {
+                await tx`
+                    UPDATE results 
+                    SET 
+                        position = ${player.position}, 
+                        total_points = ${player.total_points}
+                    WHERE tournament_id = ${tournament_id} AND player_id = ${player.player_id}
+                `;
+            }
+        });
 
         return response.status(200).json({ message: "Zapisano zmiany!" });
 

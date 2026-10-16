@@ -33,7 +33,7 @@ interface EventDeleteRequest extends NextApiRequest {
  *       200:
  *         description: Event deleted successfully
  *       400:
- *         description: Missing event ID
+ *         description: Missing event ID or tournament already finished
  *       401:
  *         description: Not authenticated
  *       403:
@@ -59,12 +59,19 @@ export default async function handler(request: EventDeleteRequest, response: Nex
             return response.status(400).json({ error: "Brak ID wydarzenia." });
         }
 
-        const eventCheck = await sql<Pick<Event, 'tournament_id'>[]>`
-            SELECT tournament_id FROM events WHERE id = ${event_id}
+        const eventCheck = await sql<{ tournament_id: string | null; finished: boolean | null }[]>`
+            SELECT e.tournament_id, t.finished
+            FROM events e
+            LEFT JOIN tournaments t ON e.tournament_id = t.id
+            WHERE e.id = ${event_id}
         `;
 
         if (eventCheck.length === 0) {
             return response.status(404).json({ error: "Nie znaleziono wydarzenia." });
+        }
+
+        if (eventCheck[0].finished === true) {
+            return response.status(400).json({ error: "Nie można usunąć wydarzenia z zakończonego turnieju." });
         }
 
         const tournament_id = eventCheck[0].tournament_id;
@@ -98,9 +105,6 @@ export default async function handler(request: EventDeleteRequest, response: Nex
 
     } catch (error: any) {
         console.error("Delete Event Error:", error);
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
-        }
         return response.status(500).json({ error: "Wystąpił błąd podczas usuwania wydarzenia." });
     }
 }

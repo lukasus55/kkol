@@ -42,7 +42,7 @@ interface TournamentUpdateOrganizerRoleRequest extends NextApiRequest {
  *       200:
  *         description: Permissions updated successfully
  *       400:
- *         description: Invalid payload
+ *         description: Invalid payload or attempting to change owner role
  *       401:
  *         description: Not authenticated
  *       403:
@@ -77,6 +77,16 @@ export default async function handler(request: TournamentUpdateOrganizerRoleRequ
             if (authCheck.length === 0 || authCheck[0].role !== 'owner') {
                 return response.status(403).json({ error: "Tylko właściciel turnieju może zarządzać uprawnieniami." });
             }
+        }
+
+        const targetCheck = await sql<Pick<TournamentOrganizer, 'role'>[]>`
+            SELECT role 
+            FROM tournament_organizers 
+            WHERE tournament_id = ${tournament_id} AND player_id = ${target_player_id}
+        `;
+
+        if (targetCheck.length > 0 && targetCheck[0].role === 'owner') {
+            return response.status(400).json({ error: "Nie można zmienić roli właściciela turnieju." });
         }
 
         if (action === 'promote') {
