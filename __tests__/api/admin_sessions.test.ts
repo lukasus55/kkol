@@ -165,7 +165,27 @@ describe('Admin Sessions API (/api/admin/sessions)', () => {
             await handler(req as any, res as any);
 
             expect(res._getStatusCode()).toBe(200);
-            expect(revokeSession).toHaveBeenCalledWith('sess-1');
+            expect(revokeSession).toHaveBeenCalledWith('sess-1', 'player1');
+        });
+
+        test('returns 404 when session does not belong to user or does not exist', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            mockSql.mockResolvedValueOnce([{ id: 'player1', role: 'player' }]); // Target user
+            vi.mocked(revokeSession).mockResolvedValueOnce(false);
+
+            const { req, res } = createMocks({
+                method: 'DELETE',
+                body: { player_id: 'player1', session_id: 'sess-other' }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(404);
+            expect(JSON.parse(res._getData()).error).toContain('Nie znaleziono podanej sesji');
+            expect(revokeSession).toHaveBeenCalledWith('sess-other', 'player1');
         });
 
         test('successfully revokes all sessions for player', async () => {

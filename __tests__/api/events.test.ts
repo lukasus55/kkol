@@ -39,4 +39,15 @@ describe('Events API Endpoint (/api/events)', () => {
         expect(data[0].name).toBe('Event 1');
         expect(data[0].tournament_id).toBe('t1');
     });
+
+    test('safely parses limit defaulting to 100 on invalid or negative input', async () => {
+        const { req, res } = createMocks({ method: 'GET', query: { tournament: 't1', limit: 'invalid' } });
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+
+        const call = mockSql.mock.calls[0];
+        expect(call).toContain(100);
+    });
 });

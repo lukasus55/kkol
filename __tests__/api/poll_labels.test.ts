@@ -58,4 +58,19 @@ describe('Poll Labels API (/api/poll_labels)', () => {
         expect(data[0].questions_count).toBe(5);
         expect(data[0].name).toBe('Label1');
     });
+
+    test('safely parses limit and offset defaulting appropriately on invalid input', async () => {
+        const { req, res } = createMocks({ 
+            method: 'GET', 
+            query: { poll: 'valid-uuid-v7', limit: 'invalid', offset: 'invalid' } 
+        });
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+
+        const call = mockSql.mock.calls[0];
+        expect(call).toContain(100);
+        expect(call).toContain(0);
+    });
 });

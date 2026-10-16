@@ -62,7 +62,8 @@ export default async function handler(request: PollsRequest, response: NextApiRe
         if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
 
         const { id, player, tournament, limit, order } = request.query;
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
         const orderClause = sql.unsafe(order === 'reversed' ? 'ORDER BY "end_date" ASC' : 'ORDER BY "end_date" DESC');
 
         let polls: Poll[];

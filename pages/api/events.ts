@@ -63,7 +63,8 @@ export default async function handler(request: EventsRequest, response: NextApiR
     try {
         const { tournament, player, format, limit, upcoming } = request.query;
         const outputFormat = format || 'calendar';
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
         
         const isUpcoming = upcoming === 'true';
         

@@ -56,8 +56,10 @@ export default async function handler(request: PollLabelsRequest, response: Next
         if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
 
         const { poll, limit, offset } = request.query;
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
-        const actualOffset = offset ? Math.max(Number(offset), 0) : 0;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
+        const parsedOffset = parseInt(String(offset), 10);
+        const actualOffset = (!isNaN(parsedOffset) && parsedOffset >= 0) ? parsedOffset : 0;
 
         if (!poll) return response.status(400).json({ error: "Brakujące dane (Id ankiety)." });
         

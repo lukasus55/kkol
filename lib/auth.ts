@@ -151,6 +151,8 @@ export async function verifySession(req: NextApiRequest): Promise<AuthContext | 
         // Fall back to searching by raw token hash (for non-JWT tokens or legacy)
     }
 
+    const tokenHash = hashToken(token);
+
     type JoinResult = Session & {
         user_role: string | null;
         user_displayed_name: string;
@@ -168,10 +170,10 @@ export async function verifySession(req: NextApiRequest): Promise<AuthContext | 
             FROM sessions s
             JOIN players p ON s.player_id = p.id
             WHERE s.id = ${sessionId}
+              AND s.token_hash = ${tokenHash}
               AND s.expires_at > CURRENT_TIMESTAMP
         `;
     } else {
-        const tokenHash = hashToken(token);
         rows = await sql<JoinResult[]>`
             SELECT 
                 s.*,

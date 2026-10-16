@@ -140,7 +140,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
             }
 
             if (session_id && typeof session_id === 'string') {
-                await revokeSession(session_id.trim());
+                const revoked = await revokeSession(session_id.trim(), cleanPlayerId);
+                if (!revoked) {
+                    return response.status(404).json({ error: "Nie znaleziono podanej sesji dla tego użytkownika." });
+                }
                 return response.status(200).json({ message: "Sesja została unieważniona." });
             }
 

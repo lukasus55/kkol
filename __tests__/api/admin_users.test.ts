@@ -157,6 +157,22 @@ describe('Admin Users API (/api/admin/users)', () => {
             expect(JSON.parse(res._getData()).error).toContain('14 znaków');
         });
 
+        test('fails when password is too long (more than 128 characters)', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const { req, res } = createMocks({
+                method: 'POST',
+                body: { id: 'valid_id', displayed_name: 'Valid Name', password: 'a'.repeat(129) }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(400);
+            expect(JSON.parse(res._getData()).error).toContain('128 znaków');
+        });
+
         test('fails when user ID already exists (409 Conflict)', async () => {
             vi.mocked(verifySession).mockResolvedValueOnce({
                 user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
@@ -259,6 +275,22 @@ describe('Admin Users API (/api/admin/users)', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData()).error).toContain('14 znaków');
+        });
+
+        test('fails when new_password is longer than 128 characters', async () => {
+            vi.mocked(verifySession).mockResolvedValueOnce({
+                user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+                session: {} as any
+            });
+
+            const { req, res } = createMocks({
+                method: 'PATCH',
+                body: { id: 'user1', new_password: 'a'.repeat(129) }
+            });
+            await handler(req as any, res as any);
+
+            expect(res._getStatusCode()).toBe(400);
+            expect(JSON.parse(res._getData()).error).toContain('128 znaków');
         });
 
         test('fails when neither role, is_active nor new_password is provided', async () => {

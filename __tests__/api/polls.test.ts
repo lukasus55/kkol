@@ -66,4 +66,15 @@ describe('Polls API Endpoint (/api/polls)', () => {
         expect(res._getStatusCode()).toBe(200);
         // orderClause is tested indirectly by the fact that the query string gets 'ASC'
     });
+
+    test('safely parses limit defaulting to 100 on invalid or negative input', async () => {
+        const { req, res } = createMocks({ method: 'GET', query: { tournament: 't1', limit: 'invalid' } });
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+
+        const call = mockSql.mock.calls[0];
+        expect(call).toContain(100);
+    });
 });

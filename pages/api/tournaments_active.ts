@@ -49,7 +49,8 @@ export default async function handler(request: TournamentsActiveRequest, respons
         const globalRole = auth.user.role || 'user';
 
         const { limit } = request.query;
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
 
         let activeTournaments: Pick<Tournament, 'id' | 'displayed_name'>[];
 

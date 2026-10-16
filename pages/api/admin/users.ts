@@ -70,6 +70,7 @@ import bcrypt from 'bcrypt';
  *               password:
  *                 type: string
  *                 minLength: 14
+ *                 maxLength: 128
  *               role:
  *                 type: string
  *                 enum: [player, organizer]
@@ -115,6 +116,7 @@ import bcrypt from 'bcrypt';
  *               new_password:
  *                 type: string
  *                 minLength: 14
+ *                 maxLength: 128
  *               reset_name:
  *                 type: boolean
  *                 description: Resets displayed name to default placeholder
@@ -249,6 +251,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 return response.status(400).json({ error: "Hasło musi mieć co najmniej 14 znaków." });
             }
 
+            if (String(password).length > 128) {
+                return response.status(400).json({ error: "Hasło może mieć maksymalnie 128 znaków." });
+            }
+
             const validRole = role === 'organizer' ? 'organizer' : 'player';
             const cleanEmail = email && typeof email === 'string' && email.trim() ? email.trim() : null;
 
@@ -295,6 +301,10 @@ export default async function handler(request: NextApiRequest, response: NextApi
 
             if (new_password !== undefined && String(new_password).length < 14) {
                 return response.status(400).json({ error: "Nowe hasło musi mieć co najmniej 14 znaków." });
+            }
+
+            if (new_password !== undefined && String(new_password).length > 128) {
+                return response.status(400).json({ error: "Nowe hasło może mieć maksymalnie 128 znaków." });
             }
 
             if (id === auth.user.id && (is_active === false || (role && role !== 'admin'))) {
