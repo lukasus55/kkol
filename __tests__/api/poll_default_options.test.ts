@@ -27,7 +27,23 @@ describe('/api/poll_default_options', () => {
         vi.clearAllMocks();
     });
 
+    it('GET - fails if not authorized (no session)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce(null);
+        const { req, res } = createMocks({
+            method: 'GET',
+            query: { poll_id: '123e4567-e89b-12d3-a456-426614174000' }
+        });
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(401);
+        expect(JSON.parse(res._getData()).error).toBe('Brak autoryzacji.');
+    });
+
     it('GET - returns default options', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
         const { req, res } = createMocks({
             method: 'GET',
             query: { poll_id: '123e4567-e89b-12d3-a456-426614174000' }

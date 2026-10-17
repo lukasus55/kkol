@@ -8,7 +8,11 @@ vi.mock('../../lib/auth', () => ({
     AUTH_COOKIE_NAME: 'auth_token'
 }));
 
-const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
+const { mockSql } = vi.hoisted(() => {
+    const fn: any = vi.fn();
+    fn.begin = vi.fn(async (cb: any) => cb(fn));
+    return { mockSql: fn };
+});
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
 describe('Tournament Leave API', () => {
@@ -25,6 +29,23 @@ describe('Tournament Leave API', () => {
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(401);
         expect(JSON.parse(res._getData()).error).toBe('Not authenticated');
+    });
+
+    test('blocks leaving finished tournaments', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { tournamentId: 't1' }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tier: 'B', finished: true, role: null }]); 
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('finished');
     });
 
     test('blocks leaving S tier tournaments', async () => {

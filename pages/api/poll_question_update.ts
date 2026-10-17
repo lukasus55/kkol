@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Poll, Player } from '../../types/db';
+import type { Poll, Player, Tournament } from '../../types/db';
 import sql from '../../db.js';
 import { verifySession } from '../../lib/auth';
 import { uuidv7 } from "uuidv7";
@@ -131,6 +131,18 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
         const tournamentId = pollCheck[0].tournament_id;
         const rightsLevel = pollCheck[0].rights_level;
 
+        const tournamentCheck = await sql<Pick<Tournament, 'finished'>[]>`
+            SELECT finished FROM tournaments WHERE id = ${tournamentId}
+        `;
+
+        if (tournamentCheck.length === 0) {
+            return response.status(400).json({ error: "Turniej nie istnieje." });
+        }
+
+        if (tournamentCheck[0].finished) {
+            return response.status(400).json({ error: "Nie można edytować pytań w zakończonym turnieju." });
+        }
+
         const allowedByRules = rightsLevel >= 2 && await isPartOfTournament(requesterId, tournamentId);
         const hasPermission = allowedByRules || await hasTournamentPermission(requesterId, tournamentId);
 
@@ -191,6 +203,29 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
             } else {
                 incomingValidIds.push(q.id);
                 toUpdate.push(processedQuestion);
+            }
+        }
+
+        if (incomingValidIds.length > 0) {
+            const existingQuestions = await sql<{ id: string }[]>`
+                SELECT id FROM questions 
+                WHERE poll_id = ${poll_id} AND id = ANY(${incomingValidIds})
+            `;
+            if (!existingQuestions || existingQuestions.length !== incomingValidIds.length) {
+                return response.status(400).json({ error: "Nieprawidłowe identyfikatory pytań dla tej ankiety." });
+            }
+        }
+
+        const allProcessedQuestions = [...toUpdate, ...toInsert];
+        const allLabelIds = allProcessedQuestions.flatMap(q => q.label_ids);
+        if (allLabelIds.length > 0) {
+            const distinctLabelIds = [...new Set(allLabelIds)];
+            const validLabels = await sql<{ id: number }[]>`
+                SELECT id FROM poll_labels 
+                WHERE poll_id = ${poll_id} AND id = ANY(${distinctLabelIds})
+            `;
+            if (!validLabels || validLabels.length !== distinctLabelIds.length) {
+                return response.status(400).json({ error: "Nieprawidłowe etykiety dla tej ankiety." });
             }
         }
 
@@ -265,8 +300,6 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
                 }
             }
 
-            const allProcessedQuestions = [...toUpdate, ...toInsert];
-
             for (const q of allProcessedQuestions) {
 
                 const incomingOptIds = q.options
@@ -318,10 +351,6 @@ export default async function handler(request: PollQuestionUpdateRequest, respon
 
     } catch (error: any) {
         console.error("Update Questions Error:", error);
-
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
-        }
 
         if (error.code === '23505') {
             return response.status(409).json({ error: "Konflikt danych (np. w kolejności). Spróbuj zapisać ponownie." });

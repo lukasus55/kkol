@@ -8,7 +8,11 @@ vi.mock('../../lib/auth', () => ({
     AUTH_COOKIE_NAME: 'auth_token'
 }));
 
-const { mockSql } = vi.hoisted(() => ({ mockSql: vi.fn() }));
+const { mockSql } = vi.hoisted(() => {
+    const fn: any = vi.fn();
+    fn.begin = vi.fn(async (cb: any) => cb(fn));
+    return { mockSql: fn };
+});
 vi.mock('../../db.js', () => ({ default: mockSql }));
 
 describe('Tournament Delete API', () => {
@@ -74,6 +78,7 @@ describe('Tournament Delete API', () => {
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(200);
+        expect(mockSql.begin).toHaveBeenCalled();
     });
 
     test('allows global admin to delete tournament even if not owner', async () => {

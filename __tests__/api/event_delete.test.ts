@@ -39,6 +39,23 @@ describe('Event Delete API (/api/event_delete)', () => {
         expect(JSON.parse(res._getData()).error).toBe('Nie znaleziono wydarzenia.');
     });
 
+    test('rejects deleting event if tournament is finished', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'admin', displayed_name: 'Admin User', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { event_id: 1 }
+        });
+        
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1', finished: true }]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('zakończonego turnieju');
+    });
+
     test('deletes event if user has permissions', async () => {
         vi.mocked(verifySession).mockResolvedValueOnce({
             user: { id: 'user1', role: 'admin', displayed_name: 'Admin User', is_active: true },

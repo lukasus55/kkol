@@ -61,11 +61,100 @@ describe('Poll Question Update API', () => {
         });
 
         mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
+        mockSql.mockResolvedValueOnce([{ finished: false }]);
         vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(400);
         expect(JSON.parse(res._getData()).error).toContain('co najmniej 3 znaki');
+    });
+
+    test('rejects if user lacks permissions (403)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { poll_id: 'p1', questions: [{ name: 'Valid Question' }] }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 1 }]);
+        mockSql.mockResolvedValueOnce([{ finished: false }]);
+        vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
+        vi.mocked(hasTournamentPermission).mockResolvedValueOnce(false);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(403);
+        expect(JSON.parse(res._getData()).error).toContain('Brak uprawnień');
+    });
+
+    test('rejects if tournament is finished (400)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { poll_id: 'p1', questions: [{ name: 'Valid Question' }] }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
+        mockSql.mockResolvedValueOnce([{ finished: true }]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('zakończonym turnieju');
+    });
+
+    test('rejects when question IDs belong to another poll (Cross-Poll IDOR prevention)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { 
+                poll_id: 'p1', 
+                questions: [{ id: 'foreign-q1', name: 'Valid Question', sort_order: 1, multiple_choice: false, options: [{ name: 'Opt 1' }], label_ids: [] }] 
+            }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
+        mockSql.mockResolvedValueOnce([{ finished: false }]);
+        vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
+
+        // SELECT id FROM questions WHERE poll_id = 'p1' AND id IN ('foreign-q1') -> returns empty
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('Nieprawidłowe identyfikatory pytań');
+    });
+
+    test('rejects when label IDs belong to another poll (Cross-Poll Label IDOR prevention)', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST', 
+            body: { 
+                poll_id: 'p1', 
+                questions: [{ name: 'Valid Question', sort_order: 1, multiple_choice: false, options: [{ name: 'Opt 1' }], label_ids: [999] }] 
+            }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
+        mockSql.mockResolvedValueOnce([{ finished: false }]);
+        vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
+
+        // SELECT id FROM poll_labels WHERE poll_id = 'p1' AND id IN (999) -> returns empty
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('Nieprawidłowe etykiety');
     });
 
     test('executes transaction on successful update', async () => {
@@ -74,18 +163,23 @@ describe('Poll Question Update API', () => {
             session: {} as any
         });
         const { req, res } = createMocks({ 
-            method: 'POST',
+            method: 'POST', 
             body: { 
                 poll_id: 'p1', 
-                questions: [{ id: 'q1', name: 'Valid Question', sort_order: 1, multiple_choice: false, options: [{ name: 'Opt 1' }], label_ids: [] }] 
+                questions: [{ id: 'q1', name: 'Valid Question', sort_order: 1, multiple_choice: false, options: [{ name: 'Opt 1' }], label_ids: [1] }] 
             }
         });
 
         mockSql.mockResolvedValueOnce([{ tournament_id: 't1', rights_level: 2 }]);
+        mockSql.mockResolvedValueOnce([{ finished: false }]);
         vi.mocked(isPartOfTournament).mockResolvedValueOnce(true);
         
+        // 1. Validation queries
+        mockSql.mockResolvedValueOnce([{ id: 'q1' }]); // questions in poll
+        mockSql.mockResolvedValueOnce([{ id: 1 }]); // labels in poll
+
         mockSql.begin.mockImplementationOnce(async (cb: any) => {
-            const mockTx = vi.fn();
+            const mockTx = vi.fn().mockResolvedValue([]);
             await cb(mockTx);
         });
 

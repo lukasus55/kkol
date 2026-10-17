@@ -53,4 +53,19 @@ describe('Active Tournaments API', () => {
         const data = JSON.parse(res._getData());
         expect(data[0].id).toBe('t2');
     });
+
+    test('safely parses limit defaulting to 100 on invalid or negative input', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ method: 'GET', query: { limit: 'invalid' } });
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+
+        const call = mockSql.mock.calls[0];
+        expect(call).toContain(100);
+    });
 });

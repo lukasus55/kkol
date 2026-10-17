@@ -76,7 +76,11 @@ export default async function handler(request: PollDeleteRequest, response: Next
         `;
 
         if (tournamentCheck.length === 0) {
-            return response.status(400).json({ error: "Nie możesz edytować ankiety w turnieju, który nie istnieje." });
+            return response.status(400).json({ error: "Nie możesz usunąć ankiety w turnieju, który nie istnieje." });
+        }
+
+        if (tournamentCheck[0].finished) {
+            return response.status(400).json({ error: "Nie można usunąć ankiety w zakończonym turnieju." });
         }
 
         const hasPermission = await hasTournamentPermission(requesterId, tournamentId);
@@ -90,9 +94,6 @@ export default async function handler(request: PollDeleteRequest, response: Next
 
     } catch (error: any) {
         console.error("Delete Poll Error:", error);
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
-        }
-        return response.status(500).json({ error: "Wystąpił błąd podczas usuwania wydarzenia." });
+        return response.status(500).json({ error: "Wystąpił błąd podczas usuwania ankiety." });
     }
 }

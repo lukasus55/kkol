@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Player, TournamentOrganizer } from '../../types/db';
+import type { Player, TournamentOrganizer, Tournament } from '../../types/db';
 import sql from '../../db.js';
 import { verifySession } from '../../lib/auth';
 
@@ -38,11 +38,13 @@ interface TournamentKickPlayerRequest extends NextApiRequest {
  *       200:
  *         description: Player kicked successfully
  *       400:
- *         description: Invalid payload
+ *         description: Invalid payload or tournament finished
  *       401:
  *         description: Not authenticated
  *       403:
  *         description: Missing permissions or attempting to kick protected roles
+ *       404:
+ *         description: Tournament not found
  *       500:
  *         description: Internal server error
  */
@@ -61,6 +63,18 @@ export default async function handler(request: TournamentKickPlayerRequest, resp
 
         if (!tournament_id || !effectiveTargetId) {
             return response.status(400).json({ error: "Invalid payload" });
+        }
+
+        const tournamentCheck = await sql<Pick<Tournament, 'id' | 'finished'>[]>`
+            SELECT id, finished FROM tournaments WHERE id = ${tournament_id}
+        `;
+
+        if (tournamentCheck.length === 0) {
+            return response.status(404).json({ error: "Turniej nie istnieje." });
+        }
+
+        if (tournamentCheck[0].finished) {
+            return response.status(400).json({ error: "Nie można wyrzucić gracza z zakończonego turnieju." });
         }
 
         let userRole = 'owner';
@@ -94,15 +108,17 @@ export default async function handler(request: TournamentKickPlayerRequest, resp
             return response.status(403).json({ error: "Nie możesz wyrzucić innego managera turnieju jako manager." });
         }
 
-        await sql`
-            DELETE FROM tournament_organizers 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${effectiveTargetId}
-        `;
+        await sql.begin(async (tx: any) => {
+            await tx`
+                DELETE FROM tournament_organizers 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${effectiveTargetId}
+            `;
 
-        await sql`
-            DELETE FROM results 
-            WHERE tournament_id = ${tournament_id} AND player_id = ${effectiveTargetId}
-        `;
+            await tx`
+                DELETE FROM results 
+                WHERE tournament_id = ${tournament_id} AND player_id = ${effectiveTargetId}
+            `;
+        });
 
         return response.status(200).json({ message: "Gracz został wyrzucony." });
 

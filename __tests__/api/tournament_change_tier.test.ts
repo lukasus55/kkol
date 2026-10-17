@@ -41,6 +41,23 @@ describe('Tournament Change Tier API', () => {
         expect(res._getStatusCode()).toBe(400);
     });
 
+    test('blocks changing tier of finished tournament', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { tournament_id: 't1', new_tier: 'B' }
+        });
+
+        mockSql.mockResolvedValueOnce([{ tier: 'C', finished: true }]); // tournamentCheck
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('zakończonego turnieju');
+    });
+
     test('blocks non-admin from setting S tier', async () => {
         vi.mocked(verifySession).mockResolvedValueOnce({
             user: { id: 'user1', role: 'organizer', displayed_name: 'Org', is_active: true },
@@ -51,7 +68,7 @@ describe('Tournament Change Tier API', () => {
             body: { tournament_id: 't1', new_tier: 'S' }
         });
 
-        mockSql.mockResolvedValueOnce([{ tier: 'A' }]); // tournamentCheck
+        mockSql.mockResolvedValueOnce([{ tier: 'A', finished: false }]); // tournamentCheck
 
         await handler(req as any, res as any);
         expect(res._getStatusCode()).toBe(403);
@@ -68,7 +85,7 @@ describe('Tournament Change Tier API', () => {
             body: { tournament_id: 't1', new_tier: 'B' }
         });
 
-        mockSql.mockResolvedValueOnce([{ tier: 'C' }]); // tournamentCheck
+        mockSql.mockResolvedValueOnce([{ tier: 'C', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]); // tournament_organizers check
         mockSql.mockResolvedValueOnce([]); // Update
 

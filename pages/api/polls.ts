@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Poll } from '../../types/db';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 
 interface PollsRequest extends NextApiRequest {
@@ -20,6 +21,8 @@ interface PollsRequest extends NextApiRequest {
  *     summary: Get polls
  *     description: Retrieves polls. Can be filtered by ID, tournament, or player.
  *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: id
@@ -48,13 +51,19 @@ interface PollsRequest extends NextApiRequest {
  *         description: Array of polls
  *       400:
  *         description: Invalid UUID
+ *       401:
+ *         description: Not authenticated
  *       500:
  *         description: Internal server error
  */
 export default async function handler(request: PollsRequest, response: NextApiResponse) {
     try {
+        const auth = await verifySession(request);
+        if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
+
         const { id, player, tournament, limit, order } = request.query;
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
         const orderClause = sql.unsafe(order === 'reversed' ? 'ORDER BY "end_date" ASC' : 'ORDER BY "end_date" DESC');
 
         let polls: Poll[];

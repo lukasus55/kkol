@@ -57,6 +57,23 @@ describe('Tournament Update Organizer Role API', () => {
         expect(res._getStatusCode()).toBe(403);
     });
 
+    test('blocks changing role of tournament owner', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { tournament_id: 't1', target_player_id: 'owner_user', action: 'promote' }
+        });
+
+        mockSql.mockResolvedValueOnce([{ role: 'owner' }]); // targetCheck
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('właściciela');
+    });
+
     test('successfully promotes a user', async () => {
         vi.mocked(verifySession).mockResolvedValueOnce({
             user: { id: 'owner_user', role: 'player', displayed_name: 'Owner', is_active: true },
@@ -68,6 +85,7 @@ describe('Tournament Update Organizer Role API', () => {
         });
 
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]);
+        mockSql.mockResolvedValueOnce([]); // targetCheck
         mockSql.mockResolvedValueOnce([]); // upsert execution
 
         await handler(req as any, res as any);
@@ -85,6 +103,7 @@ describe('Tournament Update Organizer Role API', () => {
         });
 
         mockSql.mockResolvedValueOnce([{ role: 'owner' }]);
+        mockSql.mockResolvedValueOnce([{ role: 'manager' }]); // targetCheck
         mockSql.mockResolvedValueOnce([]); // delete execution
 
         await handler(req as any, res as any);
@@ -101,6 +120,7 @@ describe('Tournament Update Organizer Role API', () => {
             body: { tournament_id: 't1', target_player_id: 'p2', action: 'promote' }
         });
 
+        mockSql.mockResolvedValueOnce([]); // targetCheck
         mockSql.mockResolvedValueOnce([]); // upsert execution
 
         await handler(req as any, res as any);

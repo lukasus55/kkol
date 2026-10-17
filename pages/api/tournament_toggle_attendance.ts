@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Player, TournamentOrganizer } from '../../types/db';
+import type { Player, TournamentOrganizer, Tournament } from '../../types/db';
 import sql from '../../db.js';
 import { verifySession } from '../../lib/auth';
 
@@ -37,11 +37,13 @@ interface TournamentToggleAttendanceRequest extends NextApiRequest {
  *       200:
  *         description: Attendance toggled successfully
  *       400:
- *         description: Invalid payload
+ *         description: Invalid payload or tournament already finished
  *       401:
  *         description: Not authenticated
  *       403:
  *         description: Missing permissions
+ *       404:
+ *         description: Tournament not found
  *       500:
  *         description: Internal server error
  */
@@ -59,6 +61,18 @@ export default async function handler(request: TournamentToggleAttendanceRequest
 
         if (!tournament_id || !target_player_id) {
             return response.status(400).json({ error: "Invalid payload" });
+        }
+
+        const tournamentCheck = await sql<Pick<Tournament, 'id' | 'finished'>[]>`
+            SELECT id, finished FROM tournaments WHERE id = ${tournament_id}
+        `;
+
+        if (tournamentCheck.length === 0) {
+            return response.status(404).json({ error: "Turniej nie istnieje." });
+        }
+
+        if (tournamentCheck[0].finished) {
+            return response.status(400).json({ error: "Nie można zmienić obecności w zakończonym turnieju." });
         }
 
         const isAdmin = auth.user.role === 'admin';

@@ -8,7 +8,7 @@ import { verifySession } from '../../lib/auth';
  * /api/availability_bulk_overrides:
  *   post:
  *     summary: Bulk update overrides for a specific date
- *     description: Replaces all availability overrides for the user on a specific date. If blocks is empty, it means the user is explicitly setting 0 availability for that day (unlike reverting to routine, which requires DELETE).
+ *     description: Replaces all availability overrides for the user on a specific date. If revertToRoutine is true, existing overrides are cleared to revert to routine. If blocks is empty, it sets 0 availability for that day.
  *     tags: [Availability]
  *     security:
  *       - cookieAuth: []
@@ -40,30 +40,36 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "date is required" });
         }
 
-        // Always delete existing overrides for this date
-        await sql`DELETE FROM availability_overrides WHERE player_id = ${playerId} AND specific_date = ${date}`;
+        if (!revertToRoutine && !Array.isArray(blocks)) {
+            return response.status(400).json({ error: "blocks must be an array when not reverting to routine" });
+        }
 
-        // If not reverting to routine, insert the provided blocks
-        if (!revertToRoutine && Array.isArray(blocks)) {
-            for (const block of blocks) {
-                if (block.start_time && block.end_time && block.status) {
-                    const newId = crypto.randomUUID();
-                    await sql`
+        await sql.begin(async (tx: any) => {
+            // Always delete existing overrides for this date
+            await tx`DELETE FROM availability_overrides WHERE player_id = ${playerId} AND specific_date = ${date}`;
+
+            // If not reverting to routine, insert the provided blocks
+            if (!revertToRoutine && Array.isArray(blocks)) {
+                for (const block of blocks) {
+                    if (block.start_time && block.end_time && block.status) {
+                        const newId = crypto.randomUUID();
+                        await tx`
+                            INSERT INTO availability_overrides (id, player_id, specific_date, start_time, end_time, status)
+                            VALUES (${newId}, ${playerId}, ${date}, ${block.start_time}, ${block.end_time}, ${block.status})
+                        `;
+                    }
+                }
+                
+                // If blocks was empty, signify "override with 0 availability".
+                if (blocks.length === 0) {
+                    const emptyId = crypto.randomUUID();
+                    await tx`
                         INSERT INTO availability_overrides (id, player_id, specific_date, start_time, end_time, status)
-                        VALUES (${newId}, ${playerId}, ${date}, ${block.start_time}, ${block.end_time}, ${block.status})
+                        VALUES (${emptyId}, ${playerId}, ${date}, '00:00', '00:00', 'unavailable')
                     `;
                 }
             }
-            
-            // If blocks was empty, signify "override with 0 availability".
-            if (blocks.length === 0) {
-                 const emptyId = crypto.randomUUID();
-                 await sql`
-                    INSERT INTO availability_overrides (id, player_id, specific_date, start_time, end_time, status)
-                    VALUES (${emptyId}, ${playerId}, ${date}, '00:00', '00:00', 'unavailable')
-                `;
-            }
-        }
+        });
 
         return response.status(200).json({ message: "Overrides updated successfully" });
     } catch (error) {

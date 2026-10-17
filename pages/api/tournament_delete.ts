@@ -73,9 +73,11 @@ export default async function handler(request: TournamentDeleteRequest, response
             }
         }
 
-        await sql`DELETE FROM results WHERE tournament_id = ${tournament_id}`;
-        await sql`DELETE FROM tournament_organizers WHERE tournament_id = ${tournament_id}`;
-        await sql`DELETE FROM tournaments WHERE id = ${tournament_id}`;
+        await sql.begin(async (tx: any) => {
+            await tx`DELETE FROM results WHERE tournament_id = ${tournament_id}`;
+            await tx`DELETE FROM tournament_organizers WHERE tournament_id = ${tournament_id}`;
+            await tx`DELETE FROM tournaments WHERE id = ${tournament_id}`;
+        });
 
         return response.status(200).json({ message: "Turniej został usunięty." });
 

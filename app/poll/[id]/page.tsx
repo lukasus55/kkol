@@ -15,7 +15,11 @@ export async function generateMetadata(
   const baseUrl = `${protocol}://${host}`;
 
   try {
-    const res = await fetch(`${baseUrl}/api/polls?id=${id}`, { cache: 'no-store' });
+    const cookie = headersList.get('cookie') || '';
+    const res = await fetch(`${baseUrl}/api/polls?id=${id}`, {
+      headers: { cookie },
+      cache: 'no-store'
+    });
     const data = await res.json();
     if (data && data.length > 0 && data[0].title) {
       return {

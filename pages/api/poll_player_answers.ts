@@ -17,7 +17,7 @@ interface PollPlayerAnswersRequest extends NextApiRequest {
  * /api/poll_player_answers:
  *   get:
  *     summary: Get player answers
- *     description: Retrieves a specific player's answers for a poll. Only allowed for self or if permitted by rights_level.
+ *     description: Retrieves a specific player's answers for a poll. Accessible by self, any participant of the tournament, or tournament organizers/admins.
  *     tags: [Polls]
  *     security:
  *       - cookieAuth: []
@@ -68,8 +68,8 @@ export default async function handler(request: PollPlayerAnswersRequest, respons
         const requesterId = auth.user.id;
 
         if (requesterId !== player) {
-            const pollCheck = await sql<Pick<Poll, 'tournament_id' | 'rights_level'>[]>`
-                SELECT tournament_id, rights_level FROM polls WHERE id = ${poll}
+            const pollCheck = await sql<Pick<Poll, 'tournament_id'>[]>`
+                SELECT tournament_id FROM polls WHERE id = ${poll}
             `;
             
             if (pollCheck.length === 0) {
@@ -77,10 +77,9 @@ export default async function handler(request: PollPlayerAnswersRequest, respons
             }
 
             const tournamentId = pollCheck[0].tournament_id;
-            const rightsLevel = pollCheck[0].rights_level;
 
-            const allowedByRules = rightsLevel >= 2 && await isPartOfTournament(requesterId, tournamentId);
-            const hasPermission = allowedByRules || await hasTournamentPermission(requesterId, tournamentId);
+            const isParticipant = await isPartOfTournament(requesterId, tournamentId);
+            const hasPermission = isParticipant || await hasTournamentPermission(requesterId, tournamentId);
             
             if (!hasPermission) {
                 return response.status(403).json({ error: "Brak uprawnień do przeglądania odpowiedzi innych graczy." });
@@ -111,11 +110,6 @@ export default async function handler(request: PollPlayerAnswersRequest, respons
 
     } catch (error: any) {
         console.error("Fetch Player Answers Error:", error);
-        
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
-        }
-
         return response.status(500).json({ error: "Wystąpił błąd podczas pobierania odpowiedzi gracza." });
     }
 }

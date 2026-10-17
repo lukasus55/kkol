@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD}
       POSTGRES_DB: ${LOCAL_DB_NAME}
     ports:
-      - "5432:5432" 
+      - "${LOCAL_DB_HOST:-127.0.0.1}:${LOCAL_DB_PORT:-5432}:5432"
     volumes:
       - ../persistent-data/database:/var/lib/postgresql/data
   cloudflared:

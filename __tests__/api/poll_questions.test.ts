@@ -74,4 +74,26 @@ describe('Poll Questions API', () => {
         expect(res._getStatusCode()).toBe(200);
         expect(JSON.parse(res._getData())[0].name).toBe('Question 1');
     });
+
+    test('safely parses limit and offset defaulting appropriately on invalid input', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'user1', role: 'user', displayed_name: 'User 1', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'GET', 
+            query: { poll: 'valid-uuid-v7', limit: 'invalid', offset: 'invalid' } 
+        });
+
+        mockSql.mockResolvedValueOnce([{ tournament_id: 't1' }]); 
+        mockSql.mockResolvedValueOnce([{ global_role: 'admin', is_organizer: false, is_player: false }]); 
+        mockSql.mockResolvedValueOnce([]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+
+        const call = mockSql.mock.calls[2];
+        expect(call).toContain(100);
+        expect(call).toContain(0);
+    });
 });

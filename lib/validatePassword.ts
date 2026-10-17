@@ -72,3 +72,19 @@ export async function validatePassword(pass: string) {
 
     return passInfo;
 }
+
+export const passwordRequirementsNames = {
+    correctLenght: "Ma od 14 do 128 znaków włącznie.",
+    notNumbersOnly: "Nie składa się wyłącznie z cyfr.",
+    notOnList: "Nie jest na liście słabych i wykradzionych haseł.",
+};
+
+export const passwordRecomendationsNames = {
+    lowerCaseChar: "Zawiera małą literę (a-z).",
+    upperCaseChar: "Zawiera wielką literę (A-Z).",
+    number: "Zawiera numer (0-9).",
+    specialChar: "Zawiera znak specjalny.",
+    moreThan17Char: "Ma co najmniej 18 znaków.",
+    moreThan20Char: "Ma co najmniej 20 znaków.",
+    moreThan22Char: "Ma co najmniej 23 znaków.",
+};

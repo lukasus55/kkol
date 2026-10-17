@@ -39,19 +39,26 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "blocks must be an array" });
         }
 
-        // Delete existing defaults
-        await sql`DELETE FROM availability_defaults WHERE player_id = ${playerId}`;
+        // Atomically replace existing defaults
+        await sql.begin(async (tx: any) => {
+            await tx`DELETE FROM availability_defaults WHERE player_id = ${playerId}`;
 
-        // Insert new blocks
-        for (const block of blocks) {
-            if (block.day_of_week && block.start_time && block.end_time && block.status) {
-                const newId = crypto.randomUUID();
-                await sql`
-                    INSERT INTO availability_defaults (id, player_id, day_of_week, start_time, end_time, status)
-                    VALUES (${newId}, ${playerId}, ${block.day_of_week}, ${block.start_time}, ${block.end_time}, ${block.status})
-                `;
+            for (const block of blocks) {
+                if (
+                    block.day_of_week !== undefined &&
+                    block.day_of_week !== null &&
+                    block.start_time &&
+                    block.end_time &&
+                    block.status
+                ) {
+                    const newId = crypto.randomUUID();
+                    await tx`
+                        INSERT INTO availability_defaults (id, player_id, day_of_week, start_time, end_time, status)
+                        VALUES (${newId}, ${playerId}, ${block.day_of_week}, ${block.start_time}, ${block.end_time}, ${block.status})
+                    `;
+                }
             }
-        }
+        });
 
         return response.status(200).json({ message: "Defaults updated successfully" });
     } catch (error) {

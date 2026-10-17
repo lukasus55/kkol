@@ -16,7 +16,9 @@ vi.mock('../../lib/auth', () => ({
 }));
 
 const { mockSql } = vi.hoisted(() => {
-    return { mockSql: vi.fn() };
+    const fn: any = vi.fn();
+    fn.begin = vi.fn(async (cb: any) => cb(fn));
+    return { mockSql: fn };
 });
 
 vi.mock('../../db.js', () => ({
@@ -26,6 +28,8 @@ vi.mock('../../db.js', () => ({
 describe('Availability API Endpoints', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mockSql.mockResolvedValue([]);
+        mockSql.begin.mockImplementation(async (cb: any) => cb(mockSql));
         vi.mocked(verifySession).mockResolvedValue({
             user: { id: 'player1', role: 'user', displayed_name: 'Player 1', is_active: true },
             session: {} as any
@@ -62,8 +66,10 @@ describe('Availability API Endpoints', () => {
 
             await getHandler(reqAttempt as any, resAttempt as any);
             
-            const query1 = mockSql.mock.calls[2][0][0];
-            expect(query1).toContain('player_id = ');
+            const call2 = mockSql.mock.calls[2];
+            expect(call2[0].join('?')).toContain('player_id =');
+            expect(call2).toContain('player1');
+            expect(call2).not.toContain('player2');
         });
     });
 
@@ -126,12 +132,13 @@ describe('Availability API Endpoints', () => {
             expect(res._getStatusCode()).toBe(401);
         });
 
-        test('updates bulk defaults securely', async () => {
+        test('updates bulk defaults securely inside transaction including Sunday (day_of_week 0)', async () => {
             const { req, res } = createMocks({ 
                 method: 'POST',
                 body: { 
                   blocks: [
-                    { day_of_week: 1, start_time: '10:00', end_time: '12:00', status: 'available' }
+                    { day_of_week: 0, start_time: '10:00', end_time: '12:00', status: 'available' },
+                    { day_of_week: 1, start_time: '14:00', end_time: '16:00', status: 'available' }
                   ] 
                 }
             });
@@ -140,9 +147,13 @@ describe('Availability API Endpoints', () => {
 
             await bulkDefaultsHandler(req as any, res as any);
             expect(res._getStatusCode()).toBe(200);
+            expect(mockSql.begin).toHaveBeenCalled();
             
-            const deleteCall = mockSql.mock.calls.find(call => call[0][0].includes('DELETE FROM availability_defaults'));
-            expect(deleteCall).toBeDefined();
+            const insertCalls = mockSql.mock.calls.filter((call: any) => call[0][0].includes('INSERT INTO availability_defaults'));
+            expect(insertCalls.length).toBe(2);
+            // Verify Sunday (day_of_week: 0) was inserted
+            const sundayCall = insertCalls.find((call: any) => call.includes(0));
+            expect(sundayCall).toBeDefined();
         });
 
         test('fails on invalid payload', async () => {
@@ -168,7 +179,30 @@ describe('Availability API Endpoints', () => {
             expect(res._getStatusCode()).toBe(401);
         });
 
-        test('updates bulk overrides securely and ignores spoofed playerIds', async () => {
+        test('fails without date', async () => {
+            const { req, res } = createMocks({ 
+                method: 'POST',
+                body: { blocks: [] }
+            });
+            
+            await bulkOverridesHandler(req as any, res as any);
+            expect(res._getStatusCode()).toBe(400);
+            expect(JSON.parse(res._getData()).error).toBe('date is required');
+        });
+
+        test('fails when blocks is not an array and revertToRoutine is not true', async () => {
+            const { req, res } = createMocks({ 
+                method: 'POST',
+                body: { date: '2024-09-10' }
+            });
+            
+            await bulkOverridesHandler(req as any, res as any);
+            expect(res._getStatusCode()).toBe(400);
+            expect(JSON.parse(res._getData()).error).toContain('blocks must be an array');
+            expect(mockSql).not.toHaveBeenCalled();
+        });
+
+        test('updates bulk overrides securely inside transaction and ignores spoofed playerIds', async () => {
             const { req, res } = createMocks({ 
                 method: 'POST',
                 body: { 
@@ -184,20 +218,39 @@ describe('Availability API Endpoints', () => {
 
             await bulkOverridesHandler(req as any, res as any);
             expect(res._getStatusCode()).toBe(200);
+            expect(mockSql.begin).toHaveBeenCalled();
             
-            const deleteCall = mockSql.mock.calls.find(call => call[0][0].includes('DELETE FROM availability_overrides'));
+            const deleteCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('DELETE FROM availability_overrides'));
             expect(deleteCall).toBeDefined();
+            expect(deleteCall).toContain('player1');
+            expect(deleteCall).not.toContain('player2');
+
+            const insertCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('INSERT INTO availability_overrides'));
+            expect(insertCall).toBeDefined();
+            expect(insertCall).toContain('player1');
+            expect(insertCall).not.toContain('player2');
         });
 
-        test('fails without date', async () => {
+        test('reverts to routine without requiring blocks', async () => {
             const { req, res } = createMocks({ 
                 method: 'POST',
-                body: { blocks: [] }
+                body: { 
+                  date: '2024-09-10',
+                  revertToRoutine: true
+                }
             });
             
+            mockSql.mockResolvedValue([]);
+
             await bulkOverridesHandler(req as any, res as any);
-            expect(res._getStatusCode()).toBe(400);
-            expect(JSON.parse(res._getData()).error).toBe('date is required');
+            expect(res._getStatusCode()).toBe(200);
+            expect(mockSql.begin).toHaveBeenCalled();
+            
+            const deleteCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('DELETE FROM availability_overrides'));
+            expect(deleteCall).toBeDefined();
+            expect(deleteCall).toContain('player1');
+            const insertCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('INSERT INTO availability_overrides'));
+            expect(insertCall).toBeUndefined();
         });
     });
 
@@ -212,7 +265,7 @@ describe('Availability API Endpoints', () => {
             expect(res._getStatusCode()).toBe(401);
         });
 
-        test('deletes default availability', async () => {
+        test('deletes default availability ensuring bound player_id', async () => {
             const { req, res } = createMocks({ 
                 method: 'DELETE',
                 query: { id: 'def-1', type: 'default' }
@@ -222,6 +275,20 @@ describe('Availability API Endpoints', () => {
             await deleteHandler(req as any, res as any);
             expect(res._getStatusCode()).toBe(200);
             expect(JSON.parse(res._getData()).message).toBe('Availability deleted');
+            expect(mockSql.mock.calls[0]).toContain('player1');
+        });
+
+        test('deletes override availability ensuring bound player_id', async () => {
+            const { req, res } = createMocks({ 
+                method: 'DELETE',
+                query: { id: 'ov-1', type: 'override' }
+            });
+            mockSql.mockResolvedValueOnce([]);
+
+            await deleteHandler(req as any, res as any);
+            expect(res._getStatusCode()).toBe(200);
+            expect(JSON.parse(res._getData()).message).toBe('Availability deleted');
+            expect(mockSql.mock.calls[0]).toContain('player1');
         });
     });
     

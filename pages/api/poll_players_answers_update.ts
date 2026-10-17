@@ -89,6 +89,11 @@ export default async function handler(request: PollPlayersAnswersUpdateRequest, 
             }
         }
 
+        const uniqueOptionIds = new Set(optionIdsToInsert);
+        if (uniqueOptionIds.size !== optionIdsToInsert.length) {
+            return response.status(400).json({ error: "Wykryto zduplikowane opcje odpowiedzi." });
+        }
+
         const tournamentRes = await sql<Pick<Poll, 'tournament_id' | 'start_date' | 'end_date'>[]>`SELECT tournament_id, start_date, end_date FROM polls WHERE id = ${poll_id}`;
         if (tournamentRes.length === 0) return response.status(404).json({ error: "Ankieta nie istnieje." });
         const { tournament_id, start_date, end_date } = tournamentRes[0];
@@ -114,8 +119,8 @@ export default async function handler(request: PollPlayersAnswersUpdateRequest, 
 
         await sql.begin(async (sqlTransaction: any) => {
             if (optionIdsToInsert.length > 0) {
-                const validOptions = await sqlTransaction<{ id: string }[]>`
-                    SELECT o.id 
+                const validOptions = await sqlTransaction<{ id: string; question_id: string; multiple_choice: boolean }[]>`
+                    SELECT o.id, q.id as question_id, q.multiple_choice 
                     FROM "options" o
                     JOIN questions q ON o.question_id = q.id
                     WHERE q.poll_id = ${poll_id}
@@ -124,6 +129,15 @@ export default async function handler(request: PollPlayersAnswersUpdateRequest, 
 
                 if (validOptions.length !== optionIdsToInsert.length) {
                     throw new Error("SECURITY_VIOLATION");
+                }
+
+                const questionOptionCounts: Record<string, number> = {};
+                for (const opt of validOptions) {
+                    const qId = String(opt.question_id);
+                    questionOptionCounts[qId] = (questionOptionCounts[qId] || 0) + 1;
+                    if (!opt.multiple_choice && questionOptionCounts[qId] > 1) {
+                        throw new Error("MULTIPLE_CHOICE_VIOLATION");
+                    }
                 }
             }
 
@@ -153,13 +167,13 @@ export default async function handler(request: PollPlayersAnswersUpdateRequest, 
 
     } catch (error: any) {
         console.error("Update Player Answers Error:", error);
-        
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return response.status(401).json({ error: "Sesja wygasła. Zaloguj się ponownie." });
-        }
 
         if (error.message === "SECURITY_VIOLATION") {
             return response.status(400).json({ error: "Przesłano nieprawidłowe opcje dla tej ankiety." });
+        }
+
+        if (error.message === "MULTIPLE_CHOICE_VIOLATION") {
+            return response.status(400).json({ error: "Dla pytań jednokrotnego wyboru można wybrać maksymalnie jedną opcję." });
         }
 
         return response.status(500).json({ error: "Wystąpił błąd podczas zapisywania odpowiedzi." });

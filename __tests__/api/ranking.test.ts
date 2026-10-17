@@ -52,4 +52,40 @@ describe('Ranking API Endpoint (/api/ranking)', () => {
         const player3 = data.find((p: any) => p.id === 'p3');
         expect(player3.ranking).toBe("5.50");
     });
+
+    test('filters ranking by specific player ID', async () => {
+        const { req, res } = createMocks({ method: 'GET', query: { id: 'p1' } });
+        
+        mockSql.mockResolvedValueOnce([{ id: 's_tour1', tier: 'S' }]);
+        mockSql.mockResolvedValueOnce([]);
+        
+        mockSql.mockResolvedValueOnce([
+            { tournament_id: 's_tour1', tournament_tier: 'S', player_id: 'p1', player_position: 1, player_name: 'Player 1', player_pfp_base64: null },
+            { tournament_id: 's_tour1', tournament_tier: 'S', player_id: 'p2', player_position: 2, player_name: 'Player 2', player_pfp_base64: null }
+        ]);
+        
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+        
+        const data = JSON.parse(res._getData());
+        expect(data.length).toBe(1);
+        expect(data[0].id).toBe('p1');
+    });
+
+    test('handles invalid or null positions safely without NaN', async () => {
+        const { req, res } = createMocks({ method: 'GET' });
+        
+        mockSql.mockResolvedValueOnce([{ id: 's_tour1', tier: 'S' }]);
+        mockSql.mockResolvedValueOnce([]);
+        
+        mockSql.mockResolvedValueOnce([
+            { tournament_id: 's_tour1', tournament_tier: 'S', player_id: 'p1', player_position: null, player_name: 'Player 1', player_pfp_base64: null }
+        ]);
+        
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(200);
+        
+        const data = JSON.parse(res._getData());
+        expect(data).toEqual([]);
+    });
 });

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { PollLabel } from '../../types/db';
 import sql from '../../db.js';
+import { verifySession } from '../../lib/auth';
 import { isUUIDv7 } from '../../public/js/utils/helpers.js';
 
 interface PollLabelsRequest extends NextApiRequest {
@@ -22,6 +23,8 @@ type PollLabelRow = Pick<PollLabel, 'id' | 'poll_id' | 'name' | 'hex' | 'descrip
  *     summary: Get poll labels
  *     description: Retrieves all labels for a given poll.
  *     tags: [Polls]
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: query
  *         name: poll
@@ -42,14 +45,21 @@ type PollLabelRow = Pick<PollLabel, 'id' | 'poll_id' | 'name' | 'hex' | 'descrip
  *         description: Array of poll labels
  *       400:
  *         description: Missing or invalid poll ID
+ *       401:
+ *         description: Not authenticated
  *       500:
  *         description: Internal server error
  */
 export default async function handler(request: PollLabelsRequest, response: NextApiResponse) {
     try {
+        const auth = await verifySession(request);
+        if (!auth) return response.status(401).json({ error: "Brak autoryzacji." });
+
         const { poll, limit, offset } = request.query;
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
-        const actualOffset = offset ? Math.max(Number(offset), 0) : 0;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
+        const parsedOffset = parseInt(String(offset), 10);
+        const actualOffset = (!isNaN(parsedOffset) && parsedOffset >= 0) ? parsedOffset : 0;
 
         if (!poll) return response.status(400).json({ error: "Brakujące dane (Id ankiety)." });
         

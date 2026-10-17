@@ -41,6 +41,23 @@ describe('Tournament Add Player API', () => {
         expect(res._getStatusCode()).toBe(400);
     });
 
+    test('blocks adding player if tournament is finished', async () => {
+        vi.mocked(verifySession).mockResolvedValueOnce({
+            user: { id: 'admin1', role: 'admin', displayed_name: 'Admin', is_active: true },
+            session: {} as any
+        });
+        const { req, res } = createMocks({ 
+            method: 'POST',
+            body: { tournament_id: 't1', new_player_id: 'p2' }
+        });
+
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: true }]);
+
+        await handler(req as any, res as any);
+        expect(res._getStatusCode()).toBe(400);
+        expect(JSON.parse(res._getData()).error).toContain('zakończonego turnieju');
+    });
+
     test('blocks if user is not owner or manager', async () => {
         vi.mocked(verifySession).mockResolvedValueOnce({
             user: { id: 'user1', role: 'player', displayed_name: 'User 1', is_active: true },
@@ -51,6 +68,7 @@ describe('Tournament Add Player API', () => {
             body: { tournament_id: 't1', new_player_id: 'p2' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'organizer' }]); // Not owner/manager
 
         await handler(req as any, res as any);
@@ -67,6 +85,7 @@ describe('Tournament Add Player API', () => {
             body: { tournament_id: 't1', new_player_id: 'p2' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]);
         mockSql.mockResolvedValueOnce([{ id: 'p2' }]); // player exists
         mockSql.mockResolvedValueOnce([{ player_id: 'p2' }]); // duplicate result
@@ -86,6 +105,7 @@ describe('Tournament Add Player API', () => {
             body: { tournament_id: 't1', new_player_id: 'p2' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ role: 'manager' }]);
         mockSql.mockResolvedValueOnce([{ id: 'p2' }]); // player exists
         mockSql.mockResolvedValueOnce([]); // no duplicate
@@ -105,6 +125,7 @@ describe('Tournament Add Player API', () => {
             body: { tournament_id: 't1', new_player_id: 'p2' }
         });
 
+        mockSql.mockResolvedValueOnce([{ id: 't1', finished: false }]); // tournamentCheck
         mockSql.mockResolvedValueOnce([{ id: 'p2' }]); // player exists
         mockSql.mockResolvedValueOnce([]); // no duplicate
         mockSql.mockResolvedValueOnce([]); // insert results

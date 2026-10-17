@@ -89,20 +89,22 @@ export default async function handler(request: TournamentCreateRequest, response
             return response.status(400).json({ error: "Turniej o takim ID już istnieje!" });
         }
 
-        await sql`
-            INSERT INTO tournaments (id, displayed_name)
-            VALUES (${cleanTournamentId}, ${cleanTournamentId})
-        `;
+        await sql.begin(async (tx: any) => {
+            await tx`
+                INSERT INTO tournaments (id, displayed_name)
+                VALUES (${cleanTournamentId}, ${cleanTournamentId})
+            `;
 
-        await sql`
-            INSERT INTO results (tournament_id, player_id)
-            VALUES (${cleanTournamentId}, ${requesterId})
-        `;
+            await tx`
+                INSERT INTO results (tournament_id, player_id)
+                VALUES (${cleanTournamentId}, ${requesterId})
+            `;
 
-        await sql`
-            INSERT INTO tournament_organizers (tournament_id, player_id, role)
-            VALUES (${cleanTournamentId}, ${requesterId}, 'owner')
-        `;
+            await tx`
+                INSERT INTO tournament_organizers (tournament_id, player_id, role)
+                VALUES (${cleanTournamentId}, ${requesterId}, 'owner')
+            `;
+        });
 
         return response.status(200).json({ message: "Turniej utworzony." });
 

@@ -33,7 +33,7 @@ interface TournamentLeaveRequest extends NextApiRequest {
  *       200:
  *         description: Successfully left the tournament
  *       400:
- *         description: Missing tournament ID
+ *         description: Missing tournament ID or tournament already finished
  *       401:
  *         description: Not authenticated
  *       403:
@@ -61,8 +61,8 @@ export default async function handler(request: TournamentLeaveRequest, response:
             return response.status(400).json({ error: "Tournament ID is required" });
         }
 
-        const checkData = await sql<(Pick<Tournament, 'tier'> & Pick<TournamentOrganizer, 'role'>)[]>`
-            SELECT t.tier, o.role
+        const checkData = await sql<(Pick<Tournament, 'tier' | 'finished'> & Pick<TournamentOrganizer, 'role'>)[]>`
+            SELECT t.tier, t.finished, o.role
             FROM tournaments t
             LEFT JOIN tournament_organizers o 
             ON t.id = o.tournament_id AND o.player_id = ${userId}
@@ -74,7 +74,12 @@ export default async function handler(request: TournamentLeaveRequest, response:
         }
 
         const tournamentTier = checkData[0].tier;
+        const tournamentFinished = checkData[0].finished;
         const userRole = checkData[0].role;
+
+        if (tournamentFinished) {
+            return response.status(400).json({ error: "Cannot leave a finished tournament." });
+        }
 
         if (tournamentTier === 'S') {
             return response.status(403).json({ error: "Players are not allowed to leave S-Tier tournaments." });
@@ -84,15 +89,17 @@ export default async function handler(request: TournamentLeaveRequest, response:
             return response.status(403).json({ error: "The owner cannot leave the tournament. You must delete it instead." });
         }
 
-        await sql`
-            DELETE FROM tournament_organizers 
-            WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
-        `;
+        await sql.begin(async (tx: any) => {
+            await tx`
+                DELETE FROM tournament_organizers 
+                WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
+            `;
 
-        await sql`
-            DELETE FROM results 
-            WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
-        `;
+            await tx`
+                DELETE FROM results 
+                WHERE tournament_id = ${tournamentId} AND player_id = ${userId}
+            `;
+        });
 
         return response.status(200).json({ message: "Successfully left the tournament" });
 

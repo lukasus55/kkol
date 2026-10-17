@@ -45,7 +45,8 @@ type PlayerRow = Pick<Player, 'id' | 'displayed_name' | 'pfp_base64'>;
 export default async function handler(request: PlayersRequest, response: NextApiResponse) {
     try {
         const { id, tournament, limit } = request.query;
-        const actualLimit = limit ? Math.min(Number(limit), 100) : 100;
+        const parsedLimit = parseInt(String(limit), 10);
+        const actualLimit = (!isNaN(parsedLimit) && parsedLimit > 0) ? Math.min(parsedLimit, 100) : 100;
 
         let players: PlayerRow[];
         let results: Result[];
@@ -70,10 +71,13 @@ export default async function handler(request: PlayersRequest, response: NextApi
             ]);
         }
         else {
-            [players, results] = await Promise.all([
-                sql<PlayerRow[]>`SELECT id, displayed_name, pfp_base64 FROM players LIMIT ${actualLimit}`,
-                sql<Result[]>`SELECT * FROM results LIMIT ${actualLimit}`
-            ]);
+            players = await sql<PlayerRow[]>`SELECT id, displayed_name, pfp_base64 FROM players LIMIT ${actualLimit}`;
+            if (players.length > 0) {
+                const playerIds = players.map(p => p.id);
+                results = await sql<Result[]>`SELECT * FROM results WHERE player_id = ANY(${playerIds})`;
+            } else {
+                results = [];
+            }
         }
 
         const dataMap: Record<string, any> = {};

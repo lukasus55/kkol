@@ -207,6 +207,39 @@ describe('Auth Library (lib/auth.ts)', () => {
             expect(result?.user.role).toBe('admin');
             expect(result?.session.id).toBe('sess1');
         });
+
+        test('verifies both sessionId and token_hash when JWT with sessionId is provided', async () => {
+            const secret = process.env.JWT_SECRET || 'kkol_jwt_secret_fallback';
+            const jwtToken = require('jsonwebtoken').sign({ id: 'player1', sessionId: 'sess-jwt-1' }, secret);
+            const expectedHash = hashToken(jwtToken);
+
+            const { req } = createMocks({
+                headers: { authorization: `Bearer ${jwtToken}` }
+            });
+
+            mockSql.mockResolvedValueOnce([{
+                id: 'sess-jwt-1',
+                player_id: 'player1',
+                token_hash: expectedHash,
+                user_is_active: true,
+                user_role: 'player',
+                user_displayed_name: 'JWT Player',
+                last_active_at: new Date()
+            }]);
+
+            const result = await verifySession(req as any);
+            expect(result).not.toBeNull();
+            expect(result?.session.id).toBe('sess-jwt-1');
+
+            // Verify that mockSql was called with the sessionId and tokenHash
+            const callArgs = mockSql.mock.calls[0];
+            const strings = callArgs[0];
+            const queryString = strings.join('?');
+            expect(queryString).toContain('s.token_hash =');
+            expect(queryString).toContain('s.id =');
+            expect(callArgs).toContain('sess-jwt-1');
+            expect(callArgs).toContain(expectedHash);
+        });
     });
 
     describe('revokeSession and revokeAllUserSessions', () => {
