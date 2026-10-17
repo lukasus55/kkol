@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Player, TournamentOrganizer, Result } from '../../types/db';
+import type { Player, TournamentOrganizer, Result, Tournament } from '../../types/db';
 import sql from '../../db.js';
 import { verifySession } from '../../lib/auth';
 

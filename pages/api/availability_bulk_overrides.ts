@@ -44,16 +44,16 @@ export default async function handler(request: NextApiRequest, response: NextApi
             return response.status(400).json({ error: "blocks must be an array when not reverting to routine" });
         }
 
-        await sql.begin(async (sql) => {
+        await sql.begin(async (tx: any) => {
             // Always delete existing overrides for this date
-            await sql`DELETE FROM availability_overrides WHERE player_id = ${playerId} AND specific_date = ${date}`;
+            await tx`DELETE FROM availability_overrides WHERE player_id = ${playerId} AND specific_date = ${date}`;
 
             // If not reverting to routine, insert the provided blocks
             if (!revertToRoutine && Array.isArray(blocks)) {
                 for (const block of blocks) {
                     if (block.start_time && block.end_time && block.status) {
                         const newId = crypto.randomUUID();
-                        await sql`
+                        await tx`
                             INSERT INTO availability_overrides (id, player_id, specific_date, start_time, end_time, status)
                             VALUES (${newId}, ${playerId}, ${date}, ${block.start_time}, ${block.end_time}, ${block.status})
                         `;
@@ -63,7 +63,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                 // If blocks was empty, signify "override with 0 availability".
                 if (blocks.length === 0) {
                     const emptyId = crypto.randomUUID();
-                    await sql`
+                    await tx`
                         INSERT INTO availability_overrides (id, player_id, specific_date, start_time, end_time, status)
                         VALUES (${emptyId}, ${playerId}, ${date}, '00:00', '00:00', 'unavailable')
                     `;

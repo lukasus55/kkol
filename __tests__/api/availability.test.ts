@@ -149,10 +149,10 @@ describe('Availability API Endpoints', () => {
             expect(res._getStatusCode()).toBe(200);
             expect(mockSql.begin).toHaveBeenCalled();
             
-            const insertCalls = mockSql.mock.calls.filter(call => call[0][0].includes('INSERT INTO availability_defaults'));
+            const insertCalls = mockSql.mock.calls.filter((call: any) => call[0][0].includes('INSERT INTO availability_defaults'));
             expect(insertCalls.length).toBe(2);
             // Verify Sunday (day_of_week: 0) was inserted
-            const sundayCall = insertCalls.find(call => call.includes(0));
+            const sundayCall = insertCalls.find((call: any) => call.includes(0));
             expect(sundayCall).toBeDefined();
         });
 
@@ -220,12 +220,12 @@ describe('Availability API Endpoints', () => {
             expect(res._getStatusCode()).toBe(200);
             expect(mockSql.begin).toHaveBeenCalled();
             
-            const deleteCall = mockSql.mock.calls.find(call => call[0][0].includes('DELETE FROM availability_overrides'));
+            const deleteCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('DELETE FROM availability_overrides'));
             expect(deleteCall).toBeDefined();
             expect(deleteCall).toContain('player1');
             expect(deleteCall).not.toContain('player2');
 
-            const insertCall = mockSql.mock.calls.find(call => call[0][0].includes('INSERT INTO availability_overrides'));
+            const insertCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('INSERT INTO availability_overrides'));
             expect(insertCall).toBeDefined();
             expect(insertCall).toContain('player1');
             expect(insertCall).not.toContain('player2');
@@ -246,10 +246,10 @@ describe('Availability API Endpoints', () => {
             expect(res._getStatusCode()).toBe(200);
             expect(mockSql.begin).toHaveBeenCalled();
             
-            const deleteCall = mockSql.mock.calls.find(call => call[0][0].includes('DELETE FROM availability_overrides'));
+            const deleteCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('DELETE FROM availability_overrides'));
             expect(deleteCall).toBeDefined();
             expect(deleteCall).toContain('player1');
-            const insertCall = mockSql.mock.calls.find(call => call[0][0].includes('INSERT INTO availability_overrides'));
+            const insertCall = mockSql.mock.calls.find((call: any) => call[0][0].includes('INSERT INTO availability_overrides'));
             expect(insertCall).toBeUndefined();
         });
     });

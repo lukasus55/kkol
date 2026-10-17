@@ -40,8 +40,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
         }
 
         // Atomically replace existing defaults
-        await sql.begin(async (sql) => {
-            await sql`DELETE FROM availability_defaults WHERE player_id = ${playerId}`;
+        await sql.begin(async (tx: any) => {
+            await tx`DELETE FROM availability_defaults WHERE player_id = ${playerId}`;
 
             for (const block of blocks) {
                 if (
@@ -52,7 +52,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     block.status
                 ) {
                     const newId = crypto.randomUUID();
-                    await sql`
+                    await tx`
                         INSERT INTO availability_defaults (id, player_id, day_of_week, start_time, end_time, status)
                         VALUES (${newId}, ${playerId}, ${block.day_of_week}, ${block.start_time}, ${block.end_time}, ${block.status})
                     `;
