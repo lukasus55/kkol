@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Player } from '../../types/db';
 import sql from '../../db.js';
 import { verifySession, revokeAllUserSessions } from '../../lib/auth';
-import { validatePassword } from '../../public/js/utils/validatePassword.js';
+import { validatePassword } from '../../lib/validatePassword';
 import bcrypt from 'bcrypt';
 
 interface ChangePasswordRequest extends NextApiRequest {

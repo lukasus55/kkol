@@ -66,8 +66,10 @@ describe('Availability API Endpoints', () => {
 
             await getHandler(reqAttempt as any, resAttempt as any);
             
-            const query1 = mockSql.mock.calls[2][0][0];
-            expect(query1).toContain('player_id = ');
+            const call2 = mockSql.mock.calls[2];
+            expect(call2[0].join('?')).toContain('player_id =');
+            expect(call2).toContain('player1');
+            expect(call2).not.toContain('player2');
         });
     });
 
@@ -220,6 +222,13 @@ describe('Availability API Endpoints', () => {
             
             const deleteCall = mockSql.mock.calls.find(call => call[0][0].includes('DELETE FROM availability_overrides'));
             expect(deleteCall).toBeDefined();
+            expect(deleteCall).toContain('player1');
+            expect(deleteCall).not.toContain('player2');
+
+            const insertCall = mockSql.mock.calls.find(call => call[0][0].includes('INSERT INTO availability_overrides'));
+            expect(insertCall).toBeDefined();
+            expect(insertCall).toContain('player1');
+            expect(insertCall).not.toContain('player2');
         });
 
         test('reverts to routine without requiring blocks', async () => {
@@ -239,6 +248,7 @@ describe('Availability API Endpoints', () => {
             
             const deleteCall = mockSql.mock.calls.find(call => call[0][0].includes('DELETE FROM availability_overrides'));
             expect(deleteCall).toBeDefined();
+            expect(deleteCall).toContain('player1');
             const insertCall = mockSql.mock.calls.find(call => call[0][0].includes('INSERT INTO availability_overrides'));
             expect(insertCall).toBeUndefined();
         });
@@ -255,7 +265,7 @@ describe('Availability API Endpoints', () => {
             expect(res._getStatusCode()).toBe(401);
         });
 
-        test('deletes default availability', async () => {
+        test('deletes default availability ensuring bound player_id', async () => {
             const { req, res } = createMocks({ 
                 method: 'DELETE',
                 query: { id: 'def-1', type: 'default' }
@@ -265,6 +275,20 @@ describe('Availability API Endpoints', () => {
             await deleteHandler(req as any, res as any);
             expect(res._getStatusCode()).toBe(200);
             expect(JSON.parse(res._getData()).message).toBe('Availability deleted');
+            expect(mockSql.mock.calls[0]).toContain('player1');
+        });
+
+        test('deletes override availability ensuring bound player_id', async () => {
+            const { req, res } = createMocks({ 
+                method: 'DELETE',
+                query: { id: 'ov-1', type: 'override' }
+            });
+            mockSql.mockResolvedValueOnce([]);
+
+            await deleteHandler(req as any, res as any);
+            expect(res._getStatusCode()).toBe(200);
+            expect(JSON.parse(res._getData()).message).toBe('Availability deleted');
+            expect(mockSql.mock.calls[0]).toContain('player1');
         });
     });
     
