@@ -33,30 +33,6 @@ export function RankingScoreCard({ currentUserId, userRank, userScore, leaderboa
         </Link>
       </div>
 
-      {/* Main Stats Grid */}
-      <div className="grid grid-cols-3 gap-2.5 sm:gap-3 mb-4">
-        <div className="bg-bg-100 rounded-md p-3 flex flex-col justify-center">
-          <span className="text-[11px] text-text-500 font-medium uppercase tracking-wider">Pozycja</span>
-          <span className="text-xl sm:text-2xl font-bold text-white mt-0.5">
-            {userRank ? `#${userRank}` : '-'}
-          </span>
-        </div>
-
-        <div className="bg-bg-100 rounded-md p-3 flex flex-col justify-center">
-          <span className="text-[11px] text-text-500 font-medium uppercase tracking-wider">S-Score</span>
-          <span className="text-xl sm:text-2xl font-bold text-white mt-0.5">
-            {userScore?.majorRanking ?? '0.00'}
-          </span>
-        </div>
-
-        <div className="bg-bg-100 rounded-md p-3 flex flex-col justify-center">
-          <span className="text-[11px] text-text-500 font-medium uppercase tracking-wider">AB-Score</span>
-          <span className="text-xl sm:text-2xl font-bold text-white mt-0.5">
-            {userScore?.minorRanking ?? '0.00'}
-          </span>
-        </div>
-      </div>
-
       {/* Mini Leaderboard Context */}
       {leaderboardContext.length > 0 && (
         <div className="flex flex-col pt-3 border-t border-bg-300">
@@ -71,9 +47,8 @@ export function RankingScoreCard({ currentUserId, userRank, userScore, leaderboa
                 <Link
                   key={player.id}
                   href={`/player/${player.id}`}
-                  className={`flex items-center justify-between py-2 px-2.5 rounded-md transition-colors group ${
-                    isCurrentUser ? 'bg-bg-300 text-white font-semibold' : 'hover:bg-bg-300 text-text-700'
-                  }`}
+                  className={`flex items-center justify-between py-2 px-2.5 rounded-md transition-colors group ${isCurrentUser ? 'bg-bg-300 text-white font-semibold' : 'hover:bg-bg-300 text-text-700'
+                    }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span className={`w-4 text-center text-xs font-semibold ${isCurrentUser ? 'font-bold text-white' : 'text-text-500'}`}>
