@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Crown, Trophy } from 'lucide-react';
 import { TierBadge } from '@/components/ui/TierBadge';
+import { RankCrestBadge } from './RankCrestBadge';
+import { PlayerAvatarCrest } from './PlayerAvatarCrest';
 
 export interface PlayerStats {
   id: string;
@@ -26,6 +27,19 @@ interface PlayerSidebarProps {
   onSelectTierFilter: (tier: string | null) => void;
 }
 
+const BANNER_CLIP_PATH =
+  'polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 36px), 50% 100%, 0 calc(100% - 36px), 0 8px)';
+
+function formatTitlesCount(count: number): string {
+  if (count === 1) return '1 tytuł';
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return `${count} tytuły`;
+  }
+  return `${count} tytułów`;
+}
+
 export function PlayerSidebar({
   player,
   ranking,
@@ -45,164 +59,135 @@ export function PlayerSidebar({
   const isSTierSecond = lastSTierPosition === 2;
   const isSTierThird = lastSTierPosition === 3;
 
-  // Frame ring based on last finished S-Tier placement
-  const frameRingClass = isSTierChampion
-    ? 'p-[3px] bg-gradient-to-tr from-amber-600 via-yellow-300 to-amber-500'
-    : isSTierSecond
-    ? 'p-[3px] bg-gradient-to-tr from-slate-400 via-slate-100 to-slate-300'
-    : isSTierThird
-    ? 'p-[3px] bg-gradient-to-tr from-amber-800 via-amber-600 to-amber-700'
-    : 'p-[2px] bg-bg-400 border border-bg-300';
-
-  const rankBadge = globalRankPosition !== null ? (
-    globalRankPosition === 1 ? (
-      <div className="inline-flex items-center px-3 py-0.5 rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-bg-100 font-extrabold text-xs border border-yellow-200 uppercase tracking-wider">
-        <span>#1 W RANKINGU</span>
-      </div>
-    ) : (
-      <div className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-bg-300 text-white font-bold text-xs border border-bg-400">
-        <span>#{globalRankPosition} W RANKINGU</span>
-      </div>
-    )
-  ) : null;
-
   const tiers = ['s', 'a', 'b', 'c'] as const;
-  const totalTitles = tiers.reduce(
-    (acc, t) => acc + (wonTournamentsByTier[t]?.length || 0),
-    0
-  );
 
   return (
-    <div className="relative w-full bg-bg-200 rounded-md p-6 flex flex-col items-center overflow-hidden border border-bg-300">
-      {/* Subtle ambient lighting behind avatar */}
+    /* Outer 1px clipped wrapper so the border follows the diagonal banner edges */
+    <div
+      className="relative w-full p-[1px] bg-gradient-to-b from-bg-300 via-bg-300 to-bg-400"
+      style={{ clipPath: BANNER_CLIP_PATH }}
+    >
       <div
-        className={`absolute -top-16 w-64 h-64 rounded-full blur-3xl pointer-events-none opacity-20 ${
-          isSTierChampion
-            ? 'bg-amber-400'
-            : isSTierSecond
-            ? 'bg-slate-200'
-            : isSTierThird
-            ? 'bg-amber-700'
-            : 'bg-sky-500'
-        }`}
-      />
+        className="relative w-full bg-bg-200 px-6 pt-6 pb-11 flex flex-col items-center overflow-hidden"
+        style={{ clipPath: BANNER_CLIP_PATH }}
+      >
+        {/* Top Hextech Filigree Notch */}
+        <div className="w-16 h-[2px] bg-gradient-to-r from-transparent via-bg-400 to-transparent mb-4" />
 
-      {/* Top filigree decorative bar */}
-      <div className="w-12 h-1 bg-gradient-to-r from-transparent via-bg-400 to-transparent mb-5" />
-
-      {/* Avatar Container with S-Tier Placement Frame */}
-      <div className="relative flex flex-col items-center">
-        {isSTierChampion && (
-          <div className="absolute -top-4 z-20 text-amber-400 drop-shadow-md animate-bounce">
-            <Crown className="w-6 h-6 fill-amber-400" />
-          </div>
-        )}
-
-        <div className={`rounded-full relative ${frameRingClass}`}>
-          <img
-            src={pfpSrc}
-            alt={player.displayed_name}
-            className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover"
+        {/* Custom Hexagonal SVG Avatar Crest + Overlapping Rank Badge */}
+        <div className="relative flex flex-col items-center">
+          <PlayerAvatarCrest
+            pfpSrc={pfpSrc}
+            playerName={player.displayed_name}
+            lastSTierPosition={lastSTierPosition}
           />
+
+          {/* Overlapping SVG Ranking Crest Badge (Ad. 4) */}
+          <div className="mt-[-12px] relative z-10">
+            <RankCrestBadge position={globalRankPosition} />
+          </div>
         </div>
 
-        {/* Overlapping Ranking Position Badge */}
-        <div className="mt-[-12px] relative z-10">{rankBadge}</div>
-      </div>
+        {/* Player Display Name */}
+        <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-3 text-center">
+          {player.displayed_name}
+        </h1>
 
-      {/* Player Display Name */}
-      <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-3 text-center">
-        {player.displayed_name}
-      </h1>
+        {/* Status note based on last S-Tier */}
+        <p className="text-[11px] font-semibold text-text-500 uppercase tracking-wider text-center mt-1">
+          {isSTierChampion
+            ? 'Mistrz Ostatniego S-Tieru'
+            : isSTierSecond
+            ? 'Wicemistrz Ostatniego S-Tieru'
+            : isSTierThird
+            ? 'Podium Ostatniego S-Tieru'
+            : 'Uczestnik Rozgrywek KKOL'}
+        </p>
 
-      {/* Status note based on last S-Tier */}
-      <p className="text-[11px] font-semibold text-text-500 uppercase tracking-wider text-center mt-1">
-        {isSTierChampion
-          ? 'Mistrz Ostatniego S-Tieru'
-          : isSTierSecond
-          ? 'Wicemistrz Ostatniego S-Tieru'
-          : isSTierThird
-          ? 'Podium Ostatniego S-Tieru'
-          : 'Uczestnik Rozgrywek KKOL'}
-      </p>
+        {/* Divider */}
+        <div className="w-full h-px bg-bg-300 my-5" />
 
-      {/* Divider */}
-      <div className="w-full h-px bg-bg-300 my-5" />
-
-      {/* Won Tournaments (Titles) Summary */}
-      <div className="w-full flex flex-col gap-2">
-        <div className="flex items-center justify-between text-xs px-0.5">
-          <span className="text-[11px] font-semibold text-text-500 uppercase tracking-wider">
-            Wygrane turnieje
+        {/* Won Tournaments (Titles) - Raw 2x2 layout, full TierBadge + single-line count */}
+        <div className="w-full flex flex-col gap-2.5">
+          <span className="text-[11px] font-semibold text-text-500 uppercase tracking-wider text-center">
+            Wygrane turnieje (tytuły)
           </span>
-          <span className="text-xs font-bold text-white flex items-center gap-1.5">
-            <Trophy className="w-3.5 h-3.5 text-amber-400" />
-            <span>
-              {totalTitles} {totalTitles === 1 ? 'tytuł' : totalTitles < 5 && totalTitles > 1 ? 'tytuły' : 'tytułów'}
+
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 mt-0.5">
+            {tiers.map((tier) => {
+              const count = wonTournamentsByTier[tier]?.length || 0;
+              const isSelected = selectedTierFilter === tier;
+
+              return (
+                <button
+                  key={tier}
+                  type="button"
+                  onClick={() => onSelectTierFilter(isSelected ? null : tier)}
+                  title={`Filtruj wygrane ${tier.toUpperCase()}-Tier`}
+                  className={`flex items-center justify-between py-0.5 transition-opacity text-left group ${
+                    selectedTierFilter && !isSelected
+                      ? 'opacity-45 hover:opacity-85'
+                      : 'opacity-100'
+                  }`}
+                >
+                  <TierBadge tier={tier.toUpperCase()} size="sm" />
+                  <span
+                    className={`text-xs font-semibold whitespace-nowrap transition-colors ${
+                      isSelected
+                        ? 'text-white underline underline-offset-4'
+                        : count > 0
+                        ? 'text-white group-hover:text-text-700'
+                        : 'text-text-500 group-hover:text-text-700'
+                    }`}
+                  >
+                    {formatTitlesCount(count)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="w-full h-px bg-bg-300 my-4" />
+
+        {/* Ranking Breakdown (raw on background, white/gray text) */}
+        <div className="w-full flex flex-col gap-2 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-text-500 font-medium">Ranking KKOL</span>
+            <span className="font-bold text-white text-sm">
+              {Number(ranking.ranking || 0).toFixed(2)} pkt
             </span>
-          </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-text-500 font-medium">S-Score</span>
+            <span className="font-semibold text-white">
+              {Number(ranking.majorRanking || 0).toFixed(2)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-text-500 font-medium">AB-Score</span>
+            <span className="font-semibold text-white">
+              {Number(ranking.minorRanking || 0).toFixed(2)}
+            </span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-1.5 mt-0.5">
-          {tiers.map((tier) => {
-            const count = wonTournamentsByTier[tier]?.length || 0;
-            const isSelected = selectedTierFilter === tier;
-
-            return (
-              <button
-                key={tier}
-                type="button"
-                onClick={() => onSelectTierFilter(isSelected ? null : tier)}
-                title={`Filtruj wygrane ${tier.toUpperCase()}-Tier`}
-                className={`flex flex-col items-center justify-center py-2 px-1 rounded-md transition-colors border ${
-                  isSelected
-                    ? 'bg-bg-300 border-white text-white'
-                    : count > 0
-                    ? 'bg-bg-150 border-bg-300 hover:border-bg-400 text-white'
-                    : 'bg-bg-100 border-transparent opacity-60 hover:opacity-100 hover:bg-bg-150'
-                }`}
-              >
-                <TierBadge
-                  tier={tier.toUpperCase()}
-                  size="sm"
-                  showSuffix={false}
-                  className="w-5 h-5 flex items-center justify-center p-0 text-[11px] font-black"
-                />
-                <span className={`text-sm font-bold mt-1 ${count > 0 ? 'text-white' : 'text-text-500'}`}>
-                  {count}
-                </span>
-                <span className="text-[9px] text-text-500 uppercase font-semibold">
-                  {count === 1 ? 'Tytuł' : 'Tytuły'}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="w-full h-px bg-bg-300 my-4" />
-
-      {/* Ranking Breakdown (raw on background, white/gray text) */}
-      <div className="w-full flex flex-col gap-2 text-xs">
-        <div className="flex items-center justify-between">
-          <span className="text-text-500 font-medium">Ranking KKOL</span>
-          <span className="font-bold text-white text-sm">
-            {Number(ranking.ranking || 0).toFixed(2)} pkt
-          </span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-text-500 font-medium">S-Score</span>
-          <span className="font-semibold text-white">
-            {Number(ranking.majorRanking || 0).toFixed(2)}
-          </span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-text-500 font-medium">AB-Score</span>
-          <span className="font-semibold text-white">
-            {Number(ranking.minorRanking || 0).toFixed(2)}
-          </span>
-        </div>
+        {/* Bottom Pennant Tip Ornament */}
+        <svg
+          className="absolute bottom-2 left-1/2 -translate-x-1/2 w-24 h-5 pointer-events-none text-bg-400"
+          viewBox="0 0 96 20"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M 8,2 L 48,17 L 88,2"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+          <path d="M 48,9 L 51,12 L 48,15 L 45,12 Z" fill="currentColor" />
+        </svg>
       </div>
     </div>
   );
