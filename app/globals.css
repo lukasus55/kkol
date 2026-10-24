@@ -543,3 +543,24 @@ button {
     justify-content: space-around;
   }
 }
+
+
+/* Ranking Table Game Icons & Score Centering */
+.ranking_table th.ranking_game,
+.ranking_table td.ranking_game_result {
+  text-align: center !important;
+  vertical-align: middle;
+}
+
+.ranking_table .ranking_game > div {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+.ranking_table .ranking_game img {
+  display: block !important;
+  margin: 0 auto !important;
+}

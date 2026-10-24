@@ -57,7 +57,7 @@ export default function RankingTable({ tournamentId, children }: RankingTablePro
                 const score = (pEvent?.points === null || pEvent?.points === undefined)
                   ? '-'
                   : Number.parseFloat(pEvent.points).toFixed(0);
-                return <td key={idx} className="ranking_game_result">{score}</td>;
+                return <td key={idx} className="ranking_game_result text-center">{score}</td>;
               })}
               <td className="ranking_total">{player.total_points}</td>
             </tr>
