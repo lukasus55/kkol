@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Trophy, ChevronRight, Loader2 } from 'lucide-react';
+import { Trophy, ChevronRight } from 'lucide-react';
+import { TierBadge } from '@/components/ui/TierBadge';
 
 interface Standing {
   id: string;
@@ -57,24 +58,6 @@ export default function HeroEventsWidget() {
 
     loadData();
   }, []);
-
-  const getTierBadge = (tierRaw?: string | null) => {
-    if (!tierRaw) return null;
-    const tier = tierRaw.toUpperCase();
-
-    switch (tier) {
-      case 'S':
-        return 'bg-amber-500/15 text-amber-300 border border-amber-500/30';
-      case 'A':
-        return 'bg-purple-500/15 text-purple-300 border border-purple-500/30';
-      case 'B':
-        return 'bg-sky-500/15 text-sky-300 border border-sky-500/30';
-      case 'C':
-        return 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
-      default:
-        return 'bg-bg-300 text-text-700';
-    }
-  };
 
   return (
     <div className="w-full bg-bg-200 rounded-md p-5 sm:p-6 flex flex-col justify-between h-full">
@@ -139,7 +122,6 @@ export default function HeroEventsWidget() {
                 : '/img/default_pfp.webp';
 
               const tournamentHref = t.page_exists && t.page_url ? `/${t.page_url}` : '/events';
-              const tierClass = getTierBadge(t.details?.tier);
 
               return (
                 <Link
@@ -153,11 +135,7 @@ export default function HeroEventsWidget() {
                       <span className="text-sm font-semibold text-white group-hover:text-slate-100 transition-colors truncate">
                         {t.displayed_name}
                       </span>
-                      {t.details?.tier && (
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0 transition-colors ${tierClass}`}>
-                          {t.details.tier}-Tier
-                        </span>
-                      )}
+                      <TierBadge tier={t.details?.tier} />
                     </div>
 
                     {/* Winner underneath name */}
