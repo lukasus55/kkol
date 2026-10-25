@@ -45,7 +45,7 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
     const [playersRes, tournamentsRes, rankingRes] = await Promise.all([
       fetch(`${baseUrl}/api/players?id=${id}`, { cache: 'no-store' }),
       fetch(`${baseUrl}/api/tournaments?player=${id}`, { cache: 'no-store' }),
-      fetch(`${baseUrl}/api/ranking?id=${id}`, { cache: 'no-store' })
+      fetch(`${baseUrl}/api/ranking`, { cache: 'no-store' })
     ]);
 
     if (!playersRes.ok || !tournamentsRes.ok || !rankingRes.ok) {
@@ -62,16 +62,20 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
       notFound();
     }
 
-    const tournaments = Object.keys(tournamentsData).map(key => tournamentsData[key]);
+    const tournaments = Object.keys(tournamentsData).map((key) => tournamentsData[key]);
 
     // Sort tournaments descending
-    tournaments.sort((a, b) => b.details.timestamp - a.details.timestamp);
+    tournaments.sort((a, b) => {
+      const timeA = a.details?.end_date ? new Date(a.details.end_date).getTime() : (a.details?.timestamp || 0);
+      const timeB = b.details?.end_date ? new Date(b.details.end_date).getTime() : (b.details?.timestamp || 0);
+      return timeB - timeA;
+    });
 
     const wonTournamentsByTier = { s: [] as string[], a: [] as string[], b: [] as string[], c: [] as string[] };
 
-    tournaments.forEach(t => {
+    tournaments.forEach((t) => {
       const standings = t.standings || [];
-      const tier = (t.details.tier || '').toLowerCase() as keyof typeof wonTournamentsByTier;
+      const tier = (t.details?.tier || '').toLowerCase() as keyof typeof wonTournamentsByTier;
 
       standings.forEach((standing: any) => {
         if (standing.position === 1 && standing.id === id && t.finished) {
@@ -82,13 +86,32 @@ export default async function PlayerProfilePage({ params }: { params: Promise<{ 
       });
     });
 
-    const playerRanking = rankingData[0] || { majorRanking: 0, minorRanking: 0, ranking: 0 };
+    // Compute player's global ranking standing
+    const rankingList = Array.isArray(rankingData) ? rankingData : Object.values(rankingData || {});
+    rankingList.sort((a: any, b: any) => Number(b.ranking) - Number(a.ranking));
+    const playerRankIndex = rankingList.findIndex((p: any) => p.id === id);
+    const globalRankPosition = playerRankIndex !== -1 ? playerRankIndex + 1 : null;
+    const playerRanking = rankingList.find((p: any) => p.id === id) || { majorRanking: 0, minorRanking: 0, ranking: 0 };
+
+    // Find position in the most recent finished S-Tier
+    const finishedSTiers = tournaments.filter(
+      (t: any) => t.finished && t.details?.tier?.toUpperCase() === 'S'
+    );
+    let lastSTierPosition: number | null = null;
+    if (finishedSTiers.length > 0 && finishedSTiers[0].standings) {
+      const standing = finishedSTiers[0].standings.find((s: any) => s.id === id);
+      if (standing && standing.position && !isNaN(Number(standing.position))) {
+        lastSTierPosition = Number(standing.position);
+      }
+    }
 
     return (
       <PlayerProfileClient
         player={player}
         tournaments={tournaments}
         ranking={playerRanking}
+        globalRankPosition={globalRankPosition}
+        lastSTierPosition={lastSTierPosition}
         wonTournamentsByTier={wonTournamentsByTier}
       />
     );

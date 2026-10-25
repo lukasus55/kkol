@@ -363,6 +363,8 @@
     transition: background-color 0.6s ease;
     width: 3.75rem;
     opacity: 80%;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .ranking_game:hover
@@ -370,29 +372,43 @@
     opacity: 100%;
 }
 
-.ranking_game1,.ranking_game2,.ranking_game3,.ranking_game4
+.ranking_game1,.ranking_game2,.ranking_game3,.ranking_game4,.ranking_game5,.ranking_game6
 {
     padding-top: 0.25rem;
     height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.ranking_table .ranking_game_result
+{
+    text-align: center;
+    width: 3.75rem;
 }
 
 .ranking_table .ranking_total_header
 {
     width: 3.75rem;
     font-weight: 800;
+    text-align: center;
 }
 
 .ranking_table .ranking_total
 {
     width: 3.75rem;
     font-weight: 800;
+    text-align: center;
 }
 
 .ranking_table .ranking_game img
 {
     width: 1.625rem;
     height: 1.625rem;
-    align-self: flex-end;
+    display: block;
+    margin: 0 auto;
 }
 
 .ranking_button_section

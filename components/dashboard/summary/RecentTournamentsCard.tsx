@@ -3,7 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Trophy, ChevronRight } from 'lucide-react';
-import { SummaryTournament, getTierBadgeClass } from './types';
+import { SummaryTournament } from './types';
+import { TierBadge } from '@/components/ui/TierBadge';
 
 interface RecentTournamentsCardProps {
   currentUserId: string;
@@ -47,7 +48,6 @@ export function RecentTournamentsCard({ currentUserId, tournaments }: RecentTour
             const points = userStanding?.total_points ?? 0;
             const isFirst = position === 1;
 
-            const tierClass = getTierBadgeClass(t.details?.tier);
             const href = t.page_exists && t.page_url ? `/${t.page_url}` : '/dashboard/tournaments';
 
             return (
@@ -62,11 +62,7 @@ export function RecentTournamentsCard({ currentUserId, tournaments }: RecentTour
                     <span className="text-xs sm:text-sm font-semibold text-white group-hover:underline truncate">
                       {t.displayed_name}
                     </span>
-                    {t.details?.tier && (
-                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0 ${tierClass}`}>
-                        {t.details.tier}-Tier
-                      </span>
-                    )}
+                    <TierBadge tier={t.details?.tier} />
                   </div>
                   <span className="text-[11px] text-text-500 mt-0.5">
                     {t.details?.displayed_date || 'Data nieokreślona'}

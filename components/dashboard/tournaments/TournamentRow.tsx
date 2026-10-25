@@ -7,6 +7,7 @@ import { TournamentEditorModal } from './TournamentEditorModal';
 import { TournamentEventsModal } from './TournamentEventsModal';
 import { ConfirmationPopup } from '../../ui/ConfirmationPopup';
 import { useToast } from '../../ui/ToastProvider';
+import { TierBadge } from '../../ui/TierBadge';
 
 interface TournamentRowProps {
   tournament: any;
@@ -26,7 +27,6 @@ export function TournamentRow({ tournament, userRole, canManage, onRefresh }: To
 
   const isFinished = tournament.finished;
   const name = tournament.displayed_name;
-  const tier = tournament.details?.tier ?? '?';
   const pageExists = tournament.page_exists;
   const pageUrl = tournament.page_url;
 
@@ -101,9 +101,9 @@ export function TournamentRow({ tournament, userRole, canManage, onRefresh }: To
                 </span>
               )}
             </div>
-            <span className="text-text-700 text-[13px]">
-              {tier}-Tier
-            </span>
+            <div>
+              <TierBadge tier={tournament.details?.tier} />
+            </div>
           </div>
         </div>
 
