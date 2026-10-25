@@ -60,7 +60,7 @@ export function PlayerTournamentsHistory({
   const paginatedTournaments = filteredTournaments.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
-    <div className="w-full bg-bg-200 rounded-md p-3 sm:p-5 flex flex-col justify-between min-h-[620px] md:min-h-[580px] border border-bg-300">
+    <div className="w-full bg-bg-200 rounded-md p-3 sm:p-5 flex flex-col justify-between min-h-[780px] md:min-h-[670px] border border-bg-300">
       <div>
         {/* Header */}
         <div className="px-2 sm:px-3 pb-3 mb-1 border-b border-bg-300 flex items-center justify-between flex-wrap gap-2">
@@ -72,7 +72,7 @@ export function PlayerTournamentsHistory({
           </div>
 
           <div className="flex items-center gap-2 text-xs">
-            {selectedTierFilter ? (
+            {selectedTierFilter && (
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-bg-300 text-white font-semibold">
                 <span>Filtr: Wygrane {selectedTierFilter.toUpperCase()}-Tier</span>
                 <button
@@ -84,10 +84,6 @@ export function PlayerTournamentsHistory({
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
-            ) : (
-              <span className="text-text-500 font-medium">
-                Występów: {tournaments.length}
-              </span>
             )}
           </div>
         </div>

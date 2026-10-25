@@ -55,10 +55,6 @@ export function PlayerSidebar({
       : `data:image/webp;base64,${player.pfp_base64}`
     : '/img/default_pfp.webp';
 
-  const isSTierChampion = lastSTierPosition === 1;
-  const isSTierSecond = lastSTierPosition === 2;
-  const isSTierThird = lastSTierPosition === 3;
-
   const tiers = ['s', 'a', 'b', 'c'] as const;
 
   return (
@@ -68,7 +64,7 @@ export function PlayerSidebar({
       style={{ clipPath: BANNER_CLIP_PATH }}
     >
       <div
-        className="relative w-full bg-bg-200 px-6 pt-6 pb-11 flex flex-col items-center overflow-hidden"
+        className="relative w-full bg-gradient-to-b from-[#1b212a] via-bg-200 to-[#13171e] px-6 pt-6 pb-14 flex flex-col items-center overflow-hidden"
         style={{ clipPath: BANNER_CLIP_PATH }}
       >
         {/* Top Hextech Filigree Notch */}
@@ -95,12 +91,8 @@ export function PlayerSidebar({
 
         {/* Status note based on last S-Tier */}
         <p className="text-[11px] font-semibold text-text-500 uppercase tracking-wider text-center mt-1">
-          {isSTierChampion
-            ? 'Mistrz Ostatniego S-Tieru'
-            : isSTierSecond
-            ? 'Wicemistrz Ostatniego S-Tieru'
-            : isSTierThird
-            ? 'Podium Ostatniego S-Tieru'
+          {lastSTierPosition !== null
+            ? `#${lastSTierPosition} w ostatnim sezonie`
             : 'Uczestnik Rozgrywek KKOL'}
         </p>
 
@@ -124,21 +116,19 @@ export function PlayerSidebar({
                   type="button"
                   onClick={() => onSelectTierFilter(isSelected ? null : tier)}
                   title={`Filtruj wygrane ${tier.toUpperCase()}-Tier`}
-                  className={`flex items-center justify-between py-0.5 transition-opacity text-left group ${
-                    selectedTierFilter && !isSelected
-                      ? 'opacity-45 hover:opacity-85'
-                      : 'opacity-100'
-                  }`}
+                  className={`flex items-center justify-start gap-2.5 py-0.5 transition-opacity text-left group ${selectedTierFilter && !isSelected
+                    ? 'opacity-45 hover:opacity-85'
+                    : 'opacity-100'
+                    }`}
                 >
                   <TierBadge tier={tier.toUpperCase()} size="sm" />
                   <span
-                    className={`text-xs font-semibold whitespace-nowrap transition-colors ${
-                      isSelected
-                        ? 'text-white underline underline-offset-4'
-                        : count > 0
+                    className={`text-xs font-semibold whitespace-nowrap transition-colors ${isSelected
+                      ? 'text-white underline underline-offset-4'
+                      : count > 0
                         ? 'text-white group-hover:text-text-700'
                         : 'text-text-500 group-hover:text-text-700'
-                    }`}
+                      }`}
                   >
                     {formatTitlesCount(count)}
                   </span>
@@ -172,22 +162,6 @@ export function PlayerSidebar({
             </span>
           </div>
         </div>
-
-        {/* Bottom Pennant Tip Ornament */}
-        <svg
-          className="absolute bottom-2 left-1/2 -translate-x-1/2 w-24 h-5 pointer-events-none text-bg-400"
-          viewBox="0 0 96 20"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M 8,2 L 48,17 L 88,2"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-          />
-          <path d="M 48,9 L 51,12 L 48,15 L 45,12 Z" fill="currentColor" />
-        </svg>
       </div>
     </div>
   );

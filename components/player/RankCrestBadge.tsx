@@ -15,7 +15,7 @@ interface CrestPalette {
   textClass: string;
 }
 
-const PALETTES: Record<'gold' | 'silver' | 'bronze' | 'steel', CrestPalette> = {
+const PALETTES: Record<'gold' | 'steel', CrestPalette> = {
   gold: {
     wingFill: '#78350f',
     wingStroke: '#f59e0b',
@@ -25,26 +25,6 @@ const PALETTES: Record<'gold' | 'silver' | 'bronze' | 'steel', CrestPalette> = {
     innerHairline: '#f59e0b',
     gemColor: '#fde68a',
     textClass: 'text-amber-200',
-  },
-  silver: {
-    wingFill: '#334155',
-    wingStroke: '#cbd5e1',
-    outerPlate: '#64748b',
-    outerStroke: '#f1f5f9',
-    innerPlate: '#12171f',
-    innerHairline: '#94a3b8',
-    gemColor: '#f1f5f9',
-    textClass: 'text-slate-100',
-  },
-  bronze: {
-    wingFill: '#451a03',
-    wingStroke: '#d97706',
-    outerPlate: '#92400e',
-    outerStroke: '#fbbf24',
-    innerPlate: '#17110b',
-    innerHairline: '#b45309',
-    gemColor: '#fcd34d',
-    textClass: 'text-amber-300',
   },
   steel: {
     wingFill: '#1c232d',
@@ -61,14 +41,8 @@ const PALETTES: Record<'gold' | 'silver' | 'bronze' | 'steel', CrestPalette> = {
 export function RankCrestBadge({ position }: RankCrestBadgeProps) {
   if (position === null) return null;
 
-  const palette =
-    position === 1
-      ? PALETTES.gold
-      : position === 2
-      ? PALETTES.silver
-      : position === 3
-      ? PALETTES.bronze
-      : PALETTES.steel;
+  // Only #1 gets the gold crest; all other ranks use the default steel/dark-blue crest
+  const palette = position === 1 ? PALETTES.gold : PALETTES.steel;
 
   return (
     <div className="relative inline-flex items-center justify-center px-6 py-1.5 select-none">
